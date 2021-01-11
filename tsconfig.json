@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig/tsconfig.svelte.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "__@comps/*": ["components/*"],
+      "__@root/*": ["*"]
+    }
+  },
+  "include": ["src", "types.d.ts"]
+}
