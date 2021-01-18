@@ -8,12 +8,12 @@
   import NavbarRight from "__@root/layout/NavbarRightLayout.svelte";
   import Footer from "__@root/layout/FooterLayout.svelte";
   import { redirect, layout, url } from "@roxi/routify";
-  import { authStore } from "__@root/store/auth";
-  import { getContext } from "__@root/store/ui";
+  import { createAuthContext } from "__@root/stores/auth";
+  import { getContext } from "__@root/stores/ui";
   import PageLayout from "../layout/PageLayout.svelte";
 
   const { toggleShowMobileSidebar } = getContext();
-  const { authorize } = authStore;
+  const { authorize } = createAuthContext();
   let loginPage = $layout.path === "/login";
 
   if (!loginPage) {

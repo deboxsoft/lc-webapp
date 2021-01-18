@@ -1,10 +1,14 @@
 <script>
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
-  import { authStore } from "__@root/store/auth";
-  import { createContext as createContextStore } from "__@root/store/ui";
+  import { createContextApplication } from "./stores/app";
+  import { createContext as createContextStore } from "__@root/stores/ui";
 
   const { store: uiStore } = createContextStore();
+
+  // set context application
+  createContextApplication();
+
   const BodyClass = (el, { isDark = false, minimizeSidebar, showMobileSidebar }) => {
     const darkClass = "-dark";
     const minimizeSidebarClass = "sidebar-xs";
@@ -28,7 +32,7 @@
   };
 
   // @ts-ignore
-  setTimeout(() => window.routify.inBrowser && authStore.init());
+  setTimeout(() => window.routify.inBrowser);
 </script>
 
 <style lang="scss" global>

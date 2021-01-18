@@ -30,7 +30,7 @@
     "@deboxsoft/svelte-core": "canary",
     "@deboxsoft/svelte-forms": "canary",
     "@deboxsoft/svelte-icons": "^0.0.4",
-    "@deboxsoft/svelte-theme-limitless": "canary",
+    "@deboxsoft/svelte-theme-limitless": "^0.0.4",
     "@popperjs/core": "2.6.0",
     "@roxi/routify": "^2.9.0"
   },

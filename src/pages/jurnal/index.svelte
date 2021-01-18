@@ -4,7 +4,7 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import AddTaskRoundedIcon from "@deboxsoft/svelte-icons/AddTaskRounded.svelte";
-  import { getTransactionStore, fetchTransactionList } from "__@root/store/journal";
+  import { getTransactionStore, fetchTransactionList } from "__@root/stores/journal";
 
   fetchTransactionList();
   const transactionStore = getTransactionStore();

@@ -6,7 +6,7 @@ import { derived, writable } from "svelte/store";
 
 let accountStore: Writable<Account[]>;
 
-export const accountManager = createAccountingManager();
+export const accountManager = createAccountingManager({});
 
 export const getListAccountType = accountManager.listAccountType();
 

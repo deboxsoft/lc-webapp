@@ -3,7 +3,7 @@
   import Breadcrumb from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb.svelte";
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import ArrowForwardIcon from "@deboxsoft/svelte-icons/ArrowForwardOutlined.svelte";
-  import { getContext } from "__@root/store/ui";
+  import { getContext } from "__@root/stores/ui";
 
   const { toggleShowMobileSidebar } = getContext();
 </script>

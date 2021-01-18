@@ -129,7 +129,6 @@ export default [
         rollupWarn(warning);
       }
     },
-    external: ["tslib"],
     watch: {
       clearScreen: false,
       buildDelay: 100

@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
-  import { getContext } from "__@root/store/ui";
+  import { getContext } from "__@root/stores/ui";
 
   export let showToggleMenu: boolean = false;
 

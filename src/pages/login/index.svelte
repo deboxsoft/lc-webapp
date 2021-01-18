@@ -9,9 +9,9 @@
   import ArrowRightIcon from "@deboxsoft/svelte-icons/KeyboardArrowRight.svelte";
   import PersonIcon from "@deboxsoft/svelte-icons/PersonOutlined.svelte";
   import LockIcon from "@deboxsoft/svelte-icons/LockOutlined.svelte";
-  import { authStore } from "__@root/store/auth";
+  // import { authStore } from "__@root/stores/auth";
 
-  const { signin } = authStore;
+  const { login } = authStore;
   let formClass;
   let submitCount;
   let errors;
@@ -25,7 +25,7 @@
     formStore.updateField("username", { touched: true });
 
     await formStore.submit(async () => {
-      await signin();
+      await login();
     });
     submitCount = formStore.submitCount;
     errors = formStore.getErrors();
