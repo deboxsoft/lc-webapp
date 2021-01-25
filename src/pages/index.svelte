@@ -1,5 +1,4 @@
 <script lang="ts">
-  import AutoComplete from "../components/AutoComplete.svelte";
-</script>
+  import {page} from "@roxi/routify";
 
-<div class="card" />
+</script>

@@ -77,8 +77,10 @@ export default [
     },
     plugins: [
       replace({
-        "__@comps": path.resolve("src", "components"),
-        "__@root": path.resolve("src"),
+        "__@comps": path.join(__dirname, "src", "components"),
+        "__@modules": path.join(__dirname, "src", "modules"),
+        "__@stores": path.join(__dirname, "src", "stores"),
+        "__@root": path.join(__dirname, "src"),
         "process.env.DBX_ENV_GRAPHQL_URL": `"${process.env.DBX_ENV_GRAPHQL_URL}"`,
         "process.env.NODE_ENV": `"${production}"`
       }),

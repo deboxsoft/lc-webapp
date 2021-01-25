@@ -14,25 +14,27 @@
     "rollup": "rollup -cw",
     "nollup": "nollup -c",
     "routify": "routify",
-    "typecheck:lint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\"",
-    "typecheck:svelte": "svelte-check",
-    "typecheck:tsc": "tsc --noEmit",
-    "typecheck": "run-p typecheck:svelte"
+    "lint:eslint": "eslint --fix \"**/*.{ts,tsx,js,jsx}\"",
+    "lint:svelte": "svelte-check ./",
+    "lint:tsc": "tsc --noEmit",
+    "lint": "run-p lint:svelte lint:eslint lint:tsc"
   },
   "dependencies": {
-    "@deboxsoft/accounting-api": "^0.1.0-alpha.6",
-    "@deboxsoft/accounting-client": "^0.1.0-alpha.7",
+    "@deboxsoft/accounting-api": "^0.1.0-alpha.0",
+    "@deboxsoft/accounting-client": "^0.1.0-alpha.0",
     "@deboxsoft/module-client": "^1.5.19-0",
     "@deboxsoft/module-core": "^1.5.19-0",
     "@deboxsoft/module-graphql": "^1.5.19-0",
     "@deboxsoft/module-validation": "^1.0.4",
     "@deboxsoft/svelte-components-base": "^0.0.12",
     "@deboxsoft/svelte-core": "canary",
-    "@deboxsoft/svelte-forms": "canary",
+    "@deboxsoft/svelte-forms": "^0.0.3-6",
     "@deboxsoft/svelte-icons": "^0.0.4",
-    "@deboxsoft/svelte-theme-limitless": "^0.0.4",
+    "@deboxsoft/svelte-theme-limitless": "^0.0.5",
+    "@deboxsoft/users-api": "^1.2.1-1",
+    "@deboxsoft/users-client-svelte": "^1.2.1-1",
     "@popperjs/core": "2.6.0",
-    "@roxi/routify": "^2.9.0"
+    "@roxi/routify": "^2.10.1"
   },
   "devDependencies": {
     "@nurdiansyah/cpx": "1.5.0",

@@ -4,6 +4,8 @@
     "baseUrl": "./src",
     "paths": {
       "__@comps/*": ["components/*"],
+      "__@modules/*": ["modules/*"],
+      "__@stores/*": ["stores/*"],
       "__@root/*": ["*"]
     }
   },

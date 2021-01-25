@@ -1,11 +1,20 @@
 <script lang="ts">
+  import type { BreadcrumbItem } from "__@stores/breadcrumb";
+
   import { layout, url, page } from "@roxi/routify";
   import Breadcrumb from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb.svelte";
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import ArrowForwardIcon from "@deboxsoft/svelte-icons/ArrowForwardOutlined.svelte";
-  import { getContext } from "__@root/stores/ui";
+  import { getContext } from "__@stores/ui";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
+
+  export let breadcrumb: Partial<BreadcrumbItem> | Partial<BreadcrumbItem>[] | undefined = undefined;
 
   const { toggleShowMobileSidebar } = getContext();
+  const { setBreadcrumb, breadcrumbStore } = getBreadcrumbStore();
+  if (breadcrumb) {
+    setBreadcrumb(breadcrumb);
+  }
 </script>
 
 <style lang="scss" global>
@@ -29,7 +38,9 @@
       </h4>
       <slot name="header-elements" />
     </div>
-    <Breadcrumb itemList={[{ title: 'home', path: $url('/') }]} />
+    {#if $breadcrumbStore.length > 0}
+      <Breadcrumb itemList={$breadcrumbStore} />
+    {/if}
   </div>
 
   <div class="content py-0">

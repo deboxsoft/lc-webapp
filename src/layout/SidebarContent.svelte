@@ -10,10 +10,13 @@
   import BookIcon from "@deboxsoft/svelte-icons/BookOutlined.svelte";
   import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
   import LocalLibraryOutlinedIcon from "@deboxsoft/svelte-icons/LocalLibraryOutlined.svelte";
+  import { getAuthStore } from "__@stores/auth";
+
+  import { leftMenus as menus } from "__@root/stores/menus";
 
   let collapse: boolean = false;
 
-  export let profile: UserProfile = { name: "guest", role: "user" };
+  const { profile } = getAuthStore();
 </script>
 
 <style lang="scss" global>
@@ -42,7 +45,9 @@
 </div>
 
 {#if !collapse}
-  <SidebarUser {profile} />
+  {#if $profile}
+    <SidebarUser profile={{ name: $profile.username, role: "admin" }} />
+  {/if}
   <!-- Main navigation -->
   <div class="card-body p-0">
     <Accordion class="nav-sidebar">
@@ -56,23 +61,23 @@
         <span> Dashboard</span>
       </AccordionItem>
 
-      <!--      Data Master-->
-      <AccordionItem let:expanded={_expand} target="_self">
-        <Icon component={LocalLibraryOutlinedIcon} />
-        <span>Master Data</span>
-        <ul slot="menu" style={_expand ? 'display: block;' : ''} class="nav nav-group-sub" data-submenu-title="Akun">
-          <li class="nav-item"><a class="nav-link" href={$url('/master/account')}>Akun Perkiraan</a></li>
-        </ul>
-      </AccordionItem>
-
-      <!-- Jurnal -->
-      <AccordionItem let:expanded={_expand} target="_self">
-        <Icon component={BookIcon} />
-        <span>Jurnal</span>
-        <ul slot="menu" style={_expand ? 'display: block;' : ''} class="nav nav-group-sub" data-submenu-title="Jurnal">
-          <li class="nav-item"><a class="nav-link" href={$url('/jurnal')}>Jurnal Umum</a></li>
-        </ul>
-      </AccordionItem>
+      {#each menus as item}
+        <AccordionItem let:expanded={_expand} target="_self" hasChildren={!!item.children}>
+          {#if item.icon}
+            <Icon component={item.icon} />
+          {/if}
+          <span>{item.label}</span>
+          <ul
+            slot="menu"
+            style={_expand ? 'display: block;' : ''}
+            class="nav nav-group-sub"
+            data-submenu-title={item.label}>
+            {#each item.children as subItem}
+              <li class="nav-item"><a class="nav-link" href={$url(subItem.url)}>{subItem.label}</a></li>
+            {/each}
+          </ul>
+        </AccordionItem>
+      {/each}
     </Accordion>
   </div>
 {/if}
