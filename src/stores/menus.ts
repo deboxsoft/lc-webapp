@@ -1,11 +1,17 @@
-import type { SvelteComponent } from "svelte/internal";
+import type { SvelteComponentDev } from "svelte/internal";
+import InventoryIcon from "__@comps/icons/Journal.svelte";
+import TransactionIcon from "__@comps/icons/Transaction.svelte";
+import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
+import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";
+import BookIcon from "__@comps/icons/Book.svelte";
+import DashboardIcon from "__@comps/icons/Dashboard.svelte";
 
 export type MenuItem = {
   label?: string;
   url?: string;
   type?: "module" | "spacer" | "divider" | "menu" | "desc";
   children?: MenuItem[];
-  icon?: typeof SvelteComponent;
+  icon?: typeof SvelteComponentDev;
 };
 
 export type MenuList = MenuItem[];
@@ -14,6 +20,7 @@ export const leftMenus: MenuList = [
     label: "Pencatatan Transaksi",
     url: "/transaksi",
     type: "module",
+    icon: TransactionIcon,
     children: [
       {
         label: "Akun Perkiraan",
@@ -37,6 +44,7 @@ export const leftMenus: MenuList = [
     label: "Persediaan [add-on]",
     url: "/persediaan",
     type: "module",
+    icon: WarehouseIcon,
     children: [
       {
         label: "Stock In",
@@ -52,6 +60,7 @@ export const leftMenus: MenuList = [
     label: "Inventaris [add-on]",
     url: "/inventaris",
     type: "module",
+    icon: InventoryIcon,
     children: [
       {
         label: "Pencatatan Inventaris",
@@ -67,6 +76,7 @@ export const leftMenus: MenuList = [
     label: "Amortisasi [add-on]",
     url: "/amortisasi",
     type: "module",
+    icon: MoneyCheckAltIcon,
     children: [
       {
         label: "BDD Transaksi",
@@ -82,6 +92,7 @@ export const leftMenus: MenuList = [
     label: "Pengikhtisaran",
     url: "/pengikhtisaran",
     type: "module",
+    icon: BookIcon,
     children: [
       {
         label: "Laporan Laba Rugi",
@@ -98,9 +109,10 @@ export const leftMenus: MenuList = [
     ]
   },
   {
-    label: "Dashboard Pelaporan Keuangan",
+    label: "Pelaporan Keuangan",
     url: "/dashboard",
     type: "module",
+    icon: DashboardIcon,
     children: [
       {
         label: "Dashboard",
