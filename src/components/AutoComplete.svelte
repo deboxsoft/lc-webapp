@@ -1,4 +1,5 @@
-<script>
+<script lang="ts">
+  import { createEventDispatcher } from "svelte";
   // the list of items  the user can select from
   export let items = [];
   // field of each item that's used for the labels in the list
@@ -6,18 +7,21 @@
   export let keywordsFieldName = labelFieldName;
   export let valueFieldName = undefined;
   export let labelFunction = function (item) {
+    item = Array.isArray(item) && item.length > 0 ? item[1] : item;
     if (item === undefined || item === null) {
       return "";
     }
     return labelFieldName ? item[labelFieldName] : item;
   };
   export let keywordsFunction = function (item) {
+    item = Array.isArray(item) && item.length > 0 ? item[1] : item;
     if (item === undefined || item === null) {
       return "";
     }
     return keywordsFieldName ? item[keywordsFieldName] : labelFunction(item);
   };
   export let valueFunction = function (item) {
+    item = Array.isArray(item) && item.length > 0 ? item[1] : item;
     if (item === undefined || item === null) {
       return item;
     }
@@ -29,16 +33,16 @@
   export let textCleanFunction = function (userEnteredText) {
     return userEnteredText;
   };
-  export let searchFunction = false;
-  export let beforeChange = function (oldSelectedItem, newSelectedItem) {
-    return true;
-  };
-  export let onChange = function (newSelectedItem) {};
+  export let searchFunction: ((search?: any) => Promise<any>) | false = false;
+  export let beforeChange: (before?: any, after?: any) => boolean = () => true;
   export let selectFirstIfEmpty = false;
   export let minCharactersToSearch = 1;
   export let maxItemsToShowInList = 0;
   export let noResultsText = "No results found";
-  const uniqueId = "sautocomplete-" + Math.floor(Math.random() * 1000);
+
+  const uniqueId = "autocomplete-" + Math.floor(Math.random() * 1000);
+  const dispatch = createEventDispatcher();
+
   function safeStringFunction(theFunction, argument) {
     if (typeof theFunction !== "function") {
       console.error("Not a function: " + theFunction + ", argument: " + argument);
@@ -59,12 +63,9 @@
     return result;
   }
   function safeLabelFunction(item) {
-    // console.log("labelFunction: " + labelFunction);
-    // console.log("safeLabelFunction, item: " + item);
     return safeStringFunction(labelFunction, item);
   }
   function safeKeywordsFunction(item) {
-    // console.log("safeKeywordsFunction");
     const keywords = safeStringFunction(keywordsFunction, item);
     let result = safeStringFunction(keywordsCleanFunction, keywords);
     result = result.toLowerCase().trim();
@@ -80,7 +81,7 @@
   // apply a className to the input control
   export let inputClassName = undefined;
   // apply a id to the input control
-  export let inputId = undefined;
+  export let id = undefined;
   // generate an HTML input with this name, containing the current value
   export let name = undefined;
   // apply a className to the dropdown div
@@ -102,7 +103,7 @@
   function onSelectedItemChanged() {
     value = valueFunction(selectedItem);
     text = safeLabelFunction(selectedItem);
-    onChange(selectedItem);
+    dispatch("change", value);
   }
   $: selectedItem, onSelectedItemChanged();
   // HTML elements
@@ -113,8 +114,8 @@
   let highlightIndex = -1;
   $: showList = opened && ((items && items.length > 0) || filteredTextLength > 0);
   // view model
-  let filteredListItems;
-  let listItems = [];
+  let filteredListItems: Record<string, any>[];
+  let listItems: any[] = [];
   function prepareListItems() {
     let tStart;
     if (debug) {
@@ -213,13 +214,14 @@
       console.log("Search took " + (tEnd - tStart) + " milliseconds, found " + filteredListItems.length + " items");
     }
   }
-  // $: text, search();
+  $: text, search();
   function selectListItem(listItem) {
     if (debug) {
       console.log("selectListItem");
     }
     if ("undefined" === typeof listItem) {
       if (debug) {
+        // @ts-ignore
         console.log(`listItem ${i} is undefined. Can not select.`);
       }
       return false;
@@ -259,7 +261,7 @@
     if (debug) {
       console.log("highlight");
     }
-    const query = ".selected";
+    const query = ".-selected";
     if (debug) {
       console.log("Seaching DOM element: " + query + " in " + list);
     }
@@ -415,7 +417,7 @@
     }
     opened = false;
     if (!text && selectFirstIfEmpty) {
-      highlightFilter = 0;
+      // highlightFilter = 0;
       selectItem();
     }
   }
@@ -465,131 +467,140 @@
   }
 </script>
 
-<style>
-  .autocomplete {
+<style lang="scss" global>
+  .dbx-autocomplete {
     min-width: 200px;
     display: inline-block;
     max-width: 100%;
     position: relative;
     vertical-align: top;
-    height: 2.25em;
-  }
-  .autocomplete:not(.hide-arrow)::after {
-    border: 3px solid transparent;
-    border-radius: 2px;
-    border-right: 0;
-    border-top: 0;
-    content: " ";
-    display: block;
-    height: 0.625em;
-    margin-top: -0.4375em;
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-    -webkit-transform-origin: center;
-    transform-origin: center;
-    width: 0.625em;
-    border-color: #3273dc;
-    right: 1.125em;
-    z-index: 4;
-  }
-  .autocomplete.show-clear:not(.hide-arrow)::after {
-    right: 2.3em;
-  }
-  .autocomplete * {
-    box-sizing: border-box;
-  }
-  .autocomplete-input {
-    font: inherit;
     width: 100%;
-    height: 100%;
-    padding: 5px 11px;
-  }
-  .autocomplete:not(.hide-arrow) .autocomplete-input {
-    padding-right: 2em;
-  }
-  .autocomplete.show-clear:not(.hide-arrow) .autocomplete-input {
-    padding-right: 3.2em;
-  }
-  .autocomplete.hide-arrow.show-clear .autocomplete-input {
-    padding-right: 2em;
-  }
-  .autocomplete-list {
-    background: #fff;
-    position: relative;
-    width: 100%;
-    overflow-y: auto;
-    z-index: 99;
-    padding: 10px 0;
-    top: 0px;
-    border: 1px solid #999;
-    max-height: calc(15 * (1rem + 10px) + 15px);
-    user-select: none;
-  }
-  .autocomplete-list:empty {
-    padding: 0;
-  }
-  .autocomplete-list-item {
-    padding: 5px 15px;
-    color: #333;
-    cursor: pointer;
-    line-height: 1;
-  }
-  .autocomplete-list-item:hover,
-  .autocomplete-list-item.selected {
-    background-color: #2e69e2;
-    color: #fff;
-  }
-  .autocomplete-list-item-no-results {
-    padding: 5px 15px;
-    color: #999;
-    line-height: 1;
-  }
-  .autocomplete-list.hidden {
-    display: none;
-  }
-  .autocomplete.show-clear .autocomplete-clear-button {
-    cursor: pointer;
-    display: block;
-    text-align: center;
-    position: absolute;
-    right: 0.1em;
-    padding: 0.3em 0.6em;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    z-index: 4;
-  }
-  .autocomplete:not(.show-clear) .autocomplete-clear-button {
-    display: none;
+    height: calc(1.5385em + 0.875rem + 2px);
+
+    &:not(.-hide-arrow)::after {
+      border-radius: 2px;
+      content: " ";
+      display: block;
+      height: 0.625em;
+      margin-top: -0.4375em;
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+      -webkit-transform-origin: center;
+      transform-origin: center;
+      width: 0.625em;
+      border: 0 solid #3273dc;
+      border-bottom-width: 3px;
+      border-left-width: 3px;
+      right: 1.125em;
+      z-index: 4;
+    }
+    &.-show-clear:not(.-hide-arrow)::after {
+      right: 2.3em;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .autocomplete-input {
+      font: inherit;
+      width: 100%;
+      padding: 5px 11px;
+    }
+
+    &:not(.-hide-arrow) .autocomplete-input {
+      padding-right: 2em;
+    }
+    &.show-clear:not(.-hide-arrow) .autocomplete-input {
+      padding-right: 3.2em;
+    }
+    &.-hide-arrow.-show-clear .autocomplete-input {
+      padding-right: 2em;
+    }
+    .autocomplete-list {
+      background: #fff;
+      position: relative;
+      width: 100%;
+      overflow-y: auto;
+      z-index: 99;
+      padding: 10px 0;
+      top: 0;
+      border: 1px solid #999;
+      max-height: calc(15 * (1rem + 10px) + 15px);
+      user-select: none;
+    }
+
+    .autocomplete-list:empty {
+      padding: 0;
+    }
+
+    .autocomplete-list-item {
+      padding: 5px 15px;
+      color: #333;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .autocomplete-list-item:hover,
+    .autocomplete-list-item.-selected {
+      background-color: #2e69e2;
+      color: #fff;
+    }
+
+    .autocomplete-list-item-no-results {
+      padding: 5px 15px;
+      color: #999;
+      line-height: 1;
+    }
+    .autocomplete-list.-hidden {
+      display: none;
+    }
+    &.-show-clear .autocomplete-clear-button {
+      cursor: pointer;
+      display: block;
+      text-align: center;
+      position: absolute;
+      right: 0.1em;
+      padding: 0.3em 0.6em;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+      z-index: 4;
+    }
+    &:not(.-show-clear) .autocomplete-clear-button {
+      display: none;
+    }
   }
 </style>
 
 <div
   class="{className ? className : ''}
-  {hideArrow ? 'hide-arrow is-multiple' : ''}
-  {showClear ? 'show-clear' : ''} autocomplete select is-fullwidth {uniqueId}">
-  <input
-    type="text"
-    class="{inputClassName ? inputClassName : ''} input autocomplete-input"
-    id={inputId ? inputId : ''}
-    {placeholder}
-    {name}
-    {disabled}
-    {title}
-    bind:this={input}
-    bind:value={text}
-    on:input={onInput}
-    on:focus={onFocus}
-    on:keydown={onKeyDown}
-    on:click={onInputClick}
-    on:keypress={onKeyPress} />
+  {hideArrow ? '-hide-arrow is-multiple' : ''}
+  {showClear ? '-show-clear' : ''} dbx-autocomplete select is-fullwidth {uniqueId}">
+  <slot>
+    <input
+      type="text"
+      class="{inputClassName ? inputClassName : ''} input autocomplete-input"
+      {id}
+      {placeholder}
+      {name}
+      {disabled}
+      {title}
+      bind:this={input}
+      bind:value={text}
+      on:input={onInput}
+      on:focus={onFocus}
+      on:keydown={onKeyDown}
+      on:click={onInputClick}
+      on:keypress={onKeyPress} />
+  </slot>
   {#if showClear}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>{/if}
   <div
-    class="{dropdownClassName ? dropdownClassName : ''} autocomplete-list {showList ? '' : 'hidden'}
+    class="{dropdownClassName ? dropdownClassName : ''} autocomplete-list {showList ? '' : '-hidden'}
     is-fullwidth"
     bind:this={list}>
     {#if filteredListItems && filteredListItems.length > 0}
@@ -597,7 +608,7 @@
         {#if listItem && (maxItemsToShowInList <= 0 || i < maxItemsToShowInList)}
           {#if listItem}
             <div
-              class="autocomplete-list-item {i === highlightIndex ? 'selected' : ''}"
+              class="autocomplete-list-item {i === highlightIndex ? '-selected' : ''}"
               on:click={() => onListItemClick(listItem)}>
               {#if listItem.highlighted}
                 {@html listItem.highlighted.label}

@@ -42,7 +42,6 @@
   tabindex="-1"
   transition:fade={{ duration: 200 }}
   on:click={(e) => (open = false)}>
-  >
   <div class="modal-dialog" use:events {...$$restProps}>
     <slot />
   </div>

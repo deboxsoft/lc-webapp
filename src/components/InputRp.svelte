@@ -1,14 +1,17 @@
 <script lang="ts">
   import type { FieldStore } from "@deboxsoft/svelte-forms";
+  import type { FormStore } from "@deboxsoft/svelte-forms";
 
   import { getContext } from "@deboxsoft/svelte-forms/Form.svelte";
-  import { FormStore } from "@deboxsoft/svelte-forms";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import { createEventDispatcher, tick } from "svelte";
   import { useMask } from "@deboxsoft/svelte-core";
 
-  export let value;
-  export let name;
+  export let value: any = undefined;
+  export let name: string;
+  export let errors = undefined;
+  export let touched = false;
+  export let validate = undefined;
   export let fieldStore: FieldStore | undefined = undefined;
   let { class: className } = $$props;
 
@@ -28,7 +31,7 @@
   }
   $: _fieldStore = fieldStore || formStore?.getFieldStore(name);
   $: {
-    if ($_fieldStore.touched) {
+    if ($_fieldStore?.touched) {
       isValid = $_fieldStore?.errors?.length === 0;
       isInvalid = $_fieldStore?.errors?.length > 0;
     }
@@ -55,7 +58,7 @@
   function createBlurHandler() {
     const handleBlur = formStore?.handleBlur(name);
     return (e) => {
-      handleBlur() && handleBlur();
+      handleBlur && handleBlur();
       dispatch("blur", e);
     };
   }
@@ -80,13 +83,13 @@
   <input
     use:useMask={options}
     {...$$restProps}
+    {value}
     {name}
     class={classes}
     on:click
     on:keydown
     on:input
     on:change
-    on:search
     on:focus
     on:blur
     on:invalid
