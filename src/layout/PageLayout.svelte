@@ -8,7 +8,7 @@
   import { getContext } from "__@stores/ui";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
 
-  export let breadcrumb: Partial<BreadcrumbItem> | Partial<BreadcrumbItem>[] | undefined = undefined;
+  export let breadcrumb: BreadcrumbItem | BreadcrumbItem[] | undefined = undefined;
 
   const { toggleShowMobileSidebar } = getContext();
   const { setBreadcrumb, breadcrumbStore } = getBreadcrumbStore();
@@ -30,7 +30,7 @@
 
 <div class="content-wrapper">
   <div class="page-header .page-header-light">
-    <div class="page-header-content header-elements-inline">
+    <div class="mb-1 mt-2 page-header-content header-elements-inline">
       <h4>
         <!--          <Icon component={ArrowForwardIcon} />-->
         <span class="font-weight-semibold">{$layout.title} {($layout.title && $page.title && '-') || ''}</span>

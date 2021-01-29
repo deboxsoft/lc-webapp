@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { UserProfile } from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser";
+  // import type { UserProfile } from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser";
 
   import { url } from "@roxi/routify";
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
@@ -7,9 +7,9 @@
   import AccordionItem from "@deboxsoft/svelte-theme-limitless/components/AccordionItem.svelte";
   import SidebarUser from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser.svelte";
   import HomeIcon from "@deboxsoft/svelte-icons/HomeOutlined.svelte";
-  import BookIcon from "@deboxsoft/svelte-icons/BookOutlined.svelte";
+  // import BookIcon from "@deboxsoft/svelte-icons/BookOutlined.svelte";
   import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
-  import LocalLibraryOutlinedIcon from "@deboxsoft/svelte-icons/LocalLibraryOutlined.svelte";
+  // import LocalLibraryOutlinedIcon from "@deboxsoft/svelte-icons/LocalLibraryOutlined.svelte";
   import { getAuthStore } from "__@stores/auth";
 
   import { leftMenus as menus } from "__@root/stores/menus";
