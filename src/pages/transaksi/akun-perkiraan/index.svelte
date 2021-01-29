@@ -20,7 +20,7 @@
     <div class="card-header header-elements-inline">
       <h5 class="card-title">Akun Perkiraan</h5>
       <div class="header-elements">
-        <div class="list-icons"><a class="list-icons-item" data-action="reload" /></div>
+<!--        <div class="list-icons"><a class="list-icons-item" data-action="reload" /></div>-->
       </div>
     </div>
     <div class="card-body">
@@ -28,10 +28,10 @@
         <table class="table table-togglable table-hover">
           <thead>
             <tr>
-              <th class="fit" data-toggle="true">Kode</th>
+              <th style="width: 100px" data-toggle="true">Kode</th>
               <th>Nama</th>
-              <th class="fit">Tipe Akun</th>
-              <th class="fit" />
+              <th style="width: 200px">Tipe Akun</th>
+              <th class="text-center" style="width: 20px">#</th>
             </tr>
           </thead>
           <tbody>
