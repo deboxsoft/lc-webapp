@@ -7,17 +7,18 @@
   import { createEventDispatcher, tick } from "svelte";
   import { useMask } from "@deboxsoft/svelte-core";
 
+  const context = getContext();
   export let value: any = undefined;
   export let name: string;
   export let errors = undefined;
   export let touched = false;
   export let validate = undefined;
-  export let fieldStore: FieldStore | undefined = undefined;
+  export let fieldStore: FieldStore | null = null;
+  export let formStoreDisable: boolean = false;
+  export let formStore: FormStore | null = !formStoreDisable && context?.formStore;
   let { class: className } = $$props;
 
   // formStore handler
-  const context = getContext();
-  const formStore: FormStore | undefined = context?.formStore;
   let isValid: boolean = false;
   let isInvalid: boolean = false;
   let _fieldStore: FieldStore;
@@ -42,12 +43,8 @@
   let options = {
     mask: Number, // enable number mask
 
-    // other options are optional with defaults below
-    scale: 4, // digits after point, 0 for integers
-    signed: true, // disallow negative
+    signed: false, // disallow negative
     thousandsSeparator: ",", // any single char
-    padFractionalZeros: false, // if true, then pads zeros at end to the length of scale
-    normalizeZeros: true, // appends or removes zeros at ends
     radix: ",", // fractional delimiter
     mapToRadix: ["."] // symbols to process as radix
   };
@@ -64,19 +61,13 @@
   }
 
   function acceptHandler({ detail: imask }) {
-    value = imask.unmaskedValue;
+    value = parseInt(imask.unmaskedValue);
     tick().then(() => {
       imask.typedValue = value;
       formStore?.handleInput(name);
     });
   }
 </script>
-
-<style lang="scss" global>
-  .input-rp {
-    direction: rtl;
-  }
-</style>
 
 <div class="input-group">
   <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
