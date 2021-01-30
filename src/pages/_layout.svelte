@@ -17,7 +17,7 @@
 
   // context and store
   const { toggleShowMobileSidebar } = getContext();
-  const { authorize } = createAuthStore({ initial: { profile: { username: "Nurdiansyah" } } });
+  const { authorize } = createAuthStore({ initial: { profile: { username: "Nurdiansyah", id: "13" } } });
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
   const { accountService } = createApplicationContext();
   // init loading
@@ -33,11 +33,15 @@
   let loginPage = $layout.path === "/login";
 
   if (!loginPage) {
-    authorize().catch(() => $redirect(loginPage));
+    authorize().catch(() => $redirect("/login"));
   }
 </script>
 
 <style lang="scss" global>
+  .navbar.-background-blue {
+    background-color: #205081;
+  }
+
   .sidebar {
     .dbx-icon {
       margin-right: 1.25rem;
@@ -72,7 +76,7 @@
 {:else}
   <div class="main-layout">
     <!-- Navbar -->
-    <Navbar expand="md" isDark>
+    <Navbar class="-background-blue" expand="md" isDark>
       <div class="navbar-brand wmin-200"><a href={$url('/')} class="d-inline-block">LC | Accounting System</a></div>
       <div class="d-md-none">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
