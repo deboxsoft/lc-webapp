@@ -1,4 +1,5 @@
 import { stores, graphql } from "@deboxsoft/accounting-client";
+import { getTransactionType as _getTransactionType, TRANSACTION_TYPE } from "@deboxsoft/accounting-api";
 import { getApplicationContext } from "__@stores/app";
 import { getContext, setContext } from "svelte";
 
@@ -28,6 +29,8 @@ export const getTransactionContext = () => {
     findTransaction,
     findTransactionById,
     removeTransaction,
-    updateTransaction
+    updateTransaction,
+    getTransactionTypeList: () => Object.entries(TRANSACTION_TYPE),
+    getTransactionType: (key?: keyof typeof TRANSACTION_TYPE) => key && _getTransactionType(key)
   };
 };

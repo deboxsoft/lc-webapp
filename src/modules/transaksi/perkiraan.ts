@@ -44,6 +44,19 @@ export const getAccountContext = () => {
         });
         return account;
       });
+    },
+    getAccountByCode(code: string) {
+      return derived(accountStore, ($store) => {
+        let account;
+        $store.some((_) => {
+          if (code === _.code) {
+            account = _;
+            return true;
+          }
+          return false;
+        });
+        return account;
+      });
     }
   };
 };
