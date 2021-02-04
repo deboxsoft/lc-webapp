@@ -1,18 +1,16 @@
 <script>
-  export let viewBox = "0 0 24 24";
+  export let viewBox = "0 0 640 512";
 
   /**
    *
    * @type {string} [htmlColor]
    */
   export let htmlColor = undefined;
+  export let title = ''
+  const { class: className } = $$props;
 </script>
 
-<svg {...$$restProps} {viewBox} color={htmlColor} role="img">
-  <path d="M26 24h4v4h-4z" />
-  <path d="M19 17h4v4h-4z" />
-  <path d="M26 17h4v4h-4z" />
-  <path
-    d="M17 24H4V10h24v5h2v-5a2.002 2.002 0 0 0-2-2h-6V4a2.002 2.002 0 0 0-2-2h-8a2.002 2.002 0 0 0-2 2v4H4a2.002 2.002 0 0 0-2 2v14a2.002 2.002 0 0 0 2 2h13zM12 4h8v4h-8z" />
-  <title>Inventory</title>
+<svg {...$$restProps} {viewBox} color={htmlColor} role="img" class="dbx-icon -type-svg {className}">
+  <path d="M632 0h-16c-4.4 0-8 4.1-8 9.1V192h-64V48c0-8.8-7.2-16-16-16H368c-8.8 0-16 7.2-16 16v144H32V9.1c0-5-3.6-9.1-8-9.1H8C3.6 0 0 4.1 0 9.1V512h32v-32h576v32h32V9.1c0-5-3.6-9.1-8-9.1zM384 64h128v128H384V64zM256 448H128V320h128v128zm32 0V320h128v128H288zm320 0H448V304c0-8.8-7.2-16-16-16H112c-8.8 0-16 7.2-16 16v144H32V224h576v224z"/>
+  <title>{title}</title>
 </svg>
