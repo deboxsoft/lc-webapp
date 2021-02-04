@@ -19,17 +19,13 @@
   const { toggleShowMobileSidebar } = getContext();
   const { authorize } = createAuthStore({ initial: { profile: { username: "Nurdiansyah", id: "13" } } });
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
-  const { accountService } = createApplicationContext();
+  const { loadingApplication } = createApplicationContext();
   // init loading
   let loading = true;
 
-  async function init() {
-    const accountStore = await accountService.findAccount();
+  loadingApplication().then(() => {
     loading = false;
-  }
-
-  init();
-
+  })
   let loginPage = $layout.path === "/login";
 
   if (!loginPage) {
@@ -40,6 +36,12 @@
 <style lang="scss" global>
   .navbar.-background-blue {
     background-color: #205081;
+  }
+
+  .dbx-theme {
+    .dbx-icon {
+      font-size: 1rem;
+    }
   }
 
   .sidebar {
@@ -56,7 +58,7 @@
 
   .navbar-nav > .nav-item > .navbar-nav-link {
     > .dbx-icon {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
     }
   }
 

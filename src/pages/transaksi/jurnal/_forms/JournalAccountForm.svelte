@@ -5,19 +5,13 @@
   import type { Writable } from "svelte/store";
 
   import CellRp from "__@comps/CellRp.svelte";
-  import InputRp from "__@comps/InputRp.svelte";
-  import TrashIcon from "__@comps/icons/Trash.svelte";
   import ListPlusIcon from "__@comps/icons/ListPlus.svelte";
+  import CheckIcon from "__@comps/icons/Check.svelte";
+  import CloseIcon from "__@comps/icons/Close.svelte";
   import { url } from "@roxi/routify";
-  import Modal from "@deboxsoft/svelte-theme-limitless/components/Modal.svelte";
-  import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
-  import { getId } from "@deboxsoft/svelte-theme-limitless/utils";
-  import AutoComplete from "__@comps/AutoComplete.svelte";
   import { getAccountContext } from "__@modules/transaksi";
   import { convertToRp } from "__@root/utils";
-  import AccountDialog from "./AccountDialog.svelte";
-
-  const { accountStore } = getAccountContext();
+  import JournalAccountItemForm from "./JournalAccountItemForm.svelte";
 
   export let journalAccountsInput: Writable<JournalAccountInput[]>;
   export let formStore: FormStore;
@@ -40,16 +34,8 @@
         formStore.setValue("total", debit);
       }
     });
-    set({ debit, credit });
+    set({ debit, credit, diff: debit - credit });
   });
-
-  // handler
-  function accountSelectedHandler(index: number) {
-    return (e) => {
-      const accountId = e.detail;
-      $journalAccountsInput[index] = { ...$journalAccountsInput[index], ...{ accountId } };
-    };
-  }
 
   // function amountInputHandler(index: number) {
   //   return (e) => {
@@ -66,7 +52,9 @@
   }
 
   function removeAccountHandler(index: number) {
-    return () => {};
+    journalAccountsInput.update((_) => {
+      _.splice(index, 1);
+    });
   }
 
   function addAccountJournalHandler() {
@@ -94,48 +82,7 @@
       </thead>
       <tbody>
         {#each $journalAccountsInput as journalAccount, index}
-          <tr>
-            <td />
-            <td>
-              <AutoComplete
-                id={getId('autocomplete')}
-                inputClassName="form-control"
-                placeholder="Pilih Akun"
-                items={$accountStore || []}
-                on:change={accountSelectedHandler(index)}
-                labelFunction={(account) => account && `${account.code}  ${account.name}`}
-                valueFieldName="id"
-                keywordsFunction={(account) => account && `${account.code} ${account.name}`} />
-            </td>
-            <td>
-              <div class="uniform-checker" style="margin-left: auto; margin-right: auto;">
-                <span class:checked={journalAccount.isCredit}><input
-                    type="checkbox"
-                    class="form-check-input-styled"
-                    on:click={() => {
-                      journalAccount.isCredit = !journalAccount.isCredit;
-                    }}
-                    checked={journalAccount.isCredit} />
-                </span>
-              </div>
-            </td>
-            <td class="fit">
-              <InputRp
-                id="amount-{index}"
-                class="form-control"
-                name="amount"
-                bind:value={journalAccount.amount} />
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-outline btn-icon alpha-danger text-danger"
-                class:disabled={index < 2}
-                disabled={index < 2}>
-                <Icon component={TrashIcon} />
-              </button>
-            </td>
-          </tr>
+          <JournalAccountItemForm {journalAccount} {index} onRemoveAccount={removeAccountHandler} />
         {/each}
       </tbody>
     </table>
@@ -143,10 +90,21 @@
   <div class="card-footer d-flex">
     <div class="flex-grow-1">
       <button class="btn btn-light" on:click={addAccountJournalHandler}>
-        <Icon component={ListPlusIcon} class="mr-2" />
+        <ListPlusIcon class="mr-2" />
         Tambah Akun
       </button>
     </div>
+    {#if $total.debit > 0 || $total.credit > 0}
+      {#if $total.diff === 0}
+        <div class="text-success" style="width: 30px;">
+          <CheckIcon />
+        </div>
+      {:else}
+        <div class="text-danger" style="width: 30px;">
+          <CloseIcon />
+        </div>
+      {/if}
+    {/if}
     <div class="d-flex flex-column" style="width: 250px">
       <div class="d-flex">
         <span class="flex-grow-1">Total Debit: Rp.</span>
@@ -155,6 +113,10 @@
       <div class="d-flex">
         <span class="flex-grow-1">Total Kredit: Rp.</span>
         <span>{$total.credit ? convertToRp(parseInt($total.credit)) : '-'}</span>
+      </div>
+      <div class="d-flex" style="border-top: solid 1px gray">
+        <span class="flex-grow-1"> Selisih: Rp.</span>
+        <span>{$total.diff ? convertToRp(parseInt($total.diff)) : '-'}</span>
       </div>
     </div>
   </div>

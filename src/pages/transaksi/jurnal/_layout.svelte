@@ -1,3 +1,4 @@
+<!--routify:options title="Jurnal Umum"-->
 <script lang="ts">
   import { url } from "@roxi/routify";
   import { getBreadcrumbStore, BREADCRUMB_CONTEXT } from "__@stores/breadcrumb";

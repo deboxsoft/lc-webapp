@@ -1,3 +1,4 @@
+<!--routify:options title="Akun Perkiraan"-->
 <script lang="ts">
   import { url } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";

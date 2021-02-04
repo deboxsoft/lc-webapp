@@ -1,4 +1,5 @@
 <script lang="ts">
-  import {page} from "@roxi/routify";
+  import {page, redirect} from "@roxi/routify";
 
+  $redirect("/dashboard")
 </script>

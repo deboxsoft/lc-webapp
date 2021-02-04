@@ -1,11 +1,11 @@
-<!--routify:options title="Buku Besar"-->
+<!--routify:options title="Aktiva Tetap"-->
 <script lang="ts">
   import { url } from "@roxi/routify";
   import { getBreadcrumbStore, BREADCRUMB_CONTEXT } from "__@stores/breadcrumb";
   import { getContext } from "svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  setBreadcrumbContext({ path: $url("./"), title: "buku-besar" });
+  setBreadcrumbContext({ path: $url("./"), title: "aktiva tetap" });
 
 </script>
 <slot />

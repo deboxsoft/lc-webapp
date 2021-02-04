@@ -1,4 +1,4 @@
-<!--routify:options title="Buku Besar"-->
+<!--routify:options title="tabel"-->
 <script lang="ts">
   import { url, ready } from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";

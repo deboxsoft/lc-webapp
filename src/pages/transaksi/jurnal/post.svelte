@@ -1,21 +1,19 @@
-<!--routify:options title="Posting Transaksi Jurnal"-->
+<!--routify:options title="form"-->
 <script lang="ts">
   import type { Account, JournalAccount, JournalAccountInput, Transaction } from "@deboxsoft/accounting-api";
   import type { FieldState } from "@deboxsoft/svelte-forms";
 
+  import * as yup from "yup";
   import { url, params, ready, goto } from "@roxi/routify";
   import { input } from "sucrase/dist/parser/traverser/base";
   import { derived, writable } from "svelte/store";
-  import * as yup from "yup";
   import { FormStore } from "@deboxsoft/svelte-forms";
   import { getBreadcrumbStore, BREADCRUMB_CONTEXT } from "__@stores/breadcrumb";
-  import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import { getTransactionContext, getAccountContext } from "__@modules/transaksi";
   import { convertToRp } from "__@root/utils";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import JournalForm from "./_forms/JournalForm.svelte";
   import JournalAccountForm from "./_forms/JournalAccountForm.svelte";
-  import AccountDialogForm from "./_forms/AccountDialog.svelte";
   // icons
   import SaveIcon from "__@comps/icons/Save.svelte";
 
@@ -73,6 +71,10 @@
       }
     });
   }
+
+  function cancelHandler() {
+    $goto("./");
+  }
 </script>
 
 <PageLayout>
@@ -89,8 +91,11 @@
       <div class="card-footer d-flex">
         <div class="flex-grow-1">&nbsp;</div>
         <div>
-          <button class="btn btn-primary" on:click={saveHandler} disabled={loading}>
-            <Icon component={SaveIcon} class="mr-2" />
+          <button class="btn btn-outline bg-pink-400 text-pink-400 border-pink-400" on:click={cancelHandler}>
+            Cancel
+          </button>
+          <button class="btn btn-primary ml-1" on:click={saveHandler} disabled={loading}>
+            <SaveIcon class="mr-2" />
             Save
           </button>
         </div>

@@ -10,7 +10,7 @@
   import Form from "@deboxsoft/svelte-forms/Form.svelte";
   import InputField from "@deboxsoft/svelte-forms/InputField.svelte";
 
-  const { getTransactionTypeList, getTransactionType } = getTransactionContext();
+  const { getTransactionType, transactionTypeStore } = getTransactionContext();
 
   export let formStore: FormStore;
 
@@ -36,7 +36,7 @@
         on:change={transactionTypeHandler}
         inputClassName="form-control"
         selectedItem={getTransactionType($fieldTransactionTypeStore.value)}
-        items={getTransactionTypeList()}
+        items={$transactionTypeStore}
         placeholder="jenis transaksi"
         value=""
         valueFunction={(val) => {

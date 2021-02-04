@@ -1,6 +1,6 @@
 <script lang="ts">
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
-  import * as yup from "@deboxsoft/module-validation";
+  import * as yup from "yup";
   import { FormStore } from "@deboxsoft/svelte-forms";
   import Form from "@deboxsoft/svelte-forms/Form.svelte";
   import InputField from "@deboxsoft/svelte-forms/InputField.svelte";
@@ -11,7 +11,7 @@
   import LockIcon from "@deboxsoft/svelte-icons/LockOutlined.svelte";
   // import { authStore } from "__@root/stores/auth";
 
-  const { login } = authStore;
+  // const { login } = authStore;
   let formClass;
   let submitCount;
   let errors;
@@ -25,7 +25,7 @@
     formStore.updateField("username", { touched: true });
 
     await formStore.submit(async () => {
-      await login();
+      // await login();
     });
     submitCount = formStore.submitCount;
     errors = formStore.getErrors();
