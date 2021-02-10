@@ -6,7 +6,7 @@
   import Accordion from "@deboxsoft/svelte-theme-limitless/components/Accordion.svelte";
   import AccordionItem from "@deboxsoft/svelte-theme-limitless/components/AccordionItem.svelte";
   import SidebarUser from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser.svelte";
-  import HomeIcon from "@deboxsoft/svelte-icons/HomeOutlined.svelte";
+  import HomeIcon from "__@comps/icons/Home.svelte";
   // import BookIcon from "@deboxsoft/svelte-icons/BookOutlined.svelte";
   import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
   // import LocalLibraryOutlinedIcon from "@deboxsoft/svelte-icons/LocalLibraryOutlined.svelte";
@@ -32,14 +32,14 @@
     <div class="list-icons">
       <!-- svelte-ignore a11y-missing-content -->
       <!-- svelte-ignore a11y-invalid-attribute -->
-      <a
-        href="#"
-        on:click|preventDefault={() => {
-          collapse = !collapse;
-        }}
-        target="_self"
-        class="list-icons-item"
-        data-action="collapse">&nbsp;</a>
+<!--      <a-->
+<!--        href="#"-->
+<!--        on:click|preventDefault={() => {-->
+<!--          collapse = !collapse;-->
+<!--        }}-->
+<!--        target="_self"-->
+<!--        class="list-icons-item"-->
+<!--        data-action="collapse">&nbsp;</a>-->
     </div>
   </div>
 </div>

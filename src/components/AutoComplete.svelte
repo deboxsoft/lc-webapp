@@ -100,12 +100,12 @@
   export let value = undefined;
   let text;
   let filteredTextLength = 0;
-  function onSelectedItemChanged() {
-    value = valueFunction(selectedItem);
-    text = safeLabelFunction(selectedItem);
+  function onSelectedItemChanged(_selectedItem) {
+    value = valueFunction(_selectedItem);
+    text = safeLabelFunction(_selectedItem);
     dispatch("change", value);
   }
-  $: selectedItem, onSelectedItemChanged();
+  $: onSelectedItemChanged(selectedItem);
   // HTML elements
   let input;
   let list;

@@ -1,10 +1,10 @@
 import type { SvelteComponentDev } from "svelte/internal";
-import InventoryIcon from "__@comps/icons/Journal.svelte";
-import TransactionIcon from "__@comps/icons/Transaction.svelte";
+import InventoryIcon from "__@comps/icons/Inventory.svelte";
+import TransactionIcon from "__@comps/icons/Exchange.svelte";
 import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
 import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";
-import BookIcon from "__@comps/icons/Book.svelte";
-import DashboardIcon from "__@comps/icons/Dashboard.svelte";
+import LayerGroupIcon from "__@comps/icons/LayerGroup.svelte";
+import FileSpreadSheet from "__@comps/icons/FileSpreadsheet.svelte";
 
 export type MenuItem = {
   label?: string;
@@ -92,7 +92,7 @@ export const leftMenus: MenuList = [
     label: "Pengikhtisaran",
     url: "/pengikhtisaran",
     type: "module",
-    icon: BookIcon,
+    icon: LayerGroupIcon,
     children: [
       {
         label: "Laporan Laba Rugi",
@@ -110,17 +110,17 @@ export const leftMenus: MenuList = [
   },
   {
     label: "Pelaporan Keuangan",
-    url: "/dashboard",
+    url: "/laporan",
     type: "module",
-    icon: DashboardIcon,
+    icon: FileSpreadSheet,
     children: [
-      {
-        label: "Dashboard",
-        url: "/dashboard"
-      },
+      // {
+      //   label: "Dashboard",
+      //   url: "/dashboard"
+      // },
       {
         label: "Financial Report",
-        url: "/dashboard/financial"
+        url: "/laporan/financial"
       }
     ]
   }

@@ -1,8 +1,8 @@
 <!--routify:options title="dashboard"-->
 <script lang="ts">
   import PageLayout from "__@root/layout/PageLayout.svelte";
-
 </script>
+
 
 <PageLayout breadcrumb={[]}>
   <div class="row">

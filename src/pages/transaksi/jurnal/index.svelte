@@ -1,21 +1,16 @@
 <!--routify:options title="tabel"-->
 <script lang="ts">
-  import { url, ready } from "@roxi/routify";
+  import { url} from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import PlusIcon from "__@comps/icons/Plus.svelte"
-  import AddTaskRoundedIcon from "@deboxsoft/svelte-icons/AddTaskRounded.svelte";
-  import { getTransactionContext } from "__@modules/transaksi/jurnal";
-  import Table from "./_tables/Table.svelte";
+  import TableJournal from "./_tables/TableJournal.svelte";
 
-  const { transactionStore, findTransaction } = getTransactionContext();
-
-  findTransaction().then($ready);
 
 </script>
 
 <PageLayout breadcrumb={[]}>
   <div class="header-elements" slot="header-elements">
-    <a href={$url('./post')} class="btn bg-blue"><PlusIcon class="mr-2" />Tambah</a>
+    <a href={$url('./form')} class="btn bg-primary"><PlusIcon class="mr-2" />Tambah</a>
   </div>
   <!--  <ul slot="navbar-second" class="navbar-nav">-->
   <!--    <li class="nav-item">-->
@@ -32,7 +27,7 @@
     </div>
     <div class="card-body">
       <div class="dataTables_scrollBody">
-        <Table />
+        <TableJournal />
       </div>
     </div>
   </div>

@@ -5,7 +5,7 @@
   import { getContext } from "svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  setBreadcrumbContext({ path: $url("./"), title: "rekonsiliasi bank" });
+  setBreadcrumbContext({ path: $url("./"), title: "laba-rugi" });
 
 </script>
 <slot />

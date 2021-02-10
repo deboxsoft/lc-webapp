@@ -1,11 +1,11 @@
 <!--routify:options title="Buku Besar"-->
 <script lang="ts">
   import { url } from "@roxi/routify";
-  import { getBreadcrumbStore, BREADCRUMB_CONTEXT } from "__@stores/breadcrumb";
-  import { getContext } from "svelte";
+  import { getBreadcrumbStore} from "__@stores/breadcrumb";
+  import { createGeneralLedgerContext } from "__@modules/accounting";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "buku-besar" });
-
+  createGeneralLedgerContext();
 </script>
 <slot />

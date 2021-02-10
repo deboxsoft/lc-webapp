@@ -2,6 +2,7 @@
   import InputField from "@deboxsoft/svelte-forms/InputField.svelte";
   import { onMount, createEventDispatcher } from "svelte";
   import Flatpickr from "flatpickr";
+  import MonthSelectPlugin from "flatpickr/dist/plugins/monthSelect";
   import { Indonesian } from "flatpickr/dist/esm/l10n/id";
 
   const hooks = new Set([
@@ -18,20 +19,28 @@
   export let formattedValue: string = "";
   export let element: HTMLElement | null = null;
   export let options = {};
+  export let mode: "month-select" | undefined = undefined;
   export let input: any = undefined;
+  export let formStoreDisable: boolean = false;
 
-  let defaultOptions = { altInput: true, altFormat: "d-M-Y", locale: Indonesian, dateFormat: "Z" }
+  let defaultOptions = { altInput: true, altFormat: "d-M-Y", locale: Indonesian, dateFormat: "Z" };
   let flatPickr;
   onMount(() => {
     const elem = element || input;
-    flatPickr = Flatpickr(
-      elem,
-      {
-        ...defaultOptions,
-        ...addHooks(options),
-        ...(element ? { wrap: true } : {})
-      }
-    );
+    defaultOptions.plugins = [];
+    if (mode === "month-select") {
+      defaultOptions.plugins.push(
+        new MonthSelectPlugin({
+          shorthand: true,
+          dateFormat: defaultOptions.dateFormat
+        })
+      );
+    }
+    flatPickr = Flatpickr(elem, {
+      ...defaultOptions,
+      ...addHooks(options),
+      ...(element ? { wrap: true } : {})
+    });
     return () => {
       flatPickr.destroy();
     };
@@ -71,6 +80,90 @@
   }
 </script>
 
-<slot>
+<style global>
+  .flatpickr-monthSelect-months {
+    margin: 10px 1px 3px 1px;
+    flex-wrap: wrap;
+  }
+
+  .flatpickr-monthSelect-month {
+    background: none;
+    border: 0;
+    border-radius: 2px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #393939;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 400;
+    margin: 0.5px;
+    justify-content: center;
+    padding: 10px;
+    position: relative;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    text-align: center;
+    width: 33%;
+  }
+
+  .flatpickr-monthSelect-month.disabled {
+    color: #eee;
+  }
+
+  .flatpickr-monthSelect-month.disabled:hover,
+  .flatpickr-monthSelect-month.disabled:focus {
+    cursor: not-allowed;
+    background: none !important;
+  }
+
+  .flatpickr-monthSelect-theme-dark {
+    background: #3f4458;
+  }
+
+  .flatpickr-monthSelect-theme-dark .flatpickr-current-month input.cur-year {
+    color: #fff;
+  }
+
+  .flatpickr-monthSelect-theme-dark .flatpickr-months .flatpickr-prev-month,
+  .flatpickr-monthSelect-theme-dark .flatpickr-months .flatpickr-next-month {
+    color: #fff;
+    fill: #fff;
+  }
+
+  .flatpickr-monthSelect-theme-dark .flatpickr-monthSelect-month {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .flatpickr-monthSelect-month:hover,
+  .flatpickr-monthSelect-month:focus {
+    background: #e6e6e6;
+    cursor: pointer;
+    outline: 0;
+  }
+
+  .flatpickr-monthSelect-theme-dark .flatpickr-monthSelect-month:hover,
+  .flatpickr-monthSelect-theme-dark .flatpickr-monthSelect-month:focus {
+    background: #646c8c;
+    border-color: #646c8c;
+  }
+
+  .flatpickr-monthSelect-month.selected {
+    background-color: #569ff7;
+    color: #fff;
+  }
+
+  .flatpickr-monthSelect-theme-dark .flatpickr-monthSelect-month.selected {
+    background: #80cbc4;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    color: #fff;
+    border-color: #80cbc4;
+  }
+</style>
+
+{#if formStoreDisable}
+  <input bind:this={input} {...$$restProps} {value} />
+{:else}
   <InputField {value} bind:ref={input} {...$$restProps} />
-</slot>
+{/if}

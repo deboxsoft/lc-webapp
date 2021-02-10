@@ -1,19 +1,20 @@
 <!--routify:options title="tabel"-->
 <script lang="ts">
+  import {url} from "@roxi/routify"
+  import PlusIcon from "__@comps/icons/Plus.svelte";
   import PageLayout from "__@root/layout/PageLayout.svelte";
+  import TableReconciliation from "./_tables/TableReconciliation.svelte"
 
-  // import Dropzone from "__@comps/"
-  // .trim().replace(/\s+/g, ' ')
-  function fileChangeHandler(e) {
-    const file = e?.target?.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (_) => {
-        console.log(_.target.result);
-      };
-      reader.readAsText(file, "UTF-8");
-    }
-  }
+
 </script>
 
-<PageLayout breadcrumb={[]}><input type="file" on:change={fileChangeHandler} /></PageLayout>
+<PageLayout breadcrumb={[]}>
+  <div class="header-elements" slot="header-elements">
+    <a href={$url('./form')} class="btn bg-primary"><PlusIcon class="mr-2" />Tambah Akun Bank</a>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <TableReconciliation />
+    </div>
+  </div>
+</PageLayout>

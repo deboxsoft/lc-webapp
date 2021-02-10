@@ -1,30 +1,43 @@
 <!--routify:options title="tabel"-->
 <script lang="ts">
-  import { url, ready } from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
-  import AddTaskRoundedIcon from "@deboxsoft/svelte-icons/AddTaskRounded.svelte";
-  import { getTransactionContext } from "__@modules/transaksi/jurnal";
-  import Table from "./_tables/Table.svelte";
+  import TableBukuBesar from "./_tables/TableBukuBesar.svelte";
+  import { getGeneralLedgerContext, getAccountContext } from "__@modules/accounting";
+  import DatePickr from "__@comps/DatePickr.svelte";
+  import AutoComplete from "__@comps/Autocomplete.svelte";
 
-  const { transactionStore, findTransaction } = getTransactionContext();
+  const { findGeneralLedger } = getGeneralLedgerContext();
+  const { accountStore } = getAccountContext();
 
-  findTransaction().then($ready);
-
+  function accountChangeHandler() {}
 </script>
 
 <PageLayout>
-  <div class="header-elements" slot="header-elements">
-  </div>
+  <div class="header-elements" slot="header-elements" />
   <div class="card">
     <div class="card-header header-elements-inline">
       <h5 class="card-title">Buku Besar</h5>
       <div class="header-elements">
-        <!--        <div class="list-icons"><a class="list-icons-item" data-action="reload" /></div>-->
+        <div class="list-icons">
+          <AutoComplete
+            id="account"
+            name="account"
+            debug
+            on:change={accountChangeHandler}
+            inputClassName="form-control"
+            selectedItem={$accountStore.length > 0 && $accountStore[0]}
+            items={$accountStore}
+            keywordsFieldName="name"
+            labelFieldName="name" />
+          <DatePickr id="date" name="date" class="form-control" mode="month-select" placeholder="Tanggal" />
+          <a class="list-icons-item" data-action="reload" />
+        </div>
       </div>
     </div>
-    <div class="dataTables_scrollBody">
-      <Table />
+    <div class="card-body">
+      <div class="dataTables_scrollBody">
+        <TableBukuBesar />
+      </div>
     </div>
   </div>
 </PageLayout>

@@ -9,6 +9,7 @@
 
   const context = getContext();
   export let value: any = undefined;
+  export let signed: boolean = true;
   export let name: string;
   export let errors = undefined;
   export let touched = false;
@@ -22,7 +23,9 @@
   let isValid: boolean = false;
   let isInvalid: boolean = false;
   let _fieldStore: FieldStore;
+  let _key;
   let dispatch = createEventDispatcher();
+
 
   // register fieldState to fieldStore
   if (fieldStore) {
@@ -43,7 +46,7 @@
   let options = {
     mask: Number, // enable number mask
 
-    signed: false, // disallow negative
+    signed, // disallow negative
     thousandsSeparator: ",", // any single char
     radix: ",", // fractional delimiter
     mapToRadix: ["."] // symbols to process as radix
@@ -60,14 +63,22 @@
     };
   }
 
-  function acceptHandler({ detail: imask }) {
+  function acceptHandler(e) {
+    const imask = e.detail
     value = parseInt(imask.unmaskedValue);
     tick().then(() => {
       imask.typedValue = value;
       formStore?.handleInput(name);
+      dispatch("input", value)
     });
   }
 </script>
+
+<style lang="scss" global>
+  .input-rp {
+    text-align: right;
+  }
+</style>
 
 <div class="input-group">
   <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
@@ -79,12 +90,10 @@
     class={classes}
     on:click
     on:keydown
-    on:input
     on:change
     on:focus
     on:blur
     on:invalid
     on:accept={acceptHandler}
-    on:accept
     on:complete />
 </div>
