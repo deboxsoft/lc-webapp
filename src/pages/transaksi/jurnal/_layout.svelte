@@ -1,10 +1,16 @@
+<!--routify:options title="Jurnal Umum"-->
 <script lang="ts">
   import { url } from "@roxi/routify";
-  import { getBreadcrumbStore, BREADCRUMB_CONTEXT } from "__@stores/breadcrumb";
-  import { getContext } from "svelte";
+  import { getBreadcrumbStore} from "__@stores/breadcrumb";
+  import { createTransactionContext, getTransactionContext } from "__@modules/accounting";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-
+  createTransactionContext();
+  const { transactionStore, fetchTransaction } = getTransactionContext();
+  let loading = true;
+  fetchTransaction().then(() => {
+    loading = false;
+  });
 </script>
 <slot />

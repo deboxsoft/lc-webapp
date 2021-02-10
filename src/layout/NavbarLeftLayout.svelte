@@ -1,6 +1,5 @@
 <script lang="ts">
-  import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
-  import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
+  import MenuIcon from "__@comps/icons/Bars.svelte";
   import { getContext } from "__@root/stores/ui";
 
   export let showToggleMenu: boolean = false;
@@ -17,7 +16,7 @@
         on:click|preventDefault={toggleMinimizeSidebar}
         class="navbar-nav-link sidebar-control sidebar-main-toggle d-none d-md-block"
         target="_self">
-        <Icon component={MenuIcon} />
+        <MenuIcon />
       </a>
     </div>
   {/if}

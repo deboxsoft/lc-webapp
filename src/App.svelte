@@ -31,14 +31,6 @@
   setTimeout(() => window.routify.inBrowser);
 </script>
 
-<style lang="scss" global>
-  .table td.fit,
-  .table th.fit {
-    white-space: nowrap;
-    width: 1%;
-  }
-</style>
-
 <div use:BodyClass={$uiStore}>
   <Router {routes} />
 </div>

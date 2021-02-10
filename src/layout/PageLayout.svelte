@@ -3,13 +3,14 @@
 
   import { layout, url, page } from "@roxi/routify";
   import Breadcrumb from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb.svelte";
-  import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
-  import ArrowForwardIcon from "@deboxsoft/svelte-icons/ArrowForwardOutlined.svelte";
   import { getContext } from "__@stores/ui";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
+  import SkeletonPage from "__@comps/loader/skeleton/SkeletonPage.svelte";
+  import { getApplicationContext } from "__@modules/app";
 
-  export let breadcrumb: Partial<BreadcrumbItem> | Partial<BreadcrumbItem>[] | undefined = undefined;
+  export let breadcrumb: BreadcrumbItem | BreadcrumbItem[] | undefined = undefined;
 
+  const { loading } = getApplicationContext();
   const { toggleShowMobileSidebar } = getContext();
   const { setBreadcrumb, breadcrumbStore } = getBreadcrumbStore();
   if (breadcrumb) {
@@ -26,25 +27,58 @@
       font-size: inherit;
     }
   }
+
+  .dbx-theme {
+    .table td,
+    .table th {
+      padding: 0.5rem 0.75rem;
+    }
+  }
+
+  .page-header-content {
+    h4 {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
 </style>
 
 <div class="content-wrapper">
-  <div class="page-header .page-header-light">
-    <div class="page-header-content header-elements-inline">
-      <h4>
-        <!--          <Icon component={ArrowForwardIcon} />-->
-        <span class="font-weight-semibold">{$layout.title} {($layout.title && $page.title && '-') || ''}</span>
-        {($layout.title !== $page.title && `  ${$page.title}`) || ''}
-      </h4>
-      <slot name="header-elements" />
+  {#if $loading}
+    <SkeletonPage />
+  {:else}
+    <div class="page-header page-header-light">
+      {#if $breadcrumbStore.length > 0}
+        <Breadcrumb itemList={$breadcrumbStore} />
+      {/if}
+      <div class="mb-1 mt-1 page-header-content header-elements-inline">
+        <h4>
+          <span class="font-weight-semibold">{$layout.title} {($layout.title && $page.title && '-') || ''}</span>
+          {($layout.title !== $page.title && `  ${$page.title}`) || ''}
+        </h4>
+        <slot name="header-elements" />
+      </div>
+      {#if $$slots['navbar-second']}
+        <div class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="text-center d-lg-none w-100">
+            <button
+              type="button"
+              class="navbar-toggler dropdown-toggle"
+              data-toggle="collapse"
+              data-target="#navbar-second">
+              <i class="icon-unfold mr-2" />
+              navigation
+            </button>
+          </div>
+          <div class="navbar-collapse collapse" id="navbar-second">
+            <slot name="navbar-second" />
+          </div>
+        </div>
+      {/if}
     </div>
-    {#if $breadcrumbStore.length > 0}
-      <Breadcrumb itemList={$breadcrumbStore} />
-    {/if}
-  </div>
-
-  <div class="content py-0">
-    <slot />
-  </div>
+    <div class="content">
+      <slot />
+    </div>
+  {/if}
 </div>
 <!--  close page content-->

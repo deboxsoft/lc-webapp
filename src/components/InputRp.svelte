@@ -1,24 +1,31 @@
 <script lang="ts">
   import type { FieldStore } from "@deboxsoft/svelte-forms";
+  import type { FormStore } from "@deboxsoft/svelte-forms";
 
   import { getContext } from "@deboxsoft/svelte-forms/Form.svelte";
-  import { FormStore } from "@deboxsoft/svelte-forms";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import { createEventDispatcher, tick } from "svelte";
   import { useMask } from "@deboxsoft/svelte-core";
 
-  export let value;
-  export let name;
-  export let fieldStore: FieldStore | undefined = undefined;
+  const context = getContext();
+  export let value: any = undefined;
+  export let signed: boolean = true;
+  export let name: string;
+  export let errors = undefined;
+  export let touched = false;
+  export let validate = undefined;
+  export let fieldStore: FieldStore | null = null;
+  export let formStoreDisable: boolean = false;
+  export let formStore: FormStore | null = !formStoreDisable && context?.formStore;
   let { class: className } = $$props;
 
   // formStore handler
-  const context = getContext();
-  const formStore: FormStore | undefined = context?.formStore;
   let isValid: boolean = false;
   let isInvalid: boolean = false;
   let _fieldStore: FieldStore;
+  let _key;
   let dispatch = createEventDispatcher();
+
 
   // register fieldState to fieldStore
   if (fieldStore) {
@@ -28,7 +35,7 @@
   }
   $: _fieldStore = fieldStore || formStore?.getFieldStore(name);
   $: {
-    if ($_fieldStore.touched) {
+    if ($_fieldStore?.touched) {
       isValid = $_fieldStore?.errors?.length === 0;
       isInvalid = $_fieldStore?.errors?.length > 0;
     }
@@ -39,12 +46,8 @@
   let options = {
     mask: Number, // enable number mask
 
-    // other options are optional with defaults below
-    scale: 4, // digits after point, 0 for integers
-    signed: true, // disallow negative
+    signed, // disallow negative
     thousandsSeparator: ",", // any single char
-    padFractionalZeros: false, // if true, then pads zeros at end to the length of scale
-    normalizeZeros: true, // appends or removes zeros at ends
     radix: ",", // fractional delimiter
     mapToRadix: ["."] // symbols to process as radix
   };
@@ -55,23 +58,25 @@
   function createBlurHandler() {
     const handleBlur = formStore?.handleBlur(name);
     return (e) => {
-      handleBlur() && handleBlur();
+      handleBlur && handleBlur();
       dispatch("blur", e);
     };
   }
 
-  function acceptHandler({ detail: imask }) {
-    value = imask.unmaskedValue;
+  function acceptHandler(e) {
+    const imask = e.detail
+    value = parseInt(imask.unmaskedValue);
     tick().then(() => {
       imask.typedValue = value;
       formStore?.handleInput(name);
+      dispatch("input", value)
     });
   }
 </script>
 
 <style lang="scss" global>
   .input-rp {
-    direction: rtl;
+    text-align: right;
   }
 </style>
 
@@ -80,17 +85,15 @@
   <input
     use:useMask={options}
     {...$$restProps}
+    {value}
     {name}
     class={classes}
     on:click
     on:keydown
-    on:input
     on:change
-    on:search
     on:focus
     on:blur
     on:invalid
     on:accept={acceptHandler}
-    on:accept
     on:complete />
 </div>
