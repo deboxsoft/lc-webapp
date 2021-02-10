@@ -19,19 +19,31 @@ export const createReconciliationContext = () => {
 export const getReconciliationContext = () => {
   const {
     bankReconciliationStore,
+    bankAccountImportHistoryStore,
+    statementBankStore,
     createBankReconciliation,
+    createStatementBankImport,
     updateBankReconciliation,
     removeBankReconciliation,
     findBankReconciliation,
-    findBankReconciliationById
+    findBankReconciliationById,
+    findStatementBank,
+    findAccountBankImportHistory,
+    fetchMoreBankReconciliation
   } = getContext<stores.BankStoreService>(KEY);
   return {
     bankReconciliationStore,
+    bankAccountImportHistoryStore,
+    statementBankStore,
+    createStatementBankImport,
     createBankReconciliation,
     updateBankReconciliation,
     removeBankReconciliation,
     findBankReconciliation,
     findBankReconciliationById,
+    findStatementBank,
+    findAccountBankImportHistory,
+    fetchMoreBankReconciliation,
     getReconciliation: (id: string) => {
       return derived(bankReconciliationStore, (_reconciliationStore = []) => {
         const i = _reconciliationStore.findIndex((_) => _.id === id);

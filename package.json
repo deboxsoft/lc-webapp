@@ -78,7 +78,7 @@
     "prettier": "^2.2.1",
     "prettier-plugin-svelte": "^1.0.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.35.1",
+    "rollup": "^2.38.0",
     "rollup-plugin-hot": "^0.1.1",
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte-hot": "^0.13.0",

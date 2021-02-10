@@ -1,5 +1,5 @@
 const sveltePreprocess = require("svelte-preprocess");
-
+const componentBaseResolve = require.resolve("@deboxsoft/svelte-components-base");
 const createPreprocess = (options) => {
   const scss = options.scss || {};
   return sveltePreprocess({
@@ -19,7 +19,7 @@ const createPreprocess = (options) => {
 };
 const preprocess = createPreprocess({
   scss: {
-    includePaths: ["./node_modules/@deboxsoft/svelte-components-base"]
+    includePaths: [componentBaseResolve]
   }
 });
 module.exports = {
