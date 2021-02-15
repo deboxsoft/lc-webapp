@@ -1,10 +1,9 @@
 <!--routify:options title="tabel"-->
 <script lang="ts">
-  import {url} from "@roxi/routify"
+  import { url } from "@roxi/routify";
   import PlusIcon from "__@comps/icons/Plus.svelte";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import TableReconciliation from "./_tables/TableReconciliation.svelte"
-
+  import Table from "./_comps/TableReconciliation.svelte";
 
 </script>
 
@@ -14,7 +13,7 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <TableReconciliation />
+      <Table />
     </div>
   </div>
 </PageLayout>

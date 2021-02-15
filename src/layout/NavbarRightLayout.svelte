@@ -1,5 +1,5 @@
 <script lang="ts">
-  import UserNavbarItem from "@deboxsoft/svelte-theme-limitless/navigation/UserNavbarItem.svelte";
+  import UserNavbarItem from "./UserNavbarItem.svelte";
   import { getAuthStore } from "__@stores/auth";
 
   const { profile } = getAuthStore();

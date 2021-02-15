@@ -12,6 +12,7 @@
       <th class="d-none d-lg-table-cell" style="width: 150px;">No</th>
       <th class="d-none d-xl-table-cell" style="width: 150px;">No Transaksi</th>
       <th class="text-center" style="width: 150px">Tanggal</th>
+      <th class="text-center" style="width: 150px">Akun</th>
       <th>Deskripsi</th>
       <th class="text-center" style="width: 200px;">Total</th>
     </tr>

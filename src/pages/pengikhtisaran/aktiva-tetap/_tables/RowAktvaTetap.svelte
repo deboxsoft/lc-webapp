@@ -4,7 +4,7 @@
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import { getAccountContext } from "__@modules/transaksi/perkiraan";
   import { convertToRp } from "__@root/utils";
-  import CellAccount from "../../akun-perkiraan/_tables/CellAccount.svelte";
+  import CellAccount from "__@comps/account/CellAccount.svelte";
 
   const { getAccount } = getAccountContext();
 

@@ -3,10 +3,7 @@
   import { getReconciliationContext } from "__@modules/accounting";
 
   const { bankReconciliationStore, findBankReconciliation } = getReconciliationContext();
-  let loading = false;
-  findBankReconciliation().then(result => {
-    loading = true;
-  })
+
 </script>
 
 <table class="table table-togglable table-hover datatable-responsive-row-control dtr-column dataTable" role="grid">

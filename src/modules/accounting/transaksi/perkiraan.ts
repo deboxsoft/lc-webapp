@@ -40,20 +40,19 @@ export const getAccountContext = () => {
     getAccount: (id: string) => {
       return derived(accountStore, ($store = []) => {
         const i = $store.findIndex((_) => _.id === id);
-        console.log(i);
-        return $store[i];
+        return $store[i] || {};
       });
     },
     getAccountByCode: (code: string) => {
       return derived(accountStore, ($store = []) => {
         const i = $store.findIndex((_) => _.code === code);
-        return $store[i];
+        return $store[i] || {};
       });
     },
     getAccountType: (code: string) => {
       const accountTypeList = get(accountTypeStore);
       const i = accountTypeList.findIndex((_) => _.code === code);
-      return accountTypeList[i];
+      return accountTypeList[i] || {};
     }
   };
 };

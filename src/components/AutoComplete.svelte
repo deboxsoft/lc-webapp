@@ -36,6 +36,7 @@
   export let searchFunction: ((search?: any) => Promise<any>) | false = false;
   export let beforeChange: (before?: any, after?: any) => boolean = () => true;
   export let selectFirstIfEmpty = false;
+  export let pristineValue: any = undefined;
   export let minCharactersToSearch = 1;
   export let maxItemsToShowInList = 0;
   export let noResultsText = "No results found";
@@ -136,6 +137,13 @@
           console.log("Undefined item for: ", item);
         }
         listItems[i] = listItem;
+        const __value = pristineValue;
+        const _item = listItem.item;
+        if ((__value && valueFieldName) && _item[valueFieldName] === __value) {
+          onSelectedItemChanged(_item);
+        } else if(_item === __value) {
+          onSelectedItemChanged(_item)
+        }
       });
     }
     if (debug) {
@@ -206,8 +214,7 @@
       return matches >= searchWords.length;
     });
     const hlfilter = highlightFilter(textFiltered, ["label"]);
-    const filteredListItemsHighlighted = tempfilteredListItems.map(hlfilter);
-    filteredListItems = filteredListItemsHighlighted;
+    filteredListItems = tempfilteredListItems.map(hlfilter);
     closeIfMinCharsToSearchReached();
     if (debug) {
       const tEnd = performance.now();
@@ -581,7 +588,6 @@
   class="{className ? className : ''}
   {hideArrow ? '-hide-arrow is-multiple' : ''}
   {showClear ? '-show-clear' : ''} dbx-autocomplete select is-fullwidth {uniqueId}">
-  <slot>
     <input
       type="text"
       class="{inputClassName ? inputClassName : ''} input autocomplete-input"
@@ -597,7 +603,6 @@
       on:keydown={onKeyDown}
       on:click={onInputClick}
       on:keypress={onKeyPress} />
-  </slot>
   {#if showClear}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>{/if}
   <div
     class="{dropdownClassName ? dropdownClassName : ''} autocomplete-list {showList ? '' : '-hidden'}
@@ -630,6 +635,7 @@
       <div class="autocomplete-list-item-no-results">{noResultsText}</div>
     {/if}
   </div>
+  <slot />
 </div>
 
 <svelte:window on:click={onDocumentClick} />

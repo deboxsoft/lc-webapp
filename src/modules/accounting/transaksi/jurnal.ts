@@ -1,7 +1,7 @@
 import { stores, graphql } from "@deboxsoft/accounting-client";
 import { getApplicationContext } from "__@modules/app";
 import { getContext, setContext } from "svelte";
-import { get } from "svelte/store";
+import { derived, get } from "svelte/store";
 
 const KEY = {};
 export const createTransactionContext = (): stores.TransactionStoreService => {
@@ -39,10 +39,17 @@ export const getTransactionContext = () => {
     findTransactionById,
     removeTransaction,
     updateTransaction,
+    getTransaction: (id) => {
+      return derived(transactionStore, ($transactionStore) => {
+        const i = $transactionStore.findIndex((_) => _.id === id);
+        return i && $transactionStore[i];
+      });
+    },
     getTransactionType: (code: String) => {
-      const transactionTypeList = get(transactionTypeStore);
-      const i = transactionTypeList.findIndex((_) => _.code === code);
-      return transactionTypeList[i];
+      return derived(transactionTypeStore, ($transactionTypeStore) => {
+        const i = $transactionTypeStore.findIndex((_) => _.code === code);
+        return $transactionTypeStore[i];
+      });
     }
   };
 };

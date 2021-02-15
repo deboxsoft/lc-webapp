@@ -6,7 +6,8 @@
       "__@comps/*": ["components/*"],
       "__@modules/*": ["modules/*"],
       "__@stores/*": ["stores/*"],
-      "__@root/*": ["*"]
+      "__@root/*": ["*"],
+      "@deboxsoft/zod/*": [".yarn/cache/@deboxsoft/zod/*"]
     }
   },
   "include": ["src", "types.d.ts"]

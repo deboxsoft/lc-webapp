@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Transaction, Account } from "@deboxsoft/accounting-api";
+  import type { Account } from "@deboxsoft/accounting-api";
   import type { FormStore } from "@deboxsoft/svelte-forms";
 
   import Flatpickr from "flatpickr";

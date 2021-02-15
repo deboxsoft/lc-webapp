@@ -1,5 +1,4 @@
 <script lang="ts">
-  import InputField from "@deboxsoft/svelte-forms/InputField.svelte";
   import { onMount, createEventDispatcher } from "svelte";
   import Flatpickr from "flatpickr";
   import MonthSelectPlugin from "flatpickr/dist/plugins/monthSelect";
@@ -21,7 +20,6 @@
   export let options = {};
   export let mode: "month-select" | undefined = undefined;
   export let input: any = undefined;
-  export let formStoreDisable: boolean = false;
 
   let defaultOptions = { altInput: true, altFormat: "d-M-Y", locale: Indonesian, dateFormat: "Z" };
   let flatPickr;
@@ -80,7 +78,7 @@
   }
 </script>
 
-<style global>
+<style lang="scss" global>
   .flatpickr-monthSelect-months {
     margin: 10px 1px 3px 1px;
     flex-wrap: wrap;
@@ -162,8 +160,5 @@
   }
 </style>
 
-{#if formStoreDisable}
-  <input bind:this={input} {...$$restProps} {value} />
-{:else}
-  <InputField {value} bind:ref={input} {...$$restProps} />
-{/if}
+<input bind:this={input} {...$$restProps} {value} >
+<slot />

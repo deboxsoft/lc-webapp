@@ -22,7 +22,6 @@
           <AutoComplete
             id="account"
             name="account"
-            debug
             on:change={accountChangeHandler}
             inputClassName="form-control"
             selectedItem={$accountStore.length > 0 && $accountStore[0]}

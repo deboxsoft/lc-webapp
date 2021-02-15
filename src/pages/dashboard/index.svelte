@@ -8,7 +8,6 @@
   <div class="row">
     <div class="col-4">
       <div class="card" style="height: 250px">
-
       </div>
     </div>
     <div class="col-4">

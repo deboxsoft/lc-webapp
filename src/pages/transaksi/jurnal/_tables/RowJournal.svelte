@@ -1,9 +1,14 @@
 <script lang="ts">
   import type { Transaction } from "@deboxsoft/accounting-api";
-  import {lightFormat, parseISO} from "date-fns"
+
+  import { get } from "svelte/store";
+  import { lightFormat, parseISO } from "date-fns";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import CellRp from "__@comps/CellRp.svelte";
   import RowJournalAccount from "./RowJournalAccount.svelte";
+  import { getAccountContext } from "__@modules/accounting";
+
+  const { getAccount } = getAccountContext();
 
   export let journal: Transaction;
   // export let index: number;
@@ -19,21 +24,21 @@
     on:click|stopPropagation={() => {
       expanded = !expanded;
     }} />
-  <td class="d-none d-lg-table-cell">{journal.noJournal || ""}</td>
-  <td class="d-none d-xl-table-cell">{journal.noTransaction|| ""}</td>
-  <td class="text-center">{lightFormat((parseISO(journal.date)), "dd-MM-yyyy") || ""}</td>
-  <td>{journal.description || ""}</td>
-  <td><CellRp value={journal.total || ""} /></td>
+  <td class="d-none d-lg-table-cell">{journal.noJournal || ''}</td>
+  <td class="d-none d-xl-table-cell">{journal.noTransaction || ''}</td>
+  <td class="text-center">{lightFormat(parseISO(journal.date), 'dd-MM-yyyy') || ''}</td>
+  <td class="text-center">{get(getAccount(journal.accountId))?.name || ''}</td>
+  <td>{journal.description || ''}</td>
+  <td>
+    <CellRp value={journal.total || ''} />
+  </td>
 </tr>
 {#if expanded}
   <tr class="child d-xl-none">
     <td class="child d-table-cell" colspan="10">
       <ul class="dtr-details">
         <li class="d-lg-none"><span class="dtr-title">No</span> <span class="dtr-data">{journal.noJournal}</span></li>
-        <li>
-          <span class="dtr-title">No Transaksi</span>
-          <span class="dtr-data">{journal.noTransaction || ""}</span>
-        </li>
+        <li><span class="dtr-title">No Transaksi</span> <span class="dtr-data">{journal.noTransaction || ''}</span></li>
       </ul>
     </td>
   </tr>
@@ -49,7 +54,7 @@
         </thead>
         <tbody>
           {#each journal.accounts as journalAccount}
-            <RowJournalAccount journalAccount={journalAccount} />
+            <RowJournalAccount {journalAccount} />
           {/each}
         </tbody>
       </table>

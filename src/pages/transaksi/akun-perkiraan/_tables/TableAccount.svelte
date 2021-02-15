@@ -29,7 +29,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each $accountStore as account}
+    {#each $accountStore as account (account.id)}
       <tr>
         <td>{account.code || ''}</td>
         <td>{account.name || ''}</td>
