@@ -1,11 +1,12 @@
 <script lang="ts">
-  import type { StatementBankInput } from "@deboxsoft/accounting-api";
-
   import DropZone from "svelte-file-dropzone/src/components/Dropzone.svelte";
   import { writable } from "svelte/store";
   import { getStoreContext } from "../_store";
+  import csvUtils from "papaparse";
+  import {getApplicationContext} from "__@modules/app"
 
   const { bankReconciliation, fileDataImport } = getStoreContext();
+  const {notify} = getApplicationContext();
 
   export let fileLoaded;
   const split = ";"
@@ -25,19 +26,21 @@
   }
   function processRawCSV(data) {
     const output = [];
-    const rows = data.split("\n");
-    rows.forEach((row) => {
-      const cells = row.split(split);
-      const statement: StatementBankInput = {
-        date: cells[0],
-        description: _sanitizeString(`${cells[1]}`),
-        in: _sanitizeNumber(cells[2]),
-        out: _sanitizeNumber(cells[3]),
-        balance: _sanitizeNumber(cells[4])
-      }
-      output.push(statement);
+    const {result, error } = csvUtils.parse(data, {
+      transform: (_cells) => ({
+        date: _cells[0],
+        description: _sanitizeString(`${_cells[1]}`),
+        in: _sanitizeNumber(_cells[2]),
+        out: _sanitizeNumber(_cells[3]),
+        balance: _sanitizeNumber(_cells[4])
+      })
     });
-    return output;
+    if (Array.isArray(error)) {
+      notify("parsing csv error: " + error[0].message, "error");
+      return [];
+    } else {
+      return result;
+    }
   }
 
   function handleFileSelect(e) {
