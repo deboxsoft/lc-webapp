@@ -17,8 +17,6 @@
     accountId: "",
     nameAccountBank: ""
   };
-  export let bankId: string = $params.id;
-  const reconciliation = getReconciliation(bankId);
   let loading: boolean = false;
 
   async function submitHandler({ detail: values }) {

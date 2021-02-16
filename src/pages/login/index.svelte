@@ -1,6 +1,5 @@
 <script lang="ts">
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
-  import * as yup from "yup";
   import { FormStore } from "@deboxsoft/svelte-forms";
   import Form from "@deboxsoft/svelte-forms/Form.svelte";
   import InputField from "@deboxsoft/svelte-forms/InputField.svelte";
@@ -17,8 +16,8 @@
   let errors;
   let formStore: FormStore;
   const validation = {
-    username: (value: any) => yup.string().required().min(5).validate(value),
-    password: (value: any) => yup.string().required().min(5).validate(value)
+    // username: (value: any) => yup.string().required().min(5).validate(value),
+    // password: (value: any) => yup.string().required().min(5).validate(value)
   };
 
   async function submitHandler() {
