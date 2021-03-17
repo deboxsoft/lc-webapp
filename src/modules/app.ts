@@ -34,7 +34,6 @@ export const createApplicationContext = () => {
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   // register service
   const accountService = createAccountContext({ fetch, notify, env, loading });
-  createGeneralLedgerContext({ fetch, notify, env });
   const fetchAccounting = accountService.load();
   return Promise.all([fetchAccounting]).then(() => {
     loading.update(() => false);

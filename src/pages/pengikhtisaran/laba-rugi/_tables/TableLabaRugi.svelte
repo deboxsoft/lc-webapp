@@ -1,25 +1,82 @@
 <script lang="ts">
-  import Row from "./RowLabaRugi.svelte";
-  import { getReconciliationContext } from "__@modules/transaksi";
+  import { labaRugiParsingUtils } from "__@root/utils";
 
-  const { bankReconciliationStore } = getReconciliationContext();
+  import CellRp from "__@comps/CellRp.svelte";
+  import Row from "./RowLabaRugi.svelte";
+  import { getGeneralLedgerContext, getAccountContext } from "__@modules/accounting";
+
+  const { balanceSheetStore } = getGeneralLedgerContext();
+  const { accountTypeStore, accountStore } = getAccountContext();
+
+  let dataList;
+  let getDataLabaRugi = labaRugiParsingUtils({ accounts: $accountStore, accountsType: $accountTypeStore });
+  $: {
+    dataList = getDataLabaRugi($balanceSheetStore);
+    console.log(dataList);
+  }
 </script>
 
-<table class="table table-togglable table-hover datatable-responsive-row-control dtr-column dataTable" role="grid">
+<table class="table text-nowrap">
   <thead>
     <tr role="row">
-      <th class="control sorting_disabled d-table-cell">Bank</th>
-      <th class="d-none d-lg-table-cell">Akun Bank</th>
-      <th class="d-none d-xl-table-cell">Akun Perkiraan</th>
-      <th class="text-center">Saldo Bank</th>
-      <th class="text-center" >Saldo Akun</th>
-      <th class="text-center" >Status</th>
-      <th class="text-center" style="width: 30px;">#</th>
+      <th>Akun</th>
+      <th class="text-center" colspan="2">Saldo</th>
     </tr>
   </thead>
   <tbody>
-    {#each $bankReconciliationStore as bankReconciliation}
-      <Row expanded={false} {bankReconciliation} />
+    {#each dataList.pendapatan.items as itemSaldo}
+      <Row {itemSaldo} />
     {/each}
+    <tr class="table-active table-border-double">
+      <td>Pendapatan</td>
+      <td class="text-right" style="width: 200px">
+        <CellRp value={dataList.pendapatan.sum} />
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+    {#each dataList.pendapatanLain.items as itemSaldo}
+      <Row {itemSaldo} />
+    {/each}
+    <tr class="table-active table-border-double">
+      <td>Pendapatan Lain</td>
+      <td class="text-right">
+        <CellRp value={dataList.pendapatanLain.sum} />
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr class="table-active table-border-double font-weight-bold">
+      <td>Total Pendapatan</td>
+      <td>&nbsp;</td>
+      <td class="text-right">
+        <CellRp value={dataList.pendapatan.sum + dataList.pendapatanLain.sum} />
+      </td>
+    </tr>
+    {#each dataList.beban.items as itemSaldo}
+      <Row {itemSaldo} />
+    {/each}
+    <tr class="table-active table-border-double">
+      <td>Beban</td>
+      <td class="text-right">
+        <CellRp value={dataList.beban.sum} />
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+    {#each dataList.bebanLain.items as itemSaldo}
+      <Row {itemSaldo} />
+    {/each}
+    <tr class="table-active table-border-double">
+      <td>Beban Lain</td>
+      <td class="text-right">
+        <CellRp value={dataList.bebanLain.sum} />
+      </td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr class="table-active table-border-double font-weight-bold">
+      <td>Total Beban</td>
+      <td>&nbsp;</td>
+      <td class="text-right">
+        <CellRp value={dataList.beban.sum + dataList.bebanLain.sum} />
+      </td>
+    </tr>
   </tbody>
 </table>

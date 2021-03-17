@@ -1,30 +1,19 @@
 <script lang="ts">
-  import type { BankReconciliation } from "@deboxsoft/accounting-api";
-  // import { lightFormat, parseISO } from "date-fns";
+  import type { ItemSaldo } from "__@root/utils";
+
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
-  import { getAccountContext } from "__@modules/transaksi/perkiraan";
-  import { convertToRp } from "__@root/utils";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
+  import CellRp from "__@comps/CellRp.svelte";
 
-  const { getAccount } = getAccountContext();
-
-  export let bankReconciliation: BankReconciliation;
-  // export let index: number;
-  export let expanded: boolean = false;
-
+  export let itemSaldo: ItemSaldo;
+  console.log(itemSaldo);
   let classes = "";
-  const account = getAccount(bankReconciliation.accountId);
-  $: classes = clsx("odd", expanded && "parent");
+  $: classes = clsx("odd");
 </script>
 
-<tr class={classes} style="cursor: pointer" on:click>
-  <td class="control d-table-cell">{bankReconciliation.bank || ''}</td>
-  <td class="d-none d-lg-table-cell">{bankReconciliation.accountBank || ''}</td>
-  <td class="d-none d-xl-table-cell">
-    <CellAccount />
+<tr class={classes}>
+  <td class="d-none d-xl-table-cell">{itemSaldo.name}</td>
+  <td class="text-right">
+    <CellRp value={itemSaldo.amount} />
   </td>
-  <td>{convertToRp(bankReconciliation.balance)}</td>
-  <td>{convertToRp($account.total)}</td>
-  <td>Unreconciled</td>
-  <td>{''}</td>
+  <td style="width: 200px">&nbsp;</td>
 </tr>

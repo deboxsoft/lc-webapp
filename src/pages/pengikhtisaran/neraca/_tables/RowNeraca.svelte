@@ -1,16 +1,18 @@
 <script lang="ts">
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
-  import { convertToRp } from "__@root/utils";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
+  import type { ItemSaldo } from "__@root/utils";
 
-  export let balanceSheet: BalanceSheet;
+  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+  import CellRp from "__@comps/CellRp.svelte";
+
+  export let itemSaldo: ItemSaldo;
   let classes = "";
   $: classes = clsx("odd");
 </script>
 
-<tr class={classes} style="cursor: pointer" on:click>
-  <td class="d-none d-xl-table-cell">
-    <CellAccount id={balanceSheet.accountId} />
+<tr class={classes}>
+  <td class="d-none d-xl-table-cell">{itemSaldo.name}</td>
+  <td class="text-right">
+    <CellRp value={itemSaldo.amount} />
   </td>
-  <td>{convertToRp(balanceSheet.amount)}</td>
+  <td style="width: 200px">&nbsp;</td>
 </tr>
