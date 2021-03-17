@@ -35,7 +35,7 @@
   }
 
   function createChangeHandler() {
-    const _validate = validateField(name);
+    const _validate = validateField && validateField(name);
     return (e) => {
       $fields[name] = e.detail;
       _validate();

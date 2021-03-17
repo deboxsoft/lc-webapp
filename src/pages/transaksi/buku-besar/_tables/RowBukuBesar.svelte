@@ -1,30 +1,30 @@
 <script lang="ts">
-  import type { BankReconciliation } from "@deboxsoft/accounting-api";
-  // import { lightFormat, parseISO } from "date-fns";
+  import { lightFormat, parse } from "date-fns";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
-  import { getAccountContext } from "__@modules/transaksi/perkiraan";
-  import { convertToRp } from "__@root/utils";
+  import CellRp from "__@comps/CellRp.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
+  import {getAccountContext} from "__@modules/accounting"
+  
+  const {accountStore} = getAccountContext()
 
-  const { getAccount } = getAccountContext();
 
-  export let bankReconciliation: BankReconciliation;
-  // export let index: number;
-  export let expanded: boolean = false;
+  export let generalLedger: GeneralLedger;
 
   let classes = "";
-  const account = getAccount(bankReconciliation.accountId);
-  $: classes = clsx("odd", expanded && "parent");
+  $: classes = clsx("odd");
+
+  $: console.log(generalLedger.oppositeAccountId);
+
 </script>
 
-<tr class={classes} style="cursor: pointer" on:click>
-  <td class="control d-table-cell">{bankReconciliation.bank || ''}</td>
-  <td class="d-none d-lg-table-cell">{bankReconciliation.accountBank || ''}</td>
+<tr class={classes}>
+  <td class="control d-table-cell">{generalLedger.no || ''}</td>
+  <td class="d-none d-lg-table-cell">{lightFormat(parse(generalLedger.date, 'T', new Date()), 'dd-MM-yyyy') || ''}</td>
   <td class="d-none d-xl-table-cell">
-    <CellAccount />
+    <CellAccount id={generalLedger.oppositeAccountId} />
   </td>
-  <td>{convertToRp(bankReconciliation.balance)}</td>
-  <td>{convertToRp($account.total)}</td>
-  <td>Unreconciled</td>
-  <td>{''}</td>
+  <td>{generalLedger.description || ""}</td>
+  <td>
+    <CellRp value={generalLedger.amount} />
+  </td>
 </tr>

@@ -5,7 +5,7 @@
   // field of each item that's used for the labels in the list
   export let labelFieldName = undefined;
   export let keywordsFieldName = labelFieldName;
-  export let valueFieldName = undefined;
+  export let valueFieldName = "id";
   export let labelFunction = function (item) {
     item = Array.isArray(item) && item.length > 0 ? item[1] : item;
     if (item === undefined || item === null) {
