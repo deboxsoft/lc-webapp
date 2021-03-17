@@ -2,7 +2,7 @@
   import Row from "./RowConciliation.svelte";
   import { getReconciliationContext } from "__@modules/accounting";
 
-  const { bankReconciliationStore, findBankReconciliation } = getReconciliationContext();
+  const { bankReconciliationStore } = getReconciliationContext();
 
 </script>
 

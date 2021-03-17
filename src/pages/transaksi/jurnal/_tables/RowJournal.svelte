@@ -1,8 +1,7 @@
 <script lang="ts">
   import type { Transaction } from "@deboxsoft/accounting-api";
 
-  import { get } from "svelte/store";
-  import { lightFormat, parseISO } from "date-fns";
+  import { lightFormat, parse } from "date-fns";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import CellRp from "__@comps/CellRp.svelte";
   import RowJournalAccount from "./RowJournalAccount.svelte";
@@ -12,13 +11,15 @@
 
   export let journal: Transaction;
   // export let index: number;
+  export let style: string = "";
   export let expanded: boolean = false;
 
   let classes = "";
+  $: console.log(journal);
   $: classes = clsx("odd", expanded && "parent");
 </script>
 
-<tr class={classes} style="cursor: pointer" on:click>
+<tr class={classes} style={`cursor: pointer;`} on:click>
   <td
     class="control d-table-cell"
     on:click|stopPropagation={() => {
@@ -26,8 +27,8 @@
     }} />
   <td class="d-none d-lg-table-cell">{journal.noJournal || ''}</td>
   <td class="d-none d-xl-table-cell">{journal.noTransaction || ''}</td>
-  <td class="text-center">{lightFormat(parseISO(journal.date), 'dd-MM-yyyy') || ''}</td>
-  <td class="text-center">{get(getAccount(journal.accountId))?.name || ''}</td>
+  <td class="text-center">{lightFormat(parse(journal.date, 'T', new Date()), 'dd-MM-yyyy') || ''}</td>
+  <td class="text-center">{getAccount({ id: journal.accountId })?.name || ''}</td>
   <td>{journal.description || ''}</td>
   <td>
     <CellRp value={journal.total || ''} />

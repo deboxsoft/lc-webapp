@@ -1,6 +1,6 @@
 <script lang="ts">
   import { utils } from "@deboxsoft/module-core";
-  import { journalAccountSchema } from "@deboxsoft/accounting-api";
+  import { TransactionInputSchema, JournalAccountSchema } from "@deboxsoft/accounting-api";
   import { createFormContext, getFormContext } from "__@stores/form";
   import { getAccountContext } from "__@modules/accounting";
   import TrashIcon from "__@comps/icons/Trash.svelte";
@@ -20,12 +20,12 @@
   const { accountStore = [], getAccount } = getAccountContext();
 
   const { submitted, fields } = getFormContext();
-  createFormContext({ schema: journalAccountSchema, values: input, validateField });
+  createFormContext({ schema: JournalAccountSchema, values: input, validateField });
 
   function validateField(fieldName) {
     return (value: unknown) => {
       if ($submitted) {
-        journalAccountSchema.pick({ [fieldName]: true }).safeParse({ [fieldName]: $fields[index][fieldName] });
+        TransactionInputSchema.pick({ [fieldName]: true }).safeParse({ [fieldName]: $fields[index][fieldName] });
         // @ts-ignore
         const { success, error } = parsed;
         fieldsErrors.update(($fieldsErrors) => {
@@ -73,21 +73,21 @@
       valueFieldName="id"
       keywordsFunction={(account) => account && `${account.code} ${account.name}`} />
   </td>
-  {#if !creditDisable}
-    <td>
-      <div class="uniform-checker" style="margin-left: auto; margin-right: auto;">
-        <span class:checked={input.isCredit}><input
-            type="checkbox"
-            class="form-check-input-styled"
-            on:click={() => {
-              input.isCredit = !input.isCredit;
-              updateHandler();
-            }}
-            checked={input.isCredit} />
-        </span>
-      </div>
-    </td>
-  {/if}
+  <!--{#if !creditDisable}-->
+  <!--  <td>-->
+  <!--    <div class="uniform-checker" style="margin-left: auto; margin-right: auto;">-->
+  <!--      <span class:checked={input.isCredit}><input-->
+  <!--          type="checkbox"-->
+  <!--          class="form-check-input-styled"-->
+  <!--          on:click={() => {-->
+  <!--            input.isCredit = !input.isCredit;-->
+  <!--            updateHandler();-->
+  <!--          }}-->
+  <!--          checked={input.isCredit} />-->
+  <!--      </span>-->
+  <!--    </div>-->
+  <!--  </td>-->
+  <!--{/if}-->
   <td class="fit">
     <InputRp
       id="{id}-amount"

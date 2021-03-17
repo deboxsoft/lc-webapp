@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { TransactionInput } from "@deboxsoft/accounting-api";
 
-  import { transactionSchema } from "@deboxsoft/accounting-api";
+  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import SaveIcon from "__@comps/icons/Save.svelte";
   import { getTransactionContext } from "__@modules/accounting";
   import DatePickr from "__@comps/DatePickr.svelte";
@@ -24,7 +24,7 @@
   }
 </script>
 
-<Form schema={transactionSchema} {values} on:submit>
+<Form schema={TransactionInputSchema} {values} on:submit>
   <div class="card">
     <div class="card-body">
       <div class="row">

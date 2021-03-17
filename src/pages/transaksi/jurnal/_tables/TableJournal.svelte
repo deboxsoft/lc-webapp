@@ -1,11 +1,20 @@
 <script lang="ts">
+  import { useVirtualList } from "@deboxsoft/svelte-core";
   import RowJournal from "./RowJournal.svelte";
   import { getTransactionContext } from "__@modules/accounting";
 
   const { transactionStore } = getTransactionContext();
+  let items = [];
+  function itemsUpdatedHandler(e) {
+    items = e.detail.items;
+  }
 </script>
 
-<table class="table table-togglable table-hover datatable-responsive-row-control dtr-column dataTable" role="grid">
+<table
+  class="table table-togglable table-hover datatable-responsive-row-control dtr-column dataTable"
+  role="grid"
+  use:useVirtualList={{ itemCount: $transactionStore.length }}
+  on:items-updated={itemsUpdatedHandler}>
   <thead>
     <tr role="row">
       <th class="text-center control sorting_disabled d-table-cell" style="width: 20px;">#</th>
@@ -18,8 +27,8 @@
     </tr>
   </thead>
   <tbody>
-    {#each $transactionStore as transaction}
-      <RowJournal expanded={false} journal={transaction} />
+    {#each items as item (item.index)}
+      <RowJournal expanded={false} journal={$transactionStore[item.index]} />
     {/each}
   </tbody>
 </table>

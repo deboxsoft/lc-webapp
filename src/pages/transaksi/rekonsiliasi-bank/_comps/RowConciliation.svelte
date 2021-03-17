@@ -6,20 +6,18 @@
   import { getAccountContext, getReconciliationContext } from "__@modules/accounting";
   import CellAccount from "__@comps/account/CellAccount.svelte";
 
-  const {removeBankReconciliation} = getReconciliationContext();
+  const { remove } = getReconciliationContext();
   export let bankReconciliation: BankReconciliation;
 
   // export let index: number;
   const { getAccount } = getAccountContext();
-  const account = getAccount(bankReconciliation.accountId);
+  const account = getAccount({ id: bankReconciliation.accountId });
   let dropdownTriggerElement;
 
   async function removeHandler() {
     try {
-        await removeBankReconciliation(bankReconciliation.id);
-    } catch (e) {
-
-    }
+      await remove(bankReconciliation.id);
+    } catch (e) {}
   }
 </script>
 
@@ -27,7 +25,7 @@
   <td class="d-table-cell">{bankReconciliation.bank || ''}</td>
   <td class="d-none d-lg-table-cell">{bankReconciliation.accountBank || ''}</td>
   <td class="d-none d-xl-table-cell">
-    <CellAccount account={$account} />
+    <CellAccount {account} />
   </td>
   <td class="text-right">{convertToRp(bankReconciliation.balance)}</td>
   <!--  TODO saldo account -->

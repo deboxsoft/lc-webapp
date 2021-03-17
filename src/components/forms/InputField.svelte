@@ -3,13 +3,13 @@
   import { createEventDispatcher } from "svelte";
 
   const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
-  const dispatcher = createEventDispatcher();
-  export let name;
+  const dispatcher: any = createEventDispatcher();
+  export let name: any;
   export let value: any = ($fields && $fields[name]) || undefined;
   const { class: className } = $$props;
 
   let invalid = true;
-  let msgError;
+  let msgError: string[] | undefined;
 
   $: {
     if ($fieldsErrors[name]) {
@@ -22,7 +22,7 @@
 
   function createInputHandler() {
     const _validate = validateField(name);
-    return (e) => {
+    return (e: any) => {
       _validate();
       dispatcher("input", e);
     };
@@ -35,10 +35,9 @@
   bind:value={$fields[name]}
   class:is-valid={$submitted && !invalid}
   class:is-invalid={$submitted && invalid}
-  on:input={createInputHandler()}
-/>
+  on:input={createInputHandler()} />
 {#if $submitted}
   {#if invalid}
-    <p class="invalid-tooltip">{msgError}</p>
+    <p class="invalid-tooltip">{(msgError && msgError.length > 0 && msgError[0]) || ''}</p>
   {/if}
 {/if}

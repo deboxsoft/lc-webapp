@@ -13,7 +13,7 @@
     }
     return labelFieldName ? item[labelFieldName] : item;
   };
-  export let keywordsFunction = function (item) {
+  export let keywordsFunction = function (item: any) {
     item = Array.isArray(item) && item.length > 0 ? item[1] : item;
     if (item === undefined || item === null) {
       return "";
@@ -78,29 +78,29 @@
   // apply a className to the control
   let { class: className } = $$props;
   // the text displayed when no option is selected
-  export let placeholder = undefined;
+  export let placeholder: string | undefined = undefined;
   // apply a className to the input control
-  export let inputClassName = undefined;
+  export let inputClassName: string | undefined = undefined;
   // apply a id to the input control
-  export let id = undefined;
+  export let id: string | undefined = undefined;
   // generate an HTML input with this name, containing the current value
-  export let name = undefined;
+  export let name: string | undefined = undefined;
   // apply a className to the dropdown div
-  export let dropdownClassName = undefined;
+  export let dropdownClassName: string | undefined = undefined;
   // option to hide the dropdown arrow
-  export let hideArrow = false;
+  export let hideArrow: boolean = false;
   // option to show clear selection button
-  export let showClear = false;
+  export let showClear: boolean = false;
   // adds the disabled tag to the HTML input
-  export let disabled = false;
+  export let disabled: boolean = false;
   // add the title to the HTML input
-  export let title = undefined;
-  export let debug = false;
+  export let title: string | undefined = undefined;
+  export let debug: boolean = false;
   // selected item state
-  export let selectedItem = undefined;
-  export let value = undefined;
-  let text;
-  let filteredTextLength = 0;
+  export let selectedItem: any = undefined;
+  export let value: any = undefined;
+  let text: string | undefined;
+  let filteredTextLength: number = 0;
   function onSelectedItemChanged(_selectedItem) {
     value = valueFunction(_selectedItem);
     text = safeLabelFunction(_selectedItem);
@@ -108,30 +108,32 @@
   }
   $: onSelectedItemChanged(selectedItem);
   // HTML elements
-  let input;
-  let list;
+  let input: any;
+  let list: HTMLElement & { scrollIntoViewIfNeeded?: Function };
+  let showList: boolean;
   // UI state
-  let opened = false;
-  let highlightIndex = -1;
+  let opened: boolean = false;
+  let highlightIndex: number = -1;
   $: showList = opened && ((items && items.length > 0) || filteredTextLength > 0);
   // view model
-  let filteredListItems: Record<string, any>[];
+  let filteredListItems: any[];
   let listItems: any[] = [];
-  function prepareListItems() {
+
+  function prepareListItems(_items: any[]) {
     let tStart;
     if (debug) {
       tStart = performance.now();
       console.log("prepare items to search");
-      console.log("items: " + JSON.stringify(items));
+      console.log("items: " + JSON.stringify(_items));
     }
-    if (!Array.isArray(items)) {
-      console.warn("Autocomplete items / search function did not return array but", items);
-      items = [];
+    if (!Array.isArray(_items)) {
+      console.warn("Autocomplete items / search function did not return array but", _items);
+      _items = [];
     }
-    const length = items ? items.length : 0;
+    const length = _items ? _items.length : 0;
     listItems = new Array(length);
     if (length > 0) {
-      items.forEach((item, i) => {
+      _items.forEach((item, i) => {
         const listItem = getListItem(item);
         if (listItem == undefined) {
           console.log("Undefined item for: ", item);
@@ -139,10 +141,10 @@
         listItems[i] = listItem;
         const __value = pristineValue;
         const _item = listItem.item;
-        if ((__value && valueFieldName) && _item[valueFieldName] === __value) {
+        if (__value && valueFieldName && _item[valueFieldName] === __value) {
           onSelectedItemChanged(_item);
-        } else if(_item === __value) {
-          onSelectedItemChanged(_item)
+        } else if (_item === __value) {
+          onSelectedItemChanged(_item);
         }
       });
     }
@@ -161,8 +163,8 @@
       item: item
     };
   }
-  $: items, prepareListItems();
-  function prepareUserEnteredText(userEnteredText) {
+  $: prepareListItems(items);
+  function prepareUserEnteredText(userEnteredText?: string) {
     if (userEnteredText === undefined || userEnteredText === null) {
       return "";
     }
@@ -180,13 +182,13 @@
     }
     return textFilteredLowerCase;
   }
-  async function search() {
+  async function search(_text: string) {
     let tStart;
     if (debug) {
       tStart = performance.now();
-      console.log("Searching user entered text: '" + text + "'");
+      console.log("Searching user entered text: '" + _text + "'");
     }
-    const textFiltered = prepareUserEnteredText(text);
+    const textFiltered = prepareUserEnteredText(_text);
     if (textFiltered === "") {
       filteredListItems = listItems;
       closeIfMinCharsToSearchReached();
@@ -197,7 +199,7 @@
     }
     if (searchFunction) {
       items = await searchFunction(textFiltered);
-      prepareListItems();
+      prepareListItems(items);
     }
     const searchWords = textFiltered.split(" ");
     let tempfilteredListItems = listItems.filter((listItem) => {
@@ -218,10 +220,10 @@
     closeIfMinCharsToSearchReached();
     if (debug) {
       const tEnd = performance.now();
-      console.log("Search took " + (tEnd - tStart) + " milliseconds, found " + filteredListItems.length + " items");
+      console.log(`Search took ${tEnd - tStart} milliseconds, found ${filteredListItems.length} items`);
     }
   }
-  $: text, search();
+  $: search(text);
   function selectListItem(listItem) {
     if (debug) {
       console.log("selectListItem");
@@ -348,7 +350,7 @@
       console.log("onInput");
     }
     text = e.target.value;
-    search();
+    search(text);
     highlightIndex = 0;
     open();
   }
@@ -588,21 +590,21 @@
   class="{className ? className : ''}
   {hideArrow ? '-hide-arrow is-multiple' : ''}
   {showClear ? '-show-clear' : ''} dbx-autocomplete select is-fullwidth {uniqueId}">
-    <input
-      type="text"
-      class="{inputClassName ? inputClassName : ''} input autocomplete-input"
-      {id}
-      {placeholder}
-      {name}
-      {disabled}
-      {title}
-      bind:this={input}
-      bind:value={text}
-      on:input={onInput}
-      on:focus={onFocus}
-      on:keydown={onKeyDown}
-      on:click={onInputClick}
-      on:keypress={onKeyPress} />
+  <input
+    type="text"
+    class="{inputClassName ? inputClassName : ''} input autocomplete-input"
+    {id}
+    {placeholder}
+    {name}
+    {disabled}
+    {title}
+    bind:this={input}
+    bind:value={text}
+    on:input={onInput}
+    on:focus={onFocus}
+    on:keydown={onKeyDown}
+    on:click={onInputClick}
+    on:keypress={onKeyPress} />
   {#if showClear}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>{/if}
   <div
     class="{dropdownClassName ? dropdownClassName : ''} autocomplete-list {showList ? '' : '-hidden'}

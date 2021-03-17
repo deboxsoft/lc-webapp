@@ -1,10 +1,11 @@
 <script lang="ts">
+  import {get} from "svelte/store"
   import { goto } from "@roxi/routify";
   import { getAccountContext } from "__@modules/accounting";
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import EditIcon from "__@comps/icons/Edit.svelte";
 
-  const { getAccountType, removeAccount, accountStore, accountTypeStore } = getAccountContext();
+  const { getAccountType, remove, accountStore, accountTypeStore } = getAccountContext();
   // handling
   function createUpdateHandler(id) {
     return () => {
@@ -14,9 +15,10 @@
 
   function createRemoveHandler(id) {
     return () => {
-      removeAccount(id);
+      remove(id);
     };
   }
+
 </script>
 
 <table class="table table-togglable table-hover">
@@ -33,7 +35,7 @@
       <tr>
         <td>{account.code || ''}</td>
         <td>{account.name || ''}</td>
-        <td>{getAccountType(account.type)?.name}</td>
+        <td>{getAccountType(account.type)?.name || account.type}</td>
         <td class="text-center">
           <span class="list-icons">
             <button

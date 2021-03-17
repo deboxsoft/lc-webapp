@@ -14,10 +14,9 @@
   let { class: className } = $$props;
 
   // state
-  let msgError;
+  let msgError: string[] | undefined;
   let invalid: boolean = false;
-  let validated = false;
-  let classes;
+  let classes: string = "";
   let _value = value;
 
   $: {
@@ -31,7 +30,7 @@
 
   $: classes = clsx(className, "form-control input-rp");
 
-  const useFormatCurrency = (el: HTMLInputElement, _options) => {
+  const useFormatCurrency = (el: HTMLInputElement, _options: any) => {
     const defaultOptions = {
       decimalPlaces: 0,
       modifyValueOnWheel: false,
@@ -40,7 +39,7 @@
     };
     const numEl = new AutoNumeric(el, { ...defaultOptions, ..._options });
     return {
-      update: (_options) => {
+      update: (_options: any) => {
         numEl.update(options);
         return {
           destroy() {
@@ -53,7 +52,7 @@
 
   function createInputHandler() {
     const _validate = validateField(name);
-    return (e) => {
+    return () => {
       _validate();
       $fields[name] = parseInt(_value.replace(/\./g, ""));
       dispatcher("input", $fields[name]);
@@ -84,6 +83,6 @@
 </div>
 {#if $submitted}
   {#if invalid}
-    <p class="invalid-tooltip">{msgError}</p>
+    <p class="invalid-tooltip">{(msgError && msgError.length > 1 && msgError[0]) || ''}</p>
   {/if}
 {/if}

@@ -1,13 +1,15 @@
 <!--routify:options title="form"-->
 <script lang="ts">
-  import { url, goto } from "@roxi/routify";
+  import type { Readable } from "svelte/store";
+
+  import { url, goto, params } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getReconciliationContext } from "__@modules/accounting";
   import FormReconciliation from "./_comps/FormReconciliation.svelte";
 
   const { notify } = getApplicationContext();
-  const { createBankReconciliation, getReconciliation } = getReconciliationContext();
+  const { create, getBankReconciliation } = getReconciliationContext();
 
   let initial = {
     date: new Date(),
@@ -17,12 +19,21 @@
     accountId: "",
     nameAccountBank: ""
   };
+  let bankReconciliation: Readable<BankReconciliation>;
+  let isUpdate: boolean = false;
   let loading: boolean = false;
+
+  $: {
+    if ($params.id) {
+      bankReconciliation = getBankReconciliation($params.id);
+      $bankReconciliation && (isUpdate = true);
+    }
+  }
 
   async function submitHandler({ detail: values }) {
     loading = true;
     try {
-      await createBankReconciliation(values);
+      await create(values);
       loading = false;
       $goto("./");
     } catch (e) {
@@ -37,6 +48,6 @@
 
 <PageLayout breadcrumb={{ title: 'Form Reconciliation Bank', path: $url('./form') }}>
   <div class="d-flex flex-column h-100">
-    <FormReconciliation fields={initial} on:submit={submitHandler} on:cancel={cancelHandler} />
+    <FormReconciliation values={{ ...initial, ...$bankReconciliation }} on:submit={submitHandler} on:cancel={cancelHandler} />
   </div>
 </PageLayout>

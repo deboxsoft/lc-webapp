@@ -1,7 +1,7 @@
 <script lang="ts">
   import type {AccountInput} from "@deboxsoft/accounting-api"
 
-  import { accountSchema } from "@deboxsoft/accounting-api";
+  import { AccountInputSchema } from "@deboxsoft/accounting-api";
   import { createEventDispatcher } from "svelte";
   import SaveIcon from "__@comps/icons/Save.svelte";
   import AutoComplete from "__@comps/forms/AutoCompleteField.svelte";
@@ -21,7 +21,7 @@
   }
 </script>
 
-<Form schema={accountSchema} {values} on:submit>
+<Form schema={AccountInputSchema} {values} on:submit>
   <div class="card">
     <div class="card-body">
       <div class="row">
@@ -46,8 +46,8 @@
             inputClassName="form-control"
             placeholder="Jenis Akun"
             items={$accountTypeStore}
-            labelFunction={(accountType) => (accountType ? `${accountType.code} ${accountType.name}` : null)}
-            keywordsFunction={(accountType) => (accountType ? `${accountType.code} ${accountType.name}` : null)} />
+            labelFunction={(accountType) => (accountType ? `${accountType.name}` : null)}
+            keywordsFunction={(accountType) => (accountType ? `${accountType.name}` : null)} />
         </div>
       </div>
     </div>

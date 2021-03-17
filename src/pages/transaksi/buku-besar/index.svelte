@@ -6,13 +6,13 @@
   import DatePickr from "__@comps/DatePickr.svelte";
   import AutoComplete from "__@comps/Autocomplete.svelte";
 
-  const { findGeneralLedger } = getGeneralLedgerContext();
+  const { generalLedgerStore } = getGeneralLedgerContext();
   const { accountStore } = getAccountContext();
 
   function accountChangeHandler() {}
 </script>
 
-<PageLayout>
+<PageLayout breadcrumb={[]}>
   <div class="header-elements" slot="header-elements" />
   <div class="card">
     <div class="card-header header-elements-inline">

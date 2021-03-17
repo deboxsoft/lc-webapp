@@ -8,9 +8,9 @@
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
   createTransactionContext();
-  const { transactionStore, fetchTransaction } = getTransactionContext();
+  const { transactionStore, load } = getTransactionContext();
   let loading = true;
-  fetchTransaction().then(() => {
+  load().then(() => {
     tick().then(() => {
       loading = false;
     })

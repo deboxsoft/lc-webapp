@@ -1,9 +1,13 @@
+<script lang="ts" context="module">
+  type OnEvent = (args?: any) => void;
+  type Placement = "bottom-start" | "bottom-end" | "top-start" | "top-end"
+</script>
 <script lang="ts">
   import type { Instance as PopperInstance } from "@popperjs/core";
   import { onMount, onDestroy, tick } from "svelte";
   import { createPopper } from "@popperjs/core/dist/umd/popper-lite";
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
 
+  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   const noop = () => {};
   export let open: boolean = false;
   export let flip: boolean = true;
@@ -15,10 +19,10 @@
   export let offset: number[] = [0, 2];
   export let menuClass: string = undefined;
   export let buttonClass: string = "";
-  export let triggerElement: Element = noop;
+  export let triggerElement: Element;
   export let onOpened: OnEvent = noop;
-  export let onClosed: OnEvent = undefined;
-  export let labelledby: string = false;
+  export let onClosed: OnEvent = noop;
+  export let labelledby: string | undefined = undefined;
   export let isNavItem: boolean = false;
   let { class: className } = $$props;
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { BankReconciliationInput } from "@deboxsoft/accounting-api";
 
-  import {bankReconciliationSchema} from "@deboxsoft/accounting-api"
+  import { BankReconciliationInputSchema } from "@deboxsoft/accounting-api";
   import { createEventDispatcher } from "svelte";
   import SaveIcon from "__@comps/icons/Save.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
@@ -23,29 +23,19 @@
   }
 </script>
 
-<Form schema={bankReconciliationSchema} {values} on:submit>
+<Form schema={BankReconciliationInputSchema} {values} on:submit>
   <div class="card">
     <div class="card-body">
       <div class="row">
         <div class="form-group col-12">
           <label for="bank">Nama Bank</label>
-          <InputField
-            id="bank"
-            name="bank"
-            type="text"
-            class="form-control"
-            placeholder="Nama Bank" />
+          <InputField id="bank" name="bank" type="text" class="form-control" placeholder="Nama Bank" />
         </div>
       </div>
       <div class="row">
         <div class="form-group col-12">
           <label for="accountBank">No Akun Bank</label>
-          <InputField
-            id="accountBank"
-            name="accountBank"
-            type="text"
-            class="form-control"
-            placeholder="Akun Bank" />
+          <InputField id="accountBank" name="accountBank" type="text" class="form-control" placeholder="Akun Bank" />
         </div>
       </div>
       <div class="row">
@@ -62,7 +52,7 @@
       <div class="row">
         <div class="form-group col-12">
           <label for="account">Akun</label>
-          <AccountSelect  />
+          <AccountSelect />
         </div>
       </div>
       <div class="row">

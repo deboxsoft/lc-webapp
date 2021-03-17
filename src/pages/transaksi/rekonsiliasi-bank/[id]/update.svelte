@@ -7,7 +7,7 @@
   import FormReconciliation from "../_comps/FormReconciliation.svelte";
 
   const { notify } = getApplicationContext();
-  const { bankId, updateBankReconciliation, bankReconciliation } = getStoreContext();
+  const { bankId, update, bankReconciliation } = getStoreContext();
 
   let loading: boolean = false;
 
@@ -15,11 +15,10 @@
     console.log("submit");
     loading = true;
     try {
-      await updateBankReconciliation(bankId, values);
+      await update(bankId, values);
       loading = false;
       $goto("../");
     } catch (e) {
-      console.log(e);
       loading = false;
     }
   }

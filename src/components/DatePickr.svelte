@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from "svelte";
   import Flatpickr from "flatpickr";
-  import MonthSelectPlugin from "flatpickr/dist/plugins/monthSelect";
+  import monthSelect from "flatpickr/dist/plugins/monthSelect";
   import { Indonesian } from "flatpickr/dist/esm/l10n/id";
 
   const hooks = new Set([
@@ -21,14 +21,13 @@
   export let mode: "month-select" | undefined = undefined;
   export let input: any = undefined;
 
-  let defaultOptions = { altInput: true, altFormat: "d-M-Y", locale: Indonesian, dateFormat: "Z" };
+  let defaultOptions = { altInput: true, altFormat: "d-M-Y", locale: Indonesian, dateFormat: "Z", plugins: [] };
   let flatPickr;
   onMount(() => {
     const elem = element || input;
-    defaultOptions.plugins = [];
     if (mode === "month-select") {
       defaultOptions.plugins.push(
-        new MonthSelectPlugin({
+        monthSelect({
           shorthand: true,
           dateFormat: defaultOptions.dateFormat
         })
@@ -50,7 +49,7 @@
     }
   }
 
-  function addHooks(opts = {}) {
+  function addHooks(opts: any = {}) {
     opts = Object.assign({}, opts);
     for (const hook of hooks) {
       const firer = (selectedDates, dateStr, instance) => {

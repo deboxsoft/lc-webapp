@@ -1,23 +1,25 @@
 <script lang="ts">
   import DropZone from "svelte-file-dropzone/src/components/Dropzone.svelte";
+  import {TEMPLATE_PARSE, bank_standard_transform, bni_transform, bank_mandiri_transform } from "./_transform-csv";
   import { writable } from "svelte/store";
   import { getStoreContext } from "../_store";
   import csvUtils from "papaparse";
-  import {getApplicationContext} from "__@modules/app"
+  import { getApplicationContext } from "__@modules/app";
 
-  const { bankReconciliation, fileDataImport } = getStoreContext();
-  const {notify} = getApplicationContext();
+  const { bankReconciliation, fileDataImport, update } = getStoreContext();
+  const { notify } = getApplicationContext();
+
+  const templateKeys = Object.keys(TEMPLATE_PARSE);
 
   export let fileLoaded;
-  const split = ";"
-
+  let templateType: keyof typeof TEMPLATE_PARSE = "STANDARD";
   let files = writable([]);
 
   $: fileLoaded = $files.length > 0;
 
   function _sanitizeString(_val: string) {
     // console.log(_val.trim(), _val);
-    return _val.trim().replace(/\s+/g, ' ');
+    return _val.trim().replace(/\s+/g, " ");
   }
 
   function _sanitizeNumber(_val: string) {
@@ -26,19 +28,28 @@
   }
   function processRawCSV(data) {
     const output = [];
-    const {result, error } = csvUtils.parse(data, {
-      transform: (_cells) => ({
-        date: _cells[0],
-        description: _sanitizeString(`${_cells[1]}`),
-        in: _sanitizeNumber(_cells[2]),
-        out: _sanitizeNumber(_cells[3]),
-        balance: _sanitizeNumber(_cells[4])
-      })
+    let step;
+    console.log(templateType);
+    switch (templateType) {
+      case "BNI":
+        step = bni_transform
+        break;
+      case "MANDIRI":
+        step = bank_mandiri_transform
+        break;
+      case "STANDARD":
+      default:
+        step = bank_standard_transform
+    }
+
+    const result = csvUtils.parse(data, {
+      step
     });
-    if (Array.isArray(error)) {
+    if (Array.isArray(result.error)) {
       notify("parsing csv error: " + error[0].message, "error");
       return [];
     } else {
+      console.log(result);
       return result;
     }
   }
@@ -68,6 +79,13 @@
 
         <dt class="col-sm-3">An. Rekening</dt>
         <p class="col-sm-9">{bankReconciliation.nameAccountBank}</p>
+
+        <dt class="col-sm-3">Template</dt>
+        <select class="col-sm-9 form-control" bind:value={templateType}>
+          {#each templateKeys as _templateKey }
+            <option value={_templateKey}>{TEMPLATE_PARSE[_templateKey]}</option>
+          {/each}
+        </select>
       </dl>
     </div>
   </div>

@@ -1,29 +1,13 @@
-import { getApplicationContext } from "__@modules/app";
+import type { GeneralLedgerStoreService } from "@deboxsoft/accounting-client/types/stores";
+
 import { stores, graphql } from "@deboxsoft/accounting-client";
-import { getContext, setContext } from "svelte";
 
-const KEY = {};
-
-export const createGeneralLedgerContext = () => {
-  const { fetch, notify, env } = getApplicationContext();
+export const createGeneralLedgerContext = ({ fetch, notify, env }) => {
   const generalLedgerService = new graphql.GeneralLedgerGraphqlClient(fetch);
-  const store = stores.createGeneralLedgerStoreService({
+  return stores.createGeneralLedgerStoreService({
     generalLedgerService,
     notify: (env !== "production" && notify) || undefined
   });
-  setContext(KEY, store);
-  return store;
 };
 
-export const getGeneralLedgerContext = () => {
-  const {
-    generalLedgerStore,
-    fetchMoreGeneralLedger,
-    findGeneralLedger
-  } = getContext<stores.GeneralLedgerStoreService>(KEY);
-  return {
-    generalLedgerStore,
-    fetchMoreGeneralLedger,
-    findGeneralLedger
-  };
-};
+export const getGeneralLedgerContext = (): GeneralLedgerStoreService => stores.getGeneralLedgerContext();

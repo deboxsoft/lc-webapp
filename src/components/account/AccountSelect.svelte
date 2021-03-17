@@ -9,26 +9,24 @@
   export let name: string = "accountId";
   export let code: string | undefined = undefined;
   export let selectedAccount: Account | undefined = undefined;
-  export let validate: any = undefined;
   const dispatch = createEventDispatcher();
 
-  let account;
   $: {
     if (selectedAccount) {
-      account = selectedAccount;
+      accountId = selectedAccount.id;
     } else {
       if (accountId) {
         const i = $accountStore.findIndex((_) => _.id === accountId);
-        account = $accountStore[i];
+        selectedAccount = $accountStore[i];
       } else if (code) {
         const i = $accountStore.findIndex((_) => _.code === code);
-        account = $accountStore[i];
-        accountId = $accountStore[i];
+        selectedAccount = $accountStore[i];
+        accountId = $accountStore[i].id;
       }
     }
   }
 
-  function changeHandler(e) {
+  function changeHandler(e: any) {
     accountId = e.detail;
     dispatch("change", e.detail);
   }

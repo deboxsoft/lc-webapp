@@ -6,11 +6,11 @@
   import LoaderContainer from "__@comps/loader/LoaderContainer.svelte"
   import Loader from "__@comps/loader/loader1.svelte"
 
-  const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
+  const { setBreadcrumbContext } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "rekonsiliasi bank" });
-  const { findBankReconciliation } = createReconciliationContext();
+  const { find } = createReconciliationContext();
   let loading = true;
-  findBankReconciliation().then((result) => {
+  find().then((result) => {
     loading = false;
   });
 </script>

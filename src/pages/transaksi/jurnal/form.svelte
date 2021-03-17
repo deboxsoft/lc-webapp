@@ -6,7 +6,7 @@
   import FormJournal from "./_forms/FormJournal.svelte";
 
   // context
-  const { createTransaction, updateTransaction, getTransaction } = getTransactionContext();
+  const { create, update, getTransaction, transactionStore } = getTransactionContext();
   const { accountStore } = getAccountContext();
 
   // form
@@ -20,7 +20,7 @@
   let isUpdate: boolean = false;
 
   $: {
-    if ($params.id && $transaction) {
+    if ($params.id && transaction) {
       isUpdate = true;
     }
   }
@@ -30,9 +30,9 @@
     loading = true;
     try {
       if (isUpdate) {
-        await updateTransaction($params.id, values);
+        await update($params.id, values);
       } else {
-        await createTransaction(values);
+        await create(values);
       }
       loading = false;
       $goto("./");

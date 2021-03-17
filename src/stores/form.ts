@@ -9,14 +9,14 @@ export interface Context {
   fields: Writable<Record<string, any>>;
   submitted: Writable<boolean>;
   fieldsErrors: Writable<Record<string, string[]>>;
-  validateField: (args: any) => (value: unknown) => void;
+  validateField: (args?: any) => (value?: unknown) => void;
 }
 
 export interface Options {
   schema: ZodObject<ZodRawShape>;
   fields?: Writable<Record<string, any>>;
   values?: any;
-  validateField?: (args: any) => (value: unknown) => void;
+  validateField?: (args?: any) => (value?: unknown) => void;
 }
 
 const key = Symbol("form");

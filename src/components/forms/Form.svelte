@@ -11,13 +11,27 @@
 
   export let schema: ZodObject<ZodRawShape> | undefined = undefined;
   export let values: Record<string, any> = {};
+  export let ignoreAttribs: string | string[] = "id";
 
   const { submitted, fieldsErrors, fields } = createFormContext({ schema, values });
 
   function submitHandler() {
     try {
       $submitted = true;
-      const values = schema.parse($fields);
+      const values = schema.transform((input) => {
+        if (ignoreAttribs) {
+          if (Array.isArray(ignoreAttribs)) {
+            ignoreAttribs.forEach(_key => {
+              if (input[key]) delete input[key]
+            })
+          } else if(typeof ignoreAttribs === "string") {
+            if (input[ignoreAttribs]) {
+              delete input[ignoreAttribs];
+            }
+          }
+        }
+        return input;
+      }).parse($fields);
       dispatch("submit", values);
     } catch (e) {
       if (e instanceof ZodError) {

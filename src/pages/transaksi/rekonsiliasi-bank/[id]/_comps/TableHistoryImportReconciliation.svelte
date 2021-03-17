@@ -3,9 +3,9 @@
   import { getReconciliationContext } from "__@modules/accounting";
 
   export let bankId: string;
-  const { bankAccountImportHistoryStore, findAccountBankImportHistory } = getReconciliationContext();
+  const { bankReconciliationHistoryStore, history } = getReconciliationContext();
   let loading = false;
-  findAccountBankImportHistory(bankId).then(result => {
+  findBankReconciliationHistory(bankId).then(result => {
     loading = true;
   })
 </script>
@@ -23,8 +23,8 @@
   </tr>
   </thead>
   <tbody>
-  {#each $bankAccountImportHistoryStore as accountBankImportHistory}
-    <Row {accountBankImportHistory} />
+  {#each $bankReconciliationHistoryStore as history}
+    <Row {history} />
   {/each}
   </tbody>
 </table>

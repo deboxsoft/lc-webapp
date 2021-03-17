@@ -2,8 +2,8 @@
   import Row from "./RowStatementBank.svelte";
   import { getReconciliationContext } from "__@modules/accounting";
 
-  const { statementBankStore } = getReconciliationContext();
-  export let statementBankList = $statementBankStore;
+  const { bankStatementStore } = getReconciliationContext();
+  export let bankStatementList = $bankStatementStore;
   export let filtering = false;
   let selected = true;
 </script>
@@ -22,7 +22,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each statementBankList as statementBank}
+    {#each bankStatementList as statementBank}
       <Row {statementBank} {selected} showCheckbox={filtering} />
     {/each}
   </tbody>
