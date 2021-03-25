@@ -1,7 +1,7 @@
 <script lang="ts">
   // import type { UserProfile } from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser";
 
-  import { url } from "@roxi/routify";
+  import { url, isActive } from "@roxi/routify";
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import Accordion from "@deboxsoft/svelte-theme-limitless/components/Accordion.svelte";
   import AccordionItem from "@deboxsoft/svelte-theme-limitless/components/AccordionItem.svelte";
@@ -62,7 +62,7 @@
       </AccordionItem>
 
       {#each menus as item}
-        <AccordionItem let:expanded={_expand} target="_self" hasChildren={!!item.children}>
+        <AccordionItem expanded={$isActive(item.url)} let:expanded={_expand} target="_self" hasChildren={!!item.children}>
           {#if item.icon}
             <Icon component={item.icon} />
           {/if}
@@ -73,7 +73,7 @@
             class="nav nav-group-sub"
             data-submenu-title={item.label}>
             {#each item.children as subItem}
-              <li class="nav-item"><a class="nav-link" href={$url(subItem.url)}>{subItem.label}</a></li>
+              <li class="nav-item"><a class="nav-link" class:active={$isActive(subItem.url)} href={$url(subItem.url)}>{subItem.label}</a></li>
             {/each}
           </ul>
         </AccordionItem>
