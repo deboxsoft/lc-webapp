@@ -8,7 +8,13 @@
   const dispatcher = createEventDispatcher();
 
   export let options: any = {};
+  export let fields: any = context.fields;
+  export let fieldsErrors: any = context.fieldsError;
+  export let prependDisable: boolean = false;
+  export let textPosition: "left" | "right" = "right";
   export let name: string;
+  export let format: "currency" | "number" = "currency";
+  export let resultType: "string" | "number" = "number";
   export let value: any = ($fields && $fields[name]) || undefined;
 
   let { class: className } = $$props;
@@ -20,6 +26,12 @@
   let _value = value;
 
   $: {
+    if (format === "number") {
+      options = { ...AutoNumeric.getPredefinedOptions().integerPos, ...options }
+    }
+  }
+
+  $: {
     if ($fieldsErrors[name]) {
       invalid = true;
       msgError = $fieldsErrors[name];
@@ -28,7 +40,7 @@
     }
   }
 
-  $: classes = clsx(className, "form-control input-rp");
+  $: classes = clsx(className, "form-control", textPosition === "right" && "text-right");
 
   const useFormatCurrency = (el: HTMLInputElement, _options: any) => {
     const defaultOptions = {
@@ -60,16 +72,13 @@
   }
 </script>
 
-<style lang="scss" global>
-  .input-rp {
-    text-align: right;
-  }
-</style>
-
 <div class="input-group">
-  <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
+  {#if !prependDisable}
+    <div class="input-group-prepend"><span class="input-group-text">Rp</span></div>
+  {/if}
   <input
     use:useFormatCurrency={options}
+    type="text"
     {...$$restProps}
     {name}
     bind:value={_value}

@@ -1,24 +1,32 @@
 <script lang="ts">
-  import {get} from "svelte/store"
+  import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
   import { getAccountContext } from "__@modules/accounting";
+
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import EditIcon from "__@comps/icons/Edit.svelte";
+  import AccountCell from "__@comps/account/CellAccount.svelte";
 
-  const { getAccountType, remove, accountStore, accountTypeStore } = getAccountContext();
-  // handling
+  let _removeAlert = writable(false);
+  const { remove, accountStore } = getAccountContext();
+
+  function removeAlertOpen(ui) {
+    $_removeAlert = true;
+    // $uiStore.modalOpen = true;
+  }
   function createUpdateHandler(id) {
     return () => {
-      $goto("./form", { id });
+      $goto("./:id/update", { id });
     };
   }
 
   function createRemoveHandler(id) {
     return () => {
-      remove(id);
+      $goto("./:id/remove", { id });
+      // removeAlertOpen();
+      // remove(id);
     };
   }
-
 </script>
 
 <table class="table table-togglable table-hover">
@@ -26,16 +34,18 @@
     <tr>
       <th style="width: 100px" data-toggle="true">Kode</th>
       <th>Nama</th>
-      <th style="width: 200px">Tipe Akun</th>
+      <th style="width: 200px">Parent</th>
       <th class="text-center" style="width: 20px">#</th>
     </tr>
   </thead>
   <tbody>
     {#each $accountStore as account (account.id)}
       <tr>
-        <td>{account.code || ''}</td>
+        <td>{account.id || ''}</td>
         <td>{account.name || ''}</td>
-        <td>{getAccountType(account.type)?.name || account.type}</td>
+        <td>
+          <AccountCell id={account.parentId} />
+        </td>
         <td class="text-center">
           <span class="list-icons">
             <button

@@ -1,67 +1,104 @@
-<script lang="ts">
-  import type {AccountInput} from "@deboxsoft/accounting-api"
-
-  import { AccountInputSchema } from "@deboxsoft/accounting-api";
-  import { createEventDispatcher } from "svelte";
-  import SaveIcon from "__@comps/icons/Save.svelte";
-  import AutoComplete from "__@comps/forms/AutoCompleteField.svelte";
-  import Form from "__@comps/forms/Form.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
+<script>
+  import { goto } from "@roxi/routify";
+  import { getApplicationContext } from "__@modules/app";
   import { getAccountContext } from "__@modules/accounting";
+  import { createEventDispatcher } from "svelte";
+  import { AccountSchema } from "@deboxsoft/accounting-api";
 
-  const { getAccountType, accountTypeStore } = getAccountContext();
+  // components
+  import Modal from "__@comps/Modal.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import SaveIcon from "__@comps/icons/Save.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputNumberField from "__@comps/forms/InputNumberField.svelte";
+  import InputCheck from "__@comps/forms/InputCheckSwitchery.svelte";
+
+  // context
+  const { notify } = getApplicationContext();
+  const { accountStore, getAccount, getAccountParentList } = getAccountContext();
   const dispatch = createEventDispatcher();
+  const parentAccountStore = getAccountParentList();
 
-  export let values: Partial<AccountInput> = {};
-  export let loading: boolean = false;
+  export let isUpdate;
+  export let account = {};
+  export let onSubmit;
+  export let title;
+  export let to;
+  let loading = false;
+  let isParent
 
-  /// handler
+  async function submitHandler(e) {
+    loading = true;
+    try {
+      await onSubmit(account)
+      loading = false;
+      $goto(to);
+    } catch (e) {
+      loading = false;
+    }
+  }
+
   function cancelHandler() {
-    dispatch("cancel", values);
+    $goto(to);
+  }
+
+  function isParentChangeHandler(e) {
+    isParent = e.detail;
   }
 </script>
-
-<Form schema={AccountInputSchema} {values} on:submit>
-  <div class="card">
-    <div class="card-body">
-      <div class="row">
-        <div class="form-group col-12">
-          <label for="code">Kode</label>
-          <InputField id="code" name="code" type="text" class="form-control" placeholder="Kode" />
+<Modal {title}>
+  <Form ignoreAttribs={[]} schema={AccountSchema} values={account} on:submit={submitHandler} on:cancel={cancelHandler}>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="form-group col-12">
+            <label for="id">Kode</label>
+            <InputNumberField
+              id="id"
+              name="id"
+              options={{ decimalPlaces: 0, digitGroupSeparator: '', maximumValue: '99999999' }}
+              prependDisable={true}
+              textPosition="left"
+              resultType="string"
+              format="number"
+              class="form-control"
+              placeholder="Kode"
+              disabled={isUpdate}
+            />
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-12">
-          <label for="name">Nama</label>
-          <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+        <div class="row">
+          <div class="form-group col-12">
+            <label for="name">Nama</label>
+            <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-12">
-          <label for="accountType">Jenis Akun</label>
-          <AutoComplete
-            id="accountType"
-            name="type"
-            valueFieldName="code"
-            inputClassName="form-control"
-            placeholder="Jenis Akun"
-            items={$accountTypeStore}
-            labelFunction={(accountType) => (accountType ? `${accountType.name}` : null)}
-            keywordsFunction={(accountType) => (accountType ? `${accountType.name}` : null)} />
+        {#if !isParent}
+          <div class="row">
+            <div class="form-group col-12">
+              <label for="accountType">Klasifikasi Akun</label>
+              <AccountSelect id="parentId" name="parentId" accountStore={parentAccountStore} allowEmpty />
+            </div>
+          </div>
+        {/if}
+        <div class="row">
+          <div class="col-12">
+            <InputCheck id="isParent" name="isParent" on:change={isParentChangeHandler} disabled={isUpdate}>
+              Akun sebagai induk
+            </InputCheck>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card-footer d-flex">
-      <div class="flex-grow-1">&nbsp;</div>
-      <div>
-        <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
-          Cancel
-        </button>
-        <button type="submit" class="btn btn-primary ml-1" disabled={loading}>
-          <SaveIcon class="mr-2" />
-          Save
-        </button>
-      </div>
-    </div>
-  </div>
-</Form>
+  </Form>
+    <svelte:fragment slot="footer">
+      <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
+        Cancel
+      </button>
+      <button type="submit" class="btn btn-primary ml-1" disabled={loading} on:click={submitHandler}>
+        <SaveIcon class="mr-2" />
+        Save
+      </button>
+    </svelte:fragment>
+</Modal>

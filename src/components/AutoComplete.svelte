@@ -99,6 +99,7 @@
   // selected item state
   export let selectedItem: any = undefined;
   export let value: any = undefined;
+  export let allowEmpty: boolean = false;
   let text: string | undefined;
   let filteredTextLength: number = 0;
   function onSelectedItemChanged(_selectedItem) {
@@ -142,9 +143,11 @@
         const __value = pristineValue;
         const _item = listItem.item;
         if (__value && valueFieldName && _item[valueFieldName] === __value) {
-          onSelectedItemChanged(_item);
+          selectedItem = _item;
+          onSelectedItemChanged(selectedItem)
         } else if (_item === __value) {
-          onSelectedItemChanged(_item);
+          selectedItem = _item;
+          onSelectedItemChanged(selectedItem)
         }
       });
     }
@@ -312,8 +315,9 @@
       highlight();
     } else {
       if (debug) {
-        console.log("onDocumentClick outside");
+        console.log("onDocumentClick outside", selectedItem);
       }
+      text = safeLabelFunction(selectedItem);
       close();
     }
   }

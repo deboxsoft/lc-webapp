@@ -4,10 +4,10 @@
   import AutoComplete from "__@comps/forms/AutoCompleteField.svelte";
   import { createEventDispatcher } from "svelte";
 
-  const { accountStore } = getAccountContext();
+  const accountContext = getAccountContext();
+  export let accountStore = accountContext.accountStore;
   export let accountId: string | undefined = undefined;
   export let name: string = "accountId";
-  export let code: string | undefined = undefined;
   export let selectedAccount: Account | undefined = undefined;
   const dispatch = createEventDispatcher();
 
@@ -18,10 +18,6 @@
       if (accountId) {
         const i = $accountStore.findIndex((_) => _.id === accountId);
         selectedAccount = $accountStore[i];
-      } else if (code) {
-        const i = $accountStore.findIndex((_) => _.code === code);
-        selectedAccount = $accountStore[i];
-        accountId = $accountStore[i].id;
       }
     }
   }
@@ -40,6 +36,6 @@
   items={$accountStore || []}
   pristineValue={accountId}
   on:change={changeHandler}
-  labelFunction={(account) => account && `${account.code}  ${account.name}`}
+  labelFunction={(account) => account && `${account.id} || ${account.name}`}
   valueFieldName="id"
-  keywordsFunction={(account) => account && `${account.code} ${account.name}`} />
+  keywordsFunction={(account) => account && `${account.id} ${account.name}`} />

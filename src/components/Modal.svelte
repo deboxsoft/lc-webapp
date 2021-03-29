@@ -19,11 +19,16 @@
 
 <script>
   import { fade } from "svelte/transition";
+  import {onMount} from "svelte"
 
-  export let open = false;
+  export let open = true;
+  export let title = undefined;
   const events = getEventsAction(current_component);
-  let is_header = $$props.$$slots && $$props.$$slots.header !== undefined;
-  let is_footer = $$props.$$slots && $$props.$$slots.footer !== undefined;
+  onMount(() => {
+    return () => {
+      open = false;
+    }
+  })
 </script>
 
 <style lang="scss" global>
@@ -36,13 +41,26 @@
   }
 </style>
 
-<div
-  class="modal fade"
-  class:show={open}
-  tabindex="-1"
-  transition:fade={{ duration: 200 }}
-  on:click={(e) => (open = false)}>
-  <div class="modal-dialog" use:events {...$$restProps}>
-    <slot />
+<div class="modal-backdrop fade" class:show={open} />
+
+<div class="modal" class:show={open} use:events tabindex="-1" transition:fade={{ duration: 200 }}>
+  <div class="modal-dialog" {...$$restProps}>
+    <div class="modal-content">
+      {#if $$slots['header'] || title}
+        <div class="modal-header">
+          <slot name="header">
+            <h5 class="modal-title">{title}</h5>
+          </slot>
+        </div>
+      {/if}
+      <div class="modal-body">
+        <slot />
+      </div>
+      {#if $$slots['footer']}
+        <div class="modal-footer">
+          <slot name="footer" />
+        </div>
+      {/if}
+    </div>
   </div>
 </div>
