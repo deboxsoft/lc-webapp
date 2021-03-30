@@ -1,19 +1,23 @@
 <!--routify:options title="form"-->
 <script lang="ts">
-  import { url, params, goto } from "@roxi/routify";
+  import { params, goto } from "@roxi/routify";
   import { getTransactionContext, getAccountContext } from "__@modules/accounting";
-  import PageLayout from "__@root/layout/PageLayout.svelte";
+  import { getUserContext } from "__@modules/users";
+  import Modal
+    from "__@comps/Modal.svelte";
   import FormJournal from "./_forms/FormJournal.svelte";
+
+  const { user } = getUserContext();
 
   // context
   const { create, update, getTransaction, transactionStore } = getTransactionContext();
   const { accountStore } = getAccountContext();
-
   // form
   let initial = {
     date: new Date(),
     type: "JOURNAL",
-    accounts: [{}]
+    accounts: [{}],
+    userId: $user.id
   };
   let transaction = getTransaction($params.id);
   let loading: boolean = false;
@@ -46,7 +50,7 @@
   }
 </script>
 
-<PageLayout breadcrumb={{path: $url("./form"), title: "form jurnal"}}>
+<Modal title="Input Transaksi" class="modal-lg">
   <div class="header-elements" slot="header-elements">
     <!--    <a href={$url('./')} class="btn btn-link btn-float text-default" target="_self">-->
     <!--      <Icon class="text-primary" size="large" component={SaveIcon} />-->
@@ -59,4 +63,4 @@
       on:submit={submitHandler}
       on:cancel={cancelHandler} />
   </div>
-</PageLayout>
+</Modal>

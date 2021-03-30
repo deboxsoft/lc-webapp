@@ -1,17 +1,21 @@
 // import { createAuthStore } from "@deboxsoft/users-client-svelte";
 //
 // export const createUserStore = () => createAuthStore({});
+import type { User } from "@deboxsoft/users-api";
 
 import { getContext, setContext } from "svelte";
+import { Readable, writable } from "svelte/store";
 
-import { createMock } from "__@stores/store";
-
-const KEY = {};
+const KEY = Symbol("user");
 
 export const createUserContext = () => {
-  const store = createMock();
-  setContext(KEY, store);
+  const store = writable<Partial<User>>({
+    id: "1232345",
+    username: "demo",
+    roles: ["ADMIN"]
+  });
+  setContext(KEY, { user: store });
   return store;
 };
 
-export const getUserContext = () => getContext<any>(KEY);
+export const getUserContext = (): { user: Readable<Partial<User>> } => getContext(KEY);

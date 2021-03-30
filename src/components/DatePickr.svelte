@@ -18,28 +18,68 @@
   export let formattedValue: string = "";
   export let element: HTMLElement | null = null;
   export let options = {};
-  export let mode: "month-select" | undefined = undefined;
-  export let input: any = undefined;
+  export let confirmEnable: boolean = false;
+  export let mode: "month-select" | "menu" | undefined = undefined;
+  let input: any = undefined;
 
-  let defaultOptions = { altInput: true, altFormat: "d-M-Y", locale: Indonesian, dateFormat: "Z", plugins: [] };
   let flatPickr;
-  onMount(() => {
-    const elem = element || input;
-    if (mode === "month-select") {
-      defaultOptions.plugins.push(
+
+  const createFlatPickr = (elem, options: Record<string, any> = {}) => {
+    options = {
+      altInput: true,
+      altFormat: "d-m-Y",
+      locale: Indonesian,
+      dateFormat: "Z",
+      plugins: [],
+      ...(element ? { wrap: true } : {}),
+      ...options
+    };
+    if (options.mode === "month-select") {
+      options.plugins = [
+        ...options.plugins,
         monthSelect({
           shorthand: true,
           dateFormat: defaultOptions.dateFormat
         })
-      );
+      ];
+    }
+    if (flatPickr) {
+      flatPickr.destroy();
     }
     flatPickr = Flatpickr(elem, {
-      ...defaultOptions,
-      ...addHooks(options),
-      ...(element ? { wrap: true } : {})
+      ...options,
+      ...addHooks(options)
     });
+  };
+
+  const createMenuElement = (container: Element) => {
+    container.appendChild();
+  };
+
+  const menuPlugin = () => {
+    return (fp) => {
+      if (fp.config.noCalendar || fp.isMobile) {
+        return {};
+      }
+      return {
+        onReady() {
+          fp._createElement("div");
+        }
+      };
+    };
+  };
+
+  onMount(() => {
+    const _elem = element || input;
+    if (mode === "month-select") {
+      flatPickr = createFlatPickr(_elem, { ...options, mode: "mode-select" });
+    } else if (mode === "menu") {
+      flatPickr = createFlatPickr(_elem, { ...{ mode: "range" }, ...options });
+    } else {
+      flatPickr = createFlatPickr(_elem, options);
+    }
     return () => {
-      flatPickr.destroy();
+      flatPickr?.destroy();
     };
   });
   const dispatch = createEventDispatcher();
@@ -64,21 +104,44 @@
       }
     }
     if (opts.onChange && !opts.onChange.includes(updateValue)) opts.onChange.push(updateValue);
+    if (opts.onClose && !opts.onClose.includes(updateValue)) opts.onClose.push(updateValue);
     return opts;
   }
 
   function updateValue(newValue, dateStr) {
     value = Array.isArray(newValue) && newValue.length === 1 ? newValue[0] : newValue;
     formattedValue = dateStr;
-
   }
 
   function stripOn(hook) {
     return hook.charAt(2).toLowerCase() + hook.substring(3);
   }
+
+  function createMenuHandler(menu: string) {
+    return () => {
+      if (menu === "selector") {
+      }
+    };
+  }
 </script>
 
 <style lang="scss" global>
+  .dbx-flatpickr {
+    display: flex;
+    > .menu {
+      ul {
+        list-style: none;
+        margin: 0 auto;
+        padding: 0;
+        width: 140px;
+      }
+
+      li {
+        cursor: pointer;
+      }
+    }
+  }
+
   .flatpickr-monthSelect-months {
     margin: 10px 1px 3px 1px;
     flex-wrap: wrap;
@@ -160,5 +223,5 @@
   }
 </style>
 
-<input bind:this={input} {...$$restProps} {value} >
+<input bind:this={input} {...$$restProps} {value} />
 <slot />

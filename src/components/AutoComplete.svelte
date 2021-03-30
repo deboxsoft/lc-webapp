@@ -88,7 +88,7 @@
   // apply a className to the dropdown div
   export let dropdownClassName: string | undefined = undefined;
   // option to hide the dropdown arrow
-  export let hideArrow: boolean = false;
+  export let hideArrow: boolean = true;
   // option to show clear selection button
   export let showClear: boolean = false;
   // adds the disabled tag to the HTML input
@@ -105,6 +105,7 @@
   function onSelectedItemChanged(_selectedItem) {
     value = valueFunction(_selectedItem);
     text = safeLabelFunction(_selectedItem);
+    showClear = allowEmpty && !!_selectedItem;
     dispatch("change", value);
   }
   $: onSelectedItemChanged(selectedItem);
@@ -456,6 +457,9 @@
   function onBlur() {
     if (debug) {
       console.log("onBlur");
+    }
+    if (text === "") {
+      // text = safeLabelFunction(selectedItem)
     }
     close();
   }

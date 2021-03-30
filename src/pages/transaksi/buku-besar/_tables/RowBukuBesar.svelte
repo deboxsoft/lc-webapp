@@ -13,18 +13,20 @@
   let classes = "";
   $: classes = clsx("odd");
 
-  $: console.log(generalLedger.oppositeAccountId);
-
 </script>
 
 <tr class={classes}>
-  <td class="control d-table-cell">{generalLedger.no || ''}</td>
-  <td class="d-none d-lg-table-cell">{lightFormat(parse(generalLedger.date, 'T', new Date()), 'dd-MM-yyyy') || ''}</td>
+  <td class=" d-lg-table-cell">{lightFormat(parse(generalLedger.date, 'T', new Date()), 'dd-MM-yyyy') || ''}</td>
   <td class="d-none d-xl-table-cell">
-    <CellAccount id={generalLedger.oppositeAccountId} />
+    {generalLedger.transactionId}
   </td>
-  <td>{generalLedger.description || ""}</td>
+  <td class="d-none d-xl-table-cell">
+    {generalLedger.description || ""}
+  </td>
   <td>
-    <CellRp value={generalLedger.amount} />
+    <CellRp spaceMinus value={generalLedger.amount} />
+  </td>
+  <td>
+    <CellRp value={generalLedger.balance} />
   </td>
 </tr>

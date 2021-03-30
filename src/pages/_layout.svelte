@@ -10,11 +10,11 @@
   import { redirect, layout, url } from "@roxi/routify";
   import { createAuthStore } from "__@stores/auth";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getContext } from "__@stores/ui";
+  import { getUIContext } from "__@stores/ui";
   import { createApplicationContext, getApplicationContext } from "__@modules/app";
 
   // context and store
-  const { toggleShowMobileSidebar } = getContext();
+  const { toggleShowMobileSidebar } = getUIContext();
   const { authorize } = createAuthStore({ initial: { profile: { username: "Nurdiansyah", id: "13" } } });
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
   createApplicationContext();

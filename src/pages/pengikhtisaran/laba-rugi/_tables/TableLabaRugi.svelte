@@ -6,13 +6,12 @@
   import { getGeneralLedgerContext, getAccountContext } from "__@modules/accounting";
 
   const { balanceSheetStore } = getGeneralLedgerContext();
-  const { accountTypeStore, accountStore } = getAccountContext();
+  const { accountStore, getAccountTree } = getAccountContext();
 
   let dataList;
-  let getDataLabaRugi = labaRugiParsingUtils({ accounts: $accountStore, accountsType: $accountTypeStore });
+  let getDataLabaRugi = labaRugiParsingUtils(getAccountTree());
   $: {
     dataList = getDataLabaRugi($balanceSheetStore);
-    console.log(dataList);
   }
 </script>
 

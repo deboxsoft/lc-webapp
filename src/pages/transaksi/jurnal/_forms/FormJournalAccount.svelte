@@ -5,48 +5,59 @@
   import { writable } from "svelte/store";
   import { getId } from "@deboxsoft/svelte-theme-limitless/utils";
   import ListPlusIcon from "__@comps/icons/ListPlus.svelte";
+  import CheckIcon from "__@comps/icons/Check.svelte";
+  import CloseIcon from "__@comps/icons/Close.svelte";
   import { convertToRp } from "__@root/utils";
   import JournalAccountItemForm from "./FormJournalAccountItem.svelte";
 
-  const { schema, fields, fieldsErrors } = getFormContext();
+  // context formJournal
+  const { schema, fields, fieldsErrors, isValid, validateField } = getFormContext();
+  const accountsValidate = validateField("accounts")
   const journalAccountSchema = schema.pick({ accounts: true });
-  createFormContext({ schema: journalAccountSchema, values: fields["accounts"] });
+  createFormContext({ schema: journalAccountSchema, fields, fieldsErrors });
 
   const createJournalAccount = () => ({ index: getId({ prefix: "account-input", size: 3 }) });
 
   export let total: number = 0;
-  export let creditDisable: boolean = true;
 
-  let journalAccountsStore = writable($fields.accounts.map((_) => ({ ..._, ...createJournalAccount() })));
-
-  let debit: string = "-";
-  let credit: string = "-";
+  let debit: any;
   let diff: number = NaN;
+  let journalAccountsStore = writable($fields.accounts.map((_) => ({ ..._, ...createJournalAccount() })));
+  let credit: any;
 
+  // validation form journal
+  // hack hapus FieldsError.account
+  delete $fieldsErrors["accounts"];
+  delete $fieldsErrors["total"];
   $: {
-    let _debit = 0;
     let _credit = 0;
     $journalAccountsStore.forEach((_) => {
-      if (_.isCredit) {
-        _credit += parseInt(_.amount || 0);
-      } else {
-        _debit += parseInt(_.amount || 0);
-      }
+      _credit = parseFloat(_.amount || 0) + _credit;
     });
-    debit = _debit;
+    console.log($fields);
+    $fields.total = _credit;
     credit = _credit;
-    diff = _debit - _credit;
-    $fields.total = debit;
+    debit = $fields.amount;
+    diff = ($fields.amount || 0) - _credit;
+    if ($fields.total === 0 || $fields.total !== $fields.amount) {
+      $fieldsErrors = { ...$fieldsErrors, noBalance: "debit and credit not balance" };
+    } else {
+      delete $fieldsErrors.noBalance;
+    }
+    isValid.set(Object.keys($fieldsErrors).length === 0);
+    console.log($fieldsErrors, $isValid);
   }
 
   function addJournalAccountHandler() {
     $journalAccountsStore = [...$journalAccountsStore, createJournalAccount()];
+    accountsValidate($journalAccountsStore);
   }
 
   function updateJournalAccountHandler(input: JournalAccountInput) {
     const i = $journalAccountsStore.findIndex((_) => _.index === input.index);
     $journalAccountsStore[i] = input;
     $fields.accounts[i] = input;
+    accountsValidate($journalAccountsStore);
   }
 
   function removeJournalAccountHandler(index: number) {
@@ -62,10 +73,7 @@
       <thead>
         <tr>
           <th class="text-center" style="width: 20px">#</th>
-          <th>Akun</th>
-          {#if !creditDisable}
-            <th style="width: 20px;">Kredit</th>
-          {/if}
+          <th>Akun Kredit</th>
           <th class="text-center" style="width: 275px">Jumlah</th>
           <th class="text-center" style="width: 20px">#</th>
         </tr>
@@ -73,7 +81,6 @@
       <tbody>
         {#each $journalAccountsStore as journalAccountInput, index (journalAccountInput.index)}
           <JournalAccountItemForm
-            {creditDisable}
             {index}
             input={journalAccountInput}
             onRemoveJournalAccount={removeJournalAccountHandler}
@@ -89,32 +96,30 @@
         Tambah Akun
       </button>
     </div>
-    <!--{#if debit > 0 || credit > 0}-->
-    <!--  {#if diff === 0}-->
-    <!--    <div class="text-success" style="width: 30px;">-->
-    <!--      <CheckIcon />-->
-    <!--    </div>-->
-    <!--  {:else}-->
-    <!--    <div class="text-danger" style="width: 30px;">-->
-    <!--      <CloseIcon />-->
-    <!--    </div>-->
-    <!--  {/if}-->
-    <!--{/if}-->
-    <div class="d-flex flex-column" style="width: 250px">
-      <div class="d-flex">
-        <span class="flex-grow-1">Total: Rp.</span>
-        <span>{debit ? convertToRp(parseInt(debit)) : '-'}</span>
-      </div>
-      {#if !creditDisable}
-        <div class="d-flex">
-          <span class="flex-grow-1">Total Kredit: Rp.</span>
-          <span>{credit ? convertToRp(parseInt(credit)) : '-'}</span>
+    {#if debit > 0 || credit > 0}
+      {#if diff === 0}
+        <div class="text-success" style="width: 30px;">
+          <CheckIcon />
         </div>
-        <div class="d-flex" style="border-top: solid 1px gray">
-          <span class="flex-grow-1"> Selisih: Rp.</span>
-          <span>{diff ? convertToRp(diff) : '-'}</span>
+      {:else}
+        <div class="text-danger" style="width: 30px;">
+          <CloseIcon />
         </div>
       {/if}
+    {/if}
+    <div class="d-flex flex-column" style="width: 250px">
+      <div class="d-flex">
+        <span class="flex-grow-1">Total Debit: Rp.</span>
+        <span>{debit ? convertToRp(parseFloat(debit)) : '-'}</span>
+      </div>
+      <div class="d-flex">
+        <span class="flex-grow-1">Total Kredit: Rp.</span>
+        <span>{credit ? convertToRp(parseFloat(credit)) : '-'}</span>
+      </div>
+      <div class="d-flex" style="border-top: solid 1px gray">
+        <span class="flex-grow-1"> Selisih: Rp.</span>
+        <span>{diff ? convertToRp(diff) : '-'}</span>
+      </div>
     </div>
   </div>
 </div>

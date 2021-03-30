@@ -36,6 +36,6 @@
   items={$accountStore || []}
   pristineValue={accountId}
   on:change={changeHandler}
-  labelFunction={(account) => account && `${account.id} || ${account.name}`}
+  labelFunction={(account) => account && `${account.id} - ${account.name}`}
   valueFieldName="id"
   keywordsFunction={(account) => account && `${account.id} ${account.name}`} />

@@ -1,22 +1,23 @@
-import { setContext, getContext as getContextSvelte } from "svelte";
-import { writable, Readable } from "svelte/store";
+import { getContext as getContextSvelte, setContext } from "svelte";
+import { Readable, writable } from "svelte/store";
 
 export interface Store {
   isDark?: boolean;
   minimizeSidebar: boolean;
   showMobileSidebar: boolean;
+  modalOpen: boolean;
 }
 
 const createUiStore = () => {
   const isDark = localStorage.getItem("is-dark");
   const toggleMinimizeSidebar = localStorage.getItem("toggle-minimize-sidebar");
   const toggleShowMobileSidebar = localStorage.getItem("toggle-show-mobile-sidebar");
-  const store = writable<Store>({
+  return writable<Store>({
     isDark: isDark === "true" || false,
     minimizeSidebar: toggleMinimizeSidebar === "true" || false,
-    showMobileSidebar: toggleShowMobileSidebar === "true" || false
+    showMobileSidebar: toggleShowMobileSidebar === "true" || false,
+    modalOpen: false
   });
-  return store;
 };
 
 const store = createUiStore();
@@ -52,14 +53,15 @@ const toggleShowMobileSidebar = () => {
   });
 };
 
-export const createContext = () => {
-  setContext<Context>(key, {
+export const createUIContext = () => {
+  const context = {
     store,
     toggleTheme,
     toggleMinimizeSidebar,
     toggleShowMobileSidebar
-  });
-  return getContext();
+  };
+  setContext<Context>(key, context);
+  return context;
 };
 
-export const getContext = (): Context => getContextSvelte<Context>(key);
+export const getUIContext = (): Context => getContextSvelte<Context>(key);

@@ -8,6 +8,7 @@ export interface Context {
   schema: ZodObject<ZodRawShape>;
   fields: Writable<Record<string, any>>;
   submitted: Writable<boolean>;
+  isValid: Writable<boolean>;
   fieldsErrors: Writable<Record<string, string[]>>;
   validateField: (args?: any) => (value?: unknown) => void;
 }
@@ -15,20 +16,28 @@ export interface Context {
 export interface Options {
   schema: ZodObject<ZodRawShape>;
   fields?: Writable<Record<string, any>>;
+  fieldsErrors: Writable<Record<string, string[]>>;
+  submittedEnable?: boolean;
   values?: any;
+  isValid: Writable<boolean>;
   validateField?: (args?: any) => (value?: unknown) => void;
 }
 
 const key = Symbol("form");
 
-export const createFormContext = ({ schema, values, validateField }: Options) => {
-  let fields = writable<Record<string, any>>(values);
-  let submitted = writable(false);
-  let fieldsErrors = writable({});
-  let $submitted = false;
-  let $fields;
+export const createFormContext = ({
+  schema,
+  values,
+  validateField,
+  fields = writable<Record<string, any>>(values),
+  isValid = writable(false),
+  fieldsErrors = writable({}),
+  submittedEnable = false
+}: Options) => {
+  let submitted = writable(submittedEnable);
+  let $fields = {};
   submitted.subscribe((_submitted) => {
-    $submitted = _submitted;
+    submittedEnable = _submitted;
   });
   fields.subscribe((_fields) => {
     $fields = _fields;
@@ -36,16 +45,18 @@ export const createFormContext = ({ schema, values, validateField }: Options) =>
 
   function validateFieldDefault(fieldName: string) {
     return (value: unknown) => {
-      if ($submitted) {
-        if (schema) {
-          const parsed = schema.pick({ [fieldName]: true }).safeParse({ [fieldName]: $fields[fieldName] });
-          // @ts-ignore
-          const { success, error } = parsed;
-          fieldsErrors.update(($fieldsErrors) => {
-            $fieldsErrors[fieldName] = !success ? error.errors[0].message : undefined;
-            return $fieldsErrors;
-          });
-        }
+      if (schema) {
+        const parsed = schema.pick({ [fieldName]: true }).safeParse({ [fieldName]: $fields[fieldName] });
+        // @ts-ignore
+        const { success, error } = parsed;
+        fieldsErrors.update(($fieldsErrors) => {
+          if (error) {
+            $fieldsErrors[fieldName] = error.errors[0].message;
+          } else if ($fieldsErrors[fieldName]) {
+            delete $fieldsErrors[fieldName];
+          }
+          return $fieldsErrors;
+        });
       }
     };
   }
@@ -55,6 +66,7 @@ export const createFormContext = ({ schema, values, validateField }: Options) =>
     fields,
     fieldsErrors,
     submitted,
+    isValid,
     validateField: validateField || validateFieldDefault
   };
 

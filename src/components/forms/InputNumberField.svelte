@@ -4,7 +4,8 @@
   import { getFormContext } from "__@stores/form";
   import { createEventDispatcher } from "svelte";
 
-  const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
+  export let formContextDisable: boolean = false;
+  const context = (!formContextDisable && getFormContext()) || {};
   const dispatcher = createEventDispatcher();
 
   export let options: any = {};
@@ -23,6 +24,7 @@
   let msgError: string[] | undefined;
   let invalid: boolean = false;
   let classes: string = "";
+  let submitted = context.submitted
   let _value = value;
 
   $: {
@@ -32,11 +34,13 @@
   }
 
   $: {
-    if ($fieldsErrors[name]) {
-      invalid = true;
-      msgError = $fieldsErrors[name];
-    } else {
-      invalid = false;
+    if (!formContextDisable) {
+      if ($fieldsErrors && $fieldsErrors[name]) {
+        invalid = true;
+        msgError = $fieldsErrors[name];
+      } else {
+        invalid = false;
+      }
     }
   }
 
@@ -44,7 +48,7 @@
 
   const useFormatCurrency = (el: HTMLInputElement, _options: any) => {
     const defaultOptions = {
-      decimalPlaces: 0,
+      decimalPlaces: format === "currency" ? 2 : 0,
       modifyValueOnWheel: false,
       digitGroupSeparator: ".",
       decimalCharacter: ","
@@ -63,11 +67,17 @@
   };
 
   function createInputHandler() {
-    const _validate = validateField(name);
+    const _validate = context.validateField ? context.validateField(name): (() => {});
     return () => {
+      let result = _value.replace(/\./g, "");
+      if (resultType === "number") {
+        result = parseFloat(result.replace(/,/g, "."));
+      }
+      if ($fields) {
+        $fields[name] = result;
+      }
       _validate();
-      $fields[name] = parseInt(_value.replace(/\./g, ""));
-      dispatcher("input", $fields[name]);
+      dispatcher("input", result);
     };
   }
 </script>

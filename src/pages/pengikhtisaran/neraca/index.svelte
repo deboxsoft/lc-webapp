@@ -1,7 +1,5 @@
 <!--routify:options title="tabel"-->
 <script lang="ts">
-  import getMonth from "date-fns/getMonth";
-  import getYear from "date-fns/getYear";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableNeraca from "./_tables/TableNeraca.svelte";
   import { getGeneralLedgerContext } from "__@modules/accounting";
@@ -10,11 +8,7 @@
   const { getBalanceSheet } = getGeneralLedgerContext();
 
   async function fetchBalanceSheetList(date: Date) {
-    const params = {
-      month: getMonth(date),
-      year: getYear(date)
-    }
-    await getBalanceSheet(params);
+    await getBalanceSheet(date);
   }
   fetchBalanceSheetList(new Date());
 

@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { BreadcrumbItem } from "__@stores/breadcrumb";
 
-  import { layout, url, page } from "@roxi/routify";
+  import { layout, page } from "@roxi/routify";
   import Breadcrumb from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb.svelte";
-  import { getContext } from "__@stores/ui";
+  import { getUIContext } from "__@stores/ui";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import SkeletonPage from "__@comps/loader/skeleton/SkeletonPage.svelte";
   import { getApplicationContext } from "__@modules/app";
@@ -11,7 +11,7 @@
   export let breadcrumb: BreadcrumbItem | BreadcrumbItem[] | undefined = undefined;
 
   const { loading } = getApplicationContext();
-  const { toggleShowMobileSidebar } = getContext();
+  const { toggleShowMobileSidebar } = getUIContext();
   const { setBreadcrumb, breadcrumbStore } = getBreadcrumbStore();
   if (breadcrumb) {
     setBreadcrumb(breadcrumb);

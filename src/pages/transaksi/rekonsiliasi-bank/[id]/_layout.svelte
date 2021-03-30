@@ -4,7 +4,7 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { createStoreContext } from "./_store";
   import LoaderContainer from "__@comps/loader/LoaderContainer.svelte"
-  import Loader from "__@comps/loader/loader1.svelte"
+  import Loader from "__@comps/loader/loader.svelte"
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Rekonsiliasi Detail" });

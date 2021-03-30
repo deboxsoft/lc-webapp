@@ -1,48 +1,72 @@
 <!--routify:options title="tabel"-->
 <script lang="ts">
-  import type { GeneralLedgerParams } from "@deboxsoft/accounting-api";
+  import type { GeneralLedgerParams, Account } from "@deboxsoft/accounting-api";
+  import AccountCombox from "../../../components/account/AccountCombox.svelte";
 
-  import getMonth from "date-fns/getMonth";
-  import getYear from "date-fns/getYear";
+  import { writable } from "svelte/store";
+  import startOfMonth from "date-fns/startOfMonth";
+  import endOfDay from "date-fns/endOfDay";
+  import startOfDay from "date-fns/startOfDay";
+  import isBefore from "date-fns/isBefore";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableBukuBesar from "./_tables/TableBukuBesar.svelte";
   import { getGeneralLedgerContext, getAccountContext } from "__@modules/accounting";
   import DatePickr from "__@comps/DatePickr.svelte";
   import AutoComplete from "__@comps/Autocomplete.svelte";
 
-  const { accountStore } = getAccountContext();
+  const { accountStore, getAccount, getAccountChildren } = getAccountContext();
   const { getGeneralLedger } = getGeneralLedgerContext();
 
-  let accountId: string;
-  let date: Date = new Date();
+  let accountIds: string[];
+  let endDate: Date = new Date();
+  let startDate: Date = startOfMonth(endDate);
+  let account = writable<Account | undefined>(undefined);
+  let accountsChild;
 
   $: {
     if ($accountStore.length > 0) {
-      if (!accountId) {
-        accountId = $accountStore[0].id;
+      if (!accountIds) {
+        setAccountIds($accountStore[0].id);
       }
-      if (accountId) {
-        fetchGeneralLedger()
+      if (accountIds) {
+        fetchGeneralLedger();
       }
     }
   }
 
   async function fetchGeneralLedger() {
-    const params: GeneralLedgerParams = {
-      month: getMonth(date),
-      year: getYear(date),
-      accountId
-    };
-    await getGeneralLedger(params);
+    if (accountIds && accountIds.length > 0) {
+      const params: GeneralLedgerParams = {
+        startDate,
+        endDate,
+        accountIds
+      };
+      await getGeneralLedger(params);
+    }
   }
 
-  function accountChangeHandler(e) {
-    accountId = e.detail;
+  function setAccountIds(_accountId: string) {
+    account = getAccount(_accountId);
+    if ($account) {
+      if ($account.isParent) {
+        accountsChild = getAccountChildren($account.id);
+        accountIds = [$account.id, ...$accountsChild.map((_) => _.id)];
+      } else {
+        accountIds = [$account.id];
+      }
+    }
+  }
+
+  function accountChangeHandler({ detail }) {
+    setAccountIds(detail);
   }
 
   function dateChangeHandler(e) {
-    date = e.detail[0][0];
-    fetchGeneralLedger()
+    const now = new Date();
+    startDate = startOfDay(e.detail[0][0] || now);
+    const _tmp = endOfDay(e.detail[0][1] || now);
+    endDate = isBefore(_tmp, now) ? _tmp : now;
+    fetchGeneralLedger();
   }
 </script>
 
@@ -53,16 +77,21 @@
       <h5 class="card-title">Buku Besar</h5>
       <div class="header-elements">
         <div class="list-icons">
-          <AutoComplete
+          <AccountCombox
             id="account"
             name="account"
             on:change={accountChangeHandler}
-            inputClassName="form-control"
-            pristineValue={accountId}
-            items={$accountStore}
-            keywordsFieldName="name"
-            labelFieldName="name" />
-          <DatePickr id="date" name="date" class="form-control" mode="month-select" placeholder="Tanggal" on:change={dateChangeHandler} />
+            class="form-control"
+            accountId={$account.id}
+          />
+          <DatePickr
+            id="date"
+            name="date"
+            class="form-control"
+            mode="menu"
+            placeholder="Tanggal"
+            on:close={dateChangeHandler}
+            confirmEnable />
           <!--          <a class="list-icons-item" data-action="reload" />-->
         </div>
       </div>

@@ -1,37 +1,45 @@
 <script lang="ts">
   import { utils } from "@deboxsoft/module-core";
-  import { TransactionInputSchema, JournalAccountSchema } from "@deboxsoft/accounting-api";
-  import { createFormContext, getFormContext } from "__@stores/form";
+  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
+  import { getFormContext } from "__@stores/form";
   import { getAccountContext } from "__@modules/accounting";
   import TrashIcon from "__@comps/icons/Trash.svelte";
-  import AutoComplete from "__@comps/AutoComplete.svelte";
+  // import AutoComplete from "__@comps/AutoComplete.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import { getId } from "@deboxsoft/svelte-theme-limitless/utils";
+  import AccountCombox from "../../../../components/account/AccountCombox.svelte";
 
   const { debounce } = utils;
   export let id = getId("journal-account-item");
   export let input;
   export let creditDisable: boolean = false;
   export let index: number;
-  export let minusCurrencyEnable: boolean = !creditDisable;
-  export let onRemoveJournalAccount = () => {};
-  export let onUpdateJournalAccount = () => {};
+  export let fieldName: string = "accounts";
+  export let minusCurrencyEnable: boolean = true;
+  export let onRemoveJournalAccount = () => {
+  };
+  export let onUpdateJournalAccount = () => {
+  };
+  export let isValid: boolean = false;
 
-  const { accountStore = [], getAccount } = getAccountContext();
+  const { getAccountLeaf, getAccount } = getAccountContext();
+  const accountStore = getAccountLeaf();
 
-  const { submitted, fields } = getFormContext();
-  createFormContext({ schema: JournalAccountSchema, values: input, validateField });
+  const { fields, fieldsErrors } = getFormContext();
 
-  function validateField(fieldName) {
+
+  // createFormContext({ schema: JournalAccountSchema, values: input, validateField });
+
+  function validateField(_fieldName) {
     return (value: unknown) => {
-      if ($submitted) {
-        TransactionInputSchema.pick({ [fieldName]: true }).safeParse({ [fieldName]: $fields[index][fieldName] });
-        // @ts-ignore
-        const { success, error } = parsed;
-        fieldsErrors.update(($fieldsErrors) => {
-          $fieldsErrors[fieldName] = !success ? error.errors[0].message : undefined;
-          return $fieldsErrors;
-        });
+      const parsed = TransactionInputSchema.pick({ [_fieldName]: true }).safeParse({ [_fieldName]: $fields[fieldName][index][_fieldName] });
+      // @ts-ignore
+      const { success, error } = parsed;
+      const key = `${fieldName}.${index}.${_fieldName}`;
+      if (error) {
+        $fieldsErrors[key] = error.errors[0].message;
+      } else if ($fieldsErrors[key]) {
+        delete $fieldsErrors[key];
       }
     };
   }
@@ -39,11 +47,13 @@
   function accountSelectedHandler(e) {
     input.accountId = e.detail;
     updateHandler();
+    validateField("accountId");
   }
 
-  function updateAmountHandler() {
+  function createUpdateAmountHandler() {
     return debounce((e) => {
       input.amount = e.detail;
+      validateField("amount");
       updateHandler();
     });
   }
@@ -61,17 +71,18 @@
 <tr>
   <td />
   <td>
-    <AutoComplete
-      id="{id}-autocomplete"
-      inputClassName="form-control"
-      placeholder="Pilih Akun"
-      items={$accountStore || []}
-      pristineValue={input.accountId}
-      bind:value={input.accountId}
-      on:change={accountSelectedHandler}
-      labelFunction={(account) => account && `${account.code}  ${account.name}`}
-      valueFieldName="id"
-      keywordsFunction={(account) => account && `${account.code} ${account.name}`} />
+    <AccountCombox id="{id}-autocomplete" class="form-control" fieldDisable placeholder="pilih akun" allowEmpty on:change={accountSelectedHandler} />
+<!--    <AutoComplete-->
+<!--      id="{id}-autocomplete"-->
+<!--      inputClassName="form-control"-->
+<!--      placeholder="Pilih Akun"-->
+<!--      items={$accountStore || []}-->
+<!--      pristineValue={input.accountId}-->
+<!--      bind:value={input.accountId}-->
+<!--      on:change={accountSelectedHandler}-->
+<!--      labelFunction={(account) => account && `${account.id} || ${account.name}`}-->
+<!--      valueFieldName="id"-->
+<!--      keywordsFunction={(account) => account && `${account.id} ${account.name}`} />-->
   </td>
   <!--{#if !creditDisable}-->
   <!--  <td>-->
@@ -94,7 +105,8 @@
       class="form-control"
       name="amount"
       value={input.amount}
-      on:input={updateAmountHandler()}
+      on:input={createUpdateAmountHandler()}
+      formContextDisable
       signed />
   </td>
   <td>

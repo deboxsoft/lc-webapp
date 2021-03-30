@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {clsx} from "@deboxsoft/svelte-theme-limitless/utils"
+  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import { getFormContext } from "__@stores/form";
   import DatePickr from "__@comps/DatePickr.svelte";
   import { createEventDispatcher } from "svelte";
@@ -19,7 +19,7 @@
   let invalid = true;
   let msgError;
 
-  $: classes = clsx(className)
+  $: classes = clsx(className);
 
   $: {
     if ($fieldsErrors[name]) {
@@ -29,18 +29,12 @@
       invalid = false;
     }
   }
-
 </script>
 
-<DatePickr
-  {...$$restProps}
-  class={className}
-  bind:value={$fields[name]}
->
+<DatePickr {...$$restProps} class={className} bind:value={$fields[name]}>
   {#if $submitted}
     {#if invalid}
       <p class="invalid-tooltip">{msgError}</p>
     {/if}
   {/if}
 </DatePickr>
-

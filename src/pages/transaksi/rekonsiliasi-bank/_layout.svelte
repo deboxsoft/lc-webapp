@@ -4,7 +4,7 @@
   import { url } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import LoaderContainer from "__@comps/loader/LoaderContainer.svelte"
-  import Loader from "__@comps/loader/loader1.svelte"
+  import Loader from "__@comps/loader/loader.svelte"
 
   const { setBreadcrumbContext } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "rekonsiliasi bank" });

@@ -1,10 +1,10 @@
 <script lang="ts">
   import MenuIcon from "__@comps/icons/Bars.svelte";
-  import { getContext } from "__@root/stores/ui";
+  import { getUIContext } from "__@root/stores/ui";
 
   export let showToggleMenu: boolean = false;
 
-  const { toggleMinimizeSidebar } = getContext();
+  const { toggleMinimizeSidebar } = getUIContext();
 </script>
 
 <div class="navbar-nav">

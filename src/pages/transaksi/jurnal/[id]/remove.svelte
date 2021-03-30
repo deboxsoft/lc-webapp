@@ -1,16 +1,14 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getAccountContext } from "__@modules/accounting";
+  import { getTransactionContext } from "__@modules/accounting";
 
-  const { remove } = getAccountContext();
+  const { remove } = getTransactionContext();
 
-  let accountId;
-
-  $: accountId = $params.id;
+  $: transactionId = $params.id;
 
   async function removeHandler() {
-    await remove(accountId);
+    await remove(transactionId);
     $goto("../");
   }
 
@@ -21,7 +19,7 @@
 
 <Modal open title="Hapus Content">
   <div class="alert alert-warning alert-styled-left">
-    Menghapus akun akan berpengaruh pada transaksi. Apa anda yakin akan menghapus kode akun `{accountId}`?
+    Menghapus transaksi akan menhapus transaksi setelahnya. Apa anda yakin akan menghapus transaksi id `{transactionId}`?
   </div>
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>

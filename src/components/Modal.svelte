@@ -19,7 +19,11 @@
 
 <script>
   import { fade } from "svelte/transition";
-  import {onMount} from "svelte"
+  import { onMount } from "svelte";
+  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+
+  let { class: className } = $$props;
+  $: classes = clsx("modal-dialog", className);
 
   export let open = true;
   export let title = undefined;
@@ -27,9 +31,33 @@
   onMount(() => {
     return () => {
       open = false;
-    }
-  })
+    };
+  });
 </script>
+
+<div class="modal-backdrop fade" class:show={open} />
+
+<div class="modal" class:show={open} use:events tabindex="-1" transition:fade={{ duration: 200 }}>
+  <div {...$$restProps} class={classes}>
+    <div class="modal-content">
+      {#if $$slots["header"] || title}
+        <div class="modal-header">
+          <slot name="header">
+            <h5 class="modal-title">{title}</h5>
+          </slot>
+        </div>
+      {/if}
+      <div class="modal-body">
+        <slot />
+      </div>
+      {#if $$slots["footer"]}
+        <div class="modal-footer">
+          <slot name="footer" />
+        </div>
+      {/if}
+    </div>
+  </div>
+</div>
 
 <style lang="scss" global>
   .dbx-theme {
@@ -40,27 +68,3 @@
     }
   }
 </style>
-
-<div class="modal-backdrop fade" class:show={open} />
-
-<div class="modal" class:show={open} use:events tabindex="-1" transition:fade={{ duration: 200 }}>
-  <div class="modal-dialog" {...$$restProps}>
-    <div class="modal-content">
-      {#if $$slots['header'] || title}
-        <div class="modal-header">
-          <slot name="header">
-            <h5 class="modal-title">{title}</h5>
-          </slot>
-        </div>
-      {/if}
-      <div class="modal-body">
-        <slot />
-      </div>
-      {#if $$slots['footer']}
-        <div class="modal-footer">
-          <slot name="footer" />
-        </div>
-      {/if}
-    </div>
-  </div>
-</div>

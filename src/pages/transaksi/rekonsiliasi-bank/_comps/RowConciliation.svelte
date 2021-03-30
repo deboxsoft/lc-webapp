@@ -11,7 +11,7 @@
 
   // export let index: number;
   const { getAccount } = getAccountContext();
-  const account = getAccount({ id: bankReconciliation.accountId });
+  const account = getAccount(bankReconciliation.accountId);
   let dropdownTriggerElement;
 
   async function removeHandler() {

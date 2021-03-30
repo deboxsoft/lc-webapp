@@ -8,11 +8,11 @@
   // components
   import Modal from "__@comps/Modal.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
-  import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import SaveIcon from "__@comps/icons/Save.svelte";
   import Form from "__@comps/forms/Form.svelte";
   import InputNumberField from "__@comps/forms/InputNumberField.svelte";
   import InputCheck from "__@comps/forms/InputCheckSwitchery.svelte";
+  import AccountCombox from "__@comps/account/AccountComboxField.svelte";
 
   // context
   const { notify } = getApplicationContext();
@@ -26,12 +26,12 @@
   export let title;
   export let to;
   let loading = false;
-  let isParent
+  let isParent;
 
   async function submitHandler(e) {
     loading = true;
     try {
-      await onSubmit(account)
+      await onSubmit(account);
       loading = false;
       $goto(to);
     } catch (e) {
@@ -78,7 +78,8 @@
           <div class="row">
             <div class="form-group col-12">
               <label for="accountType">Klasifikasi Akun</label>
-              <AccountSelect id="parentId" name="parentId" accountStore={parentAccountStore} allowEmpty />
+                <AccountCombox id="parentId" name="parentId" accountStore={parentAccountStore} allowEmpty />
+<!--              <AccountSelect id="parentId" name="parentId" accountStore={parentAccountStore} allowEmpty />-->
             </div>
           </div>
         {/if}

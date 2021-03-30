@@ -1,7 +1,7 @@
 <script>
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
-  import { createContext as createContextStore } from "__@root/stores/ui";
+  import { createUIContext as createContextStore } from "__@root/stores/ui";
 
   const { store: uiStore } = createContextStore();
 
@@ -30,7 +30,9 @@
   // @ts-ignore
   setTimeout(() => window.routify.inBrowser);
 </script>
-
+{#if $uiStore.modalOpen}
+  <div class="modal-backdrop fade show" />
+{/if}
 <div use:BodyClass={$uiStore}>
   <Router {routes} />
 </div>
