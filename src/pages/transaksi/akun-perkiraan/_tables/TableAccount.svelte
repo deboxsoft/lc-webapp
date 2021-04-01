@@ -22,7 +22,7 @@
 
   function createRemoveHandler(id) {
     return () => {
-      $goto("./:id/remove", { id }, true);
+      $goto("./:id/remove", { id });
       // removeAlertOpen();
       // remove(id);
     };

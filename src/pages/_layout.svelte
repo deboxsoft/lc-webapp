@@ -12,10 +12,11 @@
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
   import { createApplicationContext, getApplicationContext } from "__@modules/app";
+  import { accountingMenus as menus } from "__@root/stores/menus";
 
   // context and store
   const { toggleShowMobileSidebar } = getUIContext();
-  const { authorize } = createAuthStore({ initial: { profile: { username: "Nurdiansyah", id: "13" } } });
+  const { authorize } = createAuthStore();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
   createApplicationContext();
   const { loading } = getApplicationContext();
@@ -24,7 +25,7 @@
   let loginPage = $layout.path === "/login";
 
   if (!loginPage) {
-    authorize().catch(() => $redirect("/login"));
+    // authorize().catch(() => $redirect("/login"));
   }
 </script>
 
@@ -96,7 +97,7 @@
     <Sidebar isLight expand="md">
       <SidebarMobileToggler onToggleShowMobileSidebar={toggleShowMobileSidebar} />
       <div class="card card-sidebar-mobile" slot="sidebar-content">
-        <SidebarContent />
+        <SidebarContent {menus} />
       </div>
     </Sidebar>
     <!-- close sidebar -->

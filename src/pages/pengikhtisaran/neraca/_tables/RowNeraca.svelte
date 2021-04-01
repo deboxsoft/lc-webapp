@@ -12,7 +12,7 @@
 <tr class={classes}>
   <td class="d-none d-xl-table-cell">{itemSaldo.name}</td>
   <td class="text-right">
-    <CellRp value={itemSaldo.amount} />
+    <CellRp value={itemSaldo.balance} />
   </td>
   <td style="width: 200px">&nbsp;</td>
 </tr>

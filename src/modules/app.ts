@@ -5,7 +5,7 @@ import { setContext, getContext } from "svelte";
 import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
-import { createAccountContext } from "./accounting";
+import { createAccountContext, createBalanceContext } from "./accounting";
 import { createUserContext } from "./users";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
@@ -38,6 +38,7 @@ export const createApplicationContext = () => {
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   // register service
   const accountService = createAccountContext({ fetch, notify, env, loading });
+  createBalanceContext(accountService.accountStore);
   createUserContext();
   const fetchAccounting = accountService.load();
   return Promise.all([fetchAccounting]).then(() => {

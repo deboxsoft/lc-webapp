@@ -2,10 +2,11 @@
 <script lang="ts">
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableNeraca from "./_tables/TableNeraca.svelte";
-  import { getGeneralLedgerContext } from "__@modules/accounting";
+  import { getGeneralLedgerContext, getBalanceContext } from "__@modules/accounting";
   import DatePickr from "__@comps/DatePickr.svelte";
 
   const { getBalanceSheet } = getGeneralLedgerContext();
+  const {getStore} = getBalanceContext();
 
   async function fetchBalanceSheetList(date: Date) {
     await getBalanceSheet(date);
@@ -29,7 +30,6 @@
             id="date"
             name="date"
             class="form-control"
-            mode="month-select"
             placeholder="Tanggal" />
           <!--          <a class="list-icons-item" data-action="reload" />-->
         </div>

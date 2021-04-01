@@ -1,33 +1,27 @@
 <script lang="ts">
-  import { neracaParsingUtils } from "__@root/utils";
+  import Row from "./RowNeraca.svelte";
   import { onMount } from "svelte";
   import CellRp from "__@comps/CellRp.svelte";
-  import Row from "./RowNeraca.svelte";
-  import { getGeneralLedgerContext, getAccountContext } from "__@modules/accounting";
+  import { getGeneralLedgerContext, getBalanceContext } from "__@modules/accounting";
   import LoaderContainer from "__@comps/loader/LoaderContainer.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
+  import { neracaParsingUtils } from "__@root/utils";
 
   const { balanceSheetStore } = getGeneralLedgerContext();
-  const { accountStore } = getAccountContext();
+  const { keys, getAccountsTree, getBalanceAccounts, getAccountMap } = getBalanceContext();
 
-  let dataList;
+  let dataList = {};
   let loading = true;
-  let getDataNeraca;
-
-  onMount(() => {});
+  let accountsTree;
+  let balanceAccounts;
+  let accountsMapping;
 
   $: {
-    if ($accountStore) {
-      getDataNeraca = neracaParsingUtils($accountStore, {
-        aktivaTetap: [],
-        aktivaLancar: [],
-        pasiva: [],
-        cadangan: [],
-        modal: []
-      });
-      if (getDataNeraca) {
-        dataList = getDataNeraca($balanceSheetStore);
-      }
+    accountsTree = getAccountsTree();
+    balanceAccounts = getBalanceAccounts();
+    if ($balanceSheetStore) {
+      const neracaParsing = neracaParsingUtils($accountsTree, balanceAccounts);
+      dataList = neracaParsing($balanceSheetStore);
       if (dataList) {
         loading = false;
       }
@@ -48,9 +42,9 @@
       </tr>
     </thead>
     <tbody>
-      <!--{#each dataList.aktivaLancar.items as itemSaldo}-->
-      <!--  <Row {itemSaldo} />-->
-      <!--{/each}-->
+      {#each dataList.aktivaLancar.items as itemSaldo}
+        <Row {itemSaldo} />
+      {/each}
       <tr class="table-active table-border-double">
         <td>Aktiva Lancar</td>
         <td class="text-right" style="width: 200px">
@@ -58,9 +52,9 @@
         </td>
         <td>&nbsp;</td>
       </tr>
-      <!--{#each dataList.aktivaTetap.items as itemSaldo}-->
-      <!--  <Row {itemSaldo} />-->
-      <!--{/each}-->
+      {#each dataList.aktivaTetap.items as itemSaldo}
+        <Row {itemSaldo} />
+      {/each}
       <tr class="table-active table-border-double">
         <td>Aktiva Tetap</td>
         <td class="text-right">
@@ -75,9 +69,9 @@
           <CellRp value={dataList.aktivaLancar.sum + dataList.aktivaTetap.sum} />
         </td>
       </tr>
-      <!--{#each dataList.pasiva.items as itemSaldo}-->
-      <!--  <Row {itemSaldo} />-->
-      <!--{/each}-->
+      {#each dataList.pasiva.items as itemSaldo}
+        <Row {itemSaldo} />
+      {/each}
       <tr class="table-active table-border-double">
         <td>Pasiva</td>
         <td class="text-right">
@@ -85,9 +79,9 @@
         </td>
         <td>&nbsp;</td>
       </tr>
-      <!--{#each dataList.cadangan.items as itemSaldo}-->
-      <!--  <Row {itemSaldo} />-->
-      <!--{/each}-->
+      {#each dataList.cadangan.items as itemSaldo}
+        <Row {itemSaldo} />
+      {/each}
       <tr class="table-active table-border-double">
         <td>Cadangan</td>
         <td class="text-right">
@@ -95,9 +89,9 @@
         </td>
         <td>&nbsp;</td>
       </tr>
-      <!--{#each dataList.modal.items as itemSaldo}-->
-      <!--  <Row {itemSaldo} />-->
-      <!--{/each}-->
+      {#each dataList.modal.items as itemSaldo}
+        <Row {itemSaldo} />
+      {/each}
       <tr class="table-active table-border-double">
         <td>Modal</td>
         <td class="text-right">

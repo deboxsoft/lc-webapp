@@ -11,11 +11,22 @@ export type MenuItem = {
   url?: string;
   type?: "module" | "spacer" | "divider" | "menu" | "desc";
   children?: MenuItem[];
-  icon?: typeof SvelteComponentDev;
+  icon?: typeof SvelteComponentDev | string;
 };
 
 export type MenuList = MenuItem[];
-export const leftMenus: MenuList = [
+export const accountingMenus: MenuList = [
+  // {
+  //   label: "Manajemen User",
+  //   url: "/users",
+  //   icon: "icon-people",
+  //   children: [
+  //     {
+  //       label: "Data User",
+  //       url: "/"
+  //     }
+  //   ]
+  // },
   {
     label: "Pencatatan Transaksi",
     url: "/transaksi",

@@ -77,6 +77,7 @@ export default [
     },
     plugins: [
       replace({
+        preventAssignment: true,
         "__@comps": path.join(__dirname, "src", "components"),
         "__@modules": path.join(__dirname, "src", "modules"),
         "__@stores": path.join(__dirname, "src", "stores"),

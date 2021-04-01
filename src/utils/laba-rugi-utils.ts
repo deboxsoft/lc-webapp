@@ -1,4 +1,4 @@
-import { AccountTree, AccountTreeBalance, GeneralLedger, getAccountMap } from "@deboxsoft/accounting-api";
+import { AccountTree, AccountTreeBalance, BalanceSheet, getAccountMap } from "@deboxsoft/accounting-api";
 
 import { transformToAccountTreeBalance } from "@deboxsoft/accounting-api";
 
@@ -9,7 +9,7 @@ export interface LabaRugiAccounts {
   bebanLain: string[];
 }
 
-export type LabaRugiDataResult = Record<keyof LabaRugiAccounts, AccountTreeBalance[]>;
+export type LabaRugiDataResult = Record<keyof LabaRugiAccounts, { items: AccountTreeBalance[]; sum: number }>;
 export type LabaRugiAccountTree = Record<keyof LabaRugiAccounts, AccountTree[]>;
 
 export const labaRugiParsingUtils = (accountsTree: AccountTree[], labaRugiAccounts: LabaRugiAccounts) => {
@@ -19,29 +19,33 @@ export const labaRugiParsingUtils = (accountsTree: AccountTree[], labaRugiAccoun
   const bebanLain = getAccountMap(accountsTree, labaRugiAccounts.bebanLain);
 
   const result: LabaRugiDataResult = {
-    pendapatan: pendapatan.accountTrees,
-    pendapatanLain: pendapatanLain.accountTrees,
-    beban: beban.accountTrees,
-    bebanLain: bebanLain.accountTrees
+    pendapatan: { items: pendapatan.accountTrees, sum: 0 },
+    pendapatanLain: { items: pendapatanLain.accountTrees, sum: 0 },
+    beban: { items: beban.accountTrees, sum: 0 },
+    bebanLain: { items: bebanLain.accountTrees, sum: 0 }
   };
-  return (generalLedgers: GeneralLedger[]): LabaRugiDataResult => {
-    generalLedgers.forEach((generalLedger) => {
-      if (pendapatan.ids.includes(generalLedger.accountId)) {
-        result.pendapatan.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+  return (balanceSheets: BalanceSheet[]): LabaRugiDataResult => {
+    balanceSheets.forEach((balanceSheet) => {
+      if (pendapatan.ids.includes(balanceSheet.accountId)) {
+        result.pendapatan.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
-      } else if (pendapatanLain.ids.includes(generalLedger.accountId)) {
-        result.pendapatanLain.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+        result.pendapatan.sum += balanceSheet.balance;
+      } else if (pendapatanLain.ids.includes(balanceSheet.accountId)) {
+        result.pendapatanLain.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
-      } else if (beban.ids.includes(generalLedger.accountId)) {
-        result.beban.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+        result.pendapatanLain.sum += balanceSheet.balance;
+      } else if (beban.ids.includes(balanceSheet.accountId)) {
+        result.beban.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
-      } else if (bebanLain.ids.includes(generalLedger.accountId)) {
-        result.bebanLain.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+        result.beban.sum += balanceSheet.balance;
+      } else if (bebanLain.ids.includes(balanceSheet.accountId)) {
+        result.bebanLain.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
+        result.bebanLain.sum += balanceSheet.balance;
       }
     });
     return result;

@@ -1,53 +1,80 @@
-import { AccountTree, AccountTreeBalance, GeneralLedger, getAccountMap } from "@deboxsoft/accounting-api";
+import { get, Readable } from "svelte/store";
+import { AccountTree, AccountTreeBalance, BalanceSheet, getAccountMap } from "@deboxsoft/accounting-api";
 
 import { transformToAccountTreeBalance } from "@deboxsoft/accounting-api";
 
 export interface BalanceAccounts {
-  aktivaLancar: string[];
-  aktivaTetap: string[];
-  pasiva: string[];
-  cadangan: string[];
-  modal: string[];
+  aktivaLancar: Readable<string[]>;
+  aktivaTetap: Readable<string[]>;
+  pasiva: Readable<string[]>;
+  cadangan: Readable<string[]>;
+  modal: Readable<string[]>;
 }
 
-export type BalanceDataResult = Record<keyof BalanceAccounts, AccountTreeBalance[]>;
+export type BalanceDataResult = Record<
+  keyof BalanceAccounts,
+  {
+    items: AccountTreeBalance[];
+    sum: number;
+  }
+>;
 export type BalanceAccountTree = Record<keyof BalanceAccounts, AccountTree[]>;
 
 export const neracaParsingUtils = (accountsTree: AccountTree[], balanceAccounts: BalanceAccounts) => {
-  const aktivaTetap = getAccountMap(accountsTree, balanceAccounts.aktivaTetap);
-  const aktivaLancar = getAccountMap(accountsTree, balanceAccounts.aktivaLancar);
-  const pasiva = getAccountMap(accountsTree, balanceAccounts.pasiva);
-  const cadangan = getAccountMap(accountsTree, balanceAccounts.cadangan);
-  const modal = getAccountMap(accountsTree, balanceAccounts.modal);
+  const aktivaTetap = getAccountMap(accountsTree, get(balanceAccounts.aktivaTetap));
+  const aktivaLancar = getAccountMap(accountsTree, get(balanceAccounts.aktivaLancar));
+  const pasiva = getAccountMap(accountsTree, get(balanceAccounts.pasiva));
+  const cadangan = getAccountMap(accountsTree, get(balanceAccounts.cadangan));
+  const modal = getAccountMap(accountsTree, get(balanceAccounts.modal));
   const result: BalanceDataResult = {
-    aktivaTetap: aktivaTetap.accountTrees,
-    aktivaLancar: aktivaLancar.accountTrees,
-    pasiva: pasiva.accountTrees,
-    cadangan: cadangan.accountTrees,
-    modal: modal.accountTrees
+    aktivaTetap: {
+      items: aktivaTetap.accountTrees,
+      sum: 0
+    },
+    aktivaLancar: {
+      items: aktivaLancar.accountTrees,
+      sum: 0
+    },
+    pasiva: {
+      items: pasiva.accountTrees,
+      sum: 0
+    },
+    cadangan: {
+      items: cadangan.accountTrees,
+      sum: 0
+    },
+    modal: {
+      items: modal.accountTrees,
+      sum: 0
+    }
   };
-  return (generalLedgers: GeneralLedger[]): BalanceDataResult => {
-    generalLedgers.forEach((generalLedger) => {
-      if (aktivaTetap.ids.includes(generalLedger.accountId)) {
-        result.aktivaTetap.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+  return (balanceSheets: BalanceSheet[]): BalanceDataResult => {
+    balanceSheets.forEach((balanceSheet) => {
+      if (aktivaTetap.ids.includes(balanceSheet.accountId)) {
+        result.aktivaTetap.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
-      } else if (aktivaLancar.ids.includes(generalLedger.accountId)) {
-        result.aktivaLancar.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+        result.aktivaTetap.sum += balanceSheet.balance;
+      } else if (aktivaLancar.ids.includes(balanceSheet.accountId)) {
+        result.aktivaLancar.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
-      } else if (pasiva.ids.includes(generalLedger.accountId)) {
-        result.pasiva.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+        result.aktivaLancar.sum += balanceSheet.balance;
+      } else if (pasiva.ids.includes(balanceSheet.accountId)) {
+        result.pasiva.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
-      } else if (cadangan.ids.includes(generalLedger.accountId)) {
-        result.cadangan.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+        result.pasiva.sum += balanceSheet.balance;
+      } else if (cadangan.ids.includes(balanceSheet.accountId)) {
+        result.cadangan.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
-      } else if (modal.ids.includes(generalLedger.accountId)) {
-        result.modal.forEach((_) => {
-          transformToAccountTreeBalance(_, generalLedger);
+        result.cadangan.sum += balanceSheet.balance;
+      } else if (modal.ids.includes(balanceSheet.accountId)) {
+        result.modal.items.forEach((_) => {
+          transformToAccountTreeBalance(_, balanceSheet);
         });
+        result.modal.sum += balanceSheet.balance;
       }
     });
     return result;

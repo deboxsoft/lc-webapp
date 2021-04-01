@@ -3,15 +3,25 @@
 
   import CellRp from "__@comps/CellRp.svelte";
   import Row from "./RowLabaRugi.svelte";
-  import { getGeneralLedgerContext, getAccountContext } from "__@modules/accounting";
+  import { getGeneralLedgerContext, getAccountContext, getBalanceContext } from "__@modules/accounting";
 
   const { balanceSheetStore } = getGeneralLedgerContext();
   const { accountStore, getAccountTree } = getAccountContext();
+  const { keys, getAccountsTree, getBalanceAccounts, getAccountMap } = getBalanceContext();
 
-  let dataList;
+  let dataList = {};
+  let loading = true;
+  let accountsTree;
+  let balanceAccounts;
+  let accountsMapping;
   let getDataLabaRugi = labaRugiParsingUtils(getAccountTree());
   $: {
-    dataList = getDataLabaRugi($balanceSheetStore);
+    accountsTree = getAccountsTree();
+    balanceAccounts = getBalanceAccounts();
+    if ($balanceSheetStore) {
+
+      dataList = getDataLabaRugi($balanceSheetStore);
+    }
   }
 </script>
 

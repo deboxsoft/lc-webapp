@@ -12,18 +12,12 @@
   // import LocalLibraryOutlinedIcon from "@deboxsoft/svelte-icons/LocalLibraryOutlined.svelte";
   import { getAuthStore } from "__@stores/auth";
 
-  import { leftMenus as menus } from "__@root/stores/menus";
+  export let menus;
 
   let collapse: boolean = false;
 
   const { profile } = getAuthStore();
 </script>
-
-<style lang="scss" global>
-  .nav-sidebar .nav-item-header > svg {
-    display: none;
-  }
-</style>
 
 <!-- Header -->
 <div class="card-header header-elements-inline">
@@ -32,14 +26,14 @@
     <div class="list-icons">
       <!-- svelte-ignore a11y-missing-content -->
       <!-- svelte-ignore a11y-invalid-attribute -->
-<!--      <a-->
-<!--        href="#"-->
-<!--        on:click|preventDefault={() => {-->
-<!--          collapse = !collapse;-->
-<!--        }}-->
-<!--        target="_self"-->
-<!--        class="list-icons-item"-->
-<!--        data-action="collapse">&nbsp;</a>-->
+      <!--      <a-->
+      <!--        href="#"-->
+      <!--        on:click|preventDefault={() => {-->
+      <!--          collapse = !collapse;-->
+      <!--        }}-->
+      <!--        target="_self"-->
+      <!--        class="list-icons-item"-->
+      <!--        data-action="collapse">&nbsp;</a>-->
     </div>
   </div>
 </div>
@@ -56,24 +50,35 @@
         <Icon component={MenuIcon} />
       </li>
       <!-- Dashboard -->
-      <AccordionItem href={$url('/')}>
+      <AccordionItem href={$url("/")}>
         <Icon component={HomeIcon} />
         <span> Dashboard</span>
       </AccordionItem>
 
       {#each menus as item}
-        <AccordionItem expanded={$isActive(item.url)} let:expanded={_expand} target="_self" hasChildren={!!item.children}>
-          {#if item.icon}
+        <AccordionItem
+          expanded={!!item.children && $isActive(item.url)}
+          let:expanded={_expand}
+          target="_self"
+          hasChildren={!!item.children}
+          href={!item.children && item.url || undefined}
+        >
+          {#if item.icon && typeof item.icon === "string"}
+            <i class={item.icon} />
+          {:else if item.icon}
             <Icon component={item.icon} />
           {/if}
           <span>{item.label}</span>
           <ul
             slot="menu"
-            style={_expand ? 'display: block;' : ''}
+            style={_expand ? "display: block;" : ""}
             class="nav nav-group-sub"
-            data-submenu-title={item.label}>
+            data-submenu-title={item.label}
+          >
             {#each item.children as subItem}
-              <li class="nav-item"><a class="nav-link" class:active={$isActive(subItem.url)} href={$url(subItem.url)}>{subItem.label}</a></li>
+              <li class="nav-item">
+                <a class="nav-link" class:active={$isActive(subItem.url)} href={$url(subItem.url)}>{subItem.label}</a>
+              </li>
             {/each}
           </ul>
         </AccordionItem>
@@ -81,3 +86,9 @@
     </Accordion>
   </div>
 {/if}
+
+<style lang="scss" global>
+  .nav-sidebar .nav-item-header > svg {
+    display: none;
+  }
+</style>
