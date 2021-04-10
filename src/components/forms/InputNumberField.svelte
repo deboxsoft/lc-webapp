@@ -14,9 +14,18 @@
   export let prependDisable: boolean = false;
   export let textPosition: "left" | "right" = "right";
   export let name: string;
+  export let disabled: boolean = false;
   export let format: "currency" | "number" = "currency";
   export let resultType: "string" | "number" = "number";
-  export let value: any = ($fields && $fields[name]) || undefined;
+  export let pristineValue = undefined;
+  export let value: any = undefined;
+
+  const defaultOptions = {
+    decimalPlaces: format === "currency" ? 2 : 0,
+    modifyValueOnWheel: false,
+    digitGroupSeparator: ".",
+    decimalCharacter: ","
+  };
 
   let { class: className } = $$props;
 
@@ -91,7 +100,8 @@
     type="text"
     {...$$restProps}
     {name}
-    bind:value={_value}
+    {disabled}
+    bind:value={value}
     class={classes}
     on:input={createInputHandler()}
     on:click

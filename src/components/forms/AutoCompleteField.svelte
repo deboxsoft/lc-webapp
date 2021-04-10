@@ -13,7 +13,9 @@
   export let valueFieldName: string | undefined = undefined;
   export let labelFunction: undefined | ((val: any) => string) = undefined;
   export let keywordsFunction: undefined | ((val: any) => string) = undefined;
+  export let allowEmpty: boolean = false;
   export let inputClassName: string = "";
+  export let disabled = false;
   const { class: className } = $$props;
 
   let invalid = true;
@@ -26,7 +28,7 @@
   }
 
   $: {
-    if ($fieldsErrors[name]) {
+    if ($fieldsErrors && name && $fieldsErrors[name]) {
       invalid = true;
       msgError = $fieldsErrors[name];
     } else {
@@ -37,7 +39,9 @@
   function createChangeHandler() {
     const _validate = validateField && validateField(name);
     return (e) => {
-      $fields[name] = e.detail;
+      if ($fields && name) {
+        $fields[name] = e.detail;
+      }
       _validate();
       dispatcher("input", e);
     };
@@ -46,6 +50,8 @@
 
 <AutoComplete
   {...$$restProps}
+  {disabled}
+  {allowEmpty}
   {pristineValue}
   {valueFieldName}
   {labelFunction}

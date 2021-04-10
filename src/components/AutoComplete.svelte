@@ -102,6 +102,7 @@
   export let allowEmpty: boolean = false;
   let text: string | undefined;
   let filteredTextLength: number = 0;
+
   function onSelectedItemChanged(_selectedItem) {
     value = valueFunction(_selectedItem);
     text = safeLabelFunction(_selectedItem);

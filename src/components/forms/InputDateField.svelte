@@ -9,6 +9,7 @@
 
   export let name;
   export let value: any = ($fields && $fields[name]) || new Date();
+  export let disabled: boolean = false;
   export let formattedValue: string = "";
   export let options = {};
   export let mode: "month-select" | undefined = undefined;
@@ -31,7 +32,7 @@
   }
 </script>
 
-<DatePickr {...$$restProps} class={className} bind:value={$fields[name]}>
+<DatePickr {...$$restProps} {disabled} class={className} bind:value={$fields[name]}>
   {#if $submitted}
     {#if invalid}
       <p class="invalid-tooltip">{msgError}</p>

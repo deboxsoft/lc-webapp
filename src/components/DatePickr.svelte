@@ -20,6 +20,8 @@
   export let options = {};
   export let confirmEnable: boolean = false;
   export let mode: "month-select" | "menu" | undefined = undefined;
+  export let readOnly: boolean = false;
+  export let disabled: boolean = false;
   let input: any = undefined;
 
   let flatPickr;
@@ -27,7 +29,7 @@
   const createFlatPickr = (elem, options: Record<string, any> = {}) => {
     options = {
       altInput: true,
-      altFormat: "d-m-Y",
+      altFormat: "d-M-y",
       locale: Indonesian,
       dateFormat: "Z",
       plugins: [],
@@ -71,6 +73,10 @@
 
   onMount(() => {
     const _elem = element || input;
+    if (readOnly) {
+      _elem.value = value;
+      return;
+    }
     if (mode === "month-select") {
       flatPickr = createFlatPickr(_elem, { ...options, mode: "mode-select" });
     } else if (mode === "menu") {

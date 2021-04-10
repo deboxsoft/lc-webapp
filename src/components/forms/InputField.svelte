@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { writable } from "svelte/store";
   import { getFormContext } from "__@stores/form";
   import { createEventDispatcher } from "svelte";
 
-  const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
+  const { validateField, fields = writable({}), fieldsErrors, submitted } = getFormContext() || {};
   const dispatcher: any = createEventDispatcher();
   export let name: any;
   export let value: any = ($fields && $fields[name]) || undefined;
@@ -12,7 +13,7 @@
   let msgError: string[] | undefined;
 
   $: {
-    if ($fieldsErrors[name]) {
+    if ($fieldsErrors && $fieldsErrors[name]) {
       invalid = true;
       msgError = $fieldsErrors[name];
     } else {
@@ -35,9 +36,10 @@
   bind:value={$fields[name]}
   class:is-valid={$submitted && !invalid}
   class:is-invalid={$submitted && invalid}
-  on:input={createInputHandler()} />
+  on:input={createInputHandler()}
+/>
 {#if $submitted}
   {#if invalid}
-    <p class="invalid-tooltip">{(msgError && msgError.length > 0 && msgError[0]) || ''}</p>
+    <p class="invalid-tooltip">{(msgError && msgError.length > 0 && msgError[0]) || ""}</p>
   {/if}
 {/if}

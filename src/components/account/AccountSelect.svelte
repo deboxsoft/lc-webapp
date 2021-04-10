@@ -23,13 +23,15 @@
   }
 
   function changeHandler(e: any) {
-    accountId = e.detail;
-    dispatch("change", e.detail);
+    const _accountId = e.detail;
+    selectedAccount = accountContext.getAccount(_accountId);
+    dispatch("change", $selectedAccount);
   }
 </script>
 
 <AutoComplete
   {...$$restProps}
+  {disabled}
   {name}
   inputClassName="form-control"
   placeholder="Pilih Akun"
@@ -38,4 +40,5 @@
   on:change={changeHandler}
   labelFunction={(account) => account && `${account.id} - ${account.name}`}
   valueFieldName="id"
-  keywordsFunction={(account) => account && `${account.id} ${account.name}`} />
+  keywordsFunction={(account) => account && `${account.id} ${account.name}`}
+/>

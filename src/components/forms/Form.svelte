@@ -19,7 +19,7 @@
   export let checkValidateFirst: boolean = false;
   export let isValid: Writable<boolean> = writable(false);
 
-  const { submitted, fieldsErrors, fields } = createFormContext({
+  const { submitted: _submitted, fieldsErrors: _fieldsErrors, fields: _fields } = createFormContext({
     schema,
     values,
     validateField,

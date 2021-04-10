@@ -6,7 +6,7 @@
   export let id: string | undefined = undefined;
   let _store = writable({});
   $: {
-    _store =getAccount(id);
+    _store = getAccount(id);
   }
 </script>
 
