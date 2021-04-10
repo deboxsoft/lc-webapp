@@ -36,7 +36,7 @@
   </a>
   <!-- menu -->
   <div slot="dropdown-menu">
-    <a href="/#" class="dropdown-item" on:click|preventDefault={profileHandler}><i class="icon-user" />Pengaturan Profile</a>
+    <a href="/#" class="dropdown-item" on:click|preventDefault={profileHandler}><i class="far fa-user" />Pengaturan Profile</a>
     <a href="/#" class="dropdown-item" on:click|preventDefault={passwordHandler}><i class="icon-lock5" />Ganti Password</a>
     <div class="dropdown-divider" />
     <a href="/#" class="dropdown-item" on:click|preventDefault={userHandler}><i class="icon-people" />Pengelolaan User</a>

@@ -1,16 +1,15 @@
 <script lang="ts">
-  // import type { UserProfile } from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser";
-
   import { url, isActive } from "@roxi/routify";
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import Accordion from "@deboxsoft/svelte-theme-limitless/components/Accordion.svelte";
   import AccordionItem from "@deboxsoft/svelte-theme-limitless/components/AccordionItem.svelte";
   import SidebarUser from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser.svelte";
   import HomeIcon from "__@comps/icons/Home.svelte";
-  // import BookIcon from "@deboxsoft/svelte-icons/BookOutlined.svelte";
   import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
-  // import LocalLibraryOutlinedIcon from "@deboxsoft/svelte-icons/LocalLibraryOutlined.svelte";
   import { getAuthStore } from "__@stores/auth";
+
+  let scrollbar;
+  let elRef;
 
   export let menus;
 
@@ -61,7 +60,7 @@
           let:expanded={_expand}
           target="_self"
           hasChildren={!!item.children}
-          href={!item.children && item.url || undefined}
+          href={(!item.children && item.url) || undefined}
         >
           {#if item.icon && typeof item.icon === "string"}
             <i class={item.icon} />
@@ -77,7 +76,14 @@
           >
             {#each item.children as subItem}
               <li class="nav-item">
-                <a class="nav-link" class:active={$isActive(subItem.url)} href={$url(subItem.url)}>{subItem.label}</a>
+                <a class="nav-link" class:active={$isActive(subItem.url)} href={$url(subItem.url)}>
+                  {#if subItem.icon && typeof subItem.icon === "string"}
+                    <i class={subItem.icon} />
+                  {:else if subItem.icon}
+                    <Icon component={subItem.icon} />
+                  {/if}
+                  <span>{subItem.label}</span></a
+                >
               </li>
             {/each}
           </ul>
@@ -90,5 +96,10 @@
 <style lang="scss" global>
   .nav-sidebar .nav-item-header > svg {
     display: none;
+  }
+
+  .sidebar-content {
+    height: calc(100vh - 102px);
+    overflow-y: scroll !important;
   }
 </style>
