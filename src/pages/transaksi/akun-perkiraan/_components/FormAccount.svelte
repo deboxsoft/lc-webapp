@@ -3,7 +3,7 @@
   import { goto } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { getAccountContext, getPreferenceContext } from "__@modules/accounting";
-  import { createEventDispatcher, afterUpdate, onMount, beforeUpdate } from "svelte";
+  import { createEventDispatcher, beforeUpdate } from "svelte";
   import { AccountSchema } from "@deboxsoft/accounting-api";
   import { writable, get } from "svelte/store";
   import { sortUtilsFunc } from "__@root/utils";

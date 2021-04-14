@@ -52,7 +52,7 @@
           </div>
         {/if}
       </div>
-      <div class="content flex-grow-1 d-flex">
+      <div class="content">
         <slot />
       </div>
     {/if}
@@ -79,6 +79,10 @@
     }
     .content {
       padding: 10px;
+      height: calc(100vh - 160px);
+      overflow: auto;
+      flex-direction: column;
+      display: flex;
     }
   }
 

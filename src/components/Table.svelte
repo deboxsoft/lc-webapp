@@ -1,6 +1,4 @@
 <script lang="ts">
-  import AutoSizer from "svelte-virtualized-auto-sizer";
-  import List from "@deboxsoft/svelte-virtual-list";
   import InfiniteLoading from "__@comps/loader/InfiniteLoading.svelte";
 
   export let items: any[] = [];
@@ -10,40 +8,42 @@
 <div class="dbx-table" {...$$restProps}>
   <slot name="header" />
   <div class="dbx-tbody">
-    <AutoSizer let:height={childHeight} disableWidth>
-      <List height={`${childHeight}px`} {items} let:item>
-        <slot {item}>
-          <div>template, not yet implement</div>
-        </slot>
-        <div slot="infinite">
-          {#if (infiniteEnable)}
-            <InfiniteLoading on:infinite />
-          {/if}
-        </div>
-      </List>
-    </AutoSizer>
+    {#each items as item}
+      <slot {item}>
+        <div>template, not yet implement</div>
+      </slot>
+    {/each}
+    <div>
+      {#if infiniteEnable}
+        <InfiniteLoading on:infinite />
+      {/if}
+    </div>
   </div>
 </div>
 
 <style lang="scss" global>
   .dbx-table {
-    display: block;
+    display: flex;
     width: 100%;
-    margin: 0 0 3em 0;
     padding: 0;
+    flex-direction: column;
 
     .dbx-thead {
       font-weight: bold;
       display: flex;
       width: 100%;
+      height: 30px;
       .dbx-cell {
         border-bottom: 1px solid #b7b7b7;
       }
     }
 
     .dbx-tbody {
-      height: 100%;
-      width: 100%;
+      position: relative;
+      display: flex;
+      flex-flow: column nowrap;
+      overflow: auto;
+      flex: 1;
       .dbx-tr:hover {
         background-color: rgba(0, 0, 0, 0.03);
       }
@@ -52,6 +52,7 @@
     .dbx-tr {
       display: flex;
       padding-right: 5px;
+      height: 30px;
 
       .dbx-cell {
         border-top: 1px solid #ddd;
