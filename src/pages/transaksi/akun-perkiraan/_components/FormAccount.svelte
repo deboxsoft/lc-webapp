@@ -81,7 +81,12 @@
     loading = true;
     try {
       if (!$accountState.type) {
-        setTypeFromParent();
+        if ($accountState.parentId) {
+          setTypeFromParent();
+        }
+        if(!$accountState.type) {
+          $accountState.type = $accountsType[0].id
+        }
       }
       $submitted = true;
       AccountSchema.parse($accountState);
