@@ -43,11 +43,31 @@ export const accountingMenus: MenuList = [
       },
       {
         label: "Rekonsiliasi Bank",
-        url: "/transaksi/rekonsiliasi-bank"
+        url: "/transaksi/bank"
       },
       {
         label: "Buku Besar",
         url: "/transaksi/buku-besar"
+      }
+    ]
+  },
+  {
+    label: "Pengikhtisaran",
+    url: "/pengikhtisaran",
+    type: "module",
+    icon: LayerGroupIcon,
+    children: [
+      {
+        label: "Laporan Laba Rugi",
+        url: "/pengikhtisaran/laba-rugi"
+      },
+      {
+        label: "Neraca",
+        url: "/pengikhtisaran/neraca"
+      },
+      {
+        label: "Aktiva Tetap",
+        url: "/pengikhtisaran/aktiva-tetap"
       }
     ]
   },
@@ -100,26 +120,6 @@ export const accountingMenus: MenuList = [
     ]
   },
   {
-    label: "Pengikhtisaran",
-    url: "/pengikhtisaran",
-    type: "module",
-    icon: LayerGroupIcon,
-    children: [
-      {
-        label: "Laporan Laba Rugi",
-        url: "/pengikhtisaran/laba-rugi"
-      },
-      {
-        label: "Neraca",
-        url: "/pengikhtisaran/neraca"
-      },
-      {
-        label: "Aktiva Tetap",
-        url: "/pengikhtisaran/aktiva-tetap"
-      }
-    ]
-  },
-  {
     label: "Pelaporan Keuangan",
     url: "/laporan",
     type: "module",
@@ -134,5 +134,10 @@ export const accountingMenus: MenuList = [
         url: "/laporan/financial"
       }
     ]
+  },
+  {
+    label: "Pengaturan",
+    url: "/settings",
+    icon: "far fa-cog fa-lg"
   }
 ];

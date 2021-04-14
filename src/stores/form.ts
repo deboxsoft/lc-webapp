@@ -48,7 +48,7 @@ export const createFormContext = ({
       if (schema) {
         const parsed = schema.pick({ [fieldName]: true }).safeParse({ [fieldName]: $fields[fieldName] });
         // @ts-ignore
-        const { success, error } = parsed;
+        const { error } = parsed;
         fieldsErrors.update(($fieldsErrors) => {
           if (error) {
             $fieldsErrors[fieldName] = error.errors[0].message;

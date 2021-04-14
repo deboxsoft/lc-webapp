@@ -7,7 +7,6 @@
   const { create } = getAccountContext();
 
   async function onSubmit(values) {
-    console.log(values);
     if (values.isParent) {
       // remove variable if parent
       delete values.startDateBalance;

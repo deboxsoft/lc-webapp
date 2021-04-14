@@ -1,6 +1,6 @@
 import { AccountTree, AccountTreeBalance, BalanceSheet, getAccountMap } from "@deboxsoft/accounting-api";
 
-import { transformToAccountTreeBalance } from "@deboxsoft/accounting-api";
+import { setBalanceToAccountsTree } from "@deboxsoft/accounting-api";
 
 export interface LabaRugiAccounts {
   pendapatan: string[];
@@ -26,27 +26,27 @@ export const labaRugiParsingUtils = (accountsTree: AccountTree[], labaRugiAccoun
   };
   return (balanceSheets: BalanceSheet[]): LabaRugiDataResult => {
     balanceSheets.forEach((balanceSheet) => {
-      if (pendapatan.ids.includes(balanceSheet.accountId)) {
-        result.pendapatan.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.pendapatan.sum += balanceSheet.balance;
-      } else if (pendapatanLain.ids.includes(balanceSheet.accountId)) {
-        result.pendapatanLain.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.pendapatanLain.sum += balanceSheet.balance;
-      } else if (beban.ids.includes(balanceSheet.accountId)) {
-        result.beban.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.beban.sum += balanceSheet.balance;
-      } else if (bebanLain.ids.includes(balanceSheet.accountId)) {
-        result.bebanLain.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.bebanLain.sum += balanceSheet.balance;
-      }
+      // if (pendapatan.ids.includes(balanceSheet.accountId)) {
+      //   result.pendapatan.items.forEach((_) => {
+      //     setBalanceToAccountsTree(_, balanceSheet);
+      //   });
+      //   result.pendapatan.sum += balanceSheet.balance;
+      // } else if (pendapatanLain.ids.includes(balanceSheet.accountId)) {
+      //   result.pendapatanLain.items.forEach((_) => {
+      //     setBalanceToAccountsTree(_, balanceSheet);
+      //   });
+      //   result.pendapatanLain.sum += balanceSheet.balance;
+      // } else if (beban.ids.includes(balanceSheet.accountId)) {
+      //   result.beban.items.forEach((_) => {
+      //     transformToAccountTreeBalance(_, balanceSheet);
+      //   });
+      //   result.beban.sum += balanceSheet.balance;
+      // } else if (bebanLain.ids.includes(balanceSheet.accountId)) {
+      //   result.bebanLain.items.forEach((_) => {
+      //     transformToAccountTreeBalance(_, balanceSheet);
+      //   });
+      //   result.bebanLain.sum += balanceSheet.balance;
+      // }
     });
     return result;
   };

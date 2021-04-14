@@ -2,7 +2,7 @@
   import { get } from "svelte/store";
   import { getAccountContext } from "__@modules/accounting";
   import AccountCell from "__@comps/account/CellAccount.svelte";
-  import MenuList from "./MenuList.svelte";
+  import MenuListAccount from "./MenuListAccount.svelte";
 
   const { getAccountType } = getAccountContext();
   export let account;
@@ -16,6 +16,6 @@
     <AccountCell id={account.parentId} />
   </div>
   <div class="dbx-cell -menu-list" style="width: 30px">
-    <MenuList id={account.id} />
+    <MenuListAccount id={account.id} />
   </div>
 </div>

@@ -1,15 +1,19 @@
-import type { BankReconciliationStoreService } from "@deboxsoft/accounting-client/types/stores";
+import type { BankReconciliationContext } from "@deboxsoft/accounting-client/types/stores";
 
-import { getApplicationContext } from "__@modules/app";
+import { ApplicationContext, getApplicationContext } from "__@modules/app";
 import { stores, graphql } from "@deboxsoft/accounting-client";
 
-export const createReconciliationContext = () => {
-  const { fetch, notify, env } = getApplicationContext();
-  const bankReconciliationService = new graphql.BankReconciliationGraphqlClient(fetch);
-  return stores.createBankStoreService({
+export const createReconciliationContext = (
+  { fetch, notify, env, subscriptionClient }: ApplicationContext = getApplicationContext()
+) => {
+  const bankReconciliationService = new graphql.BankReconciliationGraphqlClient({
+    fetch,
+    subscriptionClient
+  });
+  return stores.createBankStoreContext({
     bankReconciliationService,
     notify: (env !== "production" && notify) || undefined
   });
 };
 
-export const getReconciliationContext = (): BankReconciliationStoreService => stores.getBankReconciliationContext();
+export const getReconciliationContext = (): BankReconciliationContext => stores.getBankReconciliationContext();

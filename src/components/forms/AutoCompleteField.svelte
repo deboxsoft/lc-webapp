@@ -8,7 +8,7 @@
   const dispatcher = createEventDispatcher();
 
   export let name;
-  export let pristineValue: any = ($fields && $fields[name]) || undefined;
+  export let pristineValue: any = undefined;
   export let items: any[];
   export let valueFieldName: string | undefined = undefined;
   export let labelFunction: undefined | ((val: any) => string) = undefined;
@@ -21,6 +21,15 @@
   let invalid = true;
   let msgError;
   let _inputClassName;
+  let selectedItem;
+
+  if ($fields && name) {
+    if (pristineValue && !$fields[name]) {
+      $fields[name] = pristineValue
+    } else if (!pristineValue) {
+      pristineValue = $fields[name];
+    }
+  }
 
   $: {
     const _valid = $submitted ? (invalid ? "is-invalid" : "is-valid") : "";
@@ -42,8 +51,8 @@
       if ($fields && name) {
         $fields[name] = e.detail;
       }
-      _validate();
-      dispatcher("input", e);
+      _validate && _validate();
+      dispatcher("change", e.detail);
     };
   }
 </script>
@@ -54,6 +63,7 @@
   {allowEmpty}
   {pristineValue}
   {valueFieldName}
+  {selectedItem}
   {labelFunction}
   {keywordsFunction}
   inputClassName={_inputClassName}

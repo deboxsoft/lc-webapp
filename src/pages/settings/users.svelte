@@ -1,6 +1,6 @@
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
 
   $: url = $params.backUrl || "./"
 
@@ -14,9 +14,17 @@
   }
 </script>
 
-<Modal class="modal-lg" open title="Pengelolaan User">
-  <svelte:fragment slot="footer">
-    <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
-    <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>
-  </svelte:fragment>
-</Modal>
+<PageLayout breadcrumb={[]}>
+  <div class="header-elements" slot="header-elements">
+<!--    <a href={$url('./create')} class="btn bg-primary"><PlusIcon class="mr-2" />Tambah</a>-->
+  </div>
+  <div class="card">
+    <!--    <div class="card-header header-elements-inline">-->
+    <!--    </div>-->
+    <div class="card-body">
+      <div class="dataTables_scrollBody">
+<!--        <TableAccount />-->
+      </div>
+    </div>
+  </div>
+</PageLayout>

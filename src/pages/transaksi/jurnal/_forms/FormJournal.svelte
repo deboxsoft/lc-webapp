@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TransactionInput } from "@deboxsoft/accounting-api";
-  import AccountCombox from "__@comps/account/AccountComboxField.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
@@ -43,7 +43,7 @@
       <div class="row">
         <div class="form-group col-md-6">
           <label for="date">Tanggal</label>
-          <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" />
+          <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" value={new Date()} disabled />
         </div>
         <div class="form-group col-md-6">
           <label for="no">No Bukti/kwitansi</label>
@@ -72,8 +72,8 @@
         <!--        </div>-->
         <div class="form-group col-md-6">
           <label for="accountId">Akun Debit</label>
-            <AccountCombox id="accountId" accountStore={getAccountLeaf()} allowEmpty />
-<!--          <AccountSelect id="accountId" accountStore={getAccountLeaf()} />-->
+<!--            <AccountCombox id="accountId" accountStore={getAccountLeaf()} allowEmpty />-->
+          <AccountSelect id="accountId" accountStore={getAccountLeaf()} />
         </div>
         <div class="form-group col-md-6">
           <label for="amount">Jumlah</label>

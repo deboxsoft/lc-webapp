@@ -2,7 +2,7 @@
   import type { ZodObject, ZodRawShape } from "@deboxsoft/zod";
   import type { Writable } from "svelte/store";
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick, onMount } from "svelte";
   import { writable } from "svelte/store";
   import { ZodError } from "@deboxsoft/zod";
   import { createFormContext } from "__@stores/form";
@@ -27,17 +27,26 @@
     isValid
   });
 
-  if (checkValidateFirst) {
-    try {
-      const _values = validate()
-    } catch (e) {}
-  }
+  export let fieldsErrors = _fieldsErrors;
+  export let submitted = _submitted;
+  export let fields = writable({});
+
+  $: fields = _fields;
+
+  onMount(async () => {
+    await tick()
+    if (checkValidateFirst) {
+      try {
+        const _values = validate()
+      } catch (e) {}
+    }
+  })
 
   function submitHandler() {
     try {
       $submitted = true;
-      const values = validate();
-      dispatch("submit", values);
+      const _values = validate();
+      dispatch("submit", _values);
     }catch (e) {
       if (e instanceof ZodError) {
         notify(`${e.errors[0].path[0]}: ${e.errors[0].message}`, "error");

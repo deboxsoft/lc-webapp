@@ -7,7 +7,7 @@
   import NavbarLeft from "__@root/layout/NavbarLeftLayout.svelte";
   import NavbarRight from "__@root/layout/NavbarRightLayout.svelte";
   import Footer from "__@root/layout/FooterLayout.svelte";
-  import { redirect, layout, url } from "@roxi/routify";
+  import { layout, url } from "@roxi/routify";
   import { createAuthStore } from "__@stores/auth";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
@@ -61,7 +61,7 @@
   .main-layout {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    height: 100vh;
   }
 
   .footer {

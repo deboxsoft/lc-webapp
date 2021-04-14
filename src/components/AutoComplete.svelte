@@ -146,10 +146,10 @@
         const _item = listItem.item;
         if (__value && valueFieldName && _item[valueFieldName] === __value) {
           selectedItem = _item;
-          onSelectedItemChanged(selectedItem)
+          onSelectedItemChanged(selectedItem);
         } else if (_item === __value) {
           selectedItem = _item;
-          onSelectedItemChanged(selectedItem)
+          onSelectedItemChanged(selectedItem);
         }
       });
     }
@@ -485,6 +485,73 @@
   }
 </script>
 
+<div
+  class="{className ? className : ''}
+  {hideArrow ? '-hide-arrow is-multiple' : ''}
+  {showClear
+    ? '-show-clear'
+    : ''} dbx-autocomplete select is-fullwidth {uniqueId} form-group-feedback form-group-feedback-right"
+>
+  <input
+    type="text"
+    class="{inputClassName ? inputClassName : ''} input autocomplete-input"
+    {id}
+    {placeholder}
+    {name}
+    {disabled}
+    {title}
+    bind:this={input}
+    bind:value={text}
+    on:input={onInput}
+    on:focus={onFocus}
+    on:keydown={onKeyDown}
+    on:click={onInputClick}
+    on:keypress={onKeyPress}
+  />
+  {#if showClear}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>
+  {:else}
+    <div class="form-control-feedback">
+      <i class="fal fa-search" />
+    </div>
+  {/if}
+  <div
+    class="{dropdownClassName ? dropdownClassName : ''} autocomplete-list {showList ? '' : '-hidden'}
+    is-fullwidth"
+    bind:this={list}
+  >
+    {#if filteredListItems && filteredListItems.length > 0}
+      {#each filteredListItems as listItem, i}
+        {#if listItem && (maxItemsToShowInList <= 0 || i < maxItemsToShowInList)}
+          {#if listItem}
+            <div
+              class="autocomplete-list-item {i === highlightIndex ? '-selected' : ''}"
+              on:click={() => onListItemClick(listItem)}
+            >
+              {#if listItem.highlighted}
+                {@html listItem.highlighted.label}
+              {:else}
+                {@html listItem.label}
+              {/if}
+            </div>
+          {/if}
+        {/if}
+      {/each}
+
+      {#if maxItemsToShowInList > 0 && filteredListItems.length > maxItemsToShowInList}
+        <div class="autocomplete-list-item-no-results">
+          ...{filteredListItems.length - maxItemsToShowInList}
+          results not shown
+        </div>
+      {/if}
+    {:else if noResultsText}
+      <div class="autocomplete-list-item-no-results">{noResultsText}</div>
+    {/if}
+  </div>
+  <slot />
+</div>
+
+<svelte:window on:click={onDocumentClick} />
+
 <style lang="scss" global>
   .dbx-autocomplete {
     min-width: 200px;
@@ -594,59 +661,3 @@
     }
   }
 </style>
-
-<div
-  class="{className ? className : ''}
-  {hideArrow ? '-hide-arrow is-multiple' : ''}
-  {showClear ? '-show-clear' : ''} dbx-autocomplete select is-fullwidth {uniqueId}">
-  <input
-    type="text"
-    class="{inputClassName ? inputClassName : ''} input autocomplete-input"
-    {id}
-    {placeholder}
-    {name}
-    {disabled}
-    {title}
-    bind:this={input}
-    bind:value={text}
-    on:input={onInput}
-    on:focus={onFocus}
-    on:keydown={onKeyDown}
-    on:click={onInputClick}
-    on:keypress={onKeyPress} />
-  {#if showClear}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>{/if}
-  <div
-    class="{dropdownClassName ? dropdownClassName : ''} autocomplete-list {showList ? '' : '-hidden'}
-    is-fullwidth"
-    bind:this={list}>
-    {#if filteredListItems && filteredListItems.length > 0}
-      {#each filteredListItems as listItem, i}
-        {#if listItem && (maxItemsToShowInList <= 0 || i < maxItemsToShowInList)}
-          {#if listItem}
-            <div
-              class="autocomplete-list-item {i === highlightIndex ? '-selected' : ''}"
-              on:click={() => onListItemClick(listItem)}>
-              {#if listItem.highlighted}
-                {@html listItem.highlighted.label}
-              {:else}
-                {@html listItem.label}
-              {/if}
-            </div>
-          {/if}
-        {/if}
-      {/each}
-
-      {#if maxItemsToShowInList > 0 && filteredListItems.length > maxItemsToShowInList}
-        <div class="autocomplete-list-item-no-results">
-          ...{filteredListItems.length - maxItemsToShowInList}
-          results not shown
-        </div>
-      {/if}
-    {:else if noResultsText}
-      <div class="autocomplete-list-item-no-results">{noResultsText}</div>
-    {/if}
-  </div>
-  <slot />
-</div>
-
-<svelte:window on:click={onDocumentClick} />

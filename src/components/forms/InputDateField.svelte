@@ -8,7 +8,6 @@
   const dispatcher = createEventDispatcher();
 
   export let name;
-  export let value: any = ($fields && $fields[name]) || new Date();
   export let disabled: boolean = false;
   export let formattedValue: string = "";
   export let options = {};

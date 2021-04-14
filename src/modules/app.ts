@@ -1,11 +1,12 @@
 import type { GraphQLClient, FetchGraphql } from "@deboxsoft/module-graphql";
 
+import { SubscriptionClient } from "graphql-subscriptions-client";
 import { createUIContext } from "__@stores/ui";
 import { setContext, getContext } from "svelte";
 import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
-import { createAccountContext, createBalanceContext } from "./accounting";
+import { registerAccountingContext } from "./accounting";
 import { createUserContext } from "./users";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
@@ -16,6 +17,7 @@ const defaultConfig: Partial<NotifyConfig> = {
 
 export interface ApplicationContext {
   client?: GraphQLClient;
+  subscriptionClient: SubscriptionClient;
   fetch: FetchGraphql;
   notify: (message: string, type?: TypeNoty, config?: NotifyConfig) => void;
   loading: Writable<boolean>;
@@ -32,16 +34,16 @@ const notify = (message: string, type?: TypeNoty, config: NotifyConfig = {}) => 
 export const createApplicationContext = () => {
   let loading = writable(true);
   const { client, fetch } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
+  const subscriptionClient = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
-  const context: ApplicationContext = { client, fetch, notify, loading, env, uiControl };
+  const context: ApplicationContext = { client, fetch, notify, loading, env, uiControl, subscriptionClient };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
+
   // register service
-  const accountService = createAccountContext({ fetch, notify, env, loading });
-  createBalanceContext(accountService.accountStore);
+  const promiseRegisterAccounting = registerAccountingContext({ fetch, notify, env, loading, subscriptionClient });
   createUserContext();
-  const fetchAccounting = accountService.load();
-  return Promise.all([fetchAccounting]).then(() => {
+  return Promise.all([promiseRegisterAccounting]).then(() => {
     loading.update(() => false);
   });
 };

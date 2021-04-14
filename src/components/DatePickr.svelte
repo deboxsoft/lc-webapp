@@ -3,6 +3,7 @@
   import Flatpickr from "flatpickr";
   import monthSelect from "flatpickr/dist/plugins/monthSelect";
   import { Indonesian } from "flatpickr/dist/esm/l10n/id";
+  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
 
   const hooks = new Set([
     "onChange",
@@ -14,18 +15,31 @@
     "onValueUpdate",
     "onDayCreate"
   ]);
-  export let value: any = new Date();
+
+  export let defaultDate = new Date();
+  export let value: any = undefined;
   export let formattedValue: string = "";
   export let element: HTMLElement | null = null;
   export let options = {};
-  export let confirmEnable: boolean = false;
   export let mode: "month-select" | "menu" | undefined = undefined;
+  export let wrapperClass: string = "w-100";
   export let readOnly: boolean = false;
   export let disabled: boolean = false;
-  let input: any = undefined;
+  export let iconDisable: boolean = false;
 
+  let wrapperDisable: boolean = iconDisable;
+  let input: any = undefined;
+  const { class: className } = $$props;
   let flatPickr;
 
+  $: classes = clsx(className);
+  $: wrapperClasses = clsx(wrapperClass, !iconDisable && "form-group-feedback form-group-feedback-right");
+
+  /**
+   * @link{https://flatpickr.js.org/options/}
+   * @param elem
+   * @param options
+   */
   const createFlatPickr = (elem, options: Record<string, any> = {}) => {
     options = {
       altInput: true,
@@ -33,6 +47,7 @@
       locale: Indonesian,
       dateFormat: "Z",
       plugins: [],
+      defaultDate,
       ...(element ? { wrap: true } : {}),
       ...options
     };
@@ -78,11 +93,11 @@
       return;
     }
     if (mode === "month-select") {
-      flatPickr = createFlatPickr(_elem, { ...options, mode: "mode-select" });
+      createFlatPickr(_elem, { ...options, mode: "mode-select" });
     } else if (mode === "menu") {
-      flatPickr = createFlatPickr(_elem, { ...{ mode: "range" }, ...options });
+      createFlatPickr(_elem, { ...{ mode: "range" }, ...options });
     } else {
-      flatPickr = createFlatPickr(_elem, options);
+      createFlatPickr(_elem, options);
     }
     return () => {
       flatPickr?.destroy();
@@ -125,11 +140,24 @@
 
   function createMenuHandler(menu: string) {
     return () => {
-      if (menu === "selector") {
-      }
+      // if (menu === "selector") {
+      // }
     };
   }
 </script>
+
+{#if !wrapperDisable}
+  <div class={wrapperClasses}>
+    <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} {value} />
+    <div class="form-control-feedback text-grey-600">
+      <i class="fal fa-calendar" />
+    </div>
+    <slot />
+  </div>
+{:else}
+  <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} {value} />
+  <slot />
+{/if}
 
 <style lang="scss" global>
   .dbx-flatpickr {
@@ -228,6 +256,3 @@
     border-color: #80cbc4;
   }
 </style>
-
-<input bind:this={input} {...$$restProps} {value} />
-<slot />

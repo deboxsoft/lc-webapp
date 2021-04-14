@@ -9,7 +9,7 @@ const KEY = {};
 
 export const createBddContext = () => {
   // const { fetch, notify } = getApplicationContext();
-  // const bddService = new graphql.BddGraphqlClient(fetch);
+  // const bddService = new graphql.BddGraphqlClient({ fetch });
   // const store = stores.createBddStoreService({ bddService, notify });
   // const store = createMock();
   // setContext(KEY, store);

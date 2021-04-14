@@ -8,11 +8,11 @@
   const {uiControl} = getApplicationContext()
 
   export let onClose = () => {
-    console.log("close")
+    // console.log("close")
   }
 
   export let onEscapeKeyDown = () =>{
-    console.log("escape")
+    // console.log("escape")
   }
   let { class: className } = $$props;
   $: classes = clsx("modal-dialog", className);
@@ -56,6 +56,7 @@
 <style lang="scss" global>
   .dbx-theme {
     .modal {
+      position: fixed;
       &.show {
         display: block;
       }

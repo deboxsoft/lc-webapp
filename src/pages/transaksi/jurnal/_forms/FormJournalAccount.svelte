@@ -12,9 +12,9 @@
 
   // context formJournal
   const { schema, fields, fieldsErrors, isValid, validateField } = getFormContext();
-  const accountsValidate = validateField("accounts")
+  const accountsValidate = validateField("accounts");
   const journalAccountSchema = schema.pick({ accounts: true });
-  createFormContext({ schema: journalAccountSchema, fields, fieldsErrors });
+  createFormContext({ schema: journalAccountSchema });
 
   const createJournalAccount = () => ({ index: getId({ prefix: "account-input", size: 3 }) });
 
@@ -28,13 +28,11 @@
   // validation form journal
   // hack hapus FieldsError.account
   delete $fieldsErrors["accounts"];
-  delete $fieldsErrors["total"];
   $: {
     let _credit = 0;
     $journalAccountsStore.forEach((_) => {
       _credit = parseFloat(_.amount || 0) + _credit;
     });
-    console.log($fields);
     $fields.total = _credit;
     credit = _credit;
     debit = $fields.amount;
@@ -43,20 +41,21 @@
       $fieldsErrors = { ...$fieldsErrors, noBalance: "debit and credit not balance" };
     } else {
       delete $fieldsErrors.noBalance;
+      delete $fieldsErrors["total"];
     }
     isValid.set(Object.keys($fieldsErrors).length === 0);
-    console.log($fieldsErrors, $isValid);
   }
 
   function addJournalAccountHandler() {
     $journalAccountsStore = [...$journalAccountsStore, createJournalAccount()];
+    $fields.accounts = $journalAccountsStore;
     accountsValidate($journalAccountsStore);
   }
 
   function updateJournalAccountHandler(input: JournalAccountInput) {
     const i = $journalAccountsStore.findIndex((_) => _.index === input.index);
     $journalAccountsStore[i] = input;
-    $fields.accounts[i] = input;
+    $fields.accounts = $journalAccountsStore;
     accountsValidate($journalAccountsStore);
   }
 
@@ -64,6 +63,8 @@
     let inputs = $journalAccountsStore;
     inputs = inputs.filter((_) => _.index !== index);
     $journalAccountsStore = inputs;
+    $fields.accounts = $journalAccountsStore;
+    accountsValidate($journalAccountsStore);
   }
 </script>
 
@@ -84,7 +85,8 @@
             {index}
             input={journalAccountInput}
             onRemoveJournalAccount={removeJournalAccountHandler}
-            onUpdateJournalAccount={updateJournalAccountHandler} />
+            onUpdateJournalAccount={updateJournalAccountHandler}
+          />
         {/each}
       </tbody>
     </table>
@@ -110,15 +112,15 @@
     <div class="d-flex flex-column" style="width: 250px">
       <div class="d-flex">
         <span class="flex-grow-1">Total Debit: Rp.</span>
-        <span>{debit ? convertToRp(parseFloat(debit)) : '-'}</span>
+        <span>{debit ? convertToRp(parseFloat(debit)) : "-"}</span>
       </div>
       <div class="d-flex">
         <span class="flex-grow-1">Total Kredit: Rp.</span>
-        <span>{credit ? convertToRp(parseFloat(credit)) : '-'}</span>
+        <span>{credit ? convertToRp(parseFloat(credit)) : "-"}</span>
       </div>
       <div class="d-flex" style="border-top: solid 1px gray">
         <span class="flex-grow-1"> Selisih: Rp.</span>
-        <span>{diff ? convertToRp(diff) : '-'}</span>
+        <span>{diff ? convertToRp(diff) : "-"}</span>
       </div>
     </div>
   </div>

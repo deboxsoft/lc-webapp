@@ -1,20 +1,27 @@
 <script lang="ts">
   import AutoSizer from "svelte-virtualized-auto-sizer";
   import List from "@deboxsoft/svelte-virtual-list";
+  import InfiniteLoading from "__@comps/loader/InfiniteLoading.svelte";
 
-  export let items: any[] = []
+  export let items: any[] = [];
+  export let infiniteEnable = false;
 </script>
 
 <div class="dbx-table" {...$$restProps}>
   <slot name="header" />
   <div class="dbx-tbody">
-  <AutoSizer let:height={childHeight} disableWidth>
+    <AutoSizer let:height={childHeight} disableWidth>
       <List height={`${childHeight}px`} {items} let:item>
         <slot {item}>
-          <div {style}>template, not yet implement</div>
+          <div>template, not yet implement</div>
         </slot>
+        <div slot="infinite">
+          {#if (infiniteEnable)}
+            <InfiniteLoading on:infinite />
+          {/if}
+        </div>
       </List>
-  </AutoSizer>
+    </AutoSizer>
   </div>
 </div>
 

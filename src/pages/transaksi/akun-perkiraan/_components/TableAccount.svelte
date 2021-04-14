@@ -25,7 +25,7 @@
     <div class="dbx-cell">Nama</div>
     <div class="dbx-cell">Klasifikasi</div>
     <div class="dbx-cell">Induk</div>
-    <div class="dbx-cell" style="width: 30px" />
+    <div class="dbx-cell text-center" style="width: 100px" />
   </div>
   <RowAccount account={item} />
 </Table>

@@ -27,12 +27,12 @@
   }
 </style>
 <div class="cell-rp" class:-minus={value < 0}>
-  {#if spaceMinus && (value < 0)}
-    <div class="space-sign" />
-  {/if}
+  <!--{#if spaceMinus && (value < 0)}-->
+  <!--  <div class="space-sign" />-->
+  <!--{/if}-->
   <div class="sign">Rp.</div>
   <div class="space" />
-  <div class="value">{value ? convertToRp(parseInt(value)) : "  "}</div>
+  <div class="value">{value ? convertToRp(parseInt(value)) : "-"}</div>
   {#if spaceMinus && (value > 0)}
     <div class="space-sign" />
   {/if}

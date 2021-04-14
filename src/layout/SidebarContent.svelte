@@ -99,7 +99,7 @@
   }
 
   .sidebar-content {
-    height: calc(100vh - 102px);
+    height: calc(100vh - 70px);
     overflow-y: scroll !important;
   }
 </style>

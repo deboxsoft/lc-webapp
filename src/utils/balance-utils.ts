@@ -1,7 +1,7 @@
-import { get, Readable } from "svelte/store";
-import { AccountTree, AccountTreeBalance, BalanceSheet, getAccountMap } from "@deboxsoft/accounting-api";
+import type { get, Readable } from "svelte/store";
+import type { AccountTree, AccountTreeBalance, BalanceSheet } from "@deboxsoft/accounting-api";
 
-import { transformToAccountTreeBalance } from "@deboxsoft/accounting-api";
+// import { setBalanceToAccountsTree } from "@deboxsoft/accounting-api";
 
 export interface BalanceAccounts {
   aktivaLancar: Readable<string[]>;
@@ -21,62 +21,62 @@ export type BalanceDataResult = Record<
 export type BalanceAccountTree = Record<keyof BalanceAccounts, AccountTree[]>;
 
 export const neracaParsingUtils = (accountsTree: AccountTree[], balanceAccounts: BalanceAccounts) => {
-  const aktivaTetap = getAccountMap(accountsTree, get(balanceAccounts.aktivaTetap));
-  const aktivaLancar = getAccountMap(accountsTree, get(balanceAccounts.aktivaLancar));
-  const pasiva = getAccountMap(accountsTree, get(balanceAccounts.pasiva));
-  const cadangan = getAccountMap(accountsTree, get(balanceAccounts.cadangan));
-  const modal = getAccountMap(accountsTree, get(balanceAccounts.modal));
-  const result: BalanceDataResult = {
-    aktivaTetap: {
-      items: aktivaTetap.accountTrees,
-      sum: 0
-    },
-    aktivaLancar: {
-      items: aktivaLancar.accountTrees,
-      sum: 0
-    },
-    pasiva: {
-      items: pasiva.accountTrees,
-      sum: 0
-    },
-    cadangan: {
-      items: cadangan.accountTrees,
-      sum: 0
-    },
-    modal: {
-      items: modal.accountTrees,
-      sum: 0
-    }
-  };
+  // const aktivaTetap = getAccountsTreeBalance(accountsTree, get(balanceAccounts.aktivaTetap));
+  // const aktivaLancar = getAccountMap(accountsTree, get(balanceAccounts.aktivaLancar));
+  // const pasiva = getAccountMap(accountsTree, get(balanceAccounts.pasiva));
+  // const cadangan = getAccountMap(accountsTree, get(balanceAccounts.cadangan));
+  // const modal = getAccountMap(accountsTree, get(balanceAccounts.modal));
+  const result: any = {};
+  //   aktivaTetap: {
+  //     items: aktivaTetap.accountTrees,
+  //     sum: 0
+  //   },
+  //   aktivaLancar: {
+  //     items: aktivaLancar.accountTrees,
+  //     sum: 0
+  //   },
+  //   pasiva: {
+  //     items: pasiva.accountTrees,
+  //     sum: 0
+  //   },
+  //   cadangan: {
+  //     items: cadangan.accountTrees,
+  //     sum: 0
+  //   },
+  //   modal: {
+  //     items: modal.accountTrees,
+  //     sum: 0
+  //   }
+  // };
   return (balanceSheets: BalanceSheet[]): BalanceDataResult => {
-    balanceSheets.forEach((balanceSheet) => {
-      if (aktivaTetap.ids.includes(balanceSheet.accountId)) {
-        result.aktivaTetap.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.aktivaTetap.sum += balanceSheet.balance;
-      } else if (aktivaLancar.ids.includes(balanceSheet.accountId)) {
-        result.aktivaLancar.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.aktivaLancar.sum += balanceSheet.balance;
-      } else if (pasiva.ids.includes(balanceSheet.accountId)) {
-        result.pasiva.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.pasiva.sum += balanceSheet.balance;
-      } else if (cadangan.ids.includes(balanceSheet.accountId)) {
-        result.cadangan.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.cadangan.sum += balanceSheet.balance;
-      } else if (modal.ids.includes(balanceSheet.accountId)) {
-        result.modal.items.forEach((_) => {
-          transformToAccountTreeBalance(_, balanceSheet);
-        });
-        result.modal.sum += balanceSheet.balance;
-      }
-    });
+    // balanceSheets.forEach((balanceSheet) => {
+    //   if (aktivaTetap.ids.includes(balanceSheet.accountId)) {
+    //     result.aktivaTetap.items.forEach((_) => {
+    //       setBalanceToAccountsTree(_, balanceSheet);
+    //     });
+    //     result.aktivaTetap.sum += balanceSheet.balance;
+    //   } else if (aktivaLancar.ids.includes(balanceSheet.accountId)) {
+    //     result.aktivaLancar.items.forEach((_) => {
+    //       setBalanceToAccountsTree(_, balanceSheet);
+    //     });
+    //     result.aktivaLancar.sum += balanceSheet.balance;
+    //   } else if (pasiva.ids.includes(balanceSheet.accountId)) {
+    //     result.pasiva.items.forEach((_) => {
+    //       setBalanceToAccountsTree(_, balanceSheet);
+    //     });
+    //     result.pasiva.sum += balanceSheet.balance;
+    //   } else if (cadangan.ids.includes(balanceSheet.accountId)) {
+    //     result.cadangan.items.forEach((_) => {
+    //       setBalanceToAccountsTree(_, balanceSheet);
+    //     });
+    //     result.cadangan.sum += balanceSheet.balance;
+    //   } else if (modal.ids.includes(balanceSheet.accountId)) {
+    //     result.modal.items.forEach((_) => {
+    //       setBalanceToAccountsTree(_, balanceSheet);
+    //     });
+    //     result.modal.sum += balanceSheet.balance;
+    //   }
+    // });
     return result;
   };
 };

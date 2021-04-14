@@ -23,19 +23,18 @@
   }
 </script>
 
-<Dropdown class="dropdown-user" isNavItem menuClass="dropdown-menu-right" {triggerElement} placement="bottom-end">
+<Dropdown class="dropdown-user" isNavItem let:toggle let:toggleClass>
   <a
     href="/#"
-    bind:this={triggerElement}
-    on:click|preventDefault={() => {}}
-    class="dropdown-toggle navbar-flex align-items-center navbar-nav-link"
+    on:click|preventDefault={toggle}
+    class="{toggleClass} navbar-flex align-items-center navbar-nav-link"
     target="_self"
   >
     <img src={avatarSrc} class="rounded-circle mr-2" height="34" alt="" />
     <span>{profileName}</span>
   </a>
   <!-- menu -->
-  <div slot="dropdown-menu">
+  <div slot="menu">
     <a href="/#" class="dropdown-item" on:click|preventDefault={profileHandler}><i class="far fa-user" />Pengaturan Profile</a>
     <a href="/#" class="dropdown-item" on:click|preventDefault={passwordHandler}><i class="icon-lock5" />Ganti Password</a>
     <div class="dropdown-divider" />

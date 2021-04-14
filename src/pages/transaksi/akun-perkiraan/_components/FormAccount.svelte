@@ -83,7 +83,6 @@
       if (!$accountState.type) {
         setTypeFromParent();
       }
-      console.log($accountState);
       $submitted = true;
       AccountSchema.parse($accountState);
       await onSubmit($accountState);
@@ -92,7 +91,6 @@
     } catch (error) {
       if (error instanceof ZodError) {
         $fieldsErrors = error.flatten().fieldErrors;
-        console.log(error.errors[0]);
         notify(
           `${pathsError[error.errors[0].path[0]] || error.errors[0].path[0]}: ${error.errors[0].message}`,
           "error"
@@ -138,10 +136,8 @@
       __account.parentId = _parentIdTmp;
       _tmpIdAsParent = __account.id;
       if (idReadOnly) {
-        console.log("lock", _tmpId);
         genCode();
       } else {
-        console.log("editable", _tmpId);
         __account.id = _tmpId;
       }
     }

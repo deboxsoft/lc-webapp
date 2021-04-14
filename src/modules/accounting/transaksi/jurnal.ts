@@ -1,15 +1,23 @@
-import type { TransactionStoreService } from "@deboxsoft/accounting-client/types/stores";
+import type { TransactionClientService } from "@deboxsoft/accounting-client/types/graphql";
 
 import { stores, graphql } from "@deboxsoft/accounting-client";
 import { getApplicationContext } from "__@modules/app";
 
-export const createTransactionContext = (): stores.TransactionStoreService => {
-  const { fetch, notify, env } = getApplicationContext();
-  const transactionService = new graphql.TransactionClientService(fetch);
+let transactionService: TransactionClientService;
 
-  return stores.createTransactionStoreService({
-    transactionService,
+export const getTransactionService = () => {
+  if (!transactionService) {
+    const { fetch } = getApplicationContext();
+    transactionService = new graphql.TransactionClientService({ fetch });
+  }
+  return transactionService;
+};
+export const createTransactionContext = (): stores.TransactionContext => {
+  const { env, notify } = getApplicationContext();
+  return stores.createTransactionContext({
+    transactionService: getTransactionService(),
     notify: (env !== "production" && notify) || undefined
   });
 };
-export const getTransactionContext = (): TransactionStoreService => stores.getTransactionContext();
+
+export const getTransactionContext = (): stores.TransactionContext => stores.getTransactionContext();
