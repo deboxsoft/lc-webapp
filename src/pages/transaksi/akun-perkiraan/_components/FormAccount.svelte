@@ -16,8 +16,6 @@
   import InputCheck from "__@comps/forms/InputCheckSwitchery.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import ComboBox from "__@comps/forms/ComboxField.svelte";
-  // import InputRp from "__@comps/forms/InputNumberField.svelte";
-  // import InputDate from "__@comps/forms/InputDateField.svelte";
 
   // context
   const { notify } = getApplicationContext();
@@ -43,7 +41,13 @@
   let _tmpId = "";
   let _tmpIdAsParent = "";
   let _parentIdTmp = "";
-  let _typeTmp = $accountsType[0];
+  let _typeTmp;
+
+  $: {
+    if (!_typeTmp && $accountsType && $accountsType.length > 0) {
+      _typeTmp = $accountsType[0].code;
+    }
+  }
 
   // hack
   let pathsError = {
@@ -85,7 +89,7 @@
           setTypeFromParent();
         }
         if(!$accountState.type) {
-          $accountState.type = $accountsType[0].id
+          $accountState.type = $accountsType[0].code
         }
       }
       $submitted = true;
@@ -233,14 +237,15 @@
                 <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
               </div>
             </div>
-            {#if $accountState.isParent}
+            {#if !$accountState.parentId || $accountState.isParent }
               <div class="row">
                 <div class="form-group col-12">
                   <label for="type">Klasifikasi Akun</label>
                   <ComboBox id="type" name="type" items={$accountsType} labelId="label" valueId="code" />
                 </div>
               </div>
-            {:else}
+            {/if}
+            {#if !$accountState.isParent}
               <div class="row">
                 <div class="form-group col-12">
                   <label for="parentId">Induk Akun</label>
