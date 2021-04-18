@@ -1,18 +1,22 @@
 <script lang="ts">
   import InfiniteLoading from "__@comps/loader/InfiniteLoading.svelte";
 
-  export let items: any[] = [];
+  export let items: any[] | undefined = undefined;
   export let infiniteEnable = false;
 </script>
 
 <div class="dbx-table" {...$$restProps}>
   <slot name="header" />
   <div class="dbx-tbody">
-    {#each items as item}
-      <slot {item}>
-        <div>template, not yet implement</div>
-      </slot>
-    {/each}
+    {#if items}
+      {#each items as item}
+        <slot {item}>
+          <div>template, not yet implement</div>
+        </slot>
+      {/each}
+    {:else}
+      <slot />
+    {/if}
     <div>
       {#if infiniteEnable}
         <InfiniteLoading on:infinite />
@@ -33,9 +37,7 @@
       display: flex;
       width: 100%;
       height: 30px;
-      .dbx-cell {
-        border-bottom: 1px solid #b7b7b7;
-      }
+      border-bottom: 1px solid #b7b7b7;
     }
 
     .dbx-tbody {
@@ -71,6 +73,10 @@
 
       &.-menu-list {
         overflow: unset;
+      }
+
+      &.-balance {
+        flex: 0 0 200px;
       }
     }
   }

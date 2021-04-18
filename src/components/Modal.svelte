@@ -3,23 +3,23 @@
   import { onMount } from "svelte";
   import Modal from "@deboxsoft/svelte-components-base/utils/Modal.svelte";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
-  import {getApplicationContext} from "__@modules/app";
+  import { getApplicationContext } from "__@modules/app";
 
-  const {uiControl} = getApplicationContext()
+  const { uiControl } = getApplicationContext();
 
   export let onClose = () => {
     // console.log("close")
-  }
+  };
 
-  export let onEscapeKeyDown = () =>{
+  export let onEscapeKeyDown = () => {
     // console.log("escape")
-  }
+  };
   let { class: className } = $$props;
-  $: classes = clsx("modal-dialog", className);
+  $: classes = clsx("modal-dialog modal-dialog-centered", className);
 
   export let open = true;
   export let title = undefined;
-  let uiStore = uiControl.store
+  let uiStore = uiControl.store;
   onMount(() => {
     $uiStore.modalOpen = true;
     return () => {
@@ -29,12 +29,17 @@
   });
 </script>
 
-<Modal {onClose} {open} class={clsx("modal", open && "show")} disableBackdropClick={false} onEscapeKeyDown={onEscapeKeyDown}>
-  <div class="modal" class:show={open} tabindex="-1" transition:fade={{ duration: 200 }}>
+<Modal {onClose} {open} class={clsx("modal", open && "show")} disableBackdropClick={false} {onEscapeKeyDown}>
+  <div
+    class="modal"
+    class:show={open}
+    tabindex="-1"
+    transition:fade={{ duration: 200 }}
+  >
     <div {...$$restProps} class={classes}>
       <div class="modal-content">
         {#if $$slots["header"] || title}
-          <div class="modal-header">
+          <div class="modal-header bg-light">
             <slot name="header">
               <h5 class="modal-title">{title}</h5>
             </slot>
@@ -44,7 +49,7 @@
           <slot />
         </div>
         {#if $$slots["footer"]}
-          <div class="modal-footer">
+          <div class="modal-footer bg-light">
             <slot name="footer" />
           </div>
         {/if}

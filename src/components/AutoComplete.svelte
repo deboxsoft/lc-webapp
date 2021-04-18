@@ -1,8 +1,12 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
+  import { createPopper } from "@popperjs/core/lib/popper-lite";
+  import flip from "@popperjs/core/lib/modifiers/flip";
+  import preventOverflow from "@popperjs/core/lib/modifiers/preventOverflow";
   // the list of items  the user can select from
   export let items = [];
   // field of each item that's used for the labels in the list
+  export let placement = "bottom-start";
   export let labelFieldName = undefined;
   export let keywordsFieldName = labelFieldName;
   export let valueFieldName = "id";
@@ -114,7 +118,9 @@
   let input: any;
   let list: HTMLElement & { scrollIntoViewIfNeeded?: Function };
   let showList: boolean;
+  let dropdownElement: any;
   // UI state
+  let popperInstance;
   let opened: boolean = false;
   let highlightIndex: number = -1;
   $: showList = opened && ((items && items.length > 0) || filteredTextLength > 0);
@@ -416,6 +422,26 @@
       }
     }
   }
+
+  async function _createPopper() {
+    await tick();
+    const popperInstance = createPopper(input, dropdownElement, {
+      placement,
+      modifiers: [
+        preventOverflow,
+        flip
+      ]
+    });
+    console.log(popperInstance);
+  }
+
+  function destroyPopper() {
+    if (popperInstance) {
+      popperInstance.destroy();
+      popperInstance = undefined;
+    }
+  }
+
   function open() {
     if (debug) {
       console.log("open");
@@ -425,6 +451,7 @@
       return;
     }
     opened = true;
+    // _createPopper();
   }
   function close() {
     if (debug) {
@@ -435,6 +462,7 @@
       // highlightFilter = 0;
       selectItem();
     }
+    // destroyPopper();
   }
   function isMinCharsToSearchReached() {
     return minCharactersToSearch > 1 && filteredTextLength < minCharactersToSearch;
@@ -483,9 +511,33 @@
       return newI;
     };
   }
+
+  function autoScrollComponent(node, { condition, dropdown }) {
+    const autoScroll = () => {
+      if (condition() == false) return;
+      const scrollFunction =
+        "scrollIntoViewIfNeeded" in Element.prototype
+          ? Element.prototype.scrollIntoViewIfNeeded
+          : Element.prototype.scrollIntoView;
+      const dropdownNode = dropdown();
+      if (dropdownNode != null) scrollFunction.call(dropdownNode);
+      scrollFunction.call(node);
+    };
+    autoScroll();
+    return {
+      update: async () => {
+        await tick();
+        autoScroll();
+      }
+    };
+  }
 </script>
 
 <div
+  use:autoScrollComponent={{
+    condition: () => opened,
+    dropdown: () => dropdownElement
+  }}
   class="{className ? className : ''}
   {hideArrow ? '-hide-arrow is-multiple' : ''}
   {showClear
@@ -524,6 +576,7 @@
         {#if listItem && (maxItemsToShowInList <= 0 || i < maxItemsToShowInList)}
           {#if listItem}
             <div
+              bind:this={dropdownElement}
               class="autocomplete-list-item {i === highlightIndex ? '-selected' : ''}"
               on:click={() => onListItemClick(listItem)}
             >

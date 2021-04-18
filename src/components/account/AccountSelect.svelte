@@ -12,16 +12,19 @@
   export let selectedAccount = accountContext.getAccount(accountId);
   const dispatch = createEventDispatcher();
 
+  let initialed = false // mencegah loop
+
   $: {
-    if (!$selectedAccount && !allowEmpty && $accountStore.length > 0) {
+    if (!$selectedAccount && !allowEmpty && !initialed && $accountStore.length > 0) {
       accountId = $accountStore[0].id;
+      initialed = true;
       selectedAccount = accountContext.getAccount(accountId);
     }
   }
 
   function changeHandler(e: any) {
-    const _accountId = e.detail;
-    selectedAccount = accountContext.getAccount(_accountId);
+    accountId = e.detail;
+    selectedAccount = accountContext.getAccount(accountId);
     dispatch("change", $selectedAccount);
   }
 </script>
