@@ -4,6 +4,7 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import RowBalance from "../../_components/RowBalance.svelte";
   import CellRp from "__@comps/CellRp.svelte";
+  import RowTotalBalance from "../../_components/RowTotalBalance.svelte";
 
   const { perDate, balanceReportStore, generateReport } = getBalanceContext();
 
@@ -28,8 +29,8 @@
         balanceSheetReport.liabilitiesFixed.balance +
         balanceSheetReport.equities.balance + statementIncomeBalance
       ;
-    } else if(!loading) {
-      generateReportHandler()
+    } else if (!loading) {
+      generateReportHandler();
     }
     console.log(balanceSheetReport);
   }
@@ -54,67 +55,39 @@
     <tbody>
       <!--    aktiva -->
       {#each balanceSheetReport.assetsCurrent.accounts as account}
-        <RowBalance name={account.name} balance={account.balance} />
+        <RowBalance label={account.name} balance={account.balance} />
       {/each}
-      <tr class="table-active table-border-double">
-        <td>Aktiva Lancar</td>
-        <td>&nbsp;</td>
-        <td class="text-right" style="width: 200px">
-          <CellRp value={balanceSheetReport.assetsCurrent.balance} />
-        </td>
-        <td style="width: 200px">&nbsp;</td>
-      </tr>
+      <RowTotalBalance label="Aktiva Lancar" balance={balanceSheetReport.assetsCurrent.balance} />
       {#each balanceSheetReport.assetsFixed.accounts as account}
-        <RowBalance name={account.name} balance={account.balance} />
+        <RowBalance label={account.name} balance={account.balance} />
       {/each}
-      <tr class="table-active table-border-double">
-        <td>Aktiva Tetap</td>
-        <td>&nbsp;</td>
-        <td class="text-right">
-          <CellRp value={balanceSheetReport.assetsFixed.balance} />
-        </td>
-        <td>&nbsp;</td>
-      </tr>
+      <RowTotalBalance label="Aktiva Tetap" balance={balanceSheetReport.assetsFixed.balance} />
       <tr class="table-active table-border-double font-weight-bold">
         <td>Total Aktiva</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="text-right">
+        <td class="text-right balance">
           <CellRp value={assetsBalance} />
         </td>
       </tr>
       <!--pasiva-->
       {#each balanceSheetReport.liabilitiesCurrent.accounts as account}
-        <RowBalance name={account.name} balance={account.balance} />
+        <RowBalance label={account.name} balance={account.balance} />
       {/each}
-      <tr class="table-active table-border-double">
-        <td>Pasiva Lancar</td>
-        <td>&nbsp;</td>
-        <td class="text-right">
-          <CellRp value={balanceSheetReport.liabilitiesCurrent.balance} />
-        </td>
-        <td>&nbsp;</td>
-      </tr>
+      <RowTotalBalance label="Pasiva Lancar" balance={balanceSheetReport.liabilitiesCurrent.balance} />
       {#each balanceSheetReport.liabilitiesFixed.accounts as account}
-        <RowBalance name={account.name} balance={account.balance} />
+        <RowBalance label={account.name} balance={account.balance} />
       {/each}
-      <tr class="table-active table-border-double">
-        <td>Pasiva Lancar</td>
-        <td>&nbsp;</td>
-        <td class="text-right">
-          <CellRp value={balanceSheetReport.liabilitiesFixed.balance} />
-        </td>
-        <td>&nbsp;</td>
-      </tr>
+      <RowTotalBalance label="Pasiva Tetap" balance={balanceSheetReport.liabilitiesFixed.balance} />
 
       <!--      modal-->
       {#each balanceSheetReport.equities.accounts as account}
-        <RowBalance name={account.name} balance={account.balance} />
+        <RowBalance label={account.name} balance={account.balance} />
       {/each}
       <tr class="table-active table-border-double">
         <td>Modal</td>
         <td>&nbsp;</td>
-        <td class="text-right">
+        <td class="text-right balance">
           <CellRp value={balanceSheetReport.equities.balance} />
         </td>
         <td>&nbsp;</td>
@@ -124,7 +97,7 @@
       <tr class="table-active table-border-double">
         <td>Laba/Rugi</td>
         <td>&nbsp;</td>
-        <td class="text-right">
+        <td class="text-right balance">
           <CellRp value={statementIncomeBalance} />
         </td>
         <td>&nbsp;</td>
@@ -134,7 +107,7 @@
         <td>Total Pasiva</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="text-right">
+        <td class="text-right balance">
           <CellRp
             value={liabilitiesBalance}
           />
@@ -145,7 +118,7 @@
         <td>Selisih</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td class="text-right">
+        <td class="text-right balance">
           <CellRp
             value={assetsBalance - liabilitiesBalance}
           />
@@ -154,3 +127,9 @@
     </tbody>
   </table>
 {/if}
+
+<style lang="scss">
+  .balance {
+    width: 200px;
+  }
+</style>

@@ -7,7 +7,7 @@
   import TableNeraca from "./_components/TableNeraca.svelte";
   import DatePickr from "__@comps/DatePickr.svelte";
 
-  const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
+  const { setBreadcrumbContext } = getBreadcrumbStore();
   const { currentDateStore } = getPreferenceContext();
   const { perDate, generateReport } = getBalanceContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
@@ -33,8 +33,8 @@
       />
     </div>
   </div>
-  <div class="card d-flex flex-1">
-    <div class="card-body d-flex flex-1 h-100">
+  <div class="card d-flex flex-1 flex-column">
+    <div class="card-body d-flex flex-1">
       <TableNeraca bind:generateReportHandler />
     </div>
   </div>

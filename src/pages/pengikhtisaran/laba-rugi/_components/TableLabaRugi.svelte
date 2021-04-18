@@ -3,6 +3,7 @@
 
   import Loader from "__@comps/loader/Loader.svelte";
   import RowBalance from "../../_components/RowBalance.svelte";
+  import RowTotalBalance from "../../_components/RowTotalBalance.svelte";
   import CellRp from "__@comps/CellRp.svelte";
 
   const { perDate, balanceReportStore, generateReport } = getBalanceContext();
@@ -43,64 +44,45 @@
     <tbody>
     <!--    aktiva -->
     {#each statementIncomeReport.revenue.accounts as account}
-      <RowBalance name={account.name} balance={account.balance} />
+      <RowBalance label={account.name} balance={account.balance} />
     {/each}
-    <tr class="table-active table-border-double">
-      <td>Pendapatan</td>
-      <td style="width: 200px">&nbsp;</td>
-      <td class="text-right" style="width: 200px">
-        <CellRp value={statementIncomeReport.revenue.balance} />
-      </td>
-      <td style="width: 200px">&nbsp;</td>
-    </tr>
+    <RowTotalBalance label="Pendapatan" balance={statementIncomeReport.revenue.balance} />
     {#each statementIncomeReport.revenueOther.accounts as account}
-      <RowBalance name={account.name} balance={account.balance} />
+      <RowBalance label={account.name} balance={account.balance} />
     {/each}
-    <tr class="table-active table-border-double">
-      <td>Pendapatan Lain-lain</td>
-      <td>&nbsp;</td>
-      <td class="text-right">
-        <CellRp value={statementIncomeReport.revenueOther.balance} />
-      </td>
-      <td>&nbsp;</td>
-    </tr>
+    <RowTotalBalance label="Pendapatan Lain-lain" balance={statementIncomeReport.revenueOther.balance} />
     <tr class="table-active table-border-double font-weight-bold">
       <td>Total Pendapatan</td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
-      <td class="text-right">
+      <td class="text-right balance">
         <CellRp value={revenueBalance} />
       </td>
     </tr>
     <!--pasiva-->
     {#each statementIncomeReport.expense.accounts as account}
-      <RowBalance name={account.name} balance={account.balance} />
+      <RowBalance label={account.name} balance={account.balance} />
     {/each}
-    <tr class="table-active table-border-double">
-      <td>Beban</td>
-      <td>&nbsp;</td>
-      <td class="text-right">
-        <CellRp value={statementIncomeReport.expense.balance} />
-      </td>
-      <td>&nbsp;</td>
-    </tr>
+    <RowTotalBalance label="Beban" balance={statementIncomeReport.expense.balance} />
     {#each statementIncomeReport.expenseOther.accounts as account}
-      <RowBalance name={account.name} balance={account.balance} />
+      <RowBalance label={account.name} balance={account.balance} />
     {/each}
+    <RowTotalBalance label="Beban Lain-lain" balance={statementIncomeReport.expenseOther.balance} />
+
     <tr class="table-active table-border-double">
-      <td>Beban Lain-lain</td>
+      <td>Total Beban</td>
       <td>&nbsp;</td>
-      <td class="text-right">
-        <CellRp value={statementIncomeReport.expenseOther.balance} />
+      <td>&nbsp;</td>
+      <td class="text-right balance">
+        <CellRp value={expenseBalance} />
       </td>
-      <td>&nbsp;</td>
     </tr>
 
     <tr class="table-active table-border-double font-weight-bold">
       <td>Laba/Rugi</td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
-      <td class="text-right">
+      <td class="text-right balance">
         <CellRp
           value={revenueBalance - expenseBalance}
         />
@@ -109,3 +91,8 @@
     </tbody>
   </table>
 {/if}
+<style lang="scss">
+  .balance {
+    width: 200px;
+  }
+</style>
