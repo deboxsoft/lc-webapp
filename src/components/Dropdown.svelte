@@ -1,5 +1,5 @@
 <script context="module">
-  import { setContext, getContext } from "svelte";
+  import { setContext, getContext, tick } from "svelte";
   import { writable } from "svelte/store";
 
   export let createContextDropdown = () => {
@@ -26,6 +26,7 @@
 
   // state
   let element;
+  let menuElement;
   let { class: className } = $$props;
 
   $: classes = clsx(className, "dbx-dropdown");
@@ -72,11 +73,34 @@
     show = !show;
     active = show;
   }
+
+  function autoScrollComponent(node, { condition, dropdown }) {
+    const autoScroll = () => {
+      if (condition() == false) return;
+      const scrollFunction =
+        "scrollIntoViewIfNeeded" in Element.prototype
+          ? Element.prototype.scrollIntoViewIfNeeded
+          : Element.prototype.scrollIntoView;
+      const dropdownNode = dropdown();
+      if (dropdownNode != null) scrollFunction.call(dropdownNode);
+      scrollFunction.call(node);
+    };
+    autoScroll();
+    return {
+      update: async () => {
+        await tick();
+        autoScroll();
+      }
+    };
+  }
 </script>
 
-<div {...$$restProps} class={classes} class:show bind:this={element}>
+<div {...$$restProps} class={classes} class:show bind:this={element} use:autoScrollComponent={{
+    condition: () => show,
+    dropdown: () => menuElement
+  }}>
   <slot {toggle} toggleClass="dbx-dropdown-toggle" />
-  <div class={menuClasses} class:show style="margin: 0" on:click={menuClickHandler}>
+  <div bind:this={menuElement} class={menuClasses} class:show style="margin: 0" on:click={menuClickHandler}>
     <slot name="menu" />
   </div>
 </div>

@@ -101,6 +101,7 @@
     {...$$restProps}
     {name}
     {disabled}
+    autocomplete="off"
     class={classes}
     on:input={createInputHandler()}
     on:click

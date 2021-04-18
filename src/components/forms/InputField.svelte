@@ -37,6 +37,8 @@
   class:is-valid={$submitted && !invalid}
   class:is-invalid={$submitted && invalid}
   on:input={createInputHandler()}
+  on:keydown
+  on:keypress
 />
 {#if $submitted}
   {#if invalid}

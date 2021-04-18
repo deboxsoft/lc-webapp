@@ -28,6 +28,7 @@
 <style lang="scss" global>
   .dbx-table {
     display: flex;
+    flex: 1;
     width: 100%;
     padding: 0;
     flex-direction: column;
@@ -44,7 +45,7 @@
       position: relative;
       display: flex;
       flex-flow: column nowrap;
-      overflow: auto;
+      //overflow: auto;
       flex: 1;
       .dbx-tr:hover {
         background-color: rgba(0, 0, 0, 0.03);
@@ -62,8 +63,7 @@
     }
     .dbx-cell {
       box-sizing: border-box;
-      flex-grow: 1;
-      width: 100%;
+      flex: 1 1 100%;
       padding: 0.25rem 0.5rem;
       list-style: none;
       vertical-align: middle;
@@ -72,6 +72,8 @@
       white-space: nowrap;
 
       &.-menu-list {
+        text-align: center;
+        flex: 0 0 30px;
         overflow: unset;
       }
 

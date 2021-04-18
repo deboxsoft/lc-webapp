@@ -78,6 +78,7 @@
       data-fouc
       data-switchery={checked}
       {disabled}
+      {...$$restProps}
       style="display: none" />
     <span class="switchery switchery-default"> <small class="slider" /></span>
     <slot>{label}</slot>

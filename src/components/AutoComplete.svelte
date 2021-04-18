@@ -547,6 +547,7 @@
   <input
     type="text"
     class="{inputClassName ? inputClassName : ''} input autocomplete-input"
+    autocomplete="off"
     {id}
     {placeholder}
     {name}

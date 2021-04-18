@@ -79,8 +79,8 @@
     }
     .content {
       padding: 10px;
-      height: calc(100vh - 160px);
-      overflow: auto;
+      //height: calc(100vh - 160px);
+      //overflow: auto;
       flex-direction: column;
       display: flex;
     }

@@ -10,7 +10,6 @@
     const minimizeSidebarClass = "sidebar-xs";
     const showMobileSidebarClass = "sidebar-mobile-main";
     document.body.classList.add("dbx-theme");
-    document.body.classList.add("modal-open");
     isDark && document.body.classList.add(darkClass);
     minimizeSidebar && document.body.classList.add(minimizeSidebarClass);
     showMobileSidebar && document.body.classList.add(showMobileSidebarClass);
