@@ -71,9 +71,9 @@
         <!--            labelFieldName="name" />-->
         <!--        </div>-->
         <div class="form-group col-md-6">
-          <label for="accountId">Akun Debit</label>
+          <label for="accountId">Debit</label>
 <!--            <AccountCombox id="accountId" accountStore={getAccountLeaf()} allowEmpty />-->
-          <AccountSelect id="accountId" accountStore={getAccountLeaf()} />
+          <AccountSelect id="accountId" accountStore={getAccountLeaf()} allowEmpty />
         </div>
         <div class="form-group col-md-6">
           <label for="amount">Jumlah</label>

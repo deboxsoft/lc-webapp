@@ -1,4 +1,5 @@
 import type { TransactionClientService } from "@deboxsoft/accounting-client/types/graphql";
+import type { TransactionContext } from "@deboxsoft/accounting-client/types/stores";
 
 import { stores, graphql } from "@deboxsoft/accounting-client";
 import { getApplicationContext } from "__@modules/app";
@@ -12,7 +13,7 @@ export const getTransactionService = () => {
   }
   return transactionService;
 };
-export const createTransactionContext = (): stores.TransactionContext => {
+export const createTransactionContext = (): TransactionContext => {
   const { env, notify } = getApplicationContext();
   return stores.createTransactionContext({
     transactionService: getTransactionService(),
@@ -20,4 +21,4 @@ export const createTransactionContext = (): stores.TransactionContext => {
   });
 };
 
-export const getTransactionContext = (): stores.TransactionContext => stores.getTransactionContext();
+export const getTransactionContext = (): TransactionContext => stores.getTransactionContext();

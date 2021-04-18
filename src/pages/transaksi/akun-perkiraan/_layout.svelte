@@ -48,12 +48,12 @@
     </div>
     <a href={$url("./create")} class="btn btn-primary btn-icon"><i class="fal fa-plus" /></a>
   </div>
-  <div class="card d-flex flex-1">
+  <div class="card d-flex flex-column flex-1">
     <div class="card-header header-elements-inline">
       <div />
       <div class="header-elements" />
     </div>
-    <div class="card-body flex-1 d-flex">
+    <div class="card-body flex-1 flex-column d-flex">
       <TableAccount {accounts} />
     </div>
   </div>

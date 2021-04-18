@@ -1,4 +1,4 @@
 export * from "./jurnal";
 export * from "./account";
-export * from "./reconciliation";
+export * from "./bank";
 export * from "./general-ledger";

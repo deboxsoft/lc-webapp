@@ -17,6 +17,7 @@
   function closeHandler() {
     $goto("../");
   }
+
 </script>
 
 <Modal open title="Hapus Content">

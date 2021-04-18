@@ -16,9 +16,9 @@
       <i class="icon-menu9" />
     </a>
     <div slot="menu">
-      <a href={$url("../rekonsiliasi/:id", { id })} class="dropdown-item"><i class="fal fa-file-excel" />Rekonsiliasi</a>
-      <a href={$url("../:id/update", { id })} class="dropdown-item"><i class="fal fa-file-edit" />Ubah Bank</a>
-      <a href={$url("../:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Bank</a>
+      <a href={$url("../statements/:id", { id })} class="dropdown-item"><i class="fal fa-file-excel" />Rekonsiliasi</a>
+      <a href={$url("../home/:id/update", { id })} class="dropdown-item"><i class="fal fa-file-edit" />Ubah Bank</a>
+      <a href={$url("../home/:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Bank</a>
     </div>
   </Dropdown>
 </div>

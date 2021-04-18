@@ -3,8 +3,7 @@
   import { goto } from "@roxi/routify";
   import { getTransactionContext, getAccountContext } from "__@modules/accounting";
   import { getUserContext } from "__@modules/users";
-  import Modal
-    from "__@comps/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import FormJournal from "./_forms/FormJournal.svelte";
 
   // context
@@ -39,16 +38,7 @@
 </script>
 
 <Modal title="Transaksi Baru" class="modal-lg">
-  <div class="header-elements" slot="header-elements">
-    <!--    <a href={$url('./')} class="btn btn-link btn-float text-default" target="_self">-->
-    <!--      <Icon class="text-primary" size="large" component={SaveIcon} />-->
-    <!--    </a>-->
-  </div>
-  <div class="d-flex flex-column h-100">
-    <FormJournal
-      values={transaction}
-      {loading}
-      on:submit={submitHandler}
-      on:cancel={cancelHandler} />
+  <div class="d-flex flex-column flex-1">
+    <FormJournal values={transaction} {loading} on:submit={submitHandler} on:cancel={cancelHandler} />
   </div>
 </Modal>

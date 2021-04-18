@@ -11,14 +11,19 @@ export const TEMPLATE_PARSE = {
   BTPN: "BTPN"
 };
 
-function sanitizeString(_val: string) {
+function sanitizeString(_val: string = "") {
   // console.log(_val.trim(), _val);
   return _val.trim().replace(/\s+/g, " ");
 }
 
-function sanitizeNumber(_val: string) {
-  _val = _val.replace(/,/g, "");
-  return parseInt(_val);
+function sanitizeNumber(_val: string = "") {
+  _val = _val.replace(/\./g, "");
+  _val = _val.replace(/,/g, ".");
+  return parseFloat(_val);
+}
+
+function sanitizeAccount(_val: string) {
+  return _val && _val.replace(/\./g, "");
 }
 
 function parseDate(val: string, format: string): Date | false {
@@ -43,15 +48,21 @@ export const bni_transform = (value: string, field: number) => {
   }
 };
 
-export const bank_standard_transform = (result, self: any) => {
-  console.log(result, self);
-  // return {
-  //   date: row[0],
-  //   description: sanitizeString(`${row[1]}`),
-  //   in: sanitizeNumber(row[2]),
-  //   out: sanitizeNumber(row[3]),
-  //   balance: sanitizeNumber(row[4])
-  // };
+export const createTransformBank = (output: any[]) => {
+  return (result, self: any) => {
+    if (parseDate(result.data[0], "dd/MM/yyyy")) {
+      output.push({
+        date: result.data[0],
+        description: sanitizeString(`${result.data[1]}`),
+        in: sanitizeNumber(result.data[2]),
+        out: sanitizeNumber(result.data[3]),
+        balance: sanitizeNumber(result.data[4]),
+        accountId: sanitizeAccount(result.data[5])
+      });
+    }
+    // return {
+    // };
+  };
 };
 
 export const bank_mandiri_transform = ({ data }) => {

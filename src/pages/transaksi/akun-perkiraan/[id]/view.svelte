@@ -16,7 +16,7 @@
 </script>
 
 {#if $account}
-  <Modal title="Detail Akun {$account ? `'${$account.id}'` : ''}">
+  <Modal title="Akun Perkiraan">
     <DetailAccount account={$account} />
     <svelte:fragment slot="footer">
       <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

@@ -1,18 +1,24 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  // import { getAccountContext } from "__@modules/accounting";
-  //
-  // const { remove } = getAccountContext();
-  //
-  // let accountId;
-  //
-  // $: accountId = $params.id;
-  //
+  import { getBankContext } from "__@modules/accounting";
+  import Loader from "__@comps/loader/Loader.svelte";
+
+  const { remove, getBank } = getBankContext();
+  let loading = false;
+
   async function removeHandler() {
-    // await remove(accountId);
-    $goto("../");
+    loading = true;
+    try {
+      await remove($params.id);
+      loading = false;
+      $goto("../");
+    } catch (e) {
+      loading = false;
+    }
   }
+
+  $: bank = getBank($params.id);
 
   function closeHandler() {
     $goto("../");
@@ -20,9 +26,13 @@
 </script>
 
 <Modal open title="Hapus Content">
-  <div class="alert alert-warning alert-styled-left">
-    Menghapus akun akan berpengaruh pada transaksi. Apa anda yakin akan menghapus kode akun `{accountId}`?
-  </div>
+  {#if loading || !$bank}
+    <Loader />
+  {:else}
+    <div class="alert alert-warning alert-styled-left">
+      Apa anda yakin akan menghapus bank "{$bank.bank}"?
+    </div>
+  {/if}
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
     <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>

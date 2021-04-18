@@ -1,11 +1,10 @@
 <!--routify:options title="Tabel Histori Rekonsiliasi"-->
-<script lang="ts">
-  import type { BankReconciliation } from "@deboxsoft/accounting-api";
+<script>
   import { url } from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import Table from "./_components/TableHistoryImportReconciliation.svelte";
+  import Table from "./_components/TableHistoryReconciliation.svelte";
 
-  export let bankReconciliation: BankReconciliation;
+  export let bank;
 </script>
 
 <PageLayout breadcrumb={{ title: 'Tabel Histori Rekonsiliasi', path: $url('./history') }}>

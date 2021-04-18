@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { BankReconciliationHistory, BankReconciliation } from "@deboxsoft/accounting-api";
+  import type { BankReconciliationHistory } from "@deboxsoft/accounting-api";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import { convertToRp } from "__@root/utils";
   import { getAccountContext } from "__@modules/accounting";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
 
   export let history: BankReconciliationHistory;
   // export let index: number;

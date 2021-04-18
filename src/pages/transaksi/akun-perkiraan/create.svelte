@@ -2,7 +2,6 @@
 <script>
   import FormAccount from "./_components/FormAccount.svelte";
   import { getAccountContext } from "__@modules/accounting";
-  import { get } from "svelte/store";
 
   const { create } = getAccountContext();
 

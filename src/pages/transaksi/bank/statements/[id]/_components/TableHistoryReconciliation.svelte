@@ -1,11 +1,11 @@
 <script lang="ts">
   import Row from "./RowHistoryImportReconciliation.svelte";
-  import { getReconciliationContext } from "__@modules/accounting";
+  import { getBankStatementContext } from "__@modules/accounting";
 
   export let bankId: string;
-  const { bankReconciliationHistoryStore, history } = getReconciliationContext();
+  const { history, historyStore  } = getBankStatementContext();
   let loading = false;
-  findBankReconciliationHistory(bankId).then(result => {
+  history(bankId).then(result => {
     loading = true;
   })
 </script>
@@ -23,7 +23,7 @@
   </tr>
   </thead>
   <tbody>
-  {#each $bankReconciliationHistoryStore as history}
+  {#each $historyStore as history}
     <Row {history} />
   {/each}
   </tbody>

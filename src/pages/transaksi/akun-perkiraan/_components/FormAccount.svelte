@@ -3,7 +3,7 @@
   import { goto } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { getAccountContext, getPreferenceContext } from "__@modules/accounting";
-  import { createEventDispatcher, beforeUpdate } from "svelte";
+  import { beforeUpdate } from "svelte";
   import { AccountSchema } from "@deboxsoft/accounting-api";
   import { writable, get } from "svelte/store";
   import { sortUtilsFunc } from "__@root/utils";
@@ -21,22 +21,21 @@
   const { notify } = getApplicationContext();
   const { preferenceStore } = getPreferenceContext();
   const { accountStore, getAccount, getAccountParentList, accountsType, getAccountChildren } = getAccountContext();
-  const dispatch = createEventDispatcher();
   const parentAccountStore = getAccountParentList();
 
-  export let isUpdate = false;
   export let account = {};
+  export let isUpdate = false;
   export let onSubmit;
   export let title;
-  export let to;
+  export let to = "../";
   let loading = false;
   let idReadOnly = true;
-  let isParent;
-  let tabSelect = 1;
   let fieldsErrors = writable([]);
   let submitted = writable(false);
+  let tabSelect = 1;
   let codeState = "";
   let accountState = writable({});
+  let isParent;
   let _autoCode = false;
   let _tmpId = "";
   let _tmpIdAsParent = "";
@@ -76,7 +75,7 @@
       if (children && children.length > 0) {
         $accountState.id = (parseInt(children.sort(sortUtilsFunc("id", "desc"))[0].id) + 1).toString();
       } else if (_parentId) {
-        $accountState.id = _parentId + "00";
+        $accountState.id = (parseInt(_parentId) + 1).toString();
       }
     }
   }
@@ -88,8 +87,8 @@
         if ($accountState.parentId) {
           setTypeFromParent();
         }
-        if(!$accountState.type) {
-          $accountState.type = $accountsType[0].code
+        if (!$accountState.type) {
+          $accountState.type = $accountsType[0].code;
         }
       }
       $submitted = true;
@@ -111,12 +110,6 @@
 
   function cancelHandler() {
     $goto(to);
-  }
-
-  function createTabSelectHandler(tab) {
-    return () => {
-      tabSelect = tab;
-    };
   }
 
   function idCustomHandler() {
@@ -144,16 +137,19 @@
     } else {
       __account.parentId = _parentIdTmp;
       _tmpIdAsParent = __account.id;
-      if (idReadOnly) {
-        genCode();
-      } else {
-        __account.id = _tmpId;
-      }
+      __account.id = _tmpId;
     }
     const __typeTmp = __account.type;
     __account.type = _typeTmp;
     _typeTmp = __typeTmp;
     $accountState = __account;
+  }
+
+  function keyHandler(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitHandler();
+    }
   }
 </script>
 
@@ -167,122 +163,92 @@
     values={account}
   >
     <div class="card">
+      <!--      <div class="card-header border-bottom-1 border-bottom-grey">-->
+      <!--        {#if isParent}-->
+      <!--          <div class="card-title">Induk Akun Perkiraan</div>-->
+      <!--        {:else}-->
+      <!--          <div class="card-title">Akun Perkiraan</div>-->
+      <!--        {/if}-->
+      <!--      </div>-->
       <div class="card-body">
-        <!--        Menu Tabs -->
-        <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
-          <li class="nav-item">
-            <a
-              href="#/"
-              class="nav-link"
-              class:active={tabSelect === 1}
-              target="_self"
-              on:click|preventDefault={createTabSelectHandler(1)}
+        <div class="row">
+          <div class="form-group  col-12">
+            <InputCheck
+              id="isParent"
+              tabindex="1"
+              name="isParent"
+              on:change={isParentChangeHandler}
+              disabled={isUpdate}
             >
-              Info
-            </a>
-          </li>
-          <!--          <li class="nav-item">-->
-          <!--            <a-->
-          <!--              href="#/"-->
-          <!--              class="nav-link"-->
-          <!--              class:active={tabSelect === 2}-->
-          <!--              target="_self"-->
-          <!--              on:click|preventDefault={createTabSelectHandler(2)}-->
-          <!--            >-->
-          <!--              Saldo-->
-          <!--            </a>-->
-          <!--          </li>-->
-        </ul>
-        <div class="tab-content">
-          <!--          form info-->
-          <div class="tab-pane fade" class:active={tabSelect === 1} class:show={tabSelect === 1}>
-            <div class="row">
-              <div class="form-group col-12">
-                <label for="id">Kode</label>
-                <InputNumberField
-                  id="id"
-                  name="id"
-                  options={{ decimalPlaces: 0, digitGroupSeparator: "", maximumValue: "99999999" }}
-                  prependDisable={true}
-                  textPosition="left"
-                  resultType="string"
-                  format="number"
-                  class="form-control"
-                  placeholder="Kode"
-                  readonly={(idReadOnly && !$accountState.isParent) || undefined}
-                  disabled={isUpdate}
-                >
-                  {#if !$accountState.isParent}
-                    <div class="input-group-append">
-                      <button
-                        type="button"
-                        class="btn btn-light"
-                        on:click|preventDefault={idCustomHandler}
-                        disabled={isUpdate}
-                      >
-                        {#if idReadOnly || undefined}
-                          <i class="fal fa-lock-alt" />
-                        {:else}
-                          <i class="fal fa-lock-open-alt" />
-                        {/if}
-                      </button>
-                    </div>
-                  {/if}
-                </InputNumberField>
-              </div>
-            </div>
-            <div class="row">
-              <div class="form-group col-12">
-                <label for="name">Nama</label>
-                <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
-              </div>
-            </div>
-            {#if !$accountState.parentId || $accountState.isParent }
-              <div class="row">
-                <div class="form-group col-12">
-                  <label for="type">Klasifikasi Akun</label>
-                  <ComboBox id="type" name="type" items={$accountsType} labelId="label" valueId="code" />
-                </div>
-              </div>
-            {/if}
-            {#if !$accountState.isParent}
-              <div class="row">
-                <div class="form-group col-12">
-                  <label for="parentId">Induk Akun</label>
-                  <AccountSelect
-                    on:change={parentChangeHandler}
-                    id="parentId"
-                    name="parentId"
-                    accountStore={parentAccountStore}
-                    disabled={isUpdate}
-                    allowEmpty
-                  />
-                </div>
-              </div>
-            {/if}
-            <div class="row">
-              <div class="form-group  col-12">
-                <InputCheck id="isParent" name="isParent" on:change={isParentChangeHandler} disabled={isUpdate}>
-                  Akun sebagai induk
-                </InputCheck>
-              </div>
+              Akun sebagai induk
+            </InputCheck>
+          </div>
+        </div>
+        {#if !$accountState.isParent}
+          <div class="row">
+            <div class="form-group col-12">
+              <label for="parentId">Induk Akun</label>
+              <AccountSelect
+                on:change={parentChangeHandler}
+                id="parentId"
+                name="parentId"
+                accountStore={parentAccountStore}
+                disabled={isUpdate}
+                allowEmpty
+                on:keypress={keyHandler}
+              />
             </div>
           </div>
-          <!--          <div class="tab-pane fade" class:active={tabSelect === 2} class:show={tabSelect === 2}>-->
-          <!--            <div class="row">-->
-          <!--              <div class="form-group  col-12">-->
-          <!--                <label for="startBalance">Saldo Awal</label>-->
-          <!--                <InputRp id="startBalance" class="form-control" name="startBalance" signed disabled={isUpdate} />-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--            <div class="row">-->
-          <!--              <div class="form-group  col-12">-->
-          <!--                <label for="startDateBalance">Per Tanggal</label>-->
-          <!--                <InputDate id="startDateBalance" name="startDateBalance" class="form-control" placeholder="Tanggal" disabled={isUpdate} />-->
-          <!--              </div>-->
-          <!--            </div>-->
-          <!--          </div>-->
+        {/if}
+        <div class="row">
+          <div class="form-group col-12">
+            <label for="id">Kode</label>
+            <InputNumberField
+              id="id"
+              name="id"
+              options={{ decimalPlaces: 0, digitGroupSeparator: "", maximumValue: "9999999999" }}
+              prependDisable={true}
+              textPosition="left"
+              resultType="string"
+              format="number"
+              class="form-control"
+              placeholder="Kode"
+              disabled={isUpdate}
+            >
+              <!--                readonly={(idReadOnly && !$accountState.isParent) || undefined}-->
+              <!--{#if !$accountState.isParent}-->
+              <!--  <div class="input-group-append">-->
+              <!--    <button-->
+              <!--      type="button"-->
+              <!--      class="btn btn-light"-->
+              <!--      on:click|preventDefault={idCustomHandler}-->
+              <!--      disabled={isUpdate}-->
+              <!--    >-->
+              <!--      {#if idReadOnly || undefined}-->
+              <!--        <i class="fal fa-lock-alt" />-->
+              <!--      {:else}-->
+              <!--        <i class="fal fa-lock-open-alt" />-->
+              <!--      {/if}-->
+              <!--    </button>-->
+              <!--  </div>-->
+              <!--{/if}-->
+            </InputNumberField>
+          </div>
         </div>
+        <div class="row">
+          <div class="form-group col-12">
+            <label for="name">Nama</label>
+            <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" on:keypress={keyHandler} />
+          </div>
+        </div>
+        {#if $accountState.isParent}
+          <div class="row">
+            <div class="form-group col-12">
+              <label for="type">Klasifikasi Akun</label>
+              <ComboBox id="type" name="type" items={$accountsType} labelId="label" valueId="code" />
+            </div>
+          </div>
+        {/if}
       </div>
     </div>
   </Form>
