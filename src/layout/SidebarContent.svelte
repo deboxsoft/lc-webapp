@@ -39,7 +39,7 @@
 
 {#if !collapse}
   {#if $profile}
-    <SidebarUser profile={{ name: $profile.username, role: "admin" }} />
+<!--    <SidebarUser profile={{ name: "demo", role: "admin" }} />-->
   {/if}
   <!-- Main navigation -->
   <div class="card-body p-0">
