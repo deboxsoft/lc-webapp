@@ -22,7 +22,6 @@
 
   function haveChildren(accountId) {
     const i = accounts.findIndex(_ => _.parentId === accountId);
-    console.log(i, accountId, i > -1);
     return i > -1;
   }
 </script>
@@ -53,10 +52,7 @@
 <style lang="scss">
   .kode {
     flex: 0 0 80px;
-  }
-  .klasfikasi {
-    flex: 0 0 150px;
-  }
+  } 
 
   .parent {
     flex: 0 0 150px;

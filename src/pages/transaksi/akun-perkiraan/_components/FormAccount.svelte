@@ -23,6 +23,10 @@
   const { accountStore, getAccount, getAccountParentList, accountsType, getAccountChildren } = getAccountContext();
   const parentAccountStore = getAccountParentList();
 
+  // filtering account type
+  const accountTypeItems = $accountsType.filter(_ => {
+    return !_.disable;
+  })
   export let account = {};
   export let isUpdate = false;
   export let onSubmit;
@@ -245,7 +249,7 @@
           <div class="row">
             <div class="form-group col-12">
               <label for="type">Klasifikasi Akun</label>
-              <ComboBox id="type" name="type" items={$accountsType} labelId="label" valueId="code" />
+              <ComboBox id="type" name="type" items={accountTypeItems} labelId="label" valueId="code" />
             </div>
           </div>
         {/if}

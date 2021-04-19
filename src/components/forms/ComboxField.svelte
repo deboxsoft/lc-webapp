@@ -32,6 +32,6 @@
     <option />
   {/if}
   {#each items as item}
-    <option value={item[valueId]}>{item[labelId]}</option>
+    <option value={item[valueId] || item}>{item[labelId] || item}</option>
   {/each}
 </select>

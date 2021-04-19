@@ -6,7 +6,7 @@
   import { createBankStatementContext, getBankContext } from "__@modules/accounting";
 
   import TableStatementBank from "./_components/TableStatementBank.svelte";
-  import DatePickr from "__@comps/DatePickr.svelte";
+  // import DatePickr from "__@comps/DatePickr.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Rekonsiliasi Detail" });
@@ -29,7 +29,7 @@
 <PageLayout breadcrumb={[]}>
   <div class="header-elements" slot="header-elements">
     <div class="list-icons">
-      <DatePickr id="date" name="date" class="form-control" placeholder="Tanggal" />
+<!--      <DatePickr id="date" name="date" class="form-control" placeholder="Tanggal" />-->
       <a href={$url("./import")} class="btn bg-slate btn-icon"><i class="icon-import" /></a>
       <!--    <a href={$url("./history")} class="btn bg-slate"><i class="icon-history mr-2" />History</a>-->
     </div>

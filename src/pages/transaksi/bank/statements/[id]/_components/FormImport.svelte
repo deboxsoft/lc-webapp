@@ -13,6 +13,7 @@
   export let isPreview;
   export let fileData;
   export let files;
+  export let itemsSelected
 
   $: fileLoaded = $files.length > 0;
 
@@ -44,7 +45,7 @@
     <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
       <dl class="row mb-0">
         <dt class="col-sm-3 mb-0">Nama bank</dt>
-        <p class="col-sm-9 mb-0">: <span class="font-weight-bold text-uppercase">{$bank.bank}</span></p>
+        <p class="col-sm-9 mb-0">: <span class="font-weight-bold text-uppercase">{$bank.name}</span> {$bank.cabang ? `cabang ${$bank.branch}` : ""}</p>
         <dt class="col-sm-3 mb-0">No Rekening</dt>
         <p class="col-sm-9 mb-0">: {$bank.noAccountBank}</p>
         <dt class="col-sm-3 mb-0">An. Rekening</dt>
@@ -74,7 +75,7 @@
       </DropZone>
 <!--    </div>-->
     {:else}
-    <TableStatementBank editable bankStatementList={fileData} />
+    <TableStatementBank preview bankStatementList={fileData} bind:itemsSelected />
   {/if}
 
 <!--</div>-->

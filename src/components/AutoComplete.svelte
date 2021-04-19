@@ -104,6 +104,7 @@
   export let selectedItem: any = undefined;
   export let value: any = undefined;
   export let allowEmpty: boolean = false;
+  export let autoScrollEnable: boolean = false;
   let text: string | undefined;
   let filteredTextLength: number = 0;
 
@@ -523,11 +524,11 @@
       if (dropdownNode != null) scrollFunction.call(dropdownNode);
       scrollFunction.call(node);
     };
-    autoScroll();
+    autoScrollEnable && autoScroll();
     return {
       update: async () => {
         await tick();
-        autoScroll();
+        autoScrollEnable && autoScroll();
       }
     };
   }
@@ -670,6 +671,7 @@
       border: 1px solid #999;
       max-height: calc(15 * (1rem + 10px) + 15px);
       user-select: none;
+      white-space: pre-wrap;
     }
 
     .autocomplete-list:empty {

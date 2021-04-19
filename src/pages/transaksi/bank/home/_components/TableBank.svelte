@@ -20,27 +20,31 @@
 <Table items={$bankStore} let:item={bank}>
     <div class="dbx-thead" slot="header">
       <div class="dbx-cell bank">Bank</div>
-      <div class="dbx-cell bank">No Rekening</div>
-      <div class="dbx-cell bank">Nama Rekening</div>
+      <div class="dbx-cell account">No Rekening</div>
+      <div class="dbx-cell name">Nama Rekening</div>
       <div class="dbx-cell">Akun Perkiraan</div>
-<!--      <div class="dbx-cell balance">Saldo</div>-->
 <!--      <div class="dbx-cell balance">Saldo Bank</div>-->
-<!--      <div class="dbx-cell status">Status</div>-->
+<!--      <div class="dbx-cell balance">Saldo Akun Perkiraan</div>-->
+<!--      <div class="dbx-cell balance">Selisih</div>-->
       <div class="dbx-cell -menu-list"></div>
     </div>
   <div class="dbx-tr">
-    <div class="dbx-cell bank">{bank.bank || ''}</div>
-    <div class="dbx-cell bank">{bank.noAccountBank || ''}</div>
-    <div class="dbx-cell bank">{bank.nameAccountBank || ''}</div>
+    <div class="dbx-cell bank flex-column">
+        {bank.name || ''} {bank.branch ? `cabang ${bank.branch}` : ""}
+      </div>
+    <div class="dbx-cell account">{bank.noAccountBank || ''}</div>
+    <div class="dbx-cell name">{bank.nameAccountBank || ''}</div>
     <div class="dbx-cell">
       <CellAccount id={bank.accountId} />
     </div>
 <!--    <div class="dbx-cell text-right balance">-->
 <!--      <CellRp value={bank.balance} />-->
 <!--    </div>-->
-    <!--  TODO saldo account -->
-<!--    <div class="dbx-cell text-right">-->
-      <!--    <CellRp value={} />-->
+<!--    <div class="dbx-cell text-right balance">-->
+<!--      <CellRp value={"100"} />-->
+<!--    </div>-->
+<!--    <div class="dbx-cell text-right balance">-->
+<!--          <CellRp value={parseInt(bank.balance) - parseInt(0)} />-->
 <!--    </div>-->
 <!--    <div class="dbx-cell text-center">-->
 <!--    <span-->
@@ -57,7 +61,15 @@
 
 <style lang="scss">
   .bank {
-    flex: 0 0 150px;
+    flex: 0 0 250px;
+  }
+
+  .account {
+    flex: 0 0 100px;
+  }
+
+  .name {
+    flex: 0 0 250px;
   }
 
   .balance {

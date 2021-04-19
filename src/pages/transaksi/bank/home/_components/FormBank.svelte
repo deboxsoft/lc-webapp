@@ -14,6 +14,7 @@
   import InputDateField from "__@comps/forms/InputDateField.svelte";
   import InputNumberField from "__@comps/forms/InputNumberField.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import ComboxField from "__@comps/forms/ComboxField.svelte";
 
   const { notify } = getApplicationContext();
   const { bankStore } = getBankContext();
@@ -30,7 +31,127 @@
   let idReadOnly = true;
   let fieldsErrors = writable([]);
   let submitted = writable(false);
-
+  const bankList = [
+    "Bank Central Asia (BCA)",
+    "Bank Mandiri",
+    "Bank Rakyat Indonesia (BRI)",
+    "Bank Negara Indonesia (BNI)",
+    "BCA Syariah",
+    "BII Syariah",
+    "Bangkok Bank",
+    "Bank ANZ Indonesia",
+    "Bank Agris",
+    "Bank Agroniaga",
+    "Bank Andara",
+    "Bank Artos Indonesia",
+    "Bank BJB (Bandung)",
+    "Bank BJB Syariah",
+    "Bank BNI Syariah",
+    "Bank BNP Paribas Indonesia",
+    "Bank BPD Bali (Denpasar)",
+    "Bank BPD DIY (Yogyakarta)",
+    "Bank BTPN",
+    "Bank BRI Syariah",
+    "Bank Bengkulu (Bengkulu)",
+    "Bank Bisnis Internasional",
+    "Bank Bukopin",
+    "Bank Bumi Arta",
+    "Bank CIMB Niaga",
+    "Bank Capital Indonesia",
+    "Bank Chinatrust Indonesia",
+    "Bank DBS Indonesia",
+    "Bank DKI (Jakarta)",
+    "Bank Dipo International",
+    "Bank Ekonomi Raharja",
+    "Bank Fama International",
+    "Bank Ganesha",
+    "Bank Hana",
+    "Bank Harda International",
+    "Bank ICBC Indonesia",
+    "Bank Ina Perdana",
+    "Bank Index Selindo",
+    "Bank International Indonesia (BII)",
+    "Bank J Trust Indonesia",
+    "Bank Jambi (Jambi)",
+    "Bank Jasa Jakarta",
+    "Bank Jateng (Semarang)",
+    "Bank Jatim (Surabaya)",
+    "Bank KEB Indonesia",
+    "Bank Kalsel (Banjarmasin)",
+    "Bank Kalsel Syariah",
+    "Bank Kalteng (Palangka Raya)",
+    "Bank Kaltim (Samarinda)",
+    "Bank Kesejahteraan Ekonomi",
+    "Bank Lampung (Bandar Lampung)",
+    "Bank Liman International",
+    "Bank MNC Internasional",
+    "Bank Maluku (Ambon)",
+    "Bank Maspion",
+    "Bank Mayapada",
+    "Bank Maybank Indonesia",
+    "Bank Maybank Syariah Indonesia",
+    "Bank Mayora",
+    "Bank Mestika Dharma",
+    "Bank Metro Express",
+    "Bank Mitraniaga",
+    "Bank Mizuho Indonesia",
+    "Bank Muamalat Indonesia",
+    "Bank Multi Arta Sentosa",
+    "Bank NTB (Mataram)",
+    "Bank NTB Syariah",
+    "Bank NTT (Kupang)",
+    "Bank Nationalnobu",
+    "Bank Nusantara Parahayangan",
+    "Bank OCBC NISP",
+    "Bank Permata",
+    "Bank Permata Syariah",
+    "Bank Pundi Indonesia",
+    "Bank QNB Kesawan",
+    "Bank Rabobank International Indonesia",
+    "Bank Resona Perdania",
+    "Bank Riau Kepri (Pekanbaru)",
+    "Bank Riau Kepri Syariah",
+    "Bank Royal Indonesia",
+    "Bank SBI Indonesia",
+    "Bank Sahabat Purba Danarta",
+    "Bank Sinar Harapan Bali",
+    "Bank Sinarmas",
+    "Bank Sulteng (Palu)",
+    "Bank Sultra (Kendari)",
+    "Bank Sulut (Manado)",
+    "Bank Sumitomo Mitsui Indonesia",
+    "Bank Sumsel Babel (Palembang)",
+    "Bank Sumsel Babel Syariah",
+    "Bank Sumut (Medan)",
+    "Bank Sumut Syariah",
+    "Bank Syariah Bukopin",
+    "Bank Syariah Mandiri",
+    "Bank Tabungan Pensiunan Nasional",
+    "Bank Tabungan Pensiunan Nasional Syariah",
+    "Bank UOB Indonesia",
+    "Bank Victoria International",
+    "Bank Victoria Syariah",
+    "Bank Windu Kentjana International",
+    "Bank Woori Indonesia",
+    "Bank Yudha Bhakti",
+    "Bank of America",
+    "Bank of China",
+    "Bank of India Indonesia",
+    "CIMB Niaga Syariah",
+    "Centrama Nasional Bank",
+    "Citibank",
+    "Deutsche Bank",
+    "HSBC",
+    "HSBC Amanah",
+    "JPMorgan Chase",
+    "OCBC NISP Syariah",
+    "Panin Bank",
+    "Panin Bank Syariah",
+    "Prima Master Bank",
+    "Royal Bank of Scotland",
+    "Standard Chartered",
+    "The Bank of Tokyo Mitsubishi UFJ"
+  ];
 
   async function submitHandler(e) {
     loading = true;
@@ -43,10 +164,7 @@
       if (error instanceof ZodError) {
         if (error instanceof ZodError) {
           $fieldsErrors = error.flatten().fieldErrors;
-          notify(
-            `${error.errors[0].message}`,
-            "error"
-          );
+          notify(`${error.errors[0].message}`, "error");
         }
       }
       loading = false;
@@ -54,7 +172,7 @@
   }
 
   function cancelHandler() {
-    $goto(to)
+    $goto(to);
   }
 </script>
 
@@ -64,16 +182,32 @@
       <div class="card-body">
         <div class="row">
           <div class="form-group col-6">
-            <label for="bank">Nama Bank</label>
-            <InputField id="bank" name="bank" type="text" class="form-control" placeholder="Nama Bank" />
+            <label for="bank">Pilih Bank</label>
+            <ComboxField items={bankList} name="name" />
           </div>
           <div class="form-group col-6">
-            <label for="accountBank">No Rekening</label>
-            <InputField id="accountBank" name="noAccountBank" type="text" class="form-control" placeholder="No Rekening" />
+            <label for="accountBank">Cabang</label>
+            <InputField
+              id="accountBank"
+              name="branch"
+              type="text"
+              class="form-control"
+              placeholder="Cabang"
+            />
           </div>
         </div>
         <div class="row">
-          <div class="form-group col-12">
+          <div class="form-group col-6">
+            <label for="accountBank">No Rekening</label>
+            <InputField
+              id="accountBank"
+              name="noAccountBank"
+              type="text"
+              class="form-control"
+              placeholder="No Rekening"
+            />
+          </div>
+          <div class="form-group col-6">
             <label for="nameAccountBank">Nama Rekening</label>
             <InputField
               id="nameAccountBank"

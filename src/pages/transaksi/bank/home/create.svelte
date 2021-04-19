@@ -16,4 +16,4 @@
   }
 </script>
 
-<FormBank {bank} title="Create Bank" {onSubmit} to={$params.to} />
+<FormBank {bank} title="Membuat Data Bank" {onSubmit} to={$params.to} />
