@@ -1,5 +1,5 @@
 <script lang="ts">
   import {page, redirect} from "@roxi/routify";
 
-  $redirect("/dashboard")
+  $redirect("/transaksi/akun-perkiraan")
 </script>

@@ -49,10 +49,10 @@
         <Icon component={MenuIcon} />
       </li>
       <!-- Dashboard -->
-      <AccordionItem href={$url("/")}>
-        <Icon component={HomeIcon} />
-        <span> Dashboard</span>
-      </AccordionItem>
+<!--      <AccordionItem href={$url("/")}>-->
+<!--        <Icon component={HomeIcon} />-->
+<!--        <span> Dashboard</span>-->
+<!--      </AccordionItem>-->
 
       {#each menus as item}
         <AccordionItem
