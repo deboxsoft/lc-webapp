@@ -63,7 +63,7 @@
     }
     .dbx-cell {
       box-sizing: border-box;
-      flex: 1 1 100%;
+      flex: 1 1 auto;
       padding: 0.25rem 0.5rem;
       list-style: none;
       vertical-align: middle;

@@ -22,7 +22,7 @@
       await importStatement($bank.id, $fileData);
       $goto("./");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 

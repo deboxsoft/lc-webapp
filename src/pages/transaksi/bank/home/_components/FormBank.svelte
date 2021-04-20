@@ -162,10 +162,19 @@
       $goto(to);
     } catch (error) {
       if (error instanceof ZodError) {
-        if (error instanceof ZodError) {
-          $fieldsErrors = error.flatten().fieldErrors;
-          notify(`${error.errors[0].message}`, "error");
+        $fieldsErrors = error.flatten().fieldErrors;
+        // remap field
+        let fieldName;
+        if ($fieldsErrors.name) {
+          fieldName = "nama"
+        } else if ($fieldsErrors.nameAccountBank) {
+          fieldName = "nama rekening"
+        } else if ($fieldsErrors.noAccountBank) {
+          fieldName = "no rekening"
+        } else if ($fieldsErrors.accountId) {
+          fieldName = "akun rekening"
         }
+        notify(`${fieldName} ${error.errors[0].message}`, "error");
       }
       loading = false;
     }
@@ -186,14 +195,8 @@
             <ComboxField items={bankList} name="name" />
           </div>
           <div class="form-group col-6">
-            <label for="accountBank">Cabang</label>
-            <InputField
-              id="accountBank"
-              name="branch"
-              type="text"
-              class="form-control"
-              placeholder="Cabang"
-            />
+            <label for="branch">Cabang</label>
+            <InputField id="branch" name="branch" type="text" class="form-control" placeholder="Cabang" />
           </div>
         </div>
         <div class="row">

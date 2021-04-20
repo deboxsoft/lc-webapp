@@ -8,24 +8,29 @@
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import CellRp from "__@comps/CellRp.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
+  import MenuListStatement from "../MenuListStatement.svelte";
 
-  const { bankStatementStore, findStatement, bank } = getBankStatementContext();
+  const { bankStatementStore, bank } = getBankStatementContext();
   const { getAccount } = getAccountContext();
-  export let bankStatementList = bankStatementStore;
+  export let bankStatementList = undefined;
   export let preview = false;
   export let loading;
   export let itemsSelected = writable([]);
   let isSelectAll = preview;
 
   $: {
-    if (preview && $bankStatementList) {
+    if (preview && bankStatementList) {
       checkSelectAll();
     }
   }
 
+  $: if (!bankStatementList) {
+    bankStatementList = $bankStatementStore;
+  }
+
   function checkSelectAll() {
     if (isSelectAll) {
-      $itemsSelected = [...$bankStatementList.map((_, index) => index)];
+      $itemsSelected = [...bankStatementList.map((_, index) => index)];
     } else {
       itemsSelected.set([]);
     }
@@ -44,12 +49,6 @@
         $itemsSelected = [...$itemsSelected, index];
       }
     };
-  }
-
-  function createReconciledHandler(index) {
-    return () => {
-
-    }
   }
 </script>
 
@@ -79,16 +78,17 @@
         <InlineCheckBox checked={isSelectAll} on:change={toggleSelectedAllHandler} />
       </div>
       <div class="dbx-cell text-center date">Tanggal</div>
-      <div class="dbx-cell">Diskripsi</div>
-      <div class="dbx-cell amount">Masuk</div>
-      <div class="dbx-cell amount">Keluar</div>
+      <div class="dbx-cell d-sm-none d-md-flex">Diskripsi</div>
+      <div class="dbx-cell d-sm-none d-md-none d-xl-flex amount">Masuk</div>
+      <div class="dbx-cell d-sm-none d-md-none d-xl-flex amount">Keluar</div>
       <div class="dbx-cell amount">Saldo</div>
       <div class="dbx-cell account" class:preview>Account</div>
       {#if !preview}
         <div class="dbx-cell text-center status">Status</div>
+        <div class="dbx-cell -menu-list" />
       {/if}
     </div>
-    {#each $bankStatementList as bankStatement, index}
+    {#each bankStatementList as bankStatement, index}
       <div class="dbx-tr" class:preview>
         <div class="dbx-cell check-item">
           <InlineCheckBox
@@ -100,9 +100,9 @@
         <div class="dbx-cell text-center date">
           {!preview ? format(parse(bankStatement.date, "T", new Date()), "dd-MM-yy") : bankStatement.date || ""}
         </div>
-        <div class="dbx-cell">{bankStatement.description || ""}</div>
-        <div class="dbx-cell text-right amount"><CellRp value={bankStatement.in} /></div>
-        <div class="dbx-cell text-right amount"><CellRp value={bankStatement.out} /></div>
+        <div class="dbx-cell d-sm-none d-md-flex">{bankStatement.description || ""}</div>
+        <div class="dbx-cell d-sm-none d-md-none d-xl-flex text-right amount"><CellRp value={bankStatement.in} /></div>
+        <div class="dbx-cell d-sm-none d-md-none d-xl-flex text-right amount"><CellRp value={bankStatement.out} /></div>
         <div class="dbx-cell text-right amount"><CellRp value={bankStatement.balance} /></div>
         <div class="dbx-cell account" class:preview>
           {#if preview}
@@ -120,6 +120,9 @@
                 class:badge-success={bank.status === "RECONCILED"}>{bankStatement.status || "UNRECONCILED"}</span
               >
             </a>
+          </div>
+          <div class="dbx-cell -menu-list" style="width: 30px">
+            <MenuListStatement id={bankStatement.id} />
           </div>
         {/if}
         <slot {item} />
