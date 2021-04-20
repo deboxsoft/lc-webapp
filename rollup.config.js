@@ -20,8 +20,8 @@ const createPreprocess = require("../../svelte.config").createPreprocess;
 
 const { distDir } = getConfig(); // use Routify's distDir for SSOT
 const assetsDir = "assets";
-const buildDir = `dist/build`;
 const production = process.env.NODE_ENV === "production";
+const buildDir = production ? `dist/prod` : `dist/build`;
 const isNollup = !!process.env.NOLLUP;
 const mode = process.env.ROLLUP_WATCH && "development";
 const dev = mode === "development";
