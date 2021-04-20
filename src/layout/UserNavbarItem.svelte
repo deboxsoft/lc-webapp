@@ -2,7 +2,7 @@
   import Dropdown from "__@comps/Dropdown.svelte";
   import { goto, route } from "@roxi/routify";
 
-  export let avatarSrc: string = "/images/profile.png";
+  export const avatarSrc: string = "/images/profile.png";
   export let profileName: string = "guest";
   let triggerElement: HTMLElement;
 

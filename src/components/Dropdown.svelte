@@ -2,13 +2,13 @@
   import { setContext, getContext, tick } from "svelte";
   import { writable } from "svelte/store";
 
-  export let createContextDropdown = () => {
+  export const createContextDropdown = () => {
     const store = writable({});
     setContext("dropdown-context", store);
     return store;
   };
 
-  export let getContextDropdown = () => getContext("dropdown-context");
+  export const getContextDropdown = () => getContext("dropdown-context");
 </script>
 
 <script lang="ts">
@@ -19,9 +19,9 @@
 
   export let show: boolean = false;
   export let active: boolean = false;
-  export let size: Size = undefined;
+  export const size: Size = undefined;
   export let toggle: (e?: any) => void = toggleHandler;
-  export let setActiveFromChild: boolean = false;
+  export const setActiveFromChild: boolean = false;
   export let menuClass: string = "";
 
   // state

@@ -9,10 +9,10 @@
 
   export let name;
   export let disabled: boolean = false;
-  export let formattedValue: string = "";
-  export let options = {};
-  export let mode: "month-select" | undefined = undefined;
-  export let input: any = undefined;
+  export const formattedValue: string = "";
+  export const options = {};
+  export const mode: "month-select" | undefined = undefined;
+  export const input: any = undefined;
   const { class: className } = $$props;
 
   let classes = "";

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { goto } from "@roxi/routify";
   import { lightFormat, parse } from "date-fns";
   import CellRp from "__@comps/CellRp.svelte";
   import { getGeneralLedgerContext } from "__@modules/accounting";
@@ -32,7 +31,7 @@
       <div class="dbx-cell date">Tanggal</div>
       <div class="dbx-cell no">No Transaksi</div>
       <div class="dbx-cell">Deskripsi</div>
-      <div class="dbx-cell mutasi">Mutasi</div>
+      <div class="dbx-cell amount">Mutasi</div>
       <div class="dbx-cell balance">Saldo</div>
     </div>
     <div class="dbx-tr">
@@ -57,7 +56,7 @@
       <td class="dbx-cell">
         {generalLedger.description || ""}
       </td>
-      <div class="dbx-cell" style="width: 400px">
+      <div class="dbx-cell amount" style="width: 400px">
         <CellRp spaceMinus value={generalLedger.amount} />
       </div>
       <div class="dbx-cell balance">

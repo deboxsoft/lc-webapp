@@ -2,9 +2,10 @@
   // import Row from "./RowAktvaTetap.svelte";
   import { getInventoryContext } from "__@modules/accounting";
   import Table from "__@comps/Table.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
+  // import Loader from "__@comps/loader/Loader.svelte";
 
   const { inventoryStore } = getInventoryContext();
+  function infiniteHandler() {}
 </script>
 
 <Table items={$inventoryStore} let:item on:infinite={infiniteHandler}>

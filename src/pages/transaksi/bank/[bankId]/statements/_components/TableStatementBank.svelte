@@ -125,7 +125,6 @@
             <MenuListStatement id={bankStatement.id} />
           </div>
         {/if}
-        <slot {item} />
       </div>
     {/each}
   </Table>

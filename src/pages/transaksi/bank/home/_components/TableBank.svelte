@@ -46,12 +46,6 @@
     <div class="dbx-cell text-right balance">
           <CellRp value={parseInt(bank.balance) - parseInt(0)} />
     </div>
-<!--    <div class="dbx-cell text-center">-->
-<!--    <span-->
-<!--      class="badge"-->
-<!--      class:badge-danger={bank.status !== 'RECONCILED'}-->
-<!--      class:badge-success={bank.status === 'RECONCILED'}>{bankReconciliation.status || 'UNRECONCILED'}</span>-->
-<!--    </div>-->
     <div class="dbx-cell -menu-list" style="width: 30px">
       <MenuListBank id={bank.id} />
     </div>
@@ -74,9 +68,5 @@
 
   .balance {
     flex: 0 1 150px;
-  }
-
-  .status {
-    flex: 0 0 90px;
   }
 </style>

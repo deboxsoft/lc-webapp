@@ -6,7 +6,7 @@
   const { validateField, fields = writable({}), fieldsErrors, submitted } = getFormContext() || {};
   const dispatcher: any = createEventDispatcher();
   export let name: any;
-  export let value: any = ($fields && $fields[name]) || undefined;
+  export const value: any = ($fields && $fields[name]) || undefined;
   const { class: className } = $$props;
 
   let invalid = true;

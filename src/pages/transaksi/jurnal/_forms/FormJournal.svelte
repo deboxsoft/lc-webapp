@@ -20,7 +20,7 @@
   // props
   export let values: Partial<TransactionInput> = {};
   export let loading: boolean = false;
-  export let title: string;
+  export const title: string = "";
 
   let isValid = writable(false);
 

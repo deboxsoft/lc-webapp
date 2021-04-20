@@ -22,7 +22,7 @@
 
   // props
   export let bank;
-  export let isUpdate = false;
+  export const isUpdate = false;
   export let onSubmit;
   export let title;
   export let to = "./";

@@ -9,7 +9,7 @@
 
   const { transactionStore, transactionPageInfo, load, find } = getTransactionContext();
 
-  export let filter = {};
+  export const filter = {};
 
   // state
   let loading = true;

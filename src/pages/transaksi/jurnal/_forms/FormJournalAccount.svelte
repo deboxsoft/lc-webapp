@@ -18,7 +18,7 @@
 
   const createJournalAccount = () => ({ index: getId({ prefix: "account-input", size: 3 }) });
 
-  export let total: number = 0;
+  export const total: number = 0;
 
   let debit: any;
   let diff: number = NaN;

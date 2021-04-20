@@ -7,7 +7,7 @@
   const accountContext = getAccountContext();
   export let items = [];
   export let name = undefined;
-  export let select = $fields && $fields[name] || undefined;
+  export const select = $fields && $fields[name] || undefined;
   export let allowEmpty = false;
   export let labelId = "id"
   export let valueId = "label"
@@ -26,7 +26,7 @@
   {...$$restProps}
   class="form-control form-control-uniform"
   bind:value={$fields[name]}
-  on:change={createChangeHandler()}
+  on:blur={createChangeHandler()}
 >
   {#if allowEmpty}
     <option />

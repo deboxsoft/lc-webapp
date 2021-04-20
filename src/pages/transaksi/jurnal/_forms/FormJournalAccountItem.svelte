@@ -12,15 +12,15 @@
   const { debounce } = utils;
   export let id = getId("journal-account-item");
   export let input;
-  export let creditDisable: boolean = false;
+  export const creditDisable: boolean = false;
   export let index: number;
   export let fieldName: string = "accounts";
-  export let minusCurrencyEnable: boolean = true;
+  export const minusCurrencyEnable: boolean = true;
   export let onRemoveJournalAccount = () => {
   };
   export let onUpdateJournalAccount = () => {
   };
-  export let isValid: boolean = false;
+  export const isValid: boolean = false;
 
   const { getAccountLeaf, getAccount } = getAccountContext();
   const accountStore = getAccountLeaf();

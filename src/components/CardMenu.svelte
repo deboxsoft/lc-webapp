@@ -5,7 +5,7 @@
 
   export let label: string = "";
   export let path: string = "./";
-  export let icon: typeof SvelteComponentDev | undefined = undefined;
+  export const icon: typeof SvelteComponentDev | undefined = undefined;
 </script>
 
 <style lang="scss" global>
