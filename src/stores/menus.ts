@@ -3,7 +3,7 @@ import type { SvelteComponentDev } from "svelte/internal";
 import TransactionIcon from "__@comps/icons/Exchange.svelte";
 // import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
 // import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";
-// import LayerGroupIcon from "__@comps/icons/LayerGroup.svelte";
+import LayerGroupIcon from "__@comps/icons/LayerGroup.svelte";
 // import FileSpreadSheet from "__@comps/icons/FileSpreadsheet.svelte";
 
 export type MenuItem = {
@@ -44,33 +44,33 @@ export const accountingMenus: MenuList = [
       {
         label: "Rekonsiliasi Bank",
         url: "/transaksi/bank"
+      },
+      {
+        label: "Buku Besar",
+        url: "/transaksi/buku-besar"
+      }
+    ]
+  },
+  {
+    label: "Pengikhtisaran",
+    url: "/pengikhtisaran",
+    type: "module",
+    icon: LayerGroupIcon,
+    children: [
+      {
+        label: "Laporan Laba Rugi",
+        url: "/pengikhtisaran/laba-rugi"
+      },
+      {
+        label: "Neraca",
+        url: "/pengikhtisaran/neraca"
       }
       // {
-      //   label: "Buku Besar",
-      //   url: "/transaksi/buku-besar"
+      //   label: "Aktiva Tetap",
+      //   url: "/pengikhtisaran/aktiva-tetap"
       // }
     ]
   }
-  // {
-  //   label: "Pengikhtisaran",
-  //   url: "/pengikhtisaran",
-  //   type: "module",
-  //   icon: LayerGroupIcon,
-  //   children: [
-  //     {
-  //       label: "Laporan Laba Rugi",
-  //       url: "/pengikhtisaran/laba-rugi"
-  //     },
-  //     {
-  //       label: "Neraca",
-  //       url: "/pengikhtisaran/neraca"
-  //     },
-  //     {
-  //       label: "Aktiva Tetap",
-  //       url: "/pengikhtisaran/aktiva-tetap"
-  //     }
-  //   ]
-  // },
   // {
   //   label: "Persediaan [add-on]",
   //   url: "/persediaan",
