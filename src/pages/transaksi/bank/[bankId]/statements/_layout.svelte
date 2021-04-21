@@ -5,19 +5,22 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { createBankStatementContext, getBankContext } from "__@modules/accounting";
-  import {getApplicationContext} from "__@modules/app"
+  import { getApplicationContext } from "__@modules/app";
 
   import TableStatementBank from "./_components/TableStatementBank.svelte";
   // import DatePickr from "__@comps/DatePickr.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Rekonsiliasi Detail" });
-  const {notify} = getApplicationContext();
+  const { notify, loading: loadingApp } = getApplicationContext();
 
   let loading = true;
   const { getBank } = getBankContext();
   const { findStatement, bank, reconcile, bankStatementStore } = createBankStatementContext(getBank($params.bankId));
   let itemsSelected;
+  $: bankStatementList = $bankStatementStore;
+
+  $: console.log($bankStatementStore);
 
   if ($bank.id && loading) {
     findStatement($bank.id, {}).then(() => {
@@ -26,28 +29,37 @@
   }
 
   async function reconcileHandler() {
+    $loadingApp = true;
     try {
       // filter
-      const statements = []
+      const statements = [];
       let index = 0;
-      for (const statement of $bankStatementStore) {
-        if (!statement.accountId) {
-          throw new Error("Akun belum terisi");
-        }
+      for (const { status, ...statement } of bankStatementList) {
         if ($itemsSelected.includes(index)) {
-          statements.push(statement)
+          if (!statement.accountId) {
+            throw new Error(`Statement "${statement.description}" akun masih belum terisi`);
+          }
+          statements.push(statement);
         }
         index++;
       }
       statements.sort(sortUtilsFunc("id", "desc"));
       if (statements.length > 0) {
-        await reconcile(statements);
+        const result = await reconcile(statements);
+        statements.forEach((_, index) => {
+          statements[index] = result[index];
+        });
+        // reset check all
+        $itemsSelected = [];
+        notify("reconcile data bank telah berhasil", "success");
       } else {
-        notify("data belum dipilih", "error");
+        notify("Belum ada data yang dipillih", "error");
       }
     } catch (e) {
       // console.error(e);
-      notify(e.message, "error")
+      // notify(e.message, "error");
+    } finally {
+      $loadingApp = false;
     }
   }
 </script>
@@ -64,7 +76,7 @@
   </div>
   <div class="card flex-column flex-1 d-flex">
     <div class="card-body d-flex flex-column flex-1">
-      <TableStatementBank bind:loading bind:itemsSelected bind:bankStatementList={$bankStatementStore} />
+      <TableStatementBank bind:loading bind:itemsSelected bind:bankStatementList />
     </div>
   </div>
 </PageLayout>

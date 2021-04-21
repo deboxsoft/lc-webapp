@@ -15,6 +15,7 @@
   export let bankStatementList = undefined;
   export let preview = false;
   export let loading;
+  export let errors = [];
   export let itemsSelected = writable([]);
   let isSelectAll = preview;
 
@@ -30,7 +31,13 @@
 
   function checkSelectAll() {
     if (isSelectAll) {
-      $itemsSelected = [...bankStatementList.map((_, index) => index)];
+      let _tmp = [];
+      bankStatementList.forEach((_, index) => {
+        if (_.status !== "RECONCILED") {
+          _tmp.push(index)
+        }
+      })
+      itemsSelected.set(_tmp);
     } else {
       itemsSelected.set([]);
     }
@@ -89,7 +96,7 @@
       {/if}
     </div>
     {#each bankStatementList as bankStatement, index}
-      <div class="dbx-tr" class:preview>
+      <div class="dbx-tr {errors.includes(index) && `error`}" class:preview>
         <div class="dbx-cell check-item">
           <InlineCheckBox
             disabled={bankStatement.status === "RECONCILED"}
@@ -101,8 +108,8 @@
           {!preview ? format(parse(bankStatement.date, "T", new Date()), "dd-MM-yy") : bankStatement.date || ""}
         </div>
         <div class="dbx-cell d-sm-none d-md-flex">{bankStatement.description || ""}</div>
-        <div class="dbx-cell d-sm-none d-md-none d-xl-flex text-right amount"><CellRp value={bankStatement.in} /></div>
-        <div class="dbx-cell d-sm-none d-md-none d-xl-flex text-right amount"><CellRp value={bankStatement.out} /></div>
+        <div class="dbx-cell text-right amount"><CellRp value={bankStatement.in} /></div>
+        <div class="dbx-cell text-right amount"><CellRp value={bankStatement.out} /></div>
         <div class="dbx-cell text-right amount"><CellRp value={bankStatement.balance} /></div>
         <div class="dbx-cell account" class:preview>
           {#if preview}
@@ -116,8 +123,8 @@
             <a href="/#" on:click|preventDefault={() => {}} target="_self">
               <span
                 class="badge"
-                class:badge-danger={bank.status !== "RECONCILED"}
-                class:badge-success={bank.status === "RECONCILED"}>{bankStatement.status || "UNRECONCILED"}</span
+                class:badge-success={bankStatement.status === "RECONCILED"}
+                class:badge-danger={bankStatement.status !== "RECONCILED"}>{bankStatement.status || "UNRECONCILED"}</span
               >
             </a>
           </div>
@@ -157,6 +164,6 @@
     }
   }
   .status {
-    flex: 0 0 150px;
+    flex: 0 0 100px;
   }
 </style>

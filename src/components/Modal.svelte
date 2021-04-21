@@ -60,8 +60,12 @@
 
 <style lang="scss" global>
   .dbx-theme {
+    .dbx-modal {
+      z-index: 1000;
+    }
     .modal {
       position: fixed;
+      z-index: 1000;
       &.show {
         display: block;
       }

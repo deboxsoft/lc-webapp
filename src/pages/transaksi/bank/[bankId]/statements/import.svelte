@@ -4,9 +4,12 @@
   import FormImport from "./_components/FormImport.svelte";
   import Modal from "__@comps/Modal.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
-  import { writable } from "svelte/store";
-  import { getBankStatementContext } from "__@modules/accounting";
+  import { writable, get } from "svelte/store";
+  import { getBankStatementContext, getAccountContext } from "__@modules/accounting";
+  import { getApplicationContext } from "__@modules/app";
 
+  const { loading: loadingApp, notify } = getApplicationContext();
+  const { getAccount } = getAccountContext();
   const { importStatement, bank } = getBankStatementContext();
   let fileLoaded = false;
   let isPreview = false;
@@ -14,15 +17,35 @@
   let files = writable([]);
   let itemsSelected;
   let loading = false;
+  let errors = [];
 
   async function submitHandler() {
+    $loadingApp = true;
     try {
       // filter
-      const statements = $fileData.filter((_, index) => $itemsSelected.includes(index));
-      await importStatement($bank.id, $fileData);
-      $goto("./");
+      errors = [];
+      const statements = $fileData.filter((_, index) => {
+        if ($itemsSelected.includes(index)) {
+          const account = get(getAccount(_.accountId));
+          if (!account || (!_.in && !_.out)) {
+            errors.push(index);
+          }
+          return true;
+        }
+        return false;
+      });
+      if (!errors || errors.length === 0) {
+        await importStatement($bank.id, statements);
+        $loadingApp = false;
+        $itemsSelected = [];
+        $goto("./");
+      } else {
+        notify("data belum lengkap", "error")
+      }
     } catch (e) {
-      console.error(e);
+      notify(e.message, "error");
+    } finally {
+      $loadingApp = false;
     }
   }
 
@@ -45,7 +68,7 @@
   {#if loading}
     <Loader />
   {:else}
-    <FormImport bind:fileLoaded bind:fileData bind:isPreview bind:files bind:itemsSelected />
+    <FormImport bind:fileLoaded bind:fileData bind:isPreview bind:files bind:itemsSelected bind:errors />
   {/if}
   <div slot="footer">
     <button type="button" on:click={cancelHandler} class="btn btn-outline-primary mr-2"

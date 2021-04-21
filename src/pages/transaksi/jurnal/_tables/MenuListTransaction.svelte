@@ -5,9 +5,20 @@
   export let transaction;
 
   let readonly = transaction.status === "APPROVED";
-  let id = transaction.id;
   let dropdownTriggerElement;
 
+  $: id = transaction.id;
+
+  async function approveHandler() {
+    $loading = true;
+    if (await approve([id])) {
+      transaction.status = "APPROVED";
+      notify(`transaksi id '${id}' telah diapprove`, "success");
+    } else {
+      notify(`approve transaksi id '${id}' tidak berhasil`, "error");
+    }
+    $loading = false;
+  }
 </script>
 
 <div class="list-icons">

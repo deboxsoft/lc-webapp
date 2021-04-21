@@ -47,8 +47,15 @@
       flex-flow: column nowrap;
       //overflow: auto;
       flex: 1;
+      .dbx-tr.error {
+        background-color: #e57373;
+        color: #fff;
+      }
       .dbx-tr:hover {
         background-color: rgba(0, 0, 0, 0.03);
+        &.error {
+          background-color: firebrick;
+        }
       }
     }
 
@@ -56,6 +63,7 @@
       display: flex;
       padding-right: 5px;
       height: 30px;
+      cursor: pointer;
 
       .dbx-cell {
         border-top: 1px solid #ddd;

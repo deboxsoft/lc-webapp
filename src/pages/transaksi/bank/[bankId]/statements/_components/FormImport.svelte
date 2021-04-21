@@ -13,7 +13,8 @@
   export let isPreview;
   export let fileData;
   export let files;
-  export let itemsSelected
+  export let itemsSelected;
+  export let errors;
 
   $: fileLoaded = $files.length > 0;
 
