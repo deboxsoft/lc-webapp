@@ -32,7 +32,12 @@
       <i class="icon-menu9" />
     </a>
     <div slot="menu">
-      <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="fal fa-file-search" />Lihat Transaksi</a>
+      {#if !readonly}
+        <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={approveHandler}
+          ><i class="icon-check2" />Approve</a
+        >
+      {/if}
+      <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Transaksi</a>
       {#if !readonly}
         <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="fal fa-file-edit" />Ubah Akun</a>
         <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Transaksi</a>

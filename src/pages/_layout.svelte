@@ -13,6 +13,7 @@
   import { getUIContext } from "__@stores/ui";
   import { createApplicationContext, getApplicationContext } from "__@modules/app";
   import { accountingMenus as menus } from "__@root/stores/menus";
+  import TopLoader from "__@comps/loader/TopLoader.svelte";
 
   // context and store
   const { toggleShowMobileSidebar } = getUIContext();
@@ -28,6 +29,49 @@
     // authorize().catch(() => $redirect("/login"));
   }
 </script>
+
+<TopLoader loading={$loading}  />
+<div class="main-layout">
+  <!-- Navbar -->
+  <Navbar class="-background-blue" expand="md" isDark>
+    <div class="navbar-brand wmin-200"><a href={$url("/")} class="d-inline-block">LC | Accounting System</a></div>
+    <div class="d-md-none">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
+        <i class="icon-tree5" />
+      </button>
+      <button
+        class="navbar-toggler sidebar-mobile-main-toggle"
+        type="button"
+        on:click|preventDefault={toggleShowMobileSidebar}
+      >
+        <i class="icon-paragraph-justify3" />
+      </button>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-mobile">
+      <NavbarLeft showToggleMenu />
+      <span class="ml-md-auto mr-md-3">&nbsp;</span>
+      <NavbarRight />
+    </div>
+  </Navbar>
+  <!-- close Navbar -->
+  <!--  page content-->
+  <div class="page-content">
+    <!-- sidebar -->
+    <Sidebar isLight expand="md">
+      <SidebarMobileToggler onToggleShowMobileSidebar={toggleShowMobileSidebar} />
+      <div class="card card-sidebar-mobile" slot="sidebar-content">
+        <SidebarContent {menus} />
+      </div>
+    </Sidebar>
+    <!-- close sidebar -->
+    <slot />
+  </div>
+  <!-- footer -->
+  <div class="footer navbar navbar-expand-lg navbar-light">
+    <Footer />
+  </div>
+</div>
+<!-- close footer -->
 
 <style lang="scss" global>
   .navbar.-background-blue {
@@ -68,44 +112,3 @@
     border-top: 1px solid rgba(0, 0, 0, 0.125);
   }
 </style>
-
-<div class="main-layout">
-  <!-- Navbar -->
-  <Navbar class="-background-blue" expand="md" isDark>
-    <div class="navbar-brand wmin-200"><a href={$url('/')} class="d-inline-block">LC | Accounting System</a></div>
-    <div class="d-md-none">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
-        <i class="icon-tree5" />
-      </button>
-      <button
-        class="navbar-toggler sidebar-mobile-main-toggle"
-        type="button"
-        on:click|preventDefault={toggleShowMobileSidebar}>
-        <i class="icon-paragraph-justify3" />
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="navbar-mobile">
-      <NavbarLeft showToggleMenu />
-      <span class="ml-md-auto mr-md-3">&nbsp;</span>
-      <NavbarRight />
-    </div>
-  </Navbar>
-  <!-- close Navbar -->
-  <!--  page content-->
-  <div class="page-content">
-    <!-- sidebar -->
-    <Sidebar isLight expand="md">
-      <SidebarMobileToggler onToggleShowMobileSidebar={toggleShowMobileSidebar} />
-      <div class="card card-sidebar-mobile" slot="sidebar-content">
-        <SidebarContent {menus} />
-      </div>
-    </Sidebar>
-    <!-- close sidebar -->
-    <slot />
-  </div>
-  <!-- footer -->
-  <div class="footer navbar navbar-expand-lg navbar-light">
-    <Footer />
-  </div>
-</div>
-<!-- close footer -->

@@ -10,7 +10,7 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import MenuListStatement from "../MenuListStatement.svelte";
 
-  const { bankStatementStore, bank } = getBankStatementContext();
+  const { bank } = getBankStatementContext();
   const { getAccount } = getAccountContext();
   export let bankStatementList = undefined;
   export let preview = false;
@@ -23,10 +23,6 @@
     if (preview && bankStatementList) {
       checkSelectAll();
     }
-  }
-
-  $: if (!bankStatementList) {
-    bankStatementList = $bankStatementStore;
   }
 
   function checkSelectAll() {
