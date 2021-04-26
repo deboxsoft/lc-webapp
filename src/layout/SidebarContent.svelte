@@ -8,7 +8,7 @@
   import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
   import { getAuthenticationContext } from "__@modules/users";
 
-  const { profileStore, authenticated } = getAuthenticationContext();
+  const { authenticationStore } = getAuthenticationContext();
   let scrollbar;
   let elRef;
 
@@ -37,8 +37,14 @@
 </div>
 
 {#if !collapse}
-  {#if $profileStore.authenticated}
-    <SidebarUser profile={{ name: $profileStore.name, role: $profileStore[0] || "" }} />
+  {#if $authenticationStore.authenticated}
+<!--    <SidebarUser-->
+<!--      profile={{-->
+<!--        name: $authenticationStore.profile.name,-->
+<!--        role: $authenticationStore.profile.role ? $authenticationStore.profile.role[0] : "",-->
+<!--        avatar: $authenticationStore.avatar || ""-->
+<!--      }}-->
+<!--    />-->
   {/if}
   <!-- Main navigation -->
   <div class="card-body p-0">
@@ -58,7 +64,7 @@
           expanded={!!item.children && $isActive(item.url)}
           let:expanded={_expand}
           toggleClass={$isActive(item.url) && "active"}
-          target="_self"
+          target={(item.children && !item.url) && "_self" || undefined}
           hasChildren={!!item.children}
           href={(!item.children && item.url) || undefined}
         >

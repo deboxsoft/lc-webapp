@@ -1,6 +1,6 @@
 <!-- routify:options preload="proximity" -->
 <script lang="ts">
-  import { goto, layout, url } from "@roxi/routify";
+  import { redirect, layout, url, ready } from "@roxi/routify";
   import { onMount } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
   import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
@@ -11,39 +11,58 @@
   import Footer from "__@root/layout/FooterLayout.svelte";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
-  import { createApplicationContext, getApplicationContext } from "__@modules/app";
+  import { jwtStore } from "__@stores/session";
   import { accountingMenus as menus } from "__@root/stores/menus";
   import TopLoader from "__@comps/loader/TopLoader.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import { getAuthenticationContext } from "__@modules/users";
+  import { createApplicationContext } from "__@modules/app";
 
   // context and store
+  const { authenticationContext, accountingContext, loading } = createApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
-  createApplicationContext();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
-  const { loading } = getApplicationContext();
-  const { profileStore } = getAuthenticationContext();
+  const { authenticationStore } = getAuthenticationContext();
 
   // init loading
   let loginPage = $layout.path === "/login";
   let mounted = false;
+  let authenticating = true;
+  let accountingLoaded = false;
+
   onMount(() => {
     mounted = true;
-    $loading = false;
   });
 
   $: {
-    if (!$profileStore.authenticated && mounted) {
-      $goto("/login");
+    if (!authenticating && !$authenticationStore.authenticated) {
+      $redirect("./login");
+    } else if (!accountingLoaded) {
+      accountingLoaded = true;
+      $loading = true;
+      accountingContext.load().then(() => {
+        $loading = false;
+      });
     }
   }
+
+  authenticationContext.authenticate($jwtStore).then(() => {
+    if ($authenticationStore.authenticated) {
+      accountingLoaded = true;
+      accountingContext.load().then(() => {
+        authenticating = false;
+        $ready();
+      });
+    }
+    authenticating = false;
+  });
 </script>
 
 <TopLoader loading={$loading} />
-<div class="main-layout">
-  {#if $loading}
-    <Loader />
-  {:else if $profileStore.authenticated}
+{#if authenticating}
+  <Loader />
+{:else if $authenticationStore.authenticated}
+  <div class="main-layout">
     <!-- Navbar -->
     <Navbar class="-background-blue" expand="md" isDark>
       <div class="navbar-brand wmin-200"><a href={$url("/")} class="d-inline-block">LC | Accounting System</a></div>
@@ -82,8 +101,10 @@
     <div class="footer navbar navbar-expand-lg navbar-light">
       <Footer />
     </div>
-  {/if}
-</div>
+  </div>
+{:else}
+  <slot />
+{/if}
 
 <!-- close footer -->
 <style lang="scss" global>

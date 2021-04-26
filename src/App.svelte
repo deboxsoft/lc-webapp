@@ -1,4 +1,5 @@
 <script>
+  import {onMount} from "svelte";
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
   import { createUIContext as createContextStore } from "__@root/stores/ui";
@@ -27,7 +28,6 @@
       }
     };
   };
-
   // @ts-ignore
   setTimeout(() => window.routify.inBrowser);
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {LoginInputSchema} from "@deboxsoft/users-api";
+  import { goto } from "@roxi/routify";
   import * as z from "@deboxsoft/zod";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import Form from "__@comps/forms/Form.svelte";
@@ -10,21 +10,31 @@
   import PersonIcon from "@deboxsoft/svelte-icons/PersonOutlined.svelte";
   import LockIcon from "@deboxsoft/svelte-icons/LockOutlined.svelte";
   import { getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
+  import {jwtStore} from "__@stores/session"
 
-  const {login} = getAuthenticationContext();
+  const { login } = getAuthenticationContext();
+  const { notify } = getApplicationContext();
 
   const schema = z.object({
     username: z.string().min(5).nonempty(),
     password: z.string().min(5).nonempty()
-  })
+  });
 
   // state
   let formClass;
+  let fields;
+  let authenticationStore;
 
   async function submitHandler() {
-    // await formStore.submit(async () => {
-    // await signin();
-    // });
+    try {
+      authenticationStore = await login({ username: $fields.username }, $fields.password);
+      jwtStore.set($authenticationStore.session.token);
+      jwtStore.useLocalStorage();
+      $goto("/");
+    } catch (e) {
+      notify("Gagal login");
+    }
   }
 
   $: {
@@ -33,7 +43,7 @@
 </script>
 
 <!-- Login form -->
-<Form class={formClass} on:submit={submitHandler} {schema}>
+<Form class={formClass} on:submit={submitHandler} bind:fields {schema}>
   <div class="card mb-0">
     <div class="card-body">
       <div class="text-center mb-3">
@@ -53,7 +63,13 @@
       </div>
 
       <div class="form-group form-group-feedback form-group-feedback-left">
-        <InputField class="form-control" name="password" type="password" placeholder="Password" />
+        <InputField
+          class="form-control"
+          name="password"
+          type="password"
+          placeholder="Password"
+          autocomplete="password"
+        />
         <div class="form-control-feedback">
           <Icon component={LockIcon} class="text-muted" size="small" />
         </div>
@@ -61,7 +77,7 @@
 
       <div class="form-group">
         <button type="submit" class="btn btn-primary btn-block"
-          >Sign in
+          >Masuk
           <Icon component={ArrowRightIcon} class="ml2" /></button
         >
       </div>
@@ -70,8 +86,8 @@
     </div>
   </div>
 </Form>
-<!-- /login form -->
 
+<!-- /login form -->
 <style lang="scss" global>
   .login-form {
     .lock-icon {

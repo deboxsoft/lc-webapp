@@ -2,11 +2,11 @@
   import UserNavbarItem from "./UserNavbarItem.svelte";
   import { getAuthenticationContext } from "__@modules/users";
 
-  const { profileStore } = getAuthenticationContext();
+  const { authenticationStore } = getAuthenticationContext();
 </script>
 
 <ul class="navbar-nav">
-  {#if $profileStore.authenticated}
-    <UserNavbarItem profileName={$profileStore.username} />
+  {#if $authenticationStore.authenticated}
+    <UserNavbarItem profileName={$authenticationStore.username} />
   {/if}
 </ul>

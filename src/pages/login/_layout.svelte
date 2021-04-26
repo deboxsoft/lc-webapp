@@ -1,11 +1,12 @@
+<!-- routify:options preload="proximity" -->
 <script lang="ts">
   import { onMount } from "svelte";
   import { redirect } from "@roxi/routify";
-  import { createAuthenticationContext } from "__@modules/users";
-  import { createBaseApplicationContext } from "__@modules/app";
+  import { getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
 
-  const { env, fetch, notify, loading } = createBaseApplicationContext();
-  const { profileStore } = createAuthenticationContext({ fetch, notify, env });
+  const { authenticationStore } = getAuthenticationContext();
+  const { loading } = getApplicationContext();
 
   onMount(() => {
     $loading = false;
@@ -13,7 +14,7 @@
   /**
    *  We don't want the login page to visible to logged in user, so we redirect them
    **/
-  $: if ($profileStore?.authenticated) $redirect("../");
+  $: if ($authenticationStore?.authenticated) $redirect("../");
 </script>
 
 <!-- Page content -->

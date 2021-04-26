@@ -42,6 +42,7 @@
     "__@root": "link:./src",
     "__@stores": "link:./src/stores",
     "autonumeric": "^4.6.0",
+    "crypto-js": "^4.0.0",
     "date-fns": "^2.17.0",
     "dropzone": "^5.7.2",
     "flatpickr": "^4.6.9",

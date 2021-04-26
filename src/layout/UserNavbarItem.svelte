@@ -1,9 +1,11 @@
 <script lang="ts">
   import Dropdown from "__@comps/Dropdown.svelte";
   import { goto, route } from "@roxi/routify";
+  import {getAuthenticationContext} from "__@modules/users"
 
-  export const avatarSrc: string = "/images/profile.png";
-  export let profileName: string = "guest";
+  const {authenticationStore} = getAuthenticationContext();
+  export const avatarSrc: string = $authenticationStore.profile.avatar;
+  export let profileName: string = $authenticationStore.profile.name;
   let triggerElement: HTMLElement;
 
   function passwordHandler() {

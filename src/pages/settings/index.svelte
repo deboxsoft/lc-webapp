@@ -2,11 +2,16 @@
 <script>
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
-  import { getUserContext } from "__@modules/users";
+  import { getUserContext, getAuthenticationContext } from "__@modules/users";
 
-  const { companyStore } = getPreferenceContext();
+  const {update} = getUserContext();
+  const {authenticationStore} = getAuthenticationContext();
 
-  function saveHandler() {}
+  $: values =  {}
+
+  function saveHandler() {
+
+  }
 
   function changePasswordHandler() {}
 </script>
@@ -32,11 +37,11 @@
       <div class="row">
         <div class="col-md-6">
           <label for="password">Password</label>
-          <input type="password" name="password" class="form-control" />
+          <input type="password" name="password" class="form-control" autocomplete="password" />
         </div>
         <div class="col-md-6">
           <label for="newPassword">Password Baru</label>
-          <input type="password" name="newPassword" class="form-control" />
+          <input type="password" name="newPassword" class="form-control" autocomplete="newPassword" />
         </div>
       </div>
     </div>
