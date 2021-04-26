@@ -1,7 +1,7 @@
-import type { User } from "@deboxsoft/users-api";
+import type { UserContext } from "@deboxsoft/users-client/types/stores";
 
-import { getContext, setContext } from "svelte";
-import { Readable, writable } from "svelte/store";
+import { stores, graphql } from "@deboxsoft/users-client";
+import { ApplicationContext, getApplicationContext } from "../app";
 
 const KEY = Symbol("user");
 
@@ -11,8 +11,6 @@ export const createUserContext = () => {
     username: "demo",
     role: ["ADMIN"]
   });
-  setContext(KEY, { user: store });
-  return store;
 };
 
 export const getUserContext = (): { user: Readable<Partial<User>> } => getContext(KEY);

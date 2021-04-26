@@ -5,7 +5,7 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableTransaction from "./_tables/TableTransaction.svelte";
   import { createTransactionContext } from "__@modules/accounting";
-  import DatePickr from "__@comps/DatePickr.svelte";
+  // import DatePickr from "__@comps/DatePickr.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
@@ -40,5 +40,5 @@
       <TableTransaction bind:filter />
     </div>
   </div>
+  <slot />
 </PageLayout>
-<slot />

@@ -5,7 +5,6 @@
   import Breadcrumb from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb.svelte";
   import { getUIContext } from "__@stores/ui";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
 
   export let breadcrumb: BreadcrumbItem | BreadcrumbItem[] | undefined = undefined;
@@ -13,8 +12,12 @@
   const { loading } = getApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
   const { setBreadcrumb, breadcrumbStore } = getBreadcrumbStore();
+  let show = true;
   if (breadcrumb) {
     setBreadcrumb(breadcrumb);
+  }
+  function togglerCollapseHandler() {
+    show = !show;
   }
 </script>
 

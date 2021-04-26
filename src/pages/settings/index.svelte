@@ -1,29 +1,47 @@
+<!--routify:options title="profil"-->
 <script>
-  import { derived, writable } from "svelte/store";
-  import { goto, params } from "@roxi/routify";
-  import { stores } from "@deboxsoft/accounting-client";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import { getUserContext } from "__@modules/users";
 
-  const { load, save } = stores.getPreferenceAccountingContext() || {};
-  $: url = $params.backUrl || "./";
+  const { companyStore } = getPreferenceContext();
 
-  async function saveHandler() {
-    $goto(url, {}, true);
-  }
+  function saveHandler() {}
 
-  function closeHandler() {
-    $goto(url, {}, true);
-  }
+  function changePasswordHandler() {}
 </script>
 
-  <form>
-    <div class="row">
-      <div class="container">
-        <class class="form-group col-12">
-        </class>
+<Form>
+  <div class="card">
+    <div class="card-body">
+      <div class="form-group col-12">
+        <label for="name">Nama</label>
+        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+      </div>
+      <div class="form-group col-12">
+        <label for="email">Email</label>
+        <InputField id="email" name="email" type="text" class="form-control" placeholder="Email" />
       </div>
     </div>
-    <div class="bootstrap-duallistbox-container row moveonselect">
-      <div class="box1 col-12">
+    <div class="card-footer text-right">
+      <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <label for="password">Password</label>
+          <input type="password" name="password" class="form-control" />
+        </div>
+        <div class="col-md-6">
+          <label for="newPassword">Password Baru</label>
+          <input type="password" name="newPassword" class="form-control" />
+        </div>
       </div>
     </div>
-  </form>
+    <div class="card-footer text-right">
+      <button class="btn bg-primary" on:click={changePasswordHandler}>Ganti Password</button>
+    </div>
+  </div>
+</Form>

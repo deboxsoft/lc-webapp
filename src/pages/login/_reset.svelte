@@ -1,11 +1,19 @@
 <script lang="ts">
-  // import { authStore } from "__@root/stores/auth";
+  import { onMount } from "svelte";
   import { redirect } from "@roxi/routify";
-  // const { user } = authStore;
+  import { createAuthenticationContext } from "__@modules/users";
+  import { createBaseApplicationContext } from "__@modules/app";
+
+  const { env, fetch, notify, loading } = createBaseApplicationContext();
+  const { profileStore } = createAuthenticationContext({ fetch, notify, env });
+
+  onMount(() => {
+    $loading = false;
+  });
   /**
    *  We don't want the login page to visible to logged in user, so we redirect them
    **/
-  // $: if ($user) $redirect("../app");
+  $: if ($profileStore?.authenticated) $redirect("../");
 </script>
 
 <!-- Page content -->
