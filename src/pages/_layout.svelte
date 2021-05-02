@@ -11,7 +11,6 @@
   import Footer from "__@root/layout/FooterLayout.svelte";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
-  import { jwtStore } from "__@stores/session";
   import { accountingMenus as menus } from "__@root/stores/menus";
   import TopLoader from "__@comps/loader/TopLoader.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
@@ -37,7 +36,7 @@
   $: {
     if (!authenticating && !$authenticationStore.authenticated) {
       $redirect("./login");
-    } else if (!accountingLoaded) {
+    } else if ($authenticationStore.authenticated && !accountingLoaded) {
       accountingLoaded = true;
       $loading = true;
       accountingContext.load().then(() => {
@@ -46,7 +45,7 @@
     }
   }
 
-  authenticationContext.authenticate($jwtStore).then(() => {
+  authenticationContext.authenticate().then(() => {
     if ($authenticationStore.authenticated) {
       accountingLoaded = true;
       accountingContext.load().then(() => {
@@ -108,6 +107,11 @@
 
 <!-- close footer -->
 <style lang="scss" global>
+  #debox-app {
+    display: flex;
+    flex: 1;
+  }
+
   .navbar.-background-blue {
     background-color: #205081;
   }
@@ -139,7 +143,7 @@
   .main-layout {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    flex: 1;
   }
 
   .footer {

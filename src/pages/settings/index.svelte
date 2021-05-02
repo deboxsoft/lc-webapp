@@ -3,20 +3,33 @@
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import { getUserContext, getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
 
-  const {update} = getUserContext();
-  const {authenticationStore} = getAuthenticationContext();
+  const { update } = getUserContext();
+  const { notify, loading } = getApplicationContext();
+  const { authenticationStore } = getAuthenticationContext();
 
-  $: values =  {}
+  let fields;
 
-  function saveHandler() {
+  $: profile = $authenticationStore.profile;
+  $: console.log(profile);
 
+  async function saveHandler() {
+    try {
+      $loading = true;
+      const input = { ...$fields };
+      delete input.id;
+      await update(profile.id, input);
+      notify("Berhasil memperbarui data profile", "success");
+      $loading = false;
+    } catch (e) {
+      notify(e.message, "error");
+      $loading = false;
+    }
   }
-
-  function changePasswordHandler() {}
 </script>
 
-<Form>
+<Form values={profile} bind:fields feedbackValidateDisable>
   <div class="card">
     <div class="card-body">
       <div class="form-group col-12">
@@ -30,23 +43,6 @@
     </div>
     <div class="card-footer text-right">
       <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>
-    </div>
-  </div>
-  <div class="card">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-6">
-          <label for="password">Password</label>
-          <input type="password" name="password" class="form-control" autocomplete="password" />
-        </div>
-        <div class="col-md-6">
-          <label for="newPassword">Password Baru</label>
-          <input type="password" name="newPassword" class="form-control" autocomplete="newPassword" />
-        </div>
-      </div>
-    </div>
-    <div class="card-footer text-right">
-      <button class="btn bg-primary" on:click={changePasswordHandler}>Ganti Password</button>
     </div>
   </div>
 </Form>

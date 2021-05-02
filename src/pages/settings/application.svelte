@@ -1,13 +1,31 @@
 <script>
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
+  import { getApplicationContext } from "__@modules/app";
+  import { getCompanyContext } from "__@modules/accounting";
+  import { writable } from "svelte/store";
+
+  const { notify, loading } = getApplicationContext();
+  const { companyStore, update } = getCompanyContext();
+
+  let fields = writable({});
+
+  $: submitting = $loading;
 
   async function saveHandler() {
-    // await save(accountId);
+    try {
+      $loading = true;
+      await update($fields);
+      $loading = false;
+      notify("data berhasil tersimpan", "success");
+    } catch (e) {
+      $loading = false;
+      notify(e.message, "error");
+    }
   }
 </script>
 
-<Form>
+<Form feedbackValidateDisable bind:fields values={$companyStore} on:submit={saveHandler}>
   <div class="card">
     <div class="card-body">
       <div class="form-group col-12">
@@ -20,7 +38,7 @@
       </div>
     </div>
     <div class="card-footer text-right">
-      <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>
+      <button class="btn bg-primary" on:click={saveHandler} disabled={submitting}>Simpan</button>
     </div>
   </div>
 </Form>
