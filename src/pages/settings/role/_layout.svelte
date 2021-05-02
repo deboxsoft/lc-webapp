@@ -1,0 +1,47 @@
+<script>
+  import Table from "__@comps/Table.svelte";
+  import { getAccessControlContext } from "__@modules/users";
+  import { url } from "@roxi/routify";
+  import Dropdown from "__@comps/Dropdown.svelte";
+
+  const { load, grants } = getAccessControlContext();
+  let roles
+
+  $: roles = Object.keys($grants);
+
+</script>
+
+<div class="card d-flex flex-1 flex-column">
+  <div class="card-body d-flex flex-1">
+    <Table items={roles} let:item={role}>
+      <div class="dbx-thead" slot="header">
+        <div class="dbx-cell">Nama Hak Akses</div>
+        <div class="dbx-cell -menu-list" />
+      </div>
+      <div class="dbx-tr">
+        <div class="dbx-cell">{role}</div>
+        <div class="dbx-cell -menu-list" style="width: 30px">
+          <div class="list-icons">
+            <Dropdown let:toggle let:toggleClass>
+              <a
+                href="/#"
+                on:click|preventDefault={toggle}
+                class="list-icons-item align-items-center {toggleClass}"
+                target="_self"
+              >
+                <i class="icon-menu9" />
+              </a>
+              <div slot="menu">
+                <a href={$url("./:role/view", { role })} class="dropdown-item"><i class="icon-eye" />Detail Role</a>
+                <a href={$url("./:role/update", { role })} class="dropdown-item"><i class="icon-pencil5" />Ubah Role</a>
+                <a href={$url("./:role/remove", { role })} class="dropdown-item"><i class="icon-minus2" />Hapus Role</a>
+              </div>
+            </Dropdown>
+          </div>
+        </div>
+      </div>
+    </Table>
+  </div>
+</div>
+<slot />
+
