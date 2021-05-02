@@ -17,11 +17,8 @@
       <i class="icon-menu9" />
     </a>
     <div slot="menu">
-<!--      <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="fal fa-file-alt" />Lihat Akun</a>-->
-      <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-user-tie" />Ubah User</a>
-      {#if !removeActDisable}
-        <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-user-minus" />Hapus User</a>
-      {/if}
+      <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-pencil5" />Ubah User</a>
+      <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-user-minus" />Hapus User</a>
     </div>
   </Dropdown>
 </div>

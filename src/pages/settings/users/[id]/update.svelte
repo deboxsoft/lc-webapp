@@ -1,33 +1,47 @@
 <script>
-  import {goto} from "@roxi/routify"
+  import { goto, params } from "@roxi/routify";
   import { getUserContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
+  import Loader from "__@comps/loader/Loader.svelte";
   import UserForm from "../_form.svelte";
   import Modal from "__@comps/Modal.svelte";
 
   let fields;
   let user;
-  let schema
-  const { getUser, update } = getUserContext();
+  let schema;
+  let submitHandler;
+  const { getUser, update, userStore } = getUserContext();
+  const { notify, loading } = getApplicationContext();
 
   $: {
-    if ($params.id) {
-      user = getUser($params.id);
-    }
+    user = getUser($params.id);
   }
 
   async function saveHandler() {
     try {
-      const inputs = schema.parse($fields)
-      const result = await update($params.id, inputs);
-      $goto("../")
+      $loading = true;
+      submitHandler();
+      const { id, ...input } = $fields;
+      const result = await update($params.id, input);
+      notify(`User ${$user.username} berhasil diperbarui`, "success");
+      $loading = false;
+      $goto("../");
     } catch (e) {
-
+      $loading = false;
     }
+  }
+
+  function closeHandler() {
+    $goto("../");
   }
 </script>
 
-<Modal class="modal-lg" open title="Membuat User">
-  <UserForm bind:fields bind:schema user={$user} />
+<Modal class="modal-lg" open title="Mengedit user" onClose={closeHandler}>
+  {#if !$user}
+    <Loader />
+  {:else}
+    <UserForm bind:fields bind:schema user={$user} isUpdate bind:submitHandler />
+  {/if}
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
     <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>

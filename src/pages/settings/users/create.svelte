@@ -2,25 +2,27 @@
   import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import UserForm from "./_form.svelte";
-  import {getUserContext} from "__@modules/users"
-  import {getApplicationContext} from "__@modules/app"
+  import { getUserContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
 
-  const {create} = getUserContext()
-  const {notify} = getApplicationContext()
+  const { create } = getUserContext();
+  const { notify, loading } = getApplicationContext();
 
   let fields;
   let schema;
-  $: url = "./"
+  let submitHandler;
+  $: url = "./";
 
   async function saveHandler() {
     try {
-      $fields.role = ["ADMIN"]
-      const input = schema.parse($fields)
-      await create(input);
+      $loading = true;
+      submitHandler();
+      await create($fields);
+      notify(`berhasil membuat user '${$fields.username}'`, "success");
+      $loading = false;
       $goto(url);
     } catch (e) {
-      console.error(e);
-      notify(e, "error")
+      $loading = false;
     }
   }
 
@@ -29,8 +31,8 @@
   }
 </script>
 
-<Modal class="modal-lg" open title="Membuat User">
-  <UserForm bind:fields bind:schema />
+<Modal class="modal-lg" open title="Membuat User" onClose={closeHandler}>
+  <UserForm bind:fields bind:schema bind:submitHandler />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
     <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>
