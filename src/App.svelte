@@ -32,6 +32,6 @@
   setTimeout(() => window.routify.inBrowser);
 </script>
 
-<div use:BodyClass={$uiStore}>
+<div use:BodyClass={$uiStore} style="display: flex; flex: 1">
   <Router {routes} />
 </div>

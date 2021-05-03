@@ -1,7 +1,11 @@
 <script>
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import { getTransactionContext } from "__@modules/accounting";
+  import { getApplicationContext } from "__@modules/app";
 
+  const { loading, notify } = getApplicationContext();
+  const { approve } = getTransactionContext();
   export let transaction;
 
   let readonly = transaction.status === "APPROVED";
@@ -39,8 +43,8 @@
       {/if}
       <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Transaksi</a>
       {#if !readonly}
-        <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="fal fa-file-edit" />Ubah Akun</a>
-        <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Transaksi</a>
+        <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-pencil" />Ubah Akun</a>
+        <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Transaksi</a>
       {/if}
     </div>
   </Dropdown>

@@ -1,6 +1,7 @@
 <!-- routify:options preload="proximity" -->
 <script lang="ts">
   import { redirect, layout, url, ready } from "@roxi/routify";
+  import initial from "initials";
   import { onMount } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
   import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
@@ -14,24 +15,28 @@
   import { accountingMenus as menus } from "__@root/stores/menus";
   import TopLoader from "__@comps/loader/TopLoader.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
-  import { getAuthenticationContext } from "__@modules/users";
   import { createApplicationContext } from "__@modules/app";
 
   // context and store
-  const { authenticationContext, accountingContext, loading } = createApplicationContext();
+  const { authenticationContext, accountingContext, loading, companyContext } = createApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
-  const { authenticationStore } = getAuthenticationContext();
+  const { authenticationStore } = authenticationContext;
+  const { companyStore, getCompany } = companyContext;
 
   // init loading
   let loginPage = $layout.path === "/login";
   let mounted = false;
   let authenticating = true;
   let accountingLoaded = false;
+  let company;
 
   onMount(() => {
     mounted = true;
   });
+
+  // loading data company
+  getCompany();
 
   $: {
     if (!authenticating && !$authenticationStore.authenticated) {
@@ -52,6 +57,8 @@
         authenticating = false;
         $ready();
       });
+    } else {
+      $ready();
     }
     authenticating = false;
   });
@@ -64,7 +71,9 @@
   <div class="main-layout">
     <!-- Navbar -->
     <Navbar class="-background-blue" expand="md" isDark>
-      <div class="navbar-brand wmin-200"><a href={$url("/")} class="d-inline-block">LC | Accounting System</a></div>
+      <div class="navbar-brand wmin-200">
+        <a href={$url("/")} class="d-inline-block">{initial($companyStore.name)?.toUpperCase() || "LC"} | {$companyStore.unit || ""}</a>
+      </div>
       <div class="d-md-none">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
           <i class="icon-tree5" />

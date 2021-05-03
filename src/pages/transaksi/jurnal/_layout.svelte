@@ -9,10 +9,15 @@
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { find } = createTransactionContext();
+  const { load } = createTransactionContext();
 
   let filter;
   let fetchMor;
+
+  let loading;
+  load().then(() => {
+    loading = false;
+  });
 
   function filterHandler() {
     // find({ filter });
@@ -37,7 +42,7 @@
   </div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
-      <TableTransaction bind:filter />
+      <TableTransaction bind:filter bind:loading />
     </div>
   </div>
   <slot />

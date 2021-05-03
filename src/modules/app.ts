@@ -6,8 +6,7 @@ import { setContext, getContext } from "svelte";
 import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
-import { registerAccountingContext } from "./accounting";
-import { jwtStore } from "__@stores/session";
+import { registerAccountingContext, createCompanyContext } from "./accounting";
 import { createAuthenticationContext } from "./users";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
@@ -39,8 +38,6 @@ export const createBaseApplicationContext = () => {
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
 
-  // jwt
-  jwtStore.useLocalStorage();
   const context: ApplicationContext = { client, fetch, notify, loading, env, uiControl, subscriptionClient };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   return {
@@ -59,6 +56,7 @@ export const createApplicationContext = () => {
   // register service
   const authenticationContext = createAuthenticationContext({ fetch, notify, env, loading, subscriptionClient });
   const accountingContext = registerAccountingContext({ fetch, notify, env, loading, subscriptionClient });
+  const companyContext = createCompanyContext({ fetch, env, notify, loading, subscriptionClient });
   return {
     client,
     fetch,
@@ -68,7 +66,8 @@ export const createApplicationContext = () => {
     uiControl,
     subscriptionClient,
     accountingContext,
-    authenticationContext
+    authenticationContext,
+    companyContext
   };
 };
 

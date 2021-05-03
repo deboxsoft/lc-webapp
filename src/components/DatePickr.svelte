@@ -22,10 +22,11 @@
   export let element: HTMLElement | null = null;
   export let options = {};
   export let mode: "month-select" | "menu" | undefined = undefined;
-  export let wrapperClass: string = "w-100";
+  export let wrapperClass: string = "";
   export let readOnly: boolean = false;
   export let disabled: boolean = false;
   export let iconDisable: boolean = false;
+  export let styleWrapper = "";
 
   let wrapperDisable: boolean = iconDisable;
   let input: any = undefined;
@@ -147,7 +148,7 @@
 </script>
 
 {#if !wrapperDisable}
-  <div class={wrapperClasses}>
+  <div class={wrapperClasses} style={styleWrapper}>
     <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} {value} />
     <div class="form-control-feedback text-grey-600">
       <i class="fal fa-calendar" />

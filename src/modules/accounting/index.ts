@@ -9,6 +9,7 @@ export * from "./balance";
 export * from "./transaksi";
 export * from "./persediaan";
 export * from "./preference";
+export * from "./company";
 
 // initial bootsrap
 export const registerAccountingContext = (applicationContext: ApplicationContext) => {
@@ -16,10 +17,9 @@ export const registerAccountingContext = (applicationContext: ApplicationContext
   const accountContext = createAccountContext(applicationContext, preferenceAccountingContext);
   return {
     load: () => {
-      const companyLoad = preferenceAccountingContext.getCompany();
       const preferenceLoad = preferenceAccountingContext.load();
       const accountLoad = accountContext.load();
-      return Promise.all([preferenceLoad, accountLoad, companyLoad]).then(() => {});
+      return Promise.all([preferenceLoad, accountLoad]).then(() => {});
     }
   };
 };

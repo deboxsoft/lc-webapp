@@ -37,46 +37,46 @@
   <table class="table text-nowrap">
     <thead>
     <tr role="row">
-      <th>Akun</th>
+      <th>Akun Perkiraan</th>
       <th class="text-center" colspan="3">Saldo</th>
     </tr>
     </thead>
     <tbody>
-    <!--    aktiva -->
+    <!-- Pendapatan -->
     {#each statementIncomeReport.revenue.accounts as account}
       <RowBalance label={account.name} balance={account.balance} />
     {/each}
-    <RowTotalBalance label="Pendapatan" balance={statementIncomeReport.revenue.balance} />
-    {#each statementIncomeReport.revenueOther.accounts as account}
-      <RowBalance label={account.name} balance={account.balance} />
-    {/each}
-    <RowTotalBalance label="Pendapatan Lain-lain" balance={statementIncomeReport.revenueOther.balance} />
-    <tr class="table-active table-border-double font-weight-bold">
-      <td>Total Pendapatan</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td class="text-right balance">
-        <CellRp value={revenueBalance} />
-      </td>
-    </tr>
-    <!--pasiva-->
+    <RowTotalBalance label="PENDAPATAN" balance={statementIncomeReport.revenue.balance} />
+    <!--{#each statementIncomeReport.revenueOther.accounts as account}-->
+    <!--  <RowBalance label={account.name} balance={account.balance} />-->
+    <!--{/each}-->
+<!--    <RowTotalBalance label="Pendapatan Lain-lain" balance={statementIncomeReport.revenueOther.balance} />-->
+<!--    <tr class="table-active table-border-double font-weight-bold">-->
+<!--      <td>Total Pendapatan</td>-->
+<!--      <td>&nbsp;</td>-->
+<!--      <td>&nbsp;</td>-->
+<!--      <td class="text-right balance">-->
+<!--        <CellRp value={revenueBalance} />-->
+<!--      </td>-->
+<!--    </tr>-->
+    <!--Biaya-->
     {#each statementIncomeReport.expense.accounts as account}
       <RowBalance label={account.name} balance={account.balance} />
     {/each}
-    <RowTotalBalance label="Beban" balance={statementIncomeReport.expense.balance} />
-    {#each statementIncomeReport.expenseOther.accounts as account}
-      <RowBalance label={account.name} balance={account.balance} />
-    {/each}
-    <RowTotalBalance label="Beban Lain-lain" balance={statementIncomeReport.expenseOther.balance} />
+    <RowTotalBalance label="BIAYA" balance={statementIncomeReport.expense.balance} />
+    <!--{#each statementIncomeReport.expenseOther.accounts as account}-->
+    <!--  <RowBalance label={account.name} balance={account.balance} />-->
+    <!--{/each}-->
+    <!--<RowTotalBalance label="Beban Lain-lain" balance={statementIncomeReport.expenseOther.balance} />-->
 
-    <tr class="table-active table-border-double">
-      <td>Total Beban</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td class="text-right balance">
-        <CellRp value={expenseBalance} />
-      </td>
-    </tr>
+<!--    <tr class="table-active table-border-double">-->
+<!--      <td>Total Beban</td>-->
+<!--      <td>&nbsp;</td>-->
+<!--      <td>&nbsp;</td>-->
+<!--      <td class="text-right balance">-->
+<!--        <CellRp value={expenseBalance} />-->
+<!--      </td>-->
+<!--    </tr>-->
 
     <tr class="table-active table-border-double font-weight-bold">
       <td>Laba/Rugi</td>

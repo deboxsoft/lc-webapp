@@ -1,5 +1,6 @@
 <!--routify:options title="Import Statement"-->
 <script>
+  import { parse } from "date-fns";
   import { goto } from "@roxi/routify";
   import FormImport from "./_components/FormImport.svelte";
   import Modal from "__@comps/Modal.svelte";
@@ -35,15 +36,20 @@
         return false;
       });
       if (!errors || errors.length === 0) {
-        await importStatement($bank.id, statements);
-        $loadingApp = false;
+        const _statements = statements.map(({ date, ...data }) => ({
+          ...data,
+          date: parse(date, "dd/MM/yy", new Date())
+        }));
+        await importStatement($bank.id, _statements);
         $itemsSelected = [];
+        notify("data berhasil tersimpan", "success");
         $goto("./");
+        $loadingApp = false;
       } else {
-        notify("data belum lengkap", "error")
+        notify("data belum lengkap", "error");
       }
     } catch (e) {
-      notify(e.message, "error");
+      // notify(e.message, "error");
     } finally {
       $loadingApp = false;
     }
@@ -75,15 +81,15 @@
       ><i class="icon-cancel-circle2 mr-2" />Tutup</button
     >
     {#if !isPreview}
-      <button type="button" on:click={previewHandler} class="btn bg-blue-400 mr-2" disabled={!fileLoaded}
+      <button type="button" on:click={previewHandler} class="btn bg-primary mr-2" disabled={!fileLoaded}
         ><i class="icon-file-eye2 mr-2" />preview</button
       >
     {:else}
       <button type="button" on:click={backHandler} class="btn btn-outline-primary mr-2"
         ><i class="icon-reset mr-2" />Reset</button
       >
-      <button type="button" on:click={submitHandler} class="btn bg-blue-400 mr-2" disabled={!fileLoaded || loading}
-        ><i class="icon-file-eye2 mr-2" />Simpan</button
+      <button type="button" on:click={submitHandler} class="btn btn-primary mr-2" disabled={!fileLoaded || loading}
+        ><i class="icon-floppy-disk mr-2" />Simpan</button
       >
     {/if}
   </div>

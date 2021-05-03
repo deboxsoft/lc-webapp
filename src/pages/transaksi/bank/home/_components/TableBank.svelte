@@ -55,7 +55,7 @@
 
 <style lang="scss">
   .bank {
-    flex: 0 1 250px;
+    flex: 0 0 250px;
   }
 
   .account {
@@ -63,10 +63,10 @@
   }
 
   .name {
-    flex: 0 1 250px;
+    flex: 0 0 250px;
   }
 
   .balance {
-    flex: 0 1 150px;
+    flex: 0 0 150px;
   }
 </style>

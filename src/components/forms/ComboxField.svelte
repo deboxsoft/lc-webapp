@@ -9,11 +9,18 @@
   export let name = undefined;
   export const select = $fields && $fields[name] || undefined;
   export let allowEmpty = false;
-  export let labelId = "id"
-  export let valueId = "label"
+  export let labelId = "label"
+  export let valueId = "id"
+  export let value;
   const dispatch = createEventDispatcher();
 
-  function createChangeHandler() {
+  $: {
+    if (items.length > 0 && !$fields[name] && !allowEmpty) {
+      $fields[name] = items[0][valueId] || items[0]
+    }
+  }
+
+  function createChangeHandler(e) {
     const _validate = validateField(name);
     return (e) => {
       _validate();
@@ -26,7 +33,7 @@
   {...$$restProps}
   class="form-control form-control-uniform"
   bind:value={$fields[name]}
-  on:blur={createChangeHandler()}
+  on:change={createChangeHandler()}
 >
   {#if allowEmpty}
     <option />

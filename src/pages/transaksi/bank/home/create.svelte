@@ -3,8 +3,10 @@
   import { params } from "@roxi/routify";
   import { getBankContext, getPreferenceContext } from "__@modules/accounting";
   import FormBank from "./_components/FormBank.svelte";
+  import { getApplicationContext } from "__@modules/app";
 
-  const {currentDateStore} = getPreferenceContext();
+  const { notify, loading } = getApplicationContext();
+  const { currentDateStore } = getPreferenceContext();
   const { create } = getBankContext();
 
   let bank = {
@@ -12,7 +14,15 @@
   };
 
   async function onSubmit(values) {
-    await create(values);
+    try {
+      $loading = true;
+      await create(values);
+      $loading = false;
+      notify(`Berhasil membuat data bank ${values.name}`, "success");
+    } catch (e) {
+      notify(e.message, "error");
+      $loading = false;
+    }
   }
 </script>
 

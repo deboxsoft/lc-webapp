@@ -2,14 +2,24 @@
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { getTransactionContext } from "__@modules/accounting";
+  import { getApplicationContext } from "__@modules/app";
 
+  const { notify, loading } = getApplicationContext();
   const { remove } = getTransactionContext();
 
   $: transactionId = $params.id;
 
   async function removeHandler() {
-    await remove(transactionId);
-    $goto("../");
+    try {
+      $loading = true;
+      await remove(transactionId);
+      $goto("../");
+      notify(`transaksi id '${transactionId}' berhasil dihapus`, "success");
+      $loading = false;
+    } catch (e) {
+      notify(e.message, "error");
+      $loading = false;
+    }
   }
 
   function closeHandler() {

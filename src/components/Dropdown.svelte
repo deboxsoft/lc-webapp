@@ -20,6 +20,7 @@
   export let show: boolean = false;
   export let active: boolean = false;
   export const size: Size = undefined;
+  export const top: number = 0;
   export let toggle: (e?: any) => void = toggleHandler;
   export const setActiveFromChild: boolean = false;
   export let menuClass: string = "";
@@ -100,13 +101,14 @@
     dropdown: () => menuElement
   }}>
   <slot {toggle} toggleClass="dbx-dropdown-toggle" />
-  <div bind:this={menuElement} class={menuClasses} class:show style="margin: 0" on:click={menuClickHandler}>
+  <div bind:this={menuElement} class={menuClasses} class:show style="margin: 0;" on:click={menuClickHandler}>
     <slot name="menu" />
   </div>
 </div>
 
 <style lang="scss" global>
   .dbx-dropdown {
+    display: block;
     position: relative;
   }
   .dbx-dropdown-toggle {
@@ -115,10 +117,11 @@
   }
 
   .dropdown-menu {
+    position: absolute;
     &.-bottom-right {
-      left: auto;
       right: 0;
-      top: 0;
+      top: auto;
+      left: auto;
       bottom: auto;
     }
   }

@@ -31,7 +31,8 @@
       <div class="dbx-cell date">Tanggal</div>
       <div class="dbx-cell no">No Transaksi</div>
       <div class="dbx-cell">Deskripsi</div>
-      <div class="dbx-cell amount">Mutasi</div>
+      <div class="dbx-cell amount">Debit</div>
+      <div class="dbx-cell amount">Kredit</div>
       <div class="dbx-cell balance">Saldo</div>
     </div>
     <div class="dbx-tr">
@@ -56,8 +57,11 @@
       <td class="dbx-cell">
         {generalLedger.description || ""}
       </td>
-      <div class="dbx-cell amount" style="width: 400px">
-        <CellRp spaceMinus value={generalLedger.amount} />
+      <div class="dbx-cell amount" style="width: 200px">
+        <CellRp value={generalLedger.amount > 0 ? generalLedger.amount : undefined} />
+      </div>
+      <div class="dbx-cell amount" style="width: 200px">
+        <CellRp value={generalLedger.amount < 0 ? -1 * generalLedger.amount : undefined} />
       </div>
       <div class="dbx-cell balance">
         <CellRp value={generalLedger.balance} />
@@ -78,7 +82,7 @@
   }
 
   .amount {
-    flex: 0 0 400px;
+    flex: 0 0 200px;
   }
 
   .balance {

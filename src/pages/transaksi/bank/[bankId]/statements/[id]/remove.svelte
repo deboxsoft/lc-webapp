@@ -2,20 +2,21 @@
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { getBankStatementContext } from "__@modules/accounting";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import { getApplicationContext } from "__@modules/app";
 
   const { removeStatement, getStatement, bank } = getBankStatementContext();
-  let loading = false;
+  const { notify, loading } = getApplicationContext();
 
   async function removeHandler() {
-    loading = true;
+    $loading = true;
     try {
       await removeStatement($params.id, $bank.id);
-      loading = false;
+      notify("data berhasil dihapus", "success");
       $goto("../");
+      $loading = false;
     } catch (e) {
-      loading = false;
-      console.error(e);
+      $loading = false;
+      notify(e.message, "error");
     }
   }
 
@@ -27,13 +28,7 @@
 </script>
 
 <Modal open title="Hapus Statement">
-  {#if loading || !$statement}
-    <Loader />
-  {:else}
-    <div class="alert alert-warning alert-styled-left">
-      Apa anda yakin akan menghapus data ini?
-    </div>
-  {/if}
+  <div class="alert alert-warning alert-styled-left">Apa anda yakin akan menghapus data ini?</div>
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
     <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>

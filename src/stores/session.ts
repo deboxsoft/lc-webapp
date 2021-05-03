@@ -8,7 +8,7 @@ export const browser = writable("UNKNOWN");
 export const ip = writable("UNKNOWN");
 export const os = writable("UNKNOWN");
 
-export const jwtStore = createWritableStore("__tok", undefined);
+export const createJwtStore = () => createWritableStore("__tok", undefined);
 
 // export function audBuilder(bd) {
 //   const version = parseInt(bd.browser.version);

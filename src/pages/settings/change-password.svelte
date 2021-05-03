@@ -6,6 +6,7 @@
   import InputField from "__@comps/forms/InputField.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
+  import Alert from "__@comps/Alert.svelte";
 
   const { notify, loading } = getApplicationContext();
   const { authenticationStore, changePassword } = getAuthenticationContext();
@@ -23,6 +24,8 @@
   let fields;
   let submitted;
   let submitHandler;
+  let alertMessage;
+  let alertOpen;
   $: url = $params.backUrl || "./";
   $: profile = $authenticationStore.profile;
 
@@ -36,7 +39,10 @@
       $loading = false;
       $goto(url);
     } catch (e) {
-      if (typeof e === "string") notify(e.message, "error");
+      $submitted = false;
+      notify(e.message, "error");
+      alertMessage = e.message;
+      alertOpen = true;
       $loading = false;
     }
   }
@@ -47,9 +53,10 @@
 </script>
 
 <Modal class="modal-lg" open title="Ganti Password">
-  <Form bind:fields {schema} bind:submitted bind:submitHandler>
+  <Form  bind:fields {schema} bind:submitted bind:submitHandler>
     <div class="card">
       <div class="card-body">
+        <Alert bind:message={alertMessage} bind:open={alertOpen} />
         <div class="row">
           <div class="form-group col-12">
             <label for="password">Password</label>

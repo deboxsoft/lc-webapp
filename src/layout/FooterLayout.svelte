@@ -26,7 +26,7 @@
       <!-- svelte-ignore a11y-invalid-attribute -->
       <a href="#" class="text-grey-800">Deboxsoft</a>
       by
-      <a href="https://debox.id/" target="_blank" class="text-grey-800">Debox Indonesia</a>
+      <a href="https://debox.id/" rel="noopener" target="_blank" class="text-grey-800">Debox Indonesia</a>
     </span>
   </div>
 </div>

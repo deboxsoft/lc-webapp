@@ -535,6 +535,7 @@
 </script>
 
 <div
+  {...$$restProps}
   use:autoScrollComponent={{
     condition: () => opened,
     dropdown: () => dropdownElement
@@ -663,7 +664,7 @@
     .autocomplete-list {
       background: #fff;
       position: relative;
-      width: 100%;
+      width: inherit;
       overflow-y: auto;
       z-index: 99;
       padding: 10px 0;

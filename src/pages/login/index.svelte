@@ -11,10 +11,10 @@
   import LockIcon from "@deboxsoft/svelte-icons/LockOutlined.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import {jwtStore} from "__@stores/session"
+  import Alert from "__@comps/Alert.svelte";
 
-  const { login } = getAuthenticationContext();
-  const { notify } = getApplicationContext();
+  const { login, jwtStore } = getAuthenticationContext();
+  const { notify, loading } = getApplicationContext();
 
   const schema = z.object({
     username: z.string().min(5).nonempty(),
@@ -25,15 +25,26 @@
   let formClass;
   let fields;
   let authenticationStore;
+  let alertMessage;
+  let alertOpen;
+  let submitted;
+
+  $: console.log(alertMessage, alertOpen, "login");
 
   async function submitHandler() {
     try {
+      $loading = true;
+      console.log("login");
       authenticationStore = await login({ username: $fields.username }, $fields.password);
-      jwtStore.set($authenticationStore.session.token);
-      jwtStore.useLocalStorage();
+      console.log("after login");
       $goto("/");
+      $loading = false;
     } catch (e) {
-      notify("Gagal login");
+      $submitted = false;
+      notify(e.message, "error");
+      alertMessage = e.message;
+      alertOpen = true;
+      $loading = false;
     }
   }
 
@@ -43,7 +54,7 @@
 </script>
 
 <!-- Login form -->
-<Form class={formClass} on:submit={submitHandler} bind:fields {schema}>
+<Form class={formClass} on:submit={submitHandler} bind:fields bind:submitted {schema}>
   <div class="card mb-0">
     <div class="card-body">
       <div class="text-center mb-3">
@@ -54,7 +65,7 @@
         <h5 class="mb-0">Login</h5>
         <span class="d-block text-muted">Sistem Akuntansi</span>
       </div>
-
+      <Alert bind:message={alertMessage} bind:open={alertOpen} />
       <div class="form-group form-group-feedback form-group-feedback-left">
         <InputField class="form-control" name="username" type="text" placeholder="Username" autocomplete="username" />
         <div class="form-control-feedback">
