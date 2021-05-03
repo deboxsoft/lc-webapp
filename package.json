@@ -47,6 +47,7 @@
     "dropzone": "^5.7.2",
     "flatpickr": "^4.6.9",
     "graphql-subscriptions-client": "^0.16.0",
+    "initials": "^3.1.1",
     "noty": "^3.2.0-beta",
     "papaparse": "^5.3.0",
     "perfect-scrollbar": "^1.5.0",

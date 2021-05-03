@@ -69,7 +69,7 @@ export default [
     preserveEntrySignatures: false,
     input: ["src/main.ts"],
     output: {
-      // sourcemap: true,
+      sourcemap: dev,
       format: "esm",
       dir: buildDir,
       // for performance, disabling filename hashing in development
