@@ -96,6 +96,9 @@
         }
       }
       $submitted = true;
+
+      // to uppercase
+      $accountState.name = $accountState.name.toUpperCase();
       AccountSchema.parse($accountState);
       await onSubmit($accountState);
       loading = false;
