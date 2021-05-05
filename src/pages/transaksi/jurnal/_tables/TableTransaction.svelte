@@ -83,7 +83,7 @@
   }
 
   .account {
-    flex: 0 0 150px;
+    flex: 0 0 200px;
   }
 
   .amount {
