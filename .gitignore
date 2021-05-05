@@ -205,7 +205,7 @@ schema.graphql
 *.local
 .pnpm-store
 .npmrc
-.env
+#.env
 
 # yarn
 yarn-error.log
