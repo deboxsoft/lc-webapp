@@ -73,7 +73,7 @@ export default [
       format: "esm",
       dir: buildDir,
       // for performance, disabling filename hashing in development
-      chunkFileNames: `[name]${(!dev && production && "-[hash]") || ""}.js`
+      chunkFileNames: `[name].js`
     },
     plugins: [
       replace({
