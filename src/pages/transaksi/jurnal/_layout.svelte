@@ -5,14 +5,19 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableTransaction from "./_tables/TableTransaction.svelte";
   import { createTransactionContext } from "__@modules/accounting";
-  import DatePickr from "__@comps/DatePickr.svelte";
+  // import DatePickr from "__@comps/DatePickr.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { find } = createTransactionContext();
+  const { load } = createTransactionContext();
 
   let filter;
   let fetchMor;
+
+  let loading;
+  load().then(() => {
+    loading = false;
+  });
 
   function filterHandler() {
     // find({ filter });
@@ -37,8 +42,8 @@
   </div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
-      <TableTransaction bind:filter />
+      <TableTransaction bind:filter bind:loading />
     </div>
   </div>
+  <slot />
 </PageLayout>
-<slot />

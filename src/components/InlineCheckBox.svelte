@@ -12,6 +12,8 @@
   export let id = "ccs-" + Math.random().toString(36);
   /** Obtain a reference to the input HTML element */
   export let ref = null;
+  export let labelStyle = "";
+
 </script>
 
 <input
@@ -30,9 +32,11 @@
   for="{id}"
   title="{title}"
   aria-label="{$$props['aria-label']}"
-  class="label">
+  class="label"
+  style={labelStyle}
+>
 </label>
-<style lang="scss">
+<style>
   .checkbox {
     margin: -1px;
     overflow: hidden;

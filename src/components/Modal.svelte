@@ -7,9 +7,7 @@
 
   const { uiControl } = getApplicationContext();
 
-  export let onClose = () => {
-    // console.log("close")
-  };
+  export let onClose = undefined;
 
   export let onEscapeKeyDown = () => {
     // console.log("escape")
@@ -27,15 +25,14 @@
       $uiStore.modalOpen = false;
     };
   });
+
+  function closeHandler() {
+    onClose();
+  }
 </script>
 
 <Modal {onClose} {open} class={clsx("modal", open && "show")} disableBackdropClick={false} {onEscapeKeyDown}>
-  <div
-    class="modal"
-    class:show={open}
-    tabindex="-1"
-    transition:fade={{ duration: 200 }}
-  >
+  <div class="modal" class:show={open} tabindex="-1" transition:fade={{ duration: 200 }}>
     <div {...$$restProps} class={classes}>
       <div class="modal-content">
         {#if $$slots["header"] || title}
@@ -43,6 +40,9 @@
             <slot name="header">
               <h5 class="modal-title">{title}</h5>
             </slot>
+            {#if onClose}
+              <button type="button" class="close" data-dismiss="modal" on:click={closeHandler}>×</button>
+            {/if}
           </div>
         {/if}
         <div class="modal-body">

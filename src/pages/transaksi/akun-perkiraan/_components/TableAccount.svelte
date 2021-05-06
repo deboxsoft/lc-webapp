@@ -43,7 +43,7 @@
     <div class="dbx-cell type">
       {get(getAccountType(account))?.label || ""}
     </div>
-    <div class="dbx-cell -menu-list" style="width: 30px">
+    <div class="dbx-cell -menu-list">
       <MenuListAccount id={account.id} removeActDisable={haveChildren(account.id)} />
     </div>
   </div>

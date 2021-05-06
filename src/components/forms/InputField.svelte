@@ -7,6 +7,7 @@
   const dispatcher: any = createEventDispatcher();
   export let name: any;
   export const value: any = ($fields && $fields[name]) || undefined;
+  export let id = name;
   const { class: className } = $$props;
 
   let invalid = true;
@@ -15,7 +16,7 @@
   $: {
     if ($fieldsErrors && $fieldsErrors[name]) {
       invalid = true;
-      msgError = $fieldsErrors[name];
+      msgError = Array.isArray($fieldsErrors[name])? $fieldsErrors[name].length > 0 && $fieldsErrors[name][0] : $fieldsErrors[name] ;
     } else {
       invalid = false;
     }
@@ -32,6 +33,7 @@
 
 <input
   {...$$restProps}
+  {id}
   class={className}
   bind:value={$fields[name]}
   class:is-valid={$submitted && !invalid}
@@ -42,6 +44,6 @@
 />
 {#if $submitted}
   {#if invalid}
-    <p class="invalid-tooltip">{(msgError && msgError.length > 0 && msgError[0]) || ""}</p>
+    <label for={id} class="validation-invalid-label">{msgError || ""}</label>
   {/if}
 {/if}

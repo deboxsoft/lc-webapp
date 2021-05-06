@@ -1,5 +1,10 @@
 <script lang="ts">
-  import {page, redirect} from "@roxi/routify";
+  import {redirect} from "@roxi/routify";
+  import {getAuthenticationContext} from "__@modules/users"
 
-  $redirect("/transaksi/akun-perkiraan")
+  const {authenticationStore} = getAuthenticationContext();
+
+  $: if ($authenticationStore.authenticated) {
+    $redirect("/transaksi/akun-perkiraan")
+  }
 </script>

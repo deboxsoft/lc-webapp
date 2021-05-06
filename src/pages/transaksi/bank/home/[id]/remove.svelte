@@ -3,18 +3,20 @@
   import Modal from "__@comps/Modal.svelte";
   import { getBankContext } from "__@modules/accounting";
   import Loader from "__@comps/loader/Loader.svelte";
+  import { getApplicationContext } from "__@modules/app";
 
   const { remove, getBank } = getBankContext();
-  let loading = false;
+  const { loading, notify } = getApplicationContext();
 
   async function removeHandler() {
-    loading = true;
+    $loading = true;
     try {
       await remove($params.id);
-      loading = false;
+      $loading = false;
       $goto("../");
+      notify(`berhasil menghapus data bank id '${$params.id}'`);
     } catch (e) {
-      loading = false;
+      $loading = false;
     }
   }
 

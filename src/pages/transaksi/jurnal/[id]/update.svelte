@@ -2,31 +2,33 @@
 <script>
   import { params, goto } from "@roxi/routify";
   import { getAccountContext, getTransactionContext } from "__@modules/accounting";
-  import { getUserContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
   import Modal from "__@comps/Modal.svelte";
   import FormJournal from "../_forms/FormJournal.svelte";
 
   // context
-  const { user } = getUserContext();
+  const { notify, loading } = getApplicationContext();
   const { update, getTransaction } = getTransactionContext();
   const { accountStore } = getAccountContext();
 
-  let loading;
   let transaction;
   $: _transaction = getTransaction($params.id);
   $: {
     if ($_transaction) {
-      transaction = { ...$_transaction, date: new Date($_transaction.date) }
+      transaction = { ...$_transaction, date: new Date($_transaction.date) };
     }
   }
 
   async function submitHandler({ detail: values }) {
-    loading = true;
+    $loading = true;
     try {
       await update($params.id, values);
+      notify(`transaksi id '${$params.id}' berhasil diperbarui`, "success");
       $goto("../");
+      $loading = false;
     } catch (e) {
-      loading = false;
+      notify(e.message, "error");
+      $loading = false;
     }
   }
 
@@ -38,7 +40,7 @@
 {#if transaction}
   <Modal title="Update Transaksi" class="modal-lg">
     <div class="d-flex flex-column h-100">
-      <FormJournal values={transaction} {loading} on:submit={submitHandler} on:cancel={cancelHandler} />
+      <FormJournal values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} />
     </div>
   </Modal>
 {/if}

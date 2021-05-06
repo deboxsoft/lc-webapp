@@ -1,5 +1,8 @@
 <!-- routify:options preload="proximity" -->
 <script lang="ts">
+  import { redirect, layout, url, ready } from "@roxi/routify";
+  import initial from "initials";
+  import { onMount } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
   import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
   import SidebarMobileToggler from "@deboxsoft/svelte-theme-limitless/components/SidebarMobileToggler.svelte";
@@ -7,29 +10,117 @@
   import NavbarLeft from "__@root/layout/NavbarLeftLayout.svelte";
   import NavbarRight from "__@root/layout/NavbarRightLayout.svelte";
   import Footer from "__@root/layout/FooterLayout.svelte";
-  import { layout, url } from "@roxi/routify";
-  import { createAuthStore } from "__@stores/auth";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
-  import { createApplicationContext, getApplicationContext } from "__@modules/app";
   import { accountingMenus as menus } from "__@root/stores/menus";
+  import TopLoader from "__@comps/loader/TopLoader.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
+  import { createApplicationContext } from "__@modules/app";
 
   // context and store
+  const { authenticationContext, accountingContext, loading, companyContext } = createApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
-  const { authorize } = createAuthStore();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
-  createApplicationContext();
-  const { loading } = getApplicationContext();
+  const { authenticationStore } = authenticationContext;
+  const { companyStore, getCompany } = companyContext;
 
   // init loading
   let loginPage = $layout.path === "/login";
+  let mounted = false;
+  let authenticating = true;
+  let accountingLoaded = false;
+  let company;
 
-  if (!loginPage) {
-    // authorize().catch(() => $redirect("/login"));
+  onMount(() => {
+    mounted = true;
+  });
+
+  // loading data company
+  getCompany();
+
+  $: {
+    if (!authenticating && !$authenticationStore.authenticated) {
+      $redirect("./login");
+    } else if ($authenticationStore.authenticated && !accountingLoaded) {
+      accountingLoaded = true;
+      $loading = true;
+      accountingContext.load().then(() => {
+        $loading = false;
+      });
+    }
   }
+
+  authenticationContext.authenticate().then(() => {
+    if ($authenticationStore.authenticated) {
+      accountingLoaded = true;
+      accountingContext.load().then(() => {
+        authenticating = false;
+        $ready();
+      });
+    } else {
+      $ready();
+    }
+    authenticating = false;
+  });
 </script>
 
+<TopLoader loading={$loading} />
+{#if authenticating}
+  <Loader />
+{:else if $authenticationStore.authenticated}
+  <div class="main-layout">
+    <!-- Navbar -->
+    <Navbar class="-background-blue" expand="md" isDark>
+      <div class="navbar-brand wmin-200">
+        <a href={$url("/")} class="d-inline-block">{initial($companyStore.name)?.toUpperCase() || "LC"} | {$companyStore.unit || ""}</a>
+      </div>
+      <div class="d-md-none">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
+          <i class="icon-tree5" />
+        </button>
+        <button
+          class="navbar-toggler sidebar-mobile-main-toggle"
+          type="button"
+          on:click|preventDefault={toggleShowMobileSidebar}
+        >
+          <i class="icon-paragraph-justify3" />
+        </button>
+      </div>
+      <div class="collapse navbar-collapse" id="navbar-mobile">
+        <NavbarLeft showToggleMenu />
+        <span class="ml-md-auto mr-md-3">&nbsp;</span>
+        <NavbarRight />
+      </div>
+    </Navbar>
+    <!-- close Navbar -->
+    <!--  page content-->
+    <div class="page-content">
+      <!-- sidebar -->
+      <Sidebar isLight expand="md">
+        <SidebarMobileToggler onToggleShowMobileSidebar={toggleShowMobileSidebar} />
+        <div class="card card-sidebar-mobile" slot="sidebar-content">
+          <SidebarContent {menus} />
+        </div>
+      </Sidebar>
+      <!-- close sidebar -->
+      <slot />
+    </div>
+    <!-- footer -->
+    <div class="footer navbar navbar-expand-lg navbar-light">
+      <Footer />
+    </div>
+  </div>
+{:else}
+  <slot />
+{/if}
+
+<!-- close footer -->
 <style lang="scss" global>
+  #debox-app {
+    display: flex;
+    flex: 1;
+  }
+
   .navbar.-background-blue {
     background-color: #205081;
   }
@@ -61,51 +152,10 @@
   .main-layout {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    flex: 1;
   }
 
   .footer {
     border-top: 1px solid rgba(0, 0, 0, 0.125);
   }
 </style>
-
-<div class="main-layout">
-  <!-- Navbar -->
-  <Navbar class="-background-blue" expand="md" isDark>
-    <div class="navbar-brand wmin-200"><a href={$url('/')} class="d-inline-block">LC | Accounting System</a></div>
-    <div class="d-md-none">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
-        <i class="icon-tree5" />
-      </button>
-      <button
-        class="navbar-toggler sidebar-mobile-main-toggle"
-        type="button"
-        on:click|preventDefault={toggleShowMobileSidebar}>
-        <i class="icon-paragraph-justify3" />
-      </button>
-    </div>
-    <div class="collapse navbar-collapse" id="navbar-mobile">
-      <NavbarLeft showToggleMenu />
-      <span class="ml-md-auto mr-md-3">&nbsp;</span>
-      <NavbarRight />
-    </div>
-  </Navbar>
-  <!-- close Navbar -->
-  <!--  page content-->
-  <div class="page-content">
-    <!-- sidebar -->
-    <Sidebar isLight expand="md">
-      <SidebarMobileToggler onToggleShowMobileSidebar={toggleShowMobileSidebar} />
-      <div class="card card-sidebar-mobile" slot="sidebar-content">
-        <SidebarContent {menus} />
-      </div>
-    </Sidebar>
-    <!-- close sidebar -->
-    <slot />
-  </div>
-  <!-- footer -->
-  <div class="footer navbar navbar-expand-lg navbar-light">
-    <Footer />
-  </div>
-</div>
-<!-- close footer -->

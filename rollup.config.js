@@ -21,7 +21,7 @@ const createPreprocess = require("../../svelte.config").createPreprocess;
 const { distDir } = getConfig(); // use Routify's distDir for SSOT
 const assetsDir = "assets";
 const production = process.env.NODE_ENV === "production";
-const buildDir = production ? `dist/prod` : `dist/build`;
+const buildDir = "dist/build";
 const isNollup = !!process.env.NOLLUP;
 const mode = process.env.ROLLUP_WATCH && "development";
 const dev = mode === "development";
@@ -46,7 +46,7 @@ const serve = () => ({
   writeBundle: async () => {
     const options = {
       assetsDir: [assetsDir, distDir],
-      entrypoint: `${assetsDir}/__app.html`,
+      entrypoint: `${assetsDir}/index.html`,
       script: `${buildDir}/main.js`
     };
     spassr({ ...options, port: 5000 });
@@ -69,11 +69,11 @@ export default [
     preserveEntrySignatures: false,
     input: ["src/main.ts"],
     output: {
-      // sourcemap: true,
+      sourcemap: dev,
       format: "esm",
       dir: buildDir,
       // for performance, disabling filename hashing in development
-      chunkFileNames: `[name]${(!dev && production && "-[hash]") || ""}.js`
+      chunkFileNames: `[name].js`
     },
     plugins: [
       replace({
@@ -120,7 +120,7 @@ export default [
       },
       injectManifest({
         globDirectory: assetsDir,
-        globPatterns: ["**/*.{js,css,svg}", "__app.html"],
+        globPatterns: ["**/*.{js,css,svg}", "index.html"],
         swSrc: `src/sw.js`,
         swDest: `dist/serviceworker.js`,
         maximumFileSizeToCacheInBytes: 10000000, // 10 MB,

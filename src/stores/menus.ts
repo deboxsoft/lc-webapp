@@ -70,7 +70,7 @@ export const accountingMenus: MenuList = [
       //   url: "/pengikhtisaran/aktiva-tetap"
       // }
     ]
-  }
+  },
   // {
   //   label: "Persediaan [add-on]",
   //   url: "/persediaan",
@@ -135,9 +135,9 @@ export const accountingMenus: MenuList = [
   //     }
   //   ]
   // },
-  // {
-  //   label: "Pengaturan",
-  //   url: "/settings",
-  //   icon: "far fa-cog fa-lg"
-  // }
+  {
+    label: "Pengaturan",
+    url: "/settings",
+    icon: "icon-cog3"
+  }
 ];

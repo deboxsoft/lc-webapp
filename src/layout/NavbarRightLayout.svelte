@@ -1,12 +1,12 @@
 <script lang="ts">
   import UserNavbarItem from "./UserNavbarItem.svelte";
-  import { getAuthStore } from "__@stores/auth";
+  import { getAuthenticationContext } from "__@modules/users";
 
-  const { profile } = getAuthStore();
+  const { authenticationStore } = getAuthenticationContext();
 </script>
 
 <ul class="navbar-nav">
-  {#if $profile}
-    <UserNavbarItem profileName={$profile.username} />
+  {#if $authenticationStore.authenticated}
+    <UserNavbarItem profileName={$authenticationStore.username} />
   {/if}
 </ul>

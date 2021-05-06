@@ -19,7 +19,7 @@
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "buku-besar" });
   const { getGeneralLedger } = createGeneralLedgerContext();
-  const { accountStore, getAccount, getAccountChildren } = getAccountContext();
+  const { accountStore, getAccount, getAccountLeaf } = getAccountContext();
   const { currentDateStore } = getPreferenceContext();
 
 
@@ -29,12 +29,13 @@
   let endDate: Date = new Date();
   let startDate: Date = startOfMonth(endDate);
   let account;
-  let accountsChild;
+
+  $: accounts = getAccountLeaf();
 
   $: {
-    if ($accountStore.length > 0) {
+    if ($accounts.length > 0) {
       if (!accountIds) {
-        setAccount($accountStore[0]);
+        // setAccount($accountStore[0]);
       }
       if (accountIds) {
         fetchGeneralLedger();
@@ -83,7 +84,7 @@
 <PageLayout breadcrumb={[]}>
   <div class="header-elements" slot="header-elements">
     <div class="list-icons">
-      <AccountSelect id="account" name="account" on:change={accountChangeHandler} accountId={account.id} />
+      <AccountSelect style="width: 350px" id="account" name="account" on:change={accountChangeHandler} accountStore={accounts} accountId={account && account.id} allowEmpty />
       <DatePickr
         id="date"
         name="date"
@@ -92,6 +93,7 @@
         on:close={dateChangeHandler}
         confirmEnable
         defaultDate={[startDate, endDate]}
+        styleWrapper="width: 250px"
       />
       <!--          <a class="list-icons-item" data-action="reload" />-->
     </div>

@@ -66,6 +66,7 @@
       cursor: pointer;
 
       .dbx-cell {
+        font-size: 0.9em;
         border-top: 1px solid #ddd;
       }
     }

@@ -5,7 +5,7 @@ import { ApplicationContext, getApplicationContext } from "../app";
 
 export const createPreferenceContext = (
   { fetch, notify, env, subscriptionClient }: ApplicationContext = getApplicationContext()
-): stores.PreferenceAccountingContext => {
+): PreferenceAccountingContext => {
   const preferenceService = new graphql.PreferenceAccountingGraphqlClient({ fetch, subscriptionClient });
   return stores.createPreferenceAccountingContext({
     preferenceService,

@@ -6,16 +6,15 @@
   import SidebarUser from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser.svelte";
   import HomeIcon from "__@comps/icons/Home.svelte";
   import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
-  import { getAuthStore } from "__@stores/auth";
+  import { getAuthenticationContext } from "__@modules/users";
 
+  const { authenticationStore } = getAuthenticationContext();
   let scrollbar;
   let elRef;
 
   export let menus;
 
   let collapse: boolean = false;
-
-  const { profile } = getAuthStore();
 </script>
 
 <!-- Header -->
@@ -38,8 +37,14 @@
 </div>
 
 {#if !collapse}
-  {#if $profile}
-<!--    <SidebarUser profile={{ name: "demo", role: "admin" }} />-->
+  {#if $authenticationStore.authenticated}
+<!--    <SidebarUser-->
+<!--      profile={{-->
+<!--        name: $authenticationStore.profile.name,-->
+<!--        role: $authenticationStore.profile.role ? $authenticationStore.profile.role[0] : "",-->
+<!--        avatar: $authenticationStore.avatar || ""-->
+<!--      }}-->
+<!--    />-->
   {/if}
   <!-- Main navigation -->
   <div class="card-body p-0">
@@ -49,16 +54,17 @@
         <Icon component={MenuIcon} />
       </li>
       <!-- Dashboard -->
-<!--      <AccordionItem href={$url("/")}>-->
-<!--        <Icon component={HomeIcon} />-->
-<!--        <span> Dashboard</span>-->
-<!--      </AccordionItem>-->
+      <!--      <AccordionItem href={$url("/")}>-->
+      <!--        <Icon component={HomeIcon} />-->
+      <!--        <span> Dashboard</span>-->
+      <!--      </AccordionItem>-->
 
       {#each menus as item}
         <AccordionItem
           expanded={!!item.children && $isActive(item.url)}
           let:expanded={_expand}
-          target="_self"
+          toggleClass={$isActive(item.url) && "active"}
+          target={(item.children && !item.url) && "_self" || undefined}
           hasChildren={!!item.children}
           href={(!item.children && item.url) || undefined}
         >

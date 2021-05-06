@@ -1,20 +1,17 @@
 <script>
-  import { goto, params } from "@roxi/routify";
+  import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
+  import RoleForm from "./_form.svelte";
 
-  $: url = $params.backUrl || "./"
-
-  async function saveHandler() {
-    // await save(accountId);
-    $goto(url, {}, true);
-  }
+  let saveHandler;
 
   function closeHandler() {
-    $goto(url, {}, true);
+    $goto("./");
   }
 </script>
 
-<Modal class="modal-lg" open title="Membuat User">
+<Modal class="modal-full" open title="Membuat role" onClose={closeHandler}>
+  <RoleForm  bind:saveHandler onSaved={() => $goto("./")} />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
     <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>

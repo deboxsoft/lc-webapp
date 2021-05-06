@@ -17,6 +17,7 @@
   export let validateField: any = undefined;
   export let submittedEnable: boolean = false;
   export let checkValidateFirst: boolean = false;
+  export let feedbackValidateDisable: boolean = false;
   export let isValid: Writable<boolean> = writable(false);
 
   const { submitted: _submitted, fieldsErrors: _fieldsErrors, fields: _fields } = createFormContext({
@@ -42,15 +43,16 @@
     }
   })
 
-  function submitHandler() {
+  export function submitHandler() {
     try {
-      $submitted = true;
+      !feedbackValidateDisable && ($submitted = true);
       const _values = validate();
       dispatch("submit", _values);
     }catch (e) {
       if (e instanceof ZodError) {
-        notify(`${e.errors[0].path[0]}: ${e.errors[0].message}`, "error");
+        notify(`kesalahan validasi`, "error");
       }
+      throw e;
     }
   }
 

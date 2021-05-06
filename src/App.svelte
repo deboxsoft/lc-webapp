@@ -1,4 +1,5 @@
 <script>
+  import {onMount} from "svelte";
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
   import { createUIContext as createContextStore } from "__@root/stores/ui";
@@ -27,11 +28,10 @@
       }
     };
   };
-
   // @ts-ignore
   setTimeout(() => window.routify.inBrowser);
 </script>
 
-<div use:BodyClass={$uiStore}>
+<div use:BodyClass={$uiStore} style="display: flex; flex: 1">
   <Router {routes} />
 </div>

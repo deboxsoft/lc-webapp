@@ -2,13 +2,22 @@
 <script>
   import { params } from "@roxi/routify";
   import { getBankContext } from "__@modules/accounting";
+  import { getApplicationContext } from "__@modules/app";
 
   const { update, getBank } = getBankContext();
+  const { notify, loading } = getApplicationContext();
 
   $: bank = getBank($params.id);
 
   async function onSubmit({ id, ...values }) {
-    await update($params.id, values);
+    try {
+      $loading = true;
+      await update($params.id, values);
+      notify("data berhasil diperbarui", "success");
+      $loading = false;
+    } catch (e) {
+      $loading = false;
+      notify(e.message, "error");
+    }
   }
 </script>
-

@@ -1,9 +1,7 @@
 <script>
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
-  import { getAccountContext } from "__@modules/accounting";
 
-  const { remove, update } = getAccountContext();
   export let id;
   export let removeActDisable = false;
 </script>

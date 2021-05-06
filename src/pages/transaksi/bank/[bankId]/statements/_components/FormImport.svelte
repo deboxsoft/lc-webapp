@@ -76,7 +76,7 @@
       </DropZone>
 <!--    </div>-->
     {:else}
-    <TableStatementBank preview bankStatementList={fileData} bind:itemsSelected />
+    <TableStatementBank preview bankStatementList={$fileData} bind:itemsSelected bind:errors />
   {/if}
 
 <!--</div>-->

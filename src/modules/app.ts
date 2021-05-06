@@ -6,8 +6,8 @@ import { setContext, getContext } from "svelte";
 import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
-import { registerAccountingContext } from "./accounting";
-import { createUserContext } from "./users";
+import { registerAccountingContext, createCompanyContext } from "./accounting";
+import { createAuthenticationContext } from "./users";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
 const defaultConfig: Partial<NotifyConfig> = {
@@ -31,21 +31,44 @@ const notify = (message: string, type?: TypeNoty, config: NotifyConfig = {}) => 
   new Notify({ ...defaultConfig, ...config, ...{ text: message, type } }).show();
 };
 
-export const createApplicationContext = () => {
+export const createBaseApplicationContext = () => {
   let loading = writable(true);
   const { client, fetch } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
   const subscriptionClient = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
+
   const context: ApplicationContext = { client, fetch, notify, loading, env, uiControl, subscriptionClient };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
+  return {
+    client,
+    fetch,
+    notify,
+    loading,
+    env,
+    uiControl,
+    subscriptionClient
+  };
+};
 
+export const createApplicationContext = () => {
+  const { loading, fetch, env, notify, subscriptionClient, client, uiControl } = createBaseApplicationContext();
   // register service
-  const promiseRegisterAccounting = registerAccountingContext({ fetch, notify, env, loading, subscriptionClient });
-  createUserContext();
-  return Promise.all([promiseRegisterAccounting]).then(() => {
-    loading.update(() => false);
-  });
+  const authenticationContext = createAuthenticationContext({ fetch, notify, env, loading, subscriptionClient });
+  const accountingContext = registerAccountingContext({ fetch, notify, env, loading, subscriptionClient });
+  const companyContext = createCompanyContext({ fetch, env, notify, loading, subscriptionClient });
+  return {
+    client,
+    fetch,
+    notify,
+    loading,
+    env,
+    uiControl,
+    subscriptionClient,
+    accountingContext,
+    authenticationContext,
+    companyContext
+  };
 };
 
 export const getApplicationContext = () => {

@@ -2,7 +2,9 @@
 <script>
   import FormAccount from "./_components/FormAccount.svelte";
   import { getAccountContext } from "__@modules/accounting";
+  import { getApplicationContext } from "__@modules/app";
 
+  const { notify, loading } = getApplicationContext();
   const { create } = getAccountContext();
 
   async function onSubmit(values) {
@@ -12,7 +14,15 @@
       delete values.startBalance;
       delete values.parentId;
     }
-    await create(values);
+    try {
+      $loading = true;
+      await create(values);
+      notify(`kode akun '${values.id}' berhasil disimpan`, "success");
+      $loading = false;
+    } catch (e) {
+      notify(e.message, "error");
+      $loading = false;
+    }
   }
 </script>
 

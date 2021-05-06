@@ -1,11 +1,20 @@
+<!-- routify:options preload="proximity" -->
 <script lang="ts">
-  // import { authStore } from "__@root/stores/auth";
+  import { onMount } from "svelte";
   import { redirect } from "@roxi/routify";
-  // const { user } = authStore;
+  import { getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
+
+  const { authenticationStore } = getAuthenticationContext();
+  const { loading } = getApplicationContext();
+
+  onMount(() => {
+    $loading = false;
+  });
   /**
    *  We don't want the login page to visible to logged in user, so we redirect them
    **/
-  // $: if ($user) $redirect("../app");
+  $: if ($authenticationStore?.authenticated) $redirect("../");
 </script>
 
 <!-- Page content -->
