@@ -47,7 +47,7 @@
 {:else}
   <table class="table text-nowrap">
     <thead>
-      <tr role="row">
+      <tr>
         <th>Akun Perkiraan</th>
         <th class="text-center" colspan="3">Saldo</th>
       </tr>
