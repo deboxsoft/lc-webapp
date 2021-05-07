@@ -10,7 +10,7 @@
   export let onClose = undefined;
 
   export let onEscapeKeyDown = () => {
-    // console.log("escape")
+    closeHandler();
   };
   let { class: className } = $$props;
   $: classes = clsx("modal-dialog modal-dialog-centered", className);
@@ -27,7 +27,7 @@
   });
 
   function closeHandler() {
-    onClose();
+    onClose && onClose();
   }
 </script>
 

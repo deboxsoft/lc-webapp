@@ -9,9 +9,15 @@
   <td class="d-xl-table-cell">{label}</td>
   <td class="d-table-cell d-xl-none">&nbsp;</td>
   <td class="d-table-cell d-md-none">&nbsp;</td>
-  <td class="text-right" style="width: 200px">
+  <td class="text-right balance">
     <CellRp value={balance} />
   </td>
   <td class="d-none d-md-table-cell">&nbsp;</td>
   <td class="d-none d-xl-table-cell">&nbsp;</td>
 </tr>
+
+<style>
+  .balance {
+    width: 200px;
+  }
+</style>

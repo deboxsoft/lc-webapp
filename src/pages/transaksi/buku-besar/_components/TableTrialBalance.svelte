@@ -1,32 +1,13 @@
-<script lang="ts">
+<script>
   import { lightFormat, parse } from "date-fns";
   import CellRp from "__@comps/CellRp.svelte";
   import { getGeneralLedgerContext } from "__@modules/accounting";
   import Table from "__@comps/Table.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
 
   const { generalLedgerStore } = getGeneralLedgerContext();
-
-  let statements;
-  export let loading;
-  // recalculate saldo
-  $: {
-    // if (Array.isArray($generalLedgerStore)) {
-      // let _lastBalance = 0;
-      statements = $generalLedgerStore;
-      //  .reduce((result, _) => {
-      //   const balance = _lastBalance + _.balance;
-      //   _lastBalance = balance;
-      //   return [...result, { ..._, balance }];
-      // }, []);
-    // }
-  }
 </script>
 
-{#if loading}
-  <Loader />
-{:else}
-  <Table items={statements} let:item={generalLedger}>
+  <Table items={$generalLedgerStore} let:item={generalLedger}>
     <div class="dbx-thead" slot="header">
       <div class="dbx-cell date">Tanggal</div>
       <div class="dbx-cell no">No Transaksi</div>
@@ -68,7 +49,6 @@
       </div>
     </div>
   </Table>
-{/if}
 
 <style lang="scss">
   .no {
