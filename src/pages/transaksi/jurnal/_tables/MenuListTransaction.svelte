@@ -17,6 +17,7 @@
 
   $: id = transaction.id;
 
+
   async function approveHandler() {
     $loading = true;
     if (await approve([id])) {
