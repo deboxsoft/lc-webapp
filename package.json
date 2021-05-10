@@ -28,7 +28,7 @@
     "@deboxsoft/svelte-components-base": "^0.0.12",
     "@deboxsoft/svelte-core": "^0.0.0-9",
     "@deboxsoft/svelte-forms": "^0.0.3-19",
-    "@deboxsoft/svelte-icons": "^0.0.4",
+    "@deboxsoft/svelte-icons": "^1.0.1",
     "@deboxsoft/svelte-theme-limitless": "^0.0.6-5",
     "@deboxsoft/svelte-virtual-list": "^1.6.7",
     "@deboxsoft/users-api": "~1.2.0-0",
