@@ -3,6 +3,7 @@
   import CellRp from "__@comps/CellRp.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAccountContext } from "__@modules/accounting";
+  import MenuListGeneralLedger from "./MenuListGeneralLedger.svelte";
 
   const { loading } = getApplicationContext();
   const { getAccountsTree } = getAccountContext();
@@ -33,6 +34,7 @@
       <tr>
         <th colspan="2">Akun Perkiraan</th>
         <th colspan="2" class="text-center">Saldo</th>
+        <th class="dbx-cell -menu-list" />
       </tr>
     </thead>
     <tbody>
@@ -42,6 +44,9 @@
           <td />
           <td class="text-right">
             <CellRp value={isBalanceFixed ? account.balanceFixed : account.balance} />
+          </td>
+          <td>
+            <MenuListGeneralLedger isParent />
           </td>
         </tr>
         {#if account.children}
