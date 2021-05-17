@@ -29,14 +29,10 @@
   let alertOpen;
   let submitted;
 
-  $: console.log(alertMessage, alertOpen, "login");
-
   async function submitHandler() {
     try {
       $loading = true;
-      console.log("login");
       authenticationStore = await login({ username: $fields.username }, $fields.password);
-      console.log("after login");
       $goto("/");
       $loading = false;
     } catch (e) {

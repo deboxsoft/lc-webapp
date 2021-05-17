@@ -1,13 +1,20 @@
 <script>
+  import { goto } from "@roxi/routify";
   import Table from "__@comps/Table.svelte";
   import { getUserContext } from "__@modules/users";
   import MenuUserList from "./_MenuUserList.svelte";
   import { getApplicationContext } from "__@modules/app";
   import Loader from "__@comps/loader/Loader.svelte";
   import GroupName from "../group/_groupName.svelte";
+  import { createAclContext } from "../_acl-context";
 
+  const { readUserGranted } = createAclContext();
   const { loading } = getApplicationContext();
   const { userStore, groupStore } = getUserContext();
+
+  if (!readUserGranted) {
+    $goto("/access-denied");
+  }
   function getGroup(id) {
     const i = $groupStore.findIndex((_) => _.id === id);
     console.log(id, i, $groupStore);

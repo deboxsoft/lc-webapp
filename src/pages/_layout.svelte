@@ -2,7 +2,7 @@
 <script lang="ts">
   import { redirect, layout, url, ready } from "@roxi/routify";
   import initial from "initials";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
   import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
   import SidebarMobileToggler from "@deboxsoft/svelte-theme-limitless/components/SidebarMobileToggler.svelte";
@@ -12,7 +12,7 @@
   import Footer from "__@root/layout/FooterLayout.svelte";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
-  import { accountingMenus as menus } from "__@root/stores/menus";
+  import { getMenus } from "__@root/stores/menus";
   import TopLoader from "__@comps/loader/TopLoader.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import { createApplicationContext } from "__@modules/app";
@@ -21,15 +21,16 @@
   const { authenticationContext, accountingContext, loading, companyContext } = createApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
-  const { authenticationStore } = authenticationContext;
+  const { authenticationStore, getAccessControl } = authenticationContext;
   const { companyStore, getCompany } = companyContext;
 
   // init loading
   let loginPage = $layout.path === "/login";
   let mounted = false;
-  let authenticating = true;
+  let submitting = true;
   let accountingLoaded = false;
   let company;
+  let menus = [];
 
   onMount(() => {
     mounted = true;
@@ -39,40 +40,46 @@
   getCompany();
 
   $: {
-    if (!authenticating && !$authenticationStore.authenticated) {
-      $redirect("./login");
-    } else if ($authenticationStore.authenticated && !accountingLoaded) {
-      accountingLoaded = true;
-      $loading = true;
-      accountingContext.load().then(() => {
-        $loading = false;
+    if (!submitting && !$authenticationStore.authenticated) {
+      tick().then(() => {
+        $redirect("./login");
       });
+    } else if (!submitting && $authenticationStore.authenticated) {
+      menus = getMenus(authenticationContext);
+      if (!accountingLoaded) {
+        accountingLoaded = true;
+        accountingContext
+          .load()
+          .then(() => {
+            $loading = false;
+            $ready();
+          })
+          .catch((e) => {
+            console.error(e);
+            $loading = false;
+            $ready();
+          });
+      }
+      $loading = false;
     }
   }
 
   authenticationContext.authenticate().then(() => {
-    if ($authenticationStore.authenticated) {
-      accountingLoaded = true;
-      accountingContext.load().then(() => {
-        authenticating = false;
-        $ready();
-      });
-    } else {
-      $ready();
-    }
-    authenticating = false;
+    submitting = false;
   });
 </script>
 
 <TopLoader loading={$loading} />
-{#if authenticating}
+{#if submitting}
   <Loader />
 {:else if $authenticationStore.authenticated}
   <div class="main-layout">
     <!-- Navbar -->
     <Navbar class="-background-blue" expand="md" isDark>
       <div class="navbar-brand wmin-200">
-        <a href={$url("/")} class="d-inline-block">{initial($companyStore.name)?.toUpperCase() || "LC"} | {$companyStore.unit || ""}</a>
+        <a href={$url("/")} class="d-inline-block"
+          >{initial($companyStore.name)?.toUpperCase() || "LC"} | {$companyStore.unit || ""}</a
+        >
       </div>
       <div class="d-md-none">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
@@ -128,6 +135,19 @@
   .dbx-theme {
     .dbx-icon {
       font-size: 1rem;
+    }
+
+    .table {
+      .list-icons-item .dbx-icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      tr .-menu-list {
+        text-align: center;
+        width: 30px;
+        padding: 0;
+      }
     }
   }
 

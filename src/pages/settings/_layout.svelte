@@ -1,15 +1,16 @@
 <!--routify:options title="Pengaturan"-->
-<script lang="ts">
+<script>
   import { url, isActive } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import { createUserContext, createAccessControlContext } from "__@modules/users";
+  import { createUserContext, createAccessControlContext, getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Loader from "__@comps/loader/Loader.svelte";
 
   const { find, findGroup } = createUserContext();
   const { load } = createAccessControlContext();
   const { loading } = getApplicationContext();
+  const authContext = getAuthenticationContext();
 
   const boot = () => {
     $loading = true;
@@ -44,30 +45,34 @@
             Profil
           </a>
         </li>
-        <li class="nav-item">
-          <a href={$url("./application")} class="navbar-nav-link" class:active={$isActive("./application")}>
-            <i class="icon-wrench3 mr-2" />
-            Aplikasi
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href={$url("./users")} class="navbar-nav-link" class:active={$isActive("./users")}>
-            <i class="icon-user mr-2" />
-            User
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href={$url("./group")} class="navbar-nav-link" class:active={$isActive("./group")}>
-            <i class="icon-users4 mr-2" />
-            User Group
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href={$url("./role")} class="navbar-nav-link" class:active={$isActive("./role")}>
-            <i class="icon-user-lock mr-2" />
-            Role
-          </a>
-        </li>
+        {#if authContext.getQuery().read("setting").granted}
+          <li class="nav-item">
+            <a href={$url("./application")} class="navbar-nav-link" class:active={$isActive("./application")}>
+              <i class="icon-wrench3 mr-2" />
+              Aplikasi
+            </a>
+          </li>
+        {/if}
+        {#if authContext.getQuery().read("user").granted}
+          <li class="nav-item">
+            <a href={$url("./users")} class="navbar-nav-link" class:active={$isActive("./users")}>
+              <i class="icon-user mr-2" />
+              User
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href={$url("./group")} class="navbar-nav-link" class:active={$isActive("./group")}>
+              <i class="icon-users4 mr-2" />
+              User Group
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href={$url("./role")} class="navbar-nav-link" class:active={$isActive("./role")}>
+              <i class="icon-user-lock mr-2" />
+              Role
+            </a>
+          </li>
+        {/if}
       </ul>
       <ul class="navbar-nav ml-xl-auto">
         {#if $isActive("./index")}

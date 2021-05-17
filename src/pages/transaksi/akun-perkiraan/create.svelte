@@ -3,7 +3,12 @@
   import FormAccount from "./_components/FormAccount.svelte";
   import { getAccountContext } from "__@modules/accounting";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "./_acl-context";
 
+  const { createGranted } = getAclContext();
+  if (!createGranted) {
+    $goto("/access-denied");
+  }
   const { notify, loading } = getApplicationContext();
   const { create } = getAccountContext();
 

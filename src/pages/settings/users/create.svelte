@@ -4,7 +4,12 @@
   import UserForm from "./_form.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../_acl-context";
 
+  const { createUserGranted } = getAclContext();
+  if (!createUserGranted) {
+    $goto("/access-denied");
+  }
   const { create } = getUserContext();
   const { notify, loading } = getApplicationContext();
 

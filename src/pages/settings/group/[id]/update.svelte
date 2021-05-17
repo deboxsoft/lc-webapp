@@ -4,7 +4,12 @@
   import GroupForm from "../_form.svelte";
   import Modal from "__@comps/Modal.svelte";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../../_acl-context";
 
+  const { updateUserGranted } = getAclContext();
+  if (!updateUserGranted) {
+    $goto("/access-denied");
+  }
   let fields;
   let user;
   let schema;

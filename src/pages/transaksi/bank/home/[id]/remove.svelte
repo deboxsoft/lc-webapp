@@ -4,7 +4,12 @@
   import { getBankContext } from "__@modules/accounting";
   import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../../_acl-context";
 
+  const { removeGranted } = getAclContext();
+  if (!removeGranted) {
+    $goto("/access-denied");
+  }
   const { remove, getBank } = getBankContext();
   const { loading, notify } = getApplicationContext();
 

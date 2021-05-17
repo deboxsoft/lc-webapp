@@ -38,20 +38,22 @@
 
 {#if !collapse}
   {#if $authenticationStore.authenticated}
-<!--    <SidebarUser-->
-<!--      profile={{-->
-<!--        name: $authenticationStore.profile.name,-->
-<!--        role: $authenticationStore.profile.role ? $authenticationStore.profile.role[0] : "",-->
-<!--        avatar: $authenticationStore.avatar || ""-->
-<!--      }}-->
-<!--    />-->
+    <!--    <SidebarUser-->
+    <!--      profile={{-->
+    <!--        name: $authenticationStore.profile.name,-->
+    <!--        role: $authenticationStore.profile.role ? $authenticationStore.profile.role[0] : "",-->
+    <!--        avatar: $authenticationStore.avatar || ""-->
+    <!--      }}-->
+    <!--    />-->
   {/if}
   <!-- Main navigation -->
   <div class="card-body p-0">
     <Accordion class="nav-sidebar">
       <li class="nav-item-header mt-0">
         <div class="text-uppercase font-size-xs line-height-xs">Main</div>
-        <Icon component={MenuIcon} />
+        <!--        <div style="width: 20px; height: 20px;">-->
+        <!--          <MenuIcon />-->
+        <!--        </div>-->
       </li>
       <!-- Dashboard -->
       <!--      <AccordionItem href={$url("/")}>-->
@@ -60,40 +62,44 @@
       <!--      </AccordionItem>-->
 
       {#each menus as item}
-        <AccordionItem
-          expanded={!!item.children && $isActive(item.url)}
-          let:expanded={_expand}
-          toggleClass={$isActive(item.url) && "active"}
-          target={(item.children && !item.url) && "_self" || undefined}
-          hasChildren={!!item.children}
-          href={(!item.children && item.url) || undefined}
-        >
-          {#if item.icon && typeof item.icon === "string"}
-            <i class={item.icon} />
-          {:else if item.icon}
-            <Icon component={item.icon} />
-          {/if}
-          <span>{item.label}</span>
-          <ul
-            slot="menu"
-            style={_expand ? "display: block;" : ""}
-            class="nav nav-group-sub"
-            data-submenu-title={item.label}
+        {#if item.show}
+          <AccordionItem
+            expanded={!!item.children && $isActive(item.url)}
+            let:expanded={_expand}
+            toggleClass={$isActive(item.url) && "active"}
+            target={(item.children && !item.url && "_self") || undefined}
+            hasChildren={!!item.children}
+            href={(!item.children && item.url) || undefined}
           >
-            {#each item.children as subItem}
-              <li class="nav-item">
-                <a class="nav-link" class:active={$isActive(subItem.url)} href={$url(subItem.url)}>
-                  {#if subItem.icon && typeof subItem.icon === "string"}
-                    <i class={subItem.icon} />
-                  {:else if subItem.icon}
-                    <Icon component={subItem.icon} />
-                  {/if}
-                  <span>{subItem.label}</span></a
-                >
-              </li>
-            {/each}
-          </ul>
-        </AccordionItem>
+            {#if item.icon && typeof item.icon === "string"}
+              <i class={item.icon} />
+            {:else if item.icon}
+              <Icon component={item.icon} />
+            {/if}
+            <span>{item.label}</span>
+            <ul
+              slot="menu"
+              style={_expand ? "display: block;" : ""}
+              class="nav nav-group-sub"
+              data-submenu-title={item.label}
+            >
+              {#each item.children as subItem}
+                {#if subItem.show}
+                  <li class="nav-item">
+                    <a class="nav-link" class:active={$isActive(subItem.url)} href={$url(subItem.url)}>
+                      {#if subItem.icon && typeof subItem.icon === "string"}
+                        <i class={subItem.icon} />
+                      {:else if subItem.icon}
+                        <Icon component={subItem.icon} />
+                      {/if}
+                      <span>{subItem.label}</span></a
+                    >
+                  </li>
+                {/if}
+              {/each}
+            </ul>
+          </AccordionItem>
+        {/if}
       {/each}
     </Accordion>
   </div>

@@ -1,14 +1,22 @@
 <!--routify:options title="Akun Perkiraan"-->
 <script lang="ts">
-  import { url } from "@roxi/routify";
+  import { url, goto } from "@roxi/routify";
   import { getAccountContext } from "__@modules/accounting";
+  import { getApplicationContext } from "__@modules/app";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import TableAccount from "./_components/TableAccount.svelte";
   import { sortUtilsFunc } from "__@root/utils";
+  import { createAclContext } from "./_acl-context";
 
+  const { readGranted } = createAclContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
   const { accountStore, getAccountType } = getAccountContext();
+  const { loading } = getApplicationContext();
+
+  if (!readGranted) {
+    $goto("/access-denied");
+  }
 
   setBreadcrumbContext({ path: $url("./"), title: "akun-perkiraan" });
   let accounts;

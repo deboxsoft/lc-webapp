@@ -1,11 +1,15 @@
 <script>
   import Table from "__@comps/Table.svelte";
   import { getUserContext } from "__@modules/users";
-  import { url } from "@roxi/routify";
+  import { url, goto } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import { createAclContext } from "../_acl-context";
 
+  const { readUserGranted } = createAclContext();
   const { groupStore, findGroup } = getUserContext();
-
+  if (!readUserGranted) {
+    $goto("/access-denied");
+  }
 </script>
 
 <div class="card d-flex flex-1 flex-column">

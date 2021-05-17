@@ -3,9 +3,14 @@
   import Modal from "__@comps/Modal.svelte";
   import { getAccountContext } from "__@modules/accounting";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../_acl-context";
 
   const { remove } = getAccountContext();
   const { notify, loading } = getApplicationContext();
+  const { removeGranted } = getAclContext();
+  if (!removeGranted) {
+    $goto("/access-denied");
+  }
 
   let accountId;
 
