@@ -32,13 +32,46 @@ const notify = (message: string, type?: TypeNoty, config: NotifyConfig = {}) => 
 };
 
 export const createBaseApplicationContext = () => {
-  let loading = writable(true);
+  // let loadingStore = writable(true);
+  const createLoadingStore = () => {
+    let countLoading = 1;
+    const { subscribe, set, update } = writable(true);
+    return {
+      subscribe,
+      update,
+      set: (val) => {
+        let prev;
+        subscribe((_) => {
+          prev = _;
+        });
+        if (val) {
+          countLoading++;
+          if (!prev) {
+            set(true);
+          }
+        } else {
+          countLoading = countLoading > 0 ? countLoading - 1 : 0;
+          if (prev && countLoading === 0) {
+            set(false);
+          }
+        }
+      }
+    };
+  };
+  const loading = createLoadingStore();
   const { client, fetch } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
   const subscriptionClient = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
-
-  const context: ApplicationContext = { client, fetch, notify, loading, env, uiControl, subscriptionClient };
+  const context: ApplicationContext = {
+    client,
+    fetch,
+    notify,
+    loading,
+    env,
+    uiControl,
+    subscriptionClient
+  };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   return {
     client,
@@ -54,7 +87,13 @@ export const createBaseApplicationContext = () => {
 export const createApplicationContext = () => {
   const { loading, fetch, env, notify, subscriptionClient, client, uiControl } = createBaseApplicationContext();
   // register service
-  const authenticationContext = createAuthenticationContext({ fetch, notify, env, loading, subscriptionClient });
+  const authenticationContext = createAuthenticationContext({
+    fetch,
+    notify,
+    env,
+    loading,
+    subscriptionClient
+  });
   const accountingContext = registerAccountingContext({ fetch, notify, env, loading, subscriptionClient });
   const companyContext = createCompanyContext({ fetch, env, notify, loading, subscriptionClient });
   return {
