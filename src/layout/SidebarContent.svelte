@@ -3,9 +3,7 @@
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import Accordion from "@deboxsoft/svelte-theme-limitless/components/Accordion.svelte";
   import AccordionItem from "@deboxsoft/svelte-theme-limitless/components/AccordionItem.svelte";
-  import SidebarUser from "@deboxsoft/svelte-theme-limitless/widget/SidebarUser.svelte";
-  import HomeIcon from "__@comps/icons/Home.svelte";
-  import MenuIcon from "@deboxsoft/svelte-icons/MenuOutlined.svelte";
+  // import MenuIcon from "@deboxsoft/svelte-icons/ico/icoEnlarge.svelte";
   import { getAuthenticationContext } from "__@modules/users";
 
   const { authenticationStore } = getAuthenticationContext();
@@ -19,9 +17,9 @@
 
 <!-- Header -->
 <div class="card-header header-elements-inline">
-  <h6 class="card-title">Navigation</h6>
-  <div class="header-elements">
-    <div class="list-icons">
+  <h6 class="card-title">MAIN MENU</h6>
+<!--  <div class="header-elements">-->
+<!--    <div class="list-icons">-->
       <!-- svelte-ignore a11y-missing-content -->
       <!-- svelte-ignore a11y-invalid-attribute -->
       <!--      <a-->
@@ -32,8 +30,8 @@
       <!--        target="_self"-->
       <!--        class="list-icons-item"-->
       <!--        data-action="collapse">&nbsp;</a>-->
-    </div>
-  </div>
+<!--    </div>-->
+<!--  </div>-->
 </div>
 
 {#if !collapse}
@@ -49,12 +47,12 @@
   <!-- Main navigation -->
   <div class="card-body p-0">
     <Accordion class="nav-sidebar">
-      <li class="nav-item-header mt-0">
-        <div class="text-uppercase font-size-xs line-height-xs">Main</div>
+<!--      <li class="nav-item-header mt-0">-->
+<!--        <div class="text-uppercase font-size-xs line-height-xs">Main</div>-->
         <!--        <div style="width: 20px; height: 20px;">-->
         <!--          <MenuIcon />-->
         <!--        </div>-->
-      </li>
+<!--      </li>-->
       <!-- Dashboard -->
       <!--      <AccordionItem href={$url("/")}>-->
       <!--        <Icon component={HomeIcon} />-->

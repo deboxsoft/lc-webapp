@@ -1,15 +1,14 @@
 <script>
   import Loader from "__@comps/loader/Loader.svelte";
-  import CellRp from "__@comps/CellRp.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAccountContext } from "__@modules/accounting";
-  import MenuListGeneralLedger from "./MenuListGeneralLedger.svelte";
+  import RowAccountBalance from "./RowAccountBalance.svelte";
 
   const { loading } = getApplicationContext();
   const { getAccountsTree } = getAccountContext();
 
   let accounts;
-  let isBalanceFixed = false;
+  export let isBalanceFixed = false;
   $: {
     accounts = getAccountsTree();
     // calculate balance
@@ -29,38 +28,17 @@
 {#if $loading}
   <Loader />
 {:else}
-  <table class="table text-nowrap">
+  <table class="table text-nowrap table-hover">
     <thead>
       <tr>
         <th colspan="2">Akun Perkiraan</th>
         <th colspan="2" class="text-center">Saldo</th>
-        <th class="dbx-cell -menu-list" />
+<!--        <th class="-menu-list" />-->
       </tr>
     </thead>
     <tbody>
       {#each $accounts as account}
-        <tr>
-          <td colspan="2" class="d-xl-table-cell">{account.name}</td>
-          <td />
-          <td class="text-right">
-            <CellRp value={isBalanceFixed ? account.balanceFixed : account.balance} />
-          </td>
-          <td>
-            <MenuListGeneralLedger isParent />
-          </td>
-        </tr>
-        {#if account.children}
-          {#each account.children as child}
-            <tr class="child">
-              <td style="width: 10px"></td>
-              <td>{child.name}</td>
-              <td class="text-right">
-                <CellRp value={isBalanceFixed ? child.balanceFixed : child.balance} />
-              </td>
-              <td />
-            </tr>
-          {/each}
-        {/if}
+        <RowAccountBalance {isBalanceFixed} {account} />
       {/each}
     </tbody>
   </table>

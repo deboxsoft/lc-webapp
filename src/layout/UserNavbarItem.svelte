@@ -1,7 +1,7 @@
 <script lang="ts">
   import Dropdown from "__@comps/Dropdown.svelte";
   import Avatar from "__@comps/Avatar.svelte";
-  import { goto, route } from "@roxi/routify";
+  import { goto, route, redirect } from "@roxi/routify";
   import { getAuthenticationContext } from "__@modules/users";
 
   const { authenticationStore, logout } = getAuthenticationContext();

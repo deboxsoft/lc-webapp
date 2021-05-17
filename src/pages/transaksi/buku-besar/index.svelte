@@ -4,16 +4,38 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableAccountBalance from "./_components/TableAccountBalance.svelte";
+  import ComboxField from "../../../components/forms/ComboxField.svelte";
 
   const { setBreadcrumbContext } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Buku Besar" });
 
+  let isBalanceFixed = false;
+  let cbValue;
+  const itemsComboBox = [
+    {
+      id: "0",
+      label: "Saldo Perkiraan"
+    },
+    {
+      id: "1",
+      label: "Saldo Fixed"
+    }
+  ];
+
+  function cbHandler() {
+    isBalanceFixed = (cbValue === itemsComboBox[1].id);
+  }
 </script>
 
 <PageLayout breadcrumb={[]}>
+  <div class="header-elements" slot="header-elements">
+    <div class="list-icons">
+      <ComboxField name="balanceType" items={itemsComboBox} bind:value={cbValue} on:change={cbHandler} />
+    </div>
+  </div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
-      <TableAccountBalance />
+      <TableAccountBalance bind:isBalanceFixed />
     </div>
   </div>
 </PageLayout>

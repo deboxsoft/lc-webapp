@@ -14,14 +14,14 @@
   }
   const { setBreadcrumbContext } = getBreadcrumbStore();
   const { currentDateStore } = getPreferenceContext();
-  const { perDate, generateReport } = getBalanceContext();
+  const { balanceSheetReportPerDate } = getBalanceContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
   let generateReportHandler;
 
   function dateChangeHandler(e) {
-    $perDate = e.detail[0][0];
-    generateReportHandler();
+    const perDate = e.detail[0][0];
+    generateReportHandler(perDate);
   }
 </script>
 
@@ -40,7 +40,7 @@
   </div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
-      <TableNeraca bind:generateReportHandler />
+      <TableNeraca date={$currentDateStore} bind:generateReportHandler />
     </div>
   </div>
 </PageLayout>
