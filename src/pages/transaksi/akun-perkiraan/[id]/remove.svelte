@@ -34,7 +34,7 @@
   }
 </script>
 
-<Modal open title="Hapus Content">
+<Modal open title="Hapus Content" onClose={closeHandler}>
   <div class="alert alert-warning alert-styled-left">
     Menghapus akun akan berpengaruh pada transaksi. Apa anda yakin akan menghapus kode akun `{accountId}`?
   </div>

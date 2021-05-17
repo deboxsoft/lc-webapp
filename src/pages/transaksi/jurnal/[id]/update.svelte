@@ -38,7 +38,7 @@
 </script>
 
 {#if transaction}
-  <Modal title="Update Transaksi" class="modal-lg">
+  <Modal title="Update Transaksi" class="modal-lg" onClose={cancelHandler}>
     <div class="d-flex flex-column h-100">
       <FormJournal values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} />
     </div>
