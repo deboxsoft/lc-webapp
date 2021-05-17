@@ -5,7 +5,6 @@
   import { BankInputSchema } from "@deboxsoft/accounting-api";
   import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
-  import { getBankContext } from "__@modules/accounting";
 
   // components
   import Modal from "__@comps/Modal.svelte";
@@ -15,8 +14,7 @@
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import ComboxField from "__@comps/forms/ComboxField.svelte";
 
-  const { notify } = getApplicationContext();
-  const { bankStore } = getBankContext();
+  const { notify, loading } = getApplicationContext();
   const dispatch = createEventDispatcher();
 
   // props
@@ -26,7 +24,6 @@
   export let title;
   export let to = "./";
   let fields;
-  let loading = false;
   let idReadOnly = true;
   let fieldsErrors = writable([]);
   let submitted = writable(false);
@@ -152,12 +149,12 @@
     "The Bank of Tokyo Mitsubishi UFJ"
   ];
 
-  async function submitHandler(e) {
-    loading = true;
+  async function submitHandler() {
+    $loading = true;
     try {
       BankInputSchema.parse($fields);
       await onSubmit($fields);
-      loading = false;
+      $loading = false;
       $goto(to);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -175,7 +172,7 @@
         }
         notify(`${fieldName} ${error.errors[0].message}`, "error");
       }
-      loading = false;
+      $loading = false;
     }
   }
 
@@ -239,7 +236,7 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
       Cancel
     </button>
-    <button type="button" class="btn btn-primary ml-1" disabled={loading} on:click={submitHandler}>
+    <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>
       <i class="fal fa-save mr-2" />
       Save
     </button>
