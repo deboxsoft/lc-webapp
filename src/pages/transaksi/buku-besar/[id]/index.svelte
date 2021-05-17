@@ -1,12 +1,12 @@
 <!--routify:options title="Trial Balance"-->
 <script>
-  import { params } from "@roxi/routify";
+  import { params, url } from "@roxi/routify";
   import startOfMonth from "date-fns/startOfMonth";
   import endOfDay from "date-fns/endOfDay";
   import startOfDay from "date-fns/startOfDay";
   import isBefore from "date-fns/isBefore";
+  import { writable } from "svelte/store";
 
-  import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { createGeneralLedgerContext, getAccountContext, getPreferenceContext } from "__@modules/accounting";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
@@ -15,8 +15,6 @@
   import Loader from "__@comps/loader/Loader.svelte";
 
   // context
-  const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  setBreadcrumbContext({ path: $url("./"), title: "buku-besar" });
   const { loading } = getApplicationContext();
   const { getGeneralLedger } = createGeneralLedgerContext();
   const { accountStore, getAccount } = getAccountContext();
@@ -25,7 +23,7 @@
   // state
   let endDate = new Date();
   let startDate = startOfMonth(endDate);
-  let account = writable(undefined);
+  let account = writable({});
 
   $: account = getAccount($params.id);
 
@@ -55,7 +53,7 @@
   }
 </script>
 
-<PageLayout breadcrumb={[]}>
+<PageLayout showBackButton breadcrumb={[{ path: "./", title: "buku-besar" }, { title: "trial balance" }]}>
   <div class="header-elements" slot="header-elements">
     <div class="list-icons">
       <DatePickr
@@ -71,10 +69,18 @@
     </div>
   </div>
   <div class="card d-flex flex-1">
-    <div class="card-body d-flex flex-1">
+    <div class="card-body d-flex flex-1 flex-column">
       {#if $loading}
         <Loader />
       {:else}
+        <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
+          <dl class="row mb-0">
+            <dt class="col-sm-3 mb-0">Akun Perkiraan</dt>
+            <p class="col-sm-9 mb-0">: <span class="font-weight-bold text-uppercase">{$account.name}</span></p>
+            <dt class="col-sm-3 mb-0">Kode</dt>
+            <p class="col-sm-9 mb-0">: {$account.id}</p>
+          </dl>
+        </div>
         <TableTrialBalance />
       {/if}
     </div>

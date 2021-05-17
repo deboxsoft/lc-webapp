@@ -2,8 +2,14 @@
   import { getFormContext } from "../../stores/form";
   import { getAccountContext } from "../../modules/accounting";
   import { createEventDispatcher } from "svelte";
+  import { writable } from "svelte/store";
 
-  const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
+  const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {
+    fields: writable({}),
+    validateField: () => {},
+    submitted: false,
+    fieldsErrors: writable(undefined)
+  };
   const accountContext = getAccountContext();
   export let items = [];
   export let name = undefined;
@@ -11,7 +17,9 @@
   export let allowEmpty = false;
   export let labelId = "label"
   export let valueId = "id"
-  export let value;
+  export let value = undefined;
+
+  $fields[name] = value;
   const dispatch = createEventDispatcher();
 
   $: {
@@ -23,7 +31,8 @@
   function createChangeHandler(e) {
     const _validate = validateField(name);
     return (e) => {
-      _validate();
+      _validate && _validate();
+      value = $fields[name];
       dispatch("change", e.detail);
     };
   }

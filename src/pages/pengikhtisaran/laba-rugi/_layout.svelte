@@ -41,7 +41,7 @@
   </div>
   <div class="card d-flex flex-1">
     <div class="card-body d-flex flex-1 h-100">
-      <TableLabaRugi bind:generateReportHandler />
+      <TableLabaRugi date={$currentDateStore} bind:generateReportHandler />
     </div>
   </div>
 </PageLayout>

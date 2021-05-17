@@ -1,19 +1,26 @@
-<script lang="ts">
+<script>
+  import {goto} from "@roxi/routify";
   import IconArrowRight from "@deboxsoft/svelte-icons/ico/icoArrowRight3.svelte";
   import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
   import CellRp from "__@comps/CellRp.svelte";
 
   export let account;
-  export let isBalanceFixed = true;
+  export let isBalanceFixed;
   let expanded = false;
 
   function expandHandler() {
     expanded = !expanded;
   }
-</script>
 
-<tr on:click={expandHandler} style="cursor: pointer;">
-  <td colspan="2" class="d-table-cell">
+  function createTrialBalanceHandler(accountId) {
+    return () => {
+      $goto("./:id", { id: accountId })
+    }
+  }
+
+</script>
+<tr class="table-active" on:click={expandHandler} style="cursor: pointer;">
+  <td class="d-table-cell" colspan="2">
     <div class="d-flex flex-row">
       <div class="align-self-center mr-1">
         <div class="arrow-icon">
@@ -29,36 +36,30 @@
       </div>
     </div>
   </td>
-  <td class="d-table-cell d-xl-none">&nbsp;</td>
-  <td class="d-table-cell d-md-none">&nbsp;</td>
-  <td class="d-none d-md-table-cell">&nbsp;</td>
+  <td />
   <td class="text-right balance">
     <CellRp value={isBalanceFixed ? account.balanceFixed : account.balance} />
   </td>
-  <td class="d-none d-xl-table-cell">&nbsp;</td>
 </tr>
 {#if account.children && expanded}
   {#each account.children as child}
-    <tr class="child" style="cursor: pointer">
+    <tr class="child" style="cursor: pointer" on:click={createTrialBalanceHandler(child.id)}>
       <td style="width: 10px"></td>
       <td>- {child.name}</td>
-      <td class="d-table-cell d-xl-none">&nbsp;</td>
-      <td class="d-table-cell d-md-none">&nbsp;</td>
       <td class="text-right balance">
         <CellRp value={isBalanceFixed ? child.balanceFixed : child.balance} />
       </td>
-      <td class="d-none d-md-table-cell">&nbsp;</td>
-      <td class="d-none d-xl-table-cell">&nbsp;</td>
+      <td />
     </tr>
   {/each}
 {/if}
 
 <style>
-  .balance {
-    width: 200px;
-  }
   .arrow-icon {
     width: 8px;
     height: 8px;
+  }
+  .balance {
+    width: 200px;
   }
 </style>

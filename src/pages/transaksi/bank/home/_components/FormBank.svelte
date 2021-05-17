@@ -11,7 +11,6 @@
   import Modal from "__@comps/Modal.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import Form from "__@comps/forms/Form.svelte";
-  import InputDateField from "__@comps/forms/InputDateField.svelte";
   import InputNumberField from "__@comps/forms/InputNumberField.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import ComboxField from "__@comps/forms/ComboxField.svelte";
@@ -228,13 +227,9 @@
           </div>
         </div>
         <div class="row">
-          <div class="form-group col-md-6">
+          <div class="form-group col-md-12">
             <label for="balance">Saldo Terakhir</label>
             <InputNumberField id="balance" name="balance" class="form-control" signed={false} />
-          </div>
-          <div class="form-group col-md-6">
-            <label for="date">Tanggal</label>
-            <InputDateField id="date" name="date" class="form-control" placeholder="Tanggal" />
           </div>
         </div>
       </div>

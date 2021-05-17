@@ -1,5 +1,5 @@
 import type { SvelteComponentDev } from "svelte/internal";
-// import InventoryIcon from "__@comps/icons/Inventory.svelte";
+import InventoryIcon from "__@comps/icons/Inventory.svelte";
 import TransactionIcon from "__@comps/icons/Exchange.svelte";
 // import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
 // import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";

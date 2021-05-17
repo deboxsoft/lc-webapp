@@ -19,7 +19,7 @@
     try {
       $loading = true;
       await update($params.id, values);
-      notify(`Berhasil mengupdate data bank id '${$params.id}'`);
+      notify(`Berhasil mengupdate data bank`, "success");
       $loading = false;
     } catch (e) {
       $loading = false;
