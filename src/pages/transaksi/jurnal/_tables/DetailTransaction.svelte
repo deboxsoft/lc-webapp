@@ -13,7 +13,7 @@
   }
 </script>
 
-<Modal title={($params.id && `Detail Transaksi '${$params.id}'`) || ""} class="modal-lg">
+<Modal title={($params.id && `Detail Transaksi '${$params.id}'`) || ""} class="modal-lg" onClose={closeHandler}>
   {#if transaction}
     <dl class="row">
       <dt class="col-sm-3">No. Bukti/Kwitansi</dt>
@@ -28,7 +28,9 @@
         <span
           class="badge"
           class:badge-warning={transaction.status === "UNAPPROVED"}
-          class:badge-success={transaction.status === "APPROVED"}>{transaction.status || ""}</span
+          class:badge-danger={transaction.status === "REJECTED"}
+          class:badge-primary={transaction.status === "FIXED"}
+          class:badge-success={transaction.status === "APPROVED"}>{transaction.status}</span
         >
       </p>
     </dl>

@@ -47,7 +47,7 @@
   }
 </script>
 
-<Modal title="Transaksi Baru" class="modal-lg">
+<Modal title="Transaksi Baru" class="modal-full" onClose={cancelHandler}>
   <div class="d-flex flex-column flex-1">
     <FormJournal values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} />
   </div>

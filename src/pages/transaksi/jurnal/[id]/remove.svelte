@@ -39,7 +39,7 @@
 </script>
 
 {#if $transaction && isRemoveOwnGranted($transaction.userId) }
-  <Modal open title="Hapus Content">
+  <Modal open title="Hapus Content" onClose={closeHandler}>
     <div class="alert alert-warning alert-styled-left">
       Menghapus transaksi akan menhapus transaksi setelahnya. Apa anda yakin akan menghapus transaksi id `{$transaction.id}`?
     </div>

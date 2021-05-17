@@ -160,7 +160,7 @@
   }
 </script>
 
-<Modal {title}>
+<Modal {title} onClose={cancelHandler}>
   <Form
     {submitted}
     {fieldsErrors}
