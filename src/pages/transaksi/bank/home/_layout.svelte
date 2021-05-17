@@ -3,7 +3,7 @@
   import { url } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import TableBank from "./_components/TableBank.svelte";
+  import Table from "./_components/TableBank.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "bank" });
@@ -16,7 +16,7 @@
   </div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
-      <TableBank />
+      <Table />
     </div>
   </div>
 </PageLayout>
