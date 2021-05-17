@@ -4,7 +4,12 @@
   import { getAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
+  import { getAclContext } from "../../_acl-context";
 
+  const { removeUserGranted } = getAclContext();
+  if (!removeUserGranted) {
+    $goto("/access-denied");
+  }
   const { save, grants } = getAccessControlContext();
   const { notify } = getApplicationContext();
 

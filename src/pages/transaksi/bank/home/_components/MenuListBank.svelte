@@ -1,6 +1,9 @@
 <script>
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import { getAclContext } from "../../_acl-context";
+
+  const { updateGranted, removeGranted } = getAclContext();
 
   export let id;
 </script>
@@ -16,9 +19,15 @@
       <i class="icon-menu9" />
     </a>
     <div slot="menu">
-      <a href={$url("../:bankId/statements", { bankId: id })} class="dropdown-item"><i class="fal fa-file-excel" />Rekonsiliasi</a>
-      <a href={$url("../home/:id/update", { id })} class="dropdown-item"><i class="fal fa-file-edit" />Ubah Bank</a>
-      <a href={$url("../home/:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Bank</a>
+      <a href={$url("../:bankId/statements", { bankId: id })} class="dropdown-item"
+        ><i class="fal fa-file-excel" />Rekonsiliasi</a
+      >
+      {#if updateGranted}
+        <a href={$url("../home/:id/update", { id })} class="dropdown-item"><i class="fal fa-file-edit" />Ubah Bank</a>
+      {/if}
+      {#if removeGranted}
+        <a href={$url("../home/:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Bank</a>
+      {/if}
     </div>
   </Dropdown>
 </div>

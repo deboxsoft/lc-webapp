@@ -5,11 +5,17 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import UserForm from "../_form.svelte";
   import Modal from "__@comps/Modal.svelte";
+  import { getAclContext } from "../../_acl-context";
 
   let fields;
   let user;
   let schema;
   let submitHandler;
+
+  const { updateUserGranted } = getAclContext();
+  if (!updateUserGranted) {
+    $goto("/access-denied");
+  }
   const { getUser, update, userStore } = getUserContext();
   const { notify, loading } = getApplicationContext();
 

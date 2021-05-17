@@ -1,13 +1,17 @@
 <script lang="ts">
   import type { BreadcrumbItem } from "__@stores/breadcrumb";
 
-  import { layout, page } from "@roxi/routify";
+  import { layout, page, goto } from "@roxi/routify";
   import Breadcrumb from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb.svelte";
   import { getUIContext } from "__@stores/ui";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { getApplicationContext } from "__@modules/app";
 
   export let breadcrumb: BreadcrumbItem | BreadcrumbItem[] | undefined = undefined;
+  export let backHandler = () => {
+    $goto("../");
+  };
+  export let showBackButton = false;
 
   const { loading } = getApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
@@ -28,6 +32,11 @@
     {/if}
     <div class="mb-1 mt-1 page-header-content header-elements-inline">
       <h4>
+        {#if showBackButton}
+          <a href="/#" target="_self" on:click|preventDefault={backHandler}>
+            <i class="icon-arrow-left52 mr-2" />
+          </a>
+        {/if}
         <span class="font-weight-semibold">{$layout.title} {($layout.title && $page.title && "-") || ""}</span>
         {($layout.title !== $page.title && `  ${$page.title}`) || ""}
       </h4>

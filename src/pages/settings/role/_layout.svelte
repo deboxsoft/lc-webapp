@@ -1,10 +1,15 @@
 <script>
   import Table from "__@comps/Table.svelte";
   import { getAccessControlContext } from "__@modules/users";
-  import { url } from "@roxi/routify";
+  import { url, goto } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import { createAclContext } from "../_acl-context";
 
+  const { readUserGranted } = createAclContext();
   const { load, grants } = getAccessControlContext();
+  if (!readUserGranted) {
+    $goto("/access-denied");
+  }
   let roles
 
   $: roles = Object.keys($grants);

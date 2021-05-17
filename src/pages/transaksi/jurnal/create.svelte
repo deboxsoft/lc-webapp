@@ -4,14 +4,20 @@
   import { getTransactionContext, getAccountContext } from "__@modules/accounting";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
+  import {getAclContext} from "./_acl-context"
   import Modal from "__@comps/Modal.svelte";
   import FormJournal from "./_forms/FormJournal.svelte";
 
   // context
   const { create, getTransaction } = getTransactionContext();
+  const { createGranted } = getAclContext();
   const { accountStore } = getAccountContext();
   const { authenticationStore } = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
+
+  if (!createGranted) {
+    $goto("/access-denied");
+  }
 
   // form
   let transaction = {

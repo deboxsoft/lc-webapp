@@ -2,7 +2,12 @@
   import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import RoleForm from "./_form.svelte";
+  import { getAclContext } from "../_acl-context";
 
+  const { createUserGranted } = getAclContext();
+  if (!createUserGranted) {
+    $goto("/access-denied");
+  }
   let saveHandler;
 
   function closeHandler() {

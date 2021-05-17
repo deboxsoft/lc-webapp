@@ -78,6 +78,38 @@
         }
       ]
     },
+    bank: {
+      label: "bank",
+      selected: false,
+      indeterminate: false,
+      actions: [
+        {
+          label: "buat",
+          value: "create:any",
+          selected: false
+        },
+        {
+          label: "lihat",
+          value: "read:any",
+          selected: false
+        },
+        {
+          label: "ubah",
+          value: "update:any",
+          selected: false
+        },
+        {
+          label: "hapus",
+          value: "delete:any",
+          selected: false
+        },
+        {
+          label: "rekonsiliasi",
+          value: "approve:any",
+          selected: false
+        }
+      ]
+    },
     ledger: {
       label: "buku besar",
       selected: false,
@@ -110,6 +142,60 @@
         {
           label: "lihat",
           value: "read:any",
+          selected: false
+        }
+      ]
+    },
+    inventory: {
+      label: "inventaris",
+      selected: false,
+      indeterminate: false,
+      actions: [
+        {
+          label: "buat",
+          value: "create:any",
+          selected: false
+        },
+        {
+          label: "lihat",
+          value: "read:any",
+          selected: false
+        },
+        {
+          label: "ubah",
+          value: "update:any",
+          selected: false
+        },
+        {
+          label: "hapus",
+          value: "delete:any",
+          selected: false
+        }
+      ]
+    },
+    bdd: {
+      label: "bdd",
+      selected: false,
+      indeterminate: false,
+      actions: [
+        {
+          label: "buat",
+          value: "create:any",
+          selected: false
+        },
+        {
+          label: "lihat",
+          value: "read:any",
+          selected: false
+        },
+        {
+          label: "ubah",
+          value: "update:any",
+          selected: false
+        },
+        {
+          label: "hapus",
+          value: "delete:any",
           selected: false
         }
       ]
@@ -147,11 +233,6 @@
       indeterminate: false,
       actions: [
         {
-          label: "buat",
-          value: "create:any",
-          selected: false
-        },
-        {
           label: "lihat",
           value: "read:any",
           selected: false
@@ -159,11 +240,6 @@
         {
           label: "ubah",
           value: "update:any",
-          selected: false
-        },
-        {
-          label: "hapus",
-          value: "delete:any",
           selected: false
         }
       ]
@@ -275,7 +351,7 @@
     <div class="row px-2">
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[0], resources[1]] as resourceKey}
+          {#each [resources[0], resources[1], resources[2]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
@@ -289,7 +365,7 @@
       </div>
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[2], resources[3], resources[4], resources[5]] as resourceKey}
+          {#each [resources[3], resources[4], resources[5], resources[6], resources[7]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
@@ -303,7 +379,7 @@
       </div>
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[6]] as resourceKey}
+          {#each [resources[8], resources[9]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}

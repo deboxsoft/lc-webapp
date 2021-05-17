@@ -1,12 +1,18 @@
 <!--routify:options title="update akun"-->
 <script>
-  import { params } from "@roxi/routify";
+  import { params, goto } from "@roxi/routify";
   import FormAccount from "../_components/FormAccount.svelte";
   import { getAccountContext } from "__@modules/accounting";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../_acl-context";
 
   const { notify, loading } = getApplicationContext();
   const { accountStore, update, getAccount } = getAccountContext();
+  const { updateGranted } = getAclContext();
+  if (!updateGranted) {
+    $goto("/access-denied");
+  }
+
   let account;
   $: {
     account = getAccount($params.id);
