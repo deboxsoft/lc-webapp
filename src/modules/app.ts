@@ -7,6 +7,7 @@ import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
 import { registerAccountingContext, createCompanyContext } from "./accounting";
+import { createConfigModule } from "./config";
 import { createAuthenticationContext } from "./users";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
@@ -22,6 +23,7 @@ export interface ApplicationContext {
   notify: (message: string, type?: TypeNoty, config?: NotifyConfig) => void;
   loading: Writable<boolean>;
   env?: string;
+  config?: Writable<any>;
   uiControl?: any;
 }
 
@@ -34,7 +36,7 @@ const notify = (message: string, type?: TypeNoty, config: NotifyConfig = {}) => 
 export const createBaseApplicationContext = () => {
   // let loadingStore = writable(true);
   const createLoadingStore = () => {
-    let countLoading = 1;
+    let countLoading = 0;
     const { subscribe, set, update } = writable(true);
     return {
       subscribe,
@@ -59,16 +61,23 @@ export const createBaseApplicationContext = () => {
     };
   };
   const loading = createLoadingStore();
+  const config = writable({});
   const { client, fetch } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
   const subscriptionClient = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
+  loading.set(true);
+  const configPromise = createConfigModule(fetch).then((_) => config.set(_));
+  Promise.all([configPromise]).then(() => {
+    loading.set(false);
+  });
   const context: ApplicationContext = {
     client,
     fetch,
     notify,
     loading,
     env,
+    config,
     uiControl,
     subscriptionClient
   };
@@ -79,6 +88,7 @@ export const createBaseApplicationContext = () => {
     notify,
     loading,
     env,
+    config,
     uiControl,
     subscriptionClient
   };
