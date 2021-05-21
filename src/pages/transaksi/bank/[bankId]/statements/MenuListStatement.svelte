@@ -16,7 +16,7 @@
       <i class="icon-menu9" />
     </a>
     <div slot="menu">
-      <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Statement</a>
+      <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Statement</a>
     </div>
   </Dropdown>
 </div>

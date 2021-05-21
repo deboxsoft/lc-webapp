@@ -5,8 +5,7 @@
   import { getAuthenticationContext } from "__@modules/users";
 
   const { authenticationStore, logout } = getAuthenticationContext();
-  export const avatarSrc: string = $authenticationStore.profile.avatar;
-  export let profileName: string = $authenticationStore.profile.name;
+  $: profileName = $authenticationStore.profile.name;
   let triggerElement: HTMLElement;
 
   async function logoutHandler() {
@@ -29,7 +28,7 @@
     class="{toggleClass} d-flex align-items-center navbar-nav-link"
     target="_self"
   >
-    <Avatar name={profileName} size="34px" class="mr-2" />
+    <Avatar size="34px" class="mr-2" />
     <!--    <img src={avatarSrc} class="rounded-circle mr-2" height="34" alt="" />-->
     <span>{profileName}</span>
   </a>

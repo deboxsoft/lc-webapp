@@ -3,12 +3,13 @@
   import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
   import Accordion from "@deboxsoft/svelte-theme-limitless/components/Accordion.svelte";
   import AccordionItem from "@deboxsoft/svelte-theme-limitless/components/AccordionItem.svelte";
-  // import MenuIcon from "@deboxsoft/svelte-icons/ico/icoEnlarge.svelte";
   import { getAuthenticationContext } from "__@modules/users";
+  import Avatar from "__@comps/Avatar.svelte";
 
   const { authenticationStore } = getAuthenticationContext();
   let scrollbar;
   let elRef;
+  $: profile = $authenticationStore.profile;
 
   export let menus;
 
@@ -18,31 +19,25 @@
 <!-- Header -->
 <div class="card-header header-elements-inline">
   <h6 class="card-title">MAIN MENU</h6>
-<!--  <div class="header-elements">-->
-<!--    <div class="list-icons">-->
-      <!-- svelte-ignore a11y-missing-content -->
-      <!-- svelte-ignore a11y-invalid-attribute -->
-      <!--      <a-->
-      <!--        href="#"-->
-      <!--        on:click|preventDefault={() => {-->
-      <!--          collapse = !collapse;-->
-      <!--        }}-->
-      <!--        target="_self"-->
-      <!--        class="list-icons-item"-->
-      <!--        data-action="collapse">&nbsp;</a>-->
-<!--    </div>-->
-<!--  </div>-->
 </div>
 
 {#if !collapse}
   {#if $authenticationStore.authenticated}
-    <!--    <SidebarUser-->
-    <!--      profile={{-->
-    <!--        name: $authenticationStore.profile.name,-->
-    <!--        role: $authenticationStore.profile.role ? $authenticationStore.profile.role[0] : "",-->
-    <!--        avatar: $authenticationStore.avatar || ""-->
-    <!--      }}-->
-    <!--    />-->
+    <div class="sidebar-user">
+      <div class="card-body">
+        <div class="media">
+          <div class="mr-3">
+            <Avatar size="50px" class="mr-2" />
+          </div>
+          <div class="media-body">
+            <div class="media-title font-weight-semibold">{profile.name}</div>
+            <div class="font-size-xs opacity-50"><i class="icon-pin font-size-sm" /> &nbsp;{profile.role}</div>
+          </div>
+
+          <div class="ml-3 align-self-center"><a href="/#" class="text-white"><i class="icon-cog3" /></a></div>
+        </div>
+      </div>
+    </div>
   {/if}
   <!-- Main navigation -->
   <div class="card-body p-0">
@@ -67,7 +62,7 @@
             toggleClass={$isActive(item.url) && "active"}
             target={(item.children && !item.url && "_self") || undefined}
             hasChildren={!!item.children}
-            href={(!item.children && item.url) || undefined}
+            href={(!item.children && item.url) || "/#"}
           >
             {#if item.icon && typeof item.icon === "string"}
               <i class={item.icon} />
