@@ -1,5 +1,6 @@
 import type { GraphQLClient, FetchGraphql } from "@deboxsoft/module-graphql";
 
+import "./errors-map";
 import { SubscriptionClient } from "graphql-subscriptions-client";
 import { createUIContext } from "__@stores/ui";
 import { setContext, getContext } from "svelte";
