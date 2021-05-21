@@ -1,5 +1,6 @@
 <!--routify:options title="create akun"-->
 <script>
+  import { goto } from "@roxi/routify";
   import FormAccount from "./_components/FormAccount.svelte";
   import { getAccountContext } from "__@modules/accounting";
   import { getApplicationContext } from "__@modules/app";

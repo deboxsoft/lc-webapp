@@ -23,6 +23,8 @@
   export let onSubmit;
   export let title;
   export let to = "./";
+
+  // state
   let fields;
   let idReadOnly = true;
   let fieldsErrors = writable([]);
@@ -220,7 +222,7 @@
         <div class="row">
           <div class="form-group col-12">
             <label for="account">Akun Perkiraan</label>
-            <AccountSelect allowEmpty />
+            <AccountSelect id="account" name="accountId"  allowEmpty />
           </div>
         </div>
         <div class="row">
@@ -237,7 +239,7 @@
       Cancel
     </button>
     <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>
-      <i class="fal fa-save mr-2" />
+      <i class="icon-floppy-disk mr-2" />
       Save
     </button>
   </svelte:fragment>
