@@ -35,11 +35,13 @@
   <div class="modal" class:show={open} tabindex="-1" transition:fade={{ duration: 200 }}>
     <div {...$$restProps} class={classes}>
       <div class="modal-content">
-        {#if $$slots["header"] || title}
+        {#if $$slots["header"] || title || onClose}
           <div class="modal-header bg-light">
-            <slot name="header">
-              <h5 class="modal-title">{title}</h5>
-            </slot>
+            {#if $$slots["header"] || title}
+              <slot name="header">
+                <h5 class="modal-title">{title}</h5>
+              </slot>
+            {/if}
             {#if onClose}
               <button type="button" class="close" data-dismiss="modal" on:click={closeHandler}>×</button>
             {/if}
