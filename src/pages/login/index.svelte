@@ -1,13 +1,10 @@
 <script lang="ts">
   import { goto } from "@roxi/routify";
-  import * as z from "@deboxsoft/zod";
+  import { z } from "@deboxsoft/zod";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
-  import IoMdLock from '@deboxsoft/svelte-icons/io/IoMdLock.svelte'
-  import ArrowRightIcon from "@deboxsoft/svelte-icons/ico/icoArrowRight2.svelte";
-  import PersonIcon from "@deboxsoft/svelte-icons/ico/icoUser4.svelte";
-  import LockIcon from "@deboxsoft/svelte-icons/ico/icoUserLock2.svelte";
+  import IoMdLock from "@deboxsoft/svelte-icons/io/IoMdLock.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Alert from "__@comps/Alert.svelte";
@@ -16,8 +13,8 @@
   const { notify, loading } = getApplicationContext();
 
   const schema = z.object({
-    username: z.string().min(5).nonempty(),
-    password: z.string().min(5).nonempty()
+    username: z.string().min(5),
+    password: z.string().min(5)
   });
 
   // state
@@ -64,10 +61,8 @@
       <Alert bind:message={alertMessage} bind:open={alertOpen} />
       <div class="form-group form-group-feedback form-group-feedback-left">
         <InputField class="form-control" name="username" type="text" placeholder="Username" autocomplete="username" />
-        <div class="h-100 d-flex align-items-center form-control-feedback">
-          <div class="form-icon text-muted">
-            <PersonIcon />
-          </div>
+        <div class="form-control-feedback">
+          <i class="icon-user text-muted" />
         </div>
       </div>
 
@@ -79,20 +74,13 @@
           placeholder="Password"
           autocomplete="password"
         />
-        <div class="h-100 d-flex align-items-center form-control-feedback">
-          <div class="form-icon text-muted">
-            <LockIcon />
-          </div>
+        <div class="form-control-feedback">
+          <i class="icon-lock2 text-muted" />
         </div>
       </div>
 
       <div class="form-group">
-        <button type="submit" class="btn d-flex justify-content-center btn-primary btn-block"
-          >Masuk
-          <div class="form-icon ml-1" style="padding-top: 4px">
-            <ArrowRightIcon />
-          </div>
-        </button>
+        <button type="submit" class="btn btn-primary btn-block">Masuk <i class="icon-circle-right2 ml-2" /> </button>
       </div>
 
       <!--      <div class="text-center"><a href="login_password_recover.html">Forgot password?</a></div>-->
