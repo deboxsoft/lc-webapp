@@ -33,7 +33,7 @@
     "@deboxsoft/svelte-virtual-list": "^1.6.7",
     "@deboxsoft/users-api": "~1.2.0-0",
     "@deboxsoft/users-client": "~1.2.0-0",
-    "@deboxsoft/zod": "^3.0.0-0",
+    "@deboxsoft/zod": "3.0.0",
     "@popperjs/core": "2.6.0",
     "@roxi/routify": "2.15.1",
     "@sveltejs/svelte-virtual-list": "^3.0.1",
