@@ -13,13 +13,16 @@ export * from "./company";
 
 // initial bootsrap
 export const registerAccountingContext = (applicationContext: ApplicationContext) => {
+  applicationContext.loading.set(true);
   const preferenceAccountingContext = createPreferenceContext(applicationContext);
   const accountContext = createAccountContext(applicationContext, preferenceAccountingContext);
   return {
     load: () => {
       const preferenceLoad = preferenceAccountingContext.load();
       const accountLoad = accountContext.load();
-      return Promise.all([preferenceLoad, accountLoad]).then(() => {});
+      return Promise.all([preferenceLoad, accountLoad]).then(() => {
+        applicationContext.loading.set(false);
+      });
     }
   };
 };

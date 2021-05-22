@@ -15,4 +15,15 @@ export const createUserContext = (
   });
 };
 
-export const getUserContext = (): UserContext => stores.getUserContext();
+export const getUserContext = (): UserContext & { uploadProfile: (image: any) => Promise<boolean> } => ({
+  ...stores.getUserContext(),
+  uploadProfile: (image) => {
+    const { fetch } = getApplicationContext();
+    const UploadProfileMutation = `
+      uploadProfile($image: Upload) {
+        uploadProfile(image: $image)
+      }
+    `;
+    return fetch(UploadProfileMutation, { variables: { image } }).then((result) => result.uploadProfile);
+  }
+});
