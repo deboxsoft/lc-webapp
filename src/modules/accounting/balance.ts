@@ -5,13 +5,12 @@ import { getApplicationContext } from "../app";
 
 let generalLedgerService;
 export const createBalanceContext = () => {
-  const { fetch, env, notify } = getApplicationContext();
+  const appContext = getApplicationContext();
   if (!generalLedgerService) {
-    generalLedgerService = new graphql.GeneralLedgerGraphqlClient({ fetch });
+    generalLedgerService = new graphql.GeneralLedgerGraphqlClient(appContext);
   }
   return stores.createBalanceStoreService({
-    generalLedgerService,
-    notify: (env !== "production" && notify) || undefined
+    generalLedgerService
   });
 };
 

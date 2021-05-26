@@ -7,7 +7,6 @@ export * from "./inventaris";
 export * from "./pelaporan";
 export * from "./balance";
 export * from "./transaksi";
-export * from "./persediaan";
 export * from "./preference";
 export * from "./company";
 

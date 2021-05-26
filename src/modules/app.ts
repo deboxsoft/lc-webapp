@@ -23,6 +23,7 @@ export interface ApplicationContext {
   fetchGraphqlWS: SubscriptionClient;
   fetch: typeof fetch;
   fetchGraphql: FetchGraphql;
+  apiUrl: string;
   notify: (message: string, type?: TypeNoty, config?: NotifyConfig) => void;
   loading: Writable<boolean>;
   env?: string;
@@ -67,6 +68,7 @@ export const createBaseApplicationContext = () => {
   const config = writable({});
   const { client, fetch: fetchGraphql } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
   const fetchGraphqlWS = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
+  const apiUrl = process.env.DBX_ENV_API_URL || "localhost";
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
   loading.set(true);
@@ -78,64 +80,37 @@ export const createBaseApplicationContext = () => {
     client,
     fetch,
     fetchGraphql,
+    fetchGraphqlWS,
+    apiUrl,
     notify,
     loading,
     env,
     config,
-    uiControl,
-    fetchGraphqlWS
+    uiControl
   };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   return {
     client,
     fetch,
     fetchGraphql,
+    fetchGraphqlWS,
+    apiUrl,
     notify,
     loading,
     env,
     config,
-    uiControl,
-    fetchGraphqlWS
+    uiControl
   };
 };
 
 export const createApplicationContext = () => {
-  const {
-    loading,
-    fetch,
-    fetchGraphql,
-    fetchGraphqlWS,
-    env,
-    notify,
-    client,
-    uiControl
-  } = createBaseApplicationContext();
+  const appContext = createBaseApplicationContext();
   // register service
-  const authenticationContext = createAuthenticationContext({
-    fetch,
-    fetchGraphql,
-    notify,
-    env,
-    loading,
-    fetchGraphqlWS
-  });
-  const accountingContext = registerAccountingContext({
-    fetch,
-    fetchGraphql,
-    notify,
-    env,
-    loading,
-    fetchGraphqlWS
-  });
-  const companyContext = createCompanyContext({ fetch, fetchGraphql, env, notify, loading, fetchGraphqlWS });
+  const authenticationContext = createAuthenticationContext(appContext);
+  const accountingContext = registerAccountingContext(appContext);
+  const companyContext = createCompanyContext(appContext);
   return {
-    client,
-    fetch,
-    notify,
-    loading,
-    env,
-    uiControl,
-    fetchGraphqlWS,
+    ...appContext,
     accountingContext,
     authenticationContext,
     companyContext

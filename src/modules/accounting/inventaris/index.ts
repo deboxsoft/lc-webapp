@@ -3,9 +3,9 @@ import { getApplicationContext } from "__@modules/app";
 import { stores, graphql } from "@deboxsoft/accounting-client";
 
 export const createInventoryContext = () => {
-  const { fetch, notify } = getApplicationContext();
-  const inventoryService = new graphql.InventoryGraphqlClient({ fetch });
-  return stores.createInventoryContext({ inventoryService, notify });
+  const appContext = getApplicationContext();
+  const inventoryService = new graphql.InventoryGraphqlClient(appContext);
+  return stores.createInventoryContext({ inventoryService });
 };
 
 export const getInventoryContext = (): InventoryContext => stores.getInventoryContext();

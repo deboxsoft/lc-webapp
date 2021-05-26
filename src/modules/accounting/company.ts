@@ -2,13 +2,10 @@ import { graphql, stores } from "@deboxsoft/accounting-client";
 import type { CompanyContext } from "@deboxsoft/accounting-client/types/stores";
 import { ApplicationContext, getApplicationContext } from "../app";
 
-export const createCompanyContext = (
-  { fetch, notify, env, subscriptionClient }: ApplicationContext = getApplicationContext()
-): CompanyContext => {
-  const companyService = new graphql.CompanyGraphqlClient({ fetch, subscriptionClient });
+export const createCompanyContext = (appContext: ApplicationContext = getApplicationContext()): CompanyContext => {
+  const companyService = new graphql.CompanyGraphqlClient(appContext);
   return stores.createCompanyContext({
-    companyService,
-    notify: (env !== "production" && notify) || undefined
+    companyService
   });
 };
 
