@@ -4,12 +4,11 @@ import { ApplicationContext, getApplicationContext } from "__@modules/app";
 import { stores, graphql } from "@deboxsoft/accounting-client";
 
 export const createGeneralLedgerContext = (
-  { fetch, notify, env, subscriptionClient }: ApplicationContext = getApplicationContext()
+  appContext: ApplicationContext = getApplicationContext()
 ): GeneralLedgerContext => {
-  const generalLedgerService = new graphql.GeneralLedgerGraphqlClient({ fetch });
+  const generalLedgerService = new graphql.GeneralLedgerGraphqlClient(appContext);
   return stores.createGeneralLedgerStoreService({
-    generalLedgerService,
-    notify: (env !== "production" && notify) || undefined
+    generalLedgerService
   });
 };
 

@@ -4,12 +4,11 @@ import { stores, graphql } from "@deboxsoft/accounting-client";
 import { ApplicationContext, getApplicationContext } from "../app";
 
 export const createPreferenceContext = (
-  { fetch, notify, env, subscriptionClient }: ApplicationContext = getApplicationContext()
+  appContext: ApplicationContext = getApplicationContext()
 ): PreferenceAccountingContext => {
-  const preferenceService = new graphql.PreferenceAccountingGraphqlClient({ fetch, subscriptionClient });
+  const preferenceService = new graphql.PreferenceAccountingGraphqlClient(appContext);
   return stores.createPreferenceAccountingContext({
-    preferenceService,
-    notify: (env !== "production" && notify) || undefined
+    preferenceService
   });
 };
 

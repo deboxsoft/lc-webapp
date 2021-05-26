@@ -1,5 +1,5 @@
-import type { Fetch } from "@deboxsoft/module-core";
 import type { AuthenticationContext } from "@deboxsoft/users-client/types/stores";
+import type { FetchGraphql } from "@deboxsoft/module-graphql";
 
 import { stores, graphql } from "@deboxsoft/users-client";
 import { ApplicationContext, getApplicationContext } from "../app";
@@ -9,7 +9,7 @@ let authenticationService;
 
 let authService;
 
-export const getAuthService = (fetch: Fetch) => {
+export const getAuthService = (fetch: FetchGraphql) => {
   if (!authService) {
     authService = new graphql.AuthenticationGraphqlClient(fetch);
   }
@@ -17,9 +17,9 @@ export const getAuthService = (fetch: Fetch) => {
 };
 
 export const createAuthenticationContext = (
-  { fetch, notify, env }: ApplicationContext = getApplicationContext()
+  { fetch, fetchGraphql, notify, env }: ApplicationContext = getApplicationContext()
 ): AuthenticationContext => {
-  authService = getAuthService(fetch);
+  authService = getAuthService(fetchGraphql);
   const jwtStore = createJwtStore();
   return stores.createAuthenticationStoreService({
     jwtStore,
