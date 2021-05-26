@@ -1,6 +1,7 @@
 import type { GraphQLClient, FetchGraphql } from "@deboxsoft/module-graphql";
 
 import "./errors-map";
+import fetch from "cross-fetch";
 import { SubscriptionClient } from "graphql-subscriptions-client";
 import { createUIContext } from "__@stores/ui";
 import { setContext, getContext } from "svelte";
@@ -19,8 +20,9 @@ const defaultConfig: Partial<NotifyConfig> = {
 
 export interface ApplicationContext {
   client?: GraphQLClient;
-  subscriptionClient: SubscriptionClient;
-  fetch: FetchGraphql;
+  fetchGraphqlWS: SubscriptionClient;
+  fetch: typeof fetch;
+  fetchGraphql: FetchGraphql;
   notify: (message: string, type?: TypeNoty, config?: NotifyConfig) => void;
   loading: Writable<boolean>;
   env?: string;
@@ -63,50 +65,69 @@ export const createBaseApplicationContext = () => {
   };
   const loading = createLoadingStore();
   const config = writable({});
-  const { client, fetch } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
-  const subscriptionClient = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
+  const { client, fetch: fetchGraphql } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
+  const fetchGraphqlWS = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
   loading.set(true);
-  const configPromise = createConfigModule(fetch).then((_) => config.set(_));
+  const configPromise = createConfigModule(fetchGraphql).then((_) => config.set(_));
   Promise.all([configPromise]).then(() => {
     loading.set(false);
   });
   const context: ApplicationContext = {
     client,
     fetch,
+    fetchGraphql,
     notify,
     loading,
     env,
     config,
     uiControl,
-    subscriptionClient
+    fetchGraphqlWS
   };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   return {
     client,
     fetch,
+    fetchGraphql,
     notify,
     loading,
     env,
     config,
     uiControl,
-    subscriptionClient
+    fetchGraphqlWS
   };
 };
 
 export const createApplicationContext = () => {
-  const { loading, fetch, env, notify, subscriptionClient, client, uiControl } = createBaseApplicationContext();
+  const {
+    loading,
+    fetch,
+    fetchGraphql,
+    fetchGraphqlWS,
+    env,
+    notify,
+    client,
+    uiControl
+  } = createBaseApplicationContext();
   // register service
   const authenticationContext = createAuthenticationContext({
     fetch,
+    fetchGraphql,
     notify,
     env,
     loading,
-    subscriptionClient
+    fetchGraphqlWS
   });
-  const accountingContext = registerAccountingContext({ fetch, notify, env, loading, subscriptionClient });
-  const companyContext = createCompanyContext({ fetch, env, notify, loading, subscriptionClient });
+  const accountingContext = registerAccountingContext({
+    fetch,
+    fetchGraphql,
+    notify,
+    env,
+    loading,
+    fetchGraphqlWS
+  });
+  const companyContext = createCompanyContext({ fetch, fetchGraphql, env, notify, loading, fetchGraphqlWS });
   return {
     client,
     fetch,
@@ -114,7 +135,7 @@ export const createApplicationContext = () => {
     loading,
     env,
     uiControl,
-    subscriptionClient,
+    fetchGraphqlWS,
     accountingContext,
     authenticationContext,
     companyContext
