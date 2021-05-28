@@ -1,12 +1,12 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getTransactionContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
 
   const { notify, loading } = getApplicationContext();
-  const { remove, getTransaction } = getTransactionContext();
+  const { remove, getTransaction } = stores.getTransactionContext();
   const { isRemoveOwnGranted } = getAclContext();
 
   let transaction;
@@ -23,9 +23,10 @@
   async function removeHandler() {
     try {
       $loading = true;
-      await remove($transaction.id);
+      const id = $transaction.id
+      await remove(id);
       $goto("../");
-      notify(`transaksi id '${$transaction.id}' berhasil dihapus`, "success");
+      notify(`transaksi id '${id}' berhasil dihapus`, "success");
       $loading = false;
     } catch (e) {
       notify(e.message, "error");

@@ -1,13 +1,13 @@
 <script>
-  import { format, parse } from "date-fns";
-  import { getTransactionContext } from "__@modules/accounting";
+  import dayjs from "dayjs";
+  import { stores } from "@deboxsoft/accounting-client";
   import CellRp from "__@comps/CellRp.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
   import MenuListTransaction from "./MenuListTransaction.svelte";
   import Table from "__@comps/Table.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
 
-  const { transactionStore, transactionPageInfo, find } = getTransactionContext();
+  const { transactionStore, transactionPageInfo, find } = stores.getTransactionContext();
 
   export const filter = {};
 
@@ -36,7 +36,7 @@
       <div class="dbx-tr">
         <div class="dbx-cell no">{transaction.id || ""}</div>
         <div class="dbx-cell date">
-          {format(parse(transaction.date, "T", new Date()), "dd-MM-yy") || ""}
+          {dayjs(transaction.date).format("DD-MM-YY") || ""}
         </div>
         <div class="dbx-cell account">
           <CellAccount id={transaction.accountId} />
@@ -48,8 +48,10 @@
         <div class="dbx-cell status">
           <span
             class="badge"
-            class:badge-warning={transaction.status === "UNAPPROVED"}
-            class:badge-success={transaction.status === "APPROVED"}>{transaction.status || ""}</span
+            class:badge-primary={transaction.status === "UNAPPROVED"}
+            class:badge-danger={transaction.status === "REJECTED"}
+            class:badge-light={transaction.status === "FIXED"}
+            class:badge-success={transaction.status === "APPROVED"}>{transaction.status}</span
           >
         </div>
         <div class="dbx-cell -menu-list" style="width: 30px">
@@ -59,9 +61,7 @@
     {/each}
     {#if $transactionPageInfo.hasNext}
       <div class="dbx-tr">
-        <button class="btn btn-light w-100">
-          Load More
-        </button>
+        <button class="btn btn-light w-100"> Load More </button>
       </div>
     {/if}
   </Table>

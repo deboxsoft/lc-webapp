@@ -4,8 +4,9 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableTransaction from "./_tables/TableTransaction.svelte";
-  import { createTransactionContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { createAclContext } from "./_acl-context";
+  import { getApplicationContext } from "../../../modules/app";
   // import DatePickr from "__@comps/DatePickr.svelte";
 
   const { readGranted, createGranted } = createAclContext();
@@ -13,8 +14,10 @@
     $goto("/access-denied");
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
+  const applicationContext = getApplicationContext();
+  const accountContext = stores.getAccountContext();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { load } = createTransactionContext();
+  const { load } = stores.createTransactionContext({ accountContext, ...applicationContext});
 
   let filter;
   let fetchMor;
@@ -35,7 +38,7 @@
       <!--      <div class="w-100 form-group-feedback form-group-feedback-right">-->
       <!--        <input type="search" class="form-control input" placeholder="Search" />-->
       <!--        <div class="form-control-feedback text-grey-600">-->
-      <!--          <i class="fal fa-search" />-->
+<!--                <i class="icon-search4" />-->
       <!--        </div>-->
       <!--      </div>-->
       <!--      <DatePickr id="date" name="date" mode="menu" placeholder="Tanggal" confirmEnable />-->
@@ -43,7 +46,7 @@
       <!--        <span>Filter</span>-->
       <!--      </button>-->
       {#if createGranted}
-        <a href={$url("./create")} class="btn bg-primary"><i class="fal fa-plus" /></a>
+        <a href={$url("./create")} class="btn bg-primary"><i class="icon-plus2" /></a>
       {/if}
     </div>
   </div>

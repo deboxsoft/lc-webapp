@@ -1,18 +1,19 @@
 <script>
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
-  import { getTransactionContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
 
   const { loading, notify } = getApplicationContext();
   const { auth, approveGranted, rejectGranted, isUpdateOwnGranted, isRemoveOwnGranted } = getAclContext();
-  const { approve, unApprove, reject, unReject } = getTransactionContext();
+  const { approve, unApprove, reject, unReject } = stores.getTransactionContext();
 
   export let transaction;
 
   $: approved = transaction.status === "APPROVED";
   $: rejected = transaction.status === "REJECTED";
+  $: fixed = transaction.status === "FIXED";
   let dropdownTriggerElement;
 
   $: id = transaction.id;
@@ -73,7 +74,7 @@
       <i class="icon-menu9" />
     </a>
     <div slot="menu">
-      {#if approveGranted && !rejected}
+      {#if approveGranted && !rejected && !fixed}
         {#if !approved}
           <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={approveHandler}
             ><i class="icon-check2" />Approve</a
@@ -84,7 +85,7 @@
           >
         {/if}
       {/if}
-      {#if rejectGranted && !approved}
+      {#if rejectGranted && !approved && !fixed}
         {#if !rejected}
           <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={rejectHandler}
             ><i class="icon-cancel-circle2" />Reject</a
@@ -96,8 +97,8 @@
         {/if}
       {/if}
       <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Transaksi</a>
-      {#if !approved}
-        {#if isUpdateOwnGranted(transaction.userId)}
+      {#if !approved && !fixed}
+        {#if isUpdateOwnGranted(transaction.userId) && !rejected}
           <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-pencil" />Ubah Akun</a>
         {/if}
         {#if isRemoveOwnGranted(transaction.userId)}

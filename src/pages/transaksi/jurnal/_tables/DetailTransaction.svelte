@@ -27,9 +27,9 @@
         :
         <span
           class="badge"
-          class:badge-warning={transaction.status === "UNAPPROVED"}
+          class:badge-primary={transaction.status === "UNAPPROVED"}
           class:badge-danger={transaction.status === "REJECTED"}
-          class:badge-primary={transaction.status === "FIXED"}
+          class:badge-light={transaction.status === "FIXED"}
           class:badge-success={transaction.status === "APPROVED"}>{transaction.status}</span
         >
       </p>

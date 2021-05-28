@@ -1,14 +1,14 @@
 <!--routify:options title="update Transaksi"-->
 <script>
   import { params, goto } from "@roxi/routify";
-  import { getAccountContext, getTransactionContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import Modal from "__@comps/Modal.svelte";
   import FormJournal from "../_forms/FormJournal.svelte";
 
   // context
   const { notify, loading } = getApplicationContext();
-  const { update, getTransaction } = getTransactionContext();
+  const { update, getTransaction } = stores.getTransactionContext();
   const { accountStore } = getAccountContext();
 
   let transaction;

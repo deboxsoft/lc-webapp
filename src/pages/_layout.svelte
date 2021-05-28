@@ -1,6 +1,6 @@
 <!-- routify:options preload="proximity" -->
 <script lang="ts">
-  import { redirect, layout, url, ready } from "@roxi/routify";
+  import { url, ready } from "@roxi/routify";
   import initial from "initials";
   import { onMount, tick } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
@@ -9,6 +9,7 @@
   import SidebarContent from "__@root/layout/SidebarContent.svelte";
   import NavbarLeft from "__@root/layout/NavbarLeftLayout.svelte";
   import NavbarRight from "__@root/layout/NavbarRightLayout.svelte";
+  import Login from "__@root/layout/Login.svelte";
   import Footer from "__@root/layout/FooterLayout.svelte";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
@@ -25,7 +26,6 @@
   const { companyStore, getCompany } = companyContext;
 
   // init loading
-  let loginPage = $layout.path === "/login";
   let mounted = false;
   let submitting = true;
   let accountingLoaded = false;
@@ -40,33 +40,37 @@
   getCompany();
 
   $: {
-    if (!submitting && !$authenticationStore.authenticated) {
+    if (!submitting && $authenticationStore.authenticated) {
       tick().then(() => {
-        $redirect("./login");
+        menus = getMenus(authenticationContext);
+        if (!accountingLoaded) {
+          accountingLoaded = true;
+          accountingContext
+            .load()
+            .then(() => {
+              $loading = false;
+              $ready();
+            })
+            .catch((e) => {
+              console.error(e);
+              $loading = false;
+              $ready();
+            });
+        }
+        $loading = false;
       });
-    } else if (!submitting && $authenticationStore.authenticated) {
-      menus = getMenus(authenticationContext);
-      if (!accountingLoaded) {
-        accountingLoaded = true;
-        accountingContext
-          .load()
-          .then(() => {
-            $loading = false;
-            $ready();
-          })
-          .catch((e) => {
-            console.error(e);
-            $loading = false;
-            $ready();
-          });
-      }
-      $loading = false;
     }
   }
 
-  authenticationContext.authenticate().then(() => {
-    submitting = false;
-  });
+  authenticationContext
+    .authenticate()
+    .then(() => {
+      submitting = false;
+      $loading = false;
+    })
+    .catch(() => {
+      $loading = false;
+    });
 </script>
 
 <TopLoader loading={$loading} />
@@ -118,7 +122,7 @@
     </div>
   </div>
 {:else}
-  <slot />
+  <Login />
 {/if}
 
 <!-- close footer -->
