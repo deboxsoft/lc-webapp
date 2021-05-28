@@ -1,9 +1,11 @@
-<script>
+<script lang="ts">
+  import { createEventDispatcher } from "svelte";
+  import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { InventoryInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
-  import { getPreferenceContext, getInventoryContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
 
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import Form from "__@comps/forms/Form.svelte";
@@ -12,8 +14,8 @@
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = getPreferenceContext();
-  const { categoryInventoryStore } = getInventoryContext();
+  const { currentDateStore } = stores.getPreferenceContext();
+  const { categoryInventoryStore } = stores.getInventoryContext();
   const dispatch = createEventDispatcher();
 
   const depreciationMethods = [{ id: "STRAIGHT_LINE", label: "Garis Lurus" }];
@@ -57,12 +59,7 @@
       </div>
       <div class="form-group col-12 col-md-6">
         <label for="purchaseDate">Umur Aset</label>
-        <InputField
-          id="estimatedLife"
-          name="estimatedLife"
-          class="form-control"
-          placeholder="Umur Aset"
-        />
+        <InputField id="estimatedLife" name="estimatedLife" class="form-control" placeholder="Umur Aset" />
       </div>
     </div>
     <div class="row">
@@ -86,13 +83,23 @@
     <div class="row">
       <div class="form-group col-12">
         <label for="accumulatedDepreciationAccount">Akun Akumulasi Depresiasi</label>
-        <AccountSelect id="accumulatedDepreciationAccount" name="accumulatedDepreciationAccount" class="form-control" placeholder="Akun Aset" />
+        <AccountSelect
+          id="accumulatedDepreciationAccount"
+          name="accumulatedDepreciationAccount"
+          class="form-control"
+          placeholder="Akun Aset"
+        />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
         <label for="depreciationAccount">Akun Beban Depresiasi</label>
-        <AccountSelect id="depreciationAccount" name="depreciationAccount" class="form-control" placeholder="Akun Aset" />
+        <AccountSelect
+          id="depreciationAccount"
+          name="depreciationAccount"
+          class="form-control"
+          placeholder="Akun Aset"
+        />
       </div>
     </div>
     <div class="row">

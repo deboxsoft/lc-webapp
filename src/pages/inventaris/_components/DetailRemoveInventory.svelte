@@ -1,8 +1,8 @@
 <script>
-  import { getInventoryContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import CellRp from "__@comps/CellRp.svelte";
 
-  const { getCategoryInventory } = getInventoryContext();
+  const { getCategoryInventory } = stores.getInventoryContext();
   export let inventory;
 </script>
 

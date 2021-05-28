@@ -1,5 +1,5 @@
 <script>
-  import { getBalanceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { onMount, tick } from "svelte";
 
@@ -9,7 +9,7 @@
   import RowTotalBalance from "../../_components/RowTotalBalance.svelte";
 
   const { loading } = getApplicationContext();
-  const { balanceSheetReportPerDate } = getBalanceContext();
+  const { balanceSheetReportPerDate } = stores.getBalanceContext();
 
   export let date;
   let balanceSheetReport;

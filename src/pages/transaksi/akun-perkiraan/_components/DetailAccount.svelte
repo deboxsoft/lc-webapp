@@ -1,9 +1,9 @@
 <script>
   import { get } from "svelte/store";
   import { url } from "@roxi/routify";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
 
-  const { getAccountType, getAccount } = getAccountContext();
+  const { getAccountType, getAccount } = stores.getAccountContext();
   export let account;
 </script>
 

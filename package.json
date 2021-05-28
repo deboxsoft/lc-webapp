@@ -20,8 +20,8 @@
     "lint": "run-p lint:svelte lint:eslint lint:tsc"
   },
   "dependencies": {
-    "@deboxsoft/accounting-api": "~0.2.0-0",
-    "@deboxsoft/accounting-client": "~0.2.0-0",
+    "@deboxsoft/accounting-api": "~1.0.0-0",
+    "@deboxsoft/accounting-client": "~1.0.0-0",
     "@deboxsoft/module-client": "~1.8.0-0",
     "@deboxsoft/module-core": "~1.8.0-0",
     "@deboxsoft/module-graphql": "~1.8.0-0",
@@ -42,8 +42,9 @@
     "__@root": "link:./src",
     "__@stores": "link:./src/stores",
     "autonumeric": "^4.6.0",
+    "cross-fetch": "^3.1.4",
     "crypto-js": "^4.0.0",
-    "date-fns": "^2.17.0",
+    "dayjs": "^1.10.5",
     "dropzone": "^5.7.2",
     "filepond": "^4.27.1",
     "filepond-plugin-file-validate-type": "^1.2.6",

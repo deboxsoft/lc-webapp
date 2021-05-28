@@ -3,11 +3,11 @@
   import DropZone from "svelte-file-dropzone/src/components/Dropzone.svelte";
   import TableStatementBank from "./TableStatementBank.svelte";
   import { createTransformBank } from "./_transform-csv";
-  import { getBankStatementContext, getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import csvUtils from "papaparse";
 
-  const { bank } = getBankStatementContext();
-  const { getAccount } = getAccountContext();
+  const { bank } = stores.getBankStatementContext();
+  const { getAccount } = stores.getAccountContext();
 
   export let fileLoaded;
   export let isPreview;

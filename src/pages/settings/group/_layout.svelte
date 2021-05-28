@@ -35,7 +35,7 @@
                 <i class="icon-menu9" />
               </a>
               <div slot="menu">
-                <!--      <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="fal fa-file-alt" />Lihat Akun</a>-->
+                <!--      <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Akun</a>-->
                 <a href={$url("./:id/update", { id: group.id, name: group.name, role: group.role })} class="dropdown-item"><i class="icon-pencil5" />Ubah Group</a>
                 <a href={$url("./:id/remove", { id: group.id, name: group.name })} class="dropdown-item"><i class="icon-minus2" />Hapus Group</a>
               </div>

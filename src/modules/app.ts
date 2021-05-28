@@ -1,18 +1,22 @@
 import type { GraphQLClient, FetchGraphql } from "@deboxsoft/module-graphql";
 
 import "./errors-map";
+import id from "dayjs/locale/id";
+import dayjs from "dayjs";
 import fetch from "cross-fetch";
+import { stores } from "@deboxsoft/accounting-client";
 import { SubscriptionClient } from "graphql-subscriptions-client";
 import { createUIContext } from "__@stores/ui";
 import { setContext, getContext } from "svelte";
 import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
-import { registerAccountingContext, createCompanyContext } from "./accounting";
+import { registerAccountingContext } from "./accounting";
 import { createConfigModule } from "./config";
 import { createAuthenticationContext } from "./users";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
+dayjs.locale(id);
 const defaultConfig: Partial<NotifyConfig> = {
   theme: "metroui",
   timeout: 1000
@@ -108,7 +112,7 @@ export const createApplicationContext = () => {
   // register service
   const authenticationContext = createAuthenticationContext(appContext);
   const accountingContext = registerAccountingContext(appContext);
-  const companyContext = createCompanyContext(appContext);
+  const companyContext = stores.createCompanyContext(appContext);
   return {
     ...appContext,
     accountingContext,

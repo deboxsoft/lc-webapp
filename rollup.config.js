@@ -84,6 +84,7 @@ export default [
         "__@root": path.join(__dirname, "src"),
         "process.env.DBX_ENV_GRAPHQL_URL": `"${process.env.DBX_ENV_GRAPHQL_URL}"`,
         "process.env.DBX_ENV_GRAPHQL_WS": `"${process.env.DBX_ENV_GRAPHQL_WS}"`,
+        "process.env.DBX_ENV_API_URL": `"${process.env.DBX_ENV_API_URL}"`,
         "process.env.NODE_ENV": `"${production}"`
       }),
       svelte({

@@ -53,7 +53,7 @@
 </script>
 
 <Modal class="modal-lg" open title="Ganti Password">
-  <Form  bind:fields {schema} bind:submitted bind:submitHandler>
+  <Form bind:fields {schema} bind:submitted bind:submitHandler>
     <div class="card">
       <div class="card-body">
         <Alert bind:message={alertMessage} bind:open={alertOpen} />

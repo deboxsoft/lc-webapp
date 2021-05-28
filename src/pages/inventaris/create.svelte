@@ -1,12 +1,12 @@
 <!--routify:options title="membuat inventaris"-->
 <script>
-  import { getInventoryContext, getPreferenceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import Form from "./_components/FormInventory.svelte";
   import { getApplicationContext } from "__@modules/app";
 
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = getPreferenceContext();
-  const { create } = getInventoryContext();
+  const { currentDateStore } = stores.getPreferenceAccountingContext();
+  const { create } = stores.getInventoryContext();
 
   let inventory = {
     date: $currentDateStore

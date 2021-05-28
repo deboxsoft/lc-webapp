@@ -1,10 +1,9 @@
 <script>
-  import { format, parse } from "date-fns";
-  import { get } from "svelte/store";
-  import { getInventoryContext } from "__@modules/accounting";
+
+  import { stores } from "@deboxsoft/accounting-client";
   import CellAccount from "__@comps/account/CellAccount.svelte";
 
-  const { getCategoryInventory } = getInventoryContext();
+  const { getCategoryInventory } = stores.getInventoryContext();
   export let categoryInventory;
 </script>
 

@@ -12,7 +12,7 @@
 
 <PageLayout breadcrumb={[]}>
   <div class="header-elements" slot="header-elements">
-    <a href={$url('./create')} class="btn btn-primary btn-icon"><i class="fal fa-plus" /></a>
+    <a href={$url('./create')} class="btn btn-primary btn-icon"><i class="icon-plus2" /></a>
   </div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">

@@ -1,7 +1,7 @@
 <!--routify:options title="Create Bank"-->
 <script>
   import { params, goto } from "@roxi/routify";
-  import { getBankContext, getPreferenceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import FormBank from "./_components/FormBank.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
@@ -11,8 +11,8 @@
     $goto("/access-denied");
   }
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = getPreferenceContext();
-  const { create } = getBankContext();
+  const { currentDateStore } = stores.getPreferenceAccountingContext();
+  const { create } = stores.getBankContext();
 
   let bank = {
     date: $currentDateStore

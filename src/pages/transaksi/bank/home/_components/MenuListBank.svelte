@@ -20,13 +20,13 @@
     </a>
     <div slot="menu">
       <a href={$url("../:bankId/statements", { bankId: id })} class="dropdown-item"
-        ><i class="fal fa-file-excel" />Rekonsiliasi</a
+        ><i class="icon-file-excel" />Rekonsiliasi</a
       >
       {#if updateGranted}
-        <a href={$url("../home/:id/update", { id })} class="dropdown-item"><i class="fal fa-file-edit" />Ubah Bank</a>
+        <a href={$url("../home/:id/update", { id })} class="dropdown-item"><i class="icon-pencil" />Ubah Bank</a>
       {/if}
       {#if removeGranted}
-        <a href={$url("../home/:id/remove", { id })} class="dropdown-item"><i class="fal fa-trash-alt" />Hapus Bank</a>
+        <a href={$url("../home/:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Bank</a>
       {/if}
     </div>
   </Dropdown>

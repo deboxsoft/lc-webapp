@@ -1,10 +1,10 @@
 <!--routify:options title="Update Bank"-->
 <script>
   import { params } from "@roxi/routify";
-  import { getBankContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
 
-  const { update, getBank } = getBankContext();
+  const { update, getBank } = stores.getBankContext();
   const { notify, loading } = getApplicationContext();
 
   $: bank = getBank($params.id);

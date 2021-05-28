@@ -1,10 +1,10 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getBankStatementContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
 
-  const { removeStatement, getStatement, bank } = getBankStatementContext();
+  const { removeStatement, getStatement, bank } = stores.getBankStatementContext();
   const { notify, loading } = getApplicationContext();
 
   async function removeHandler() {

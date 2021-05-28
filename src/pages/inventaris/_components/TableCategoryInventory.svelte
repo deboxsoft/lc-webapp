@@ -1,8 +1,8 @@
-<script lang="ts">
-  import { getInventoryContext } from "__@modules/accounting";
+<script>
+  import { stores } from "@deboxsoft/accounting-client";
   import AccountCell from "__@comps/account/CellAccount.svelte";
 
-  const { categoryInventoryStore } = getInventoryContext();
+  const { categoryInventoryStore } = stores.getInventoryContext();
 </script>
 
 <table class="table table-hover text-nowrap">

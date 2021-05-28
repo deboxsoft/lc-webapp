@@ -1,7 +1,7 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getBankContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
@@ -10,7 +10,7 @@
   if (!removeGranted) {
     $goto("/access-denied");
   }
-  const { remove, getBank } = getBankContext();
+  const { remove, getBank } = stores.getBankContext();
   const { loading, notify } = getApplicationContext();
 
   async function removeHandler() {

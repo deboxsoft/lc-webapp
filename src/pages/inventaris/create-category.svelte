@@ -1,12 +1,12 @@
 <!--routify:options title="Membuat kategori inventaris"-->
 <script>
-  import { getInventoryContext, getPreferenceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import Form from "./_components/FormInventory.svelte";
   import { getApplicationContext } from "__@modules/app";
 
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = getPreferenceContext();
-  const { createCategory } = getInventoryContext();
+  const { currentDateStore } = stores.getPreferenceContext();
+  const { createCategory } = stores.getInventoryContext();
 
   let inventory = {
     date: $currentDateStore

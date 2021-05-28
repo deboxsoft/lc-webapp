@@ -1,7 +1,7 @@
 <!--routify:options title="Akun Perkiraan"-->
 <script lang="ts">
   import { url, goto } from "@roxi/routify";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
@@ -11,7 +11,7 @@
 
   const { readGranted } = createAclContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { accountStore, getAccountType } = getAccountContext();
+  const { accountStore, getAccountType } = stores.getAccountContext();
   const { loading } = getApplicationContext();
 
   if (!readGranted) {
@@ -50,11 +50,11 @@
       <div class="list-icons">
         <input class="form-control input" placeholder="search" on:input={filterHandler} />
         <div class="form-control-feedback text-grey-600">
-          <i class="fal fa-search" />
+          <i class="icon-search4" />
         </div>
       </div>
     </div>
-    <a href={$url("./create")} class="btn btn-primary btn-icon"><i class="fal fa-plus" /></a>
+    <a href={$url("./create")} class="btn btn-primary btn-icon"><i class="icon-plus2" /></a>
   </div>
   <div class="card d-flex flex-column flex-1">
     <div class="card-header header-elements-inline">

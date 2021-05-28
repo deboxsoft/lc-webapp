@@ -9,7 +9,7 @@
   // context
   const { notify, loading } = getApplicationContext();
   const { update, getTransaction } = stores.getTransactionContext();
-  const { accountStore } = getAccountContext();
+  const { accountStore } = stores.getAccountContext();
 
   let transaction;
   $: _transaction = getTransaction($params.id);
