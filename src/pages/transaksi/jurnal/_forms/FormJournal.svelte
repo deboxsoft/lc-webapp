@@ -7,15 +7,15 @@
   import { utils } from "@deboxsoft/module-core";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import SaveIcon from "__@comps/icons/Save.svelte";
-  import { getTransactionContext, getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import InputDate from "__@comps/forms/InputDateField.svelte";
   import FormJournalAccount from "./FormJournalAccount.svelte";
 
-  const { getTransactionType, transactionTypeStore } = getTransactionContext();
-  const { getAccountLeaf } = getAccountContext();
+  const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
+  const { getAccountLeaf } = stores.getAccountContext();
   const dispatch = createEventDispatcher();
   // props
   export let values: Partial<TransactionInput> = {};
@@ -23,6 +23,8 @@
   export const title: string = "";
 
   let isValid = writable(false);
+  let fieldsErrors;
+  let fields
 
   // handler
   function createUpdateAmountHandler() {
@@ -37,13 +39,13 @@
 
 </script>
 
-<Form checkValidateFirst schema={TransactionInputSchema} {isValid} bind:values on:submit>
+<Form checkValidateFirst schema={TransactionInputSchema} bind:fieldsErrors bind:fields {isValid} bind:values on:submit>
   <div class="card">
     <div class="card-body">
       <div class="row">
         <div class="form-group col-md-6">
           <label for="date">Tanggal</label>
-          <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" value={new Date()} disabled />
+          <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" value={new Date()} disabled={values.status === "UNAPPROVED"} />
         </div>
         <div class="form-group col-md-6">
           <label for="no">No Bukti/kwitansi</label>

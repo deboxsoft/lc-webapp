@@ -1,10 +1,10 @@
 <script>
   import { params } from "@roxi/routify";
-  import { getTransactionContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { writable } from "svelte/store";
   import DetailTransaction from "../_tables/DetailTransaction.svelte";
 
-  const context = getTransactionContext();
+  const context = stores.getTransactionContext();
   let backUrl = $params.backUrl || "../";
 
   let transaction = writable(undefined);

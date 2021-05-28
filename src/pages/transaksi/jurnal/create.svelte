@@ -1,7 +1,7 @@
 <!--routify:options title="Transaksi Baru"-->
 <script lang="ts">
   import { goto } from "@roxi/routify";
-  import { getTransactionContext, getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import {getAclContext} from "./_acl-context"
@@ -9,9 +9,9 @@
   import FormJournal from "./_forms/FormJournal.svelte";
 
   // context
-  const { create, getTransaction } = getTransactionContext();
+  const { create, getTransaction } = stores.getTransactionContext();
   const { createGranted } = getAclContext();
-  const { accountStore } = getAccountContext();
+  const { accountStore } = stores.getAccountContext();
   const { authenticationStore } = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
 
@@ -23,8 +23,7 @@
   let transaction = {
     date: new Date(),
     type: "JOURNAL",
-    total: 0,
-    accounts: [{}],
+    creditAccounts: [{}],
     userId: $authenticationStore.profile.id
   };
 
