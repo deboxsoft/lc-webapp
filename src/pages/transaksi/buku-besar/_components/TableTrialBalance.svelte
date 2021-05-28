@@ -1,10 +1,10 @@
 <script>
-  import { lightFormat, parse } from "date-fns";
+  import dayjs from "dayjs";
   import CellRp from "__@comps/CellRp.svelte";
-  import { getGeneralLedgerContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import Table from "__@comps/Table.svelte";
 
-  const { generalLedgerStore } = getGeneralLedgerContext();
+  const { generalLedgerStore } = stores.getGeneralLedgerContext();
 </script>
 
   <Table items={$generalLedgerStore} let:item={generalLedger}>
@@ -18,7 +18,7 @@
     </div>
     <div class="dbx-tr">
       <div class="dbx-cell date">
-        {lightFormat(parse(generalLedger.date, "T", new Date()), "dd-M-yyyy") || ""}
+        {dayjs(generalLedger.date).format("DD-MM-YY") || ""}
       </div>
       <div class="dbx-cell no">
 <!--        <a-->

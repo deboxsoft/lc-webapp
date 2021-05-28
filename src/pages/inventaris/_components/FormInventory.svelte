@@ -1,9 +1,12 @@
 <script>
+  import { createEventDispatcher } from "svelte";
+  import { writable } from "svelte/store";
+
   import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { InventoryInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
-  import { getPreferenceContext, getInventoryContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
 
   import InputDate from "__@comps/forms/InputDateField.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
@@ -12,8 +15,8 @@
   import ComboxField from "__@comps/forms/ComboxField.svelte";
 
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = getPreferenceContext();
-  const { categoryInventoryStore } = getInventoryContext();
+  const { currentDateStore } = stores.getPreferenceContext();
+  const { categoryInventoryStore } = stores.getInventoryContext();
   const dispatch = createEventDispatcher();
 
   // props

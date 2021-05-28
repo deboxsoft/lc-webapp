@@ -1,6 +1,6 @@
 <script>
   import { params, goto } from "@roxi/routify";
-  import { getInventoryContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import FormInventory from "../_components/FormInventory.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
@@ -9,7 +9,7 @@
   if (!updateGranted) {
     $goto("/access-denied");
   }
-  const { update, getInventory } = getInventoryContext();
+  const { update, getInventory } = stores.getInventoryContext();
   const { loading, notify } = getApplicationContext();
 
   $: to = $params.to || "../";

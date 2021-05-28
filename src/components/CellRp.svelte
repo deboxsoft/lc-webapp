@@ -1,9 +1,23 @@
 <script lang="ts">
-  import {convertToRp} from "__@root/utils"
+  import { convertToRp } from "__@root/utils";
 
   export let value;
   export let spaceMinus: boolean = false;
+  let { class: className } = $$props;
 </script>
+
+<div {...$$restProps} class="cell-rp {className}" class:-minus={value < 0}>
+  <!--{#if spaceMinus && (value < 0)}-->
+  <!--  <div class="space-sign" />-->
+  <!--{/if}-->
+  <div class="sign">Rp.</div>
+  <div class="space" />
+  <div class="value">{value ? convertToRp(parseFloat(value).toFixed(2)) : "-"}</div>
+  {#if spaceMinus && value > 0}
+    <div class="space-sign" />
+  {/if}
+</div>
+
 <style lang="scss" global>
   .cell-rp {
     display: flex;
@@ -26,14 +40,3 @@
     }
   }
 </style>
-<div class="cell-rp" class:-minus={value < 0}>
-  <!--{#if spaceMinus && (value < 0)}-->
-  <!--  <div class="space-sign" />-->
-  <!--{/if}-->
-  <div class="sign">Rp.</div>
-  <div class="space" />
-  <div class="value">{value ? convertToRp(parseInt(value)) : "-"}</div>
-  {#if spaceMinus && (value > 0)}
-    <div class="space-sign" />
-  {/if}
-</div>

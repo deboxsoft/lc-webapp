@@ -2,7 +2,7 @@
 <script>
   import { goto } from "@roxi/routify";
   import FormAccount from "./_components/FormAccount.svelte";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "./_acl-context";
 
@@ -11,7 +11,7 @@
     $goto("/access-denied");
   }
   const { notify, loading } = getApplicationContext();
-  const { create } = getAccountContext();
+  const { create } = stores.getAccountContext();
 
   async function onSubmit(values) {
     if (values.isParent) {

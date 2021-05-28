@@ -2,10 +2,12 @@
 <script lang="ts">
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { createBalanceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
 
   const auth = getAuthenticationContext();
+  const applicationContext = getApplicationContext();
   const statementIncomeShow = auth.getQuery().read("statementIncome").granted;
   const balanceSheetShow = auth.getQuery().read("balanceSheet").granted;
   const show = statementIncomeShow || balanceSheetShow;
@@ -15,7 +17,7 @@
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "pengikhtisaran" });
-  createBalanceContext();
+  stores.createBalanceContext(applicationContext);
 </script>
 
 <slot />

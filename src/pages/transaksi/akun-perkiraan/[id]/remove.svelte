@@ -1,11 +1,11 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
 
-  const { remove } = getAccountContext();
+  const { remove } = stores.getAccountContext();
   const { notify, loading } = getApplicationContext();
   const { removeGranted } = getAclContext();
   if (!removeGranted) {

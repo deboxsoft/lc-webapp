@@ -44,7 +44,7 @@
     $loading = true;
     if (await reject([id])) {
       transaction.status = "REJECTED";
-      notify(`transaksi id '${id}' telah diapprove`, "success");
+      notify(`transaksi id '${id}' telah direject`, "success");
     } else {
       notify(`approve transaksi id '${id}' tidak berhasil`, "error");
     }

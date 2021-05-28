@@ -1,8 +1,8 @@
 <script>
-  import { format, parse } from "date-fns";
+  import dayjs from "dayjs";
   import InlineCheckBox from "__@comps/InlineCheckBox.svelte";
   import { get, writable } from "svelte/store";
-  import { getBankStatementContext, getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import Table from "__@comps/Table.svelte";
   import AccountCell from "__@comps/account/CellAccount.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
@@ -10,8 +10,8 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import MenuListStatement from "../MenuListStatement.svelte";
 
-  const { bank } = getBankStatementContext();
-  const { getAccount, getAccountLeaf } = getAccountContext();
+  const { bank } = stores.getBankStatementContext();
+  const { getAccount, getAccountLeaf } = stores.getAccountContext();
   export let bankStatementList = undefined;
   export let preview = false;
   export let loading;
@@ -107,7 +107,7 @@
           </div>
         {/if}
         <div class="dbx-cell text-center date">
-          {!preview ? format(parse(bankStatement.date, "T", new Date()), "dd-MM-yy") : bankStatement.date || ""}
+          {dayjs(bankStatement.date).format("DD-MMM-YYYY") || ""}
         </div>
         <div class="dbx-cell d-sm-none d-md-flex">{bankStatement.description || ""}</div>
         <div class="dbx-cell text-right amount"><CellRp value={bankStatement.in} /></div>
@@ -151,7 +151,7 @@
     flex: 0 0 30px;
   }
   .date {
-    flex: 0 0 75px;
+    flex: 0 0 100px;
   }
 
   .amount {

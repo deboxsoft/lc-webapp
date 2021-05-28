@@ -1,8 +1,8 @@
 <script>
-  import { getAccountContext } from "../../modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { createEventDispatcher } from "svelte";
 
-  const accountContext = getAccountContext();
+  const accountContext = stores.getAccountContext();
   export let accountStore = accountContext.accountStore;
   export let name = "accountId";
   export let accountId = undefined;

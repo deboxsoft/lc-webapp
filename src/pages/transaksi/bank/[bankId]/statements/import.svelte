@@ -1,17 +1,17 @@
 <!--routify:options title="Import Statement"-->
 <script>
-  import { parse } from "date-fns";
+  import dayjs from "dayjs";
   import { goto } from "@roxi/routify";
   import FormImport from "./_components/FormImport.svelte";
   import Modal from "__@comps/Modal.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import { writable, get } from "svelte/store";
-  import { getBankStatementContext, getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
 
   const { loading: loadingApp, notify } = getApplicationContext();
-  const { getAccount } = getAccountContext();
-  const { importStatement, bank } = getBankStatementContext();
+  const { getAccount } = stores.getAccountContext();
+  const { importStatement, bank } = stores.getBankStatementContext();
   let fileLoaded = false;
   let isPreview = false;
   let fileData = writable(undefined);
@@ -38,7 +38,7 @@
       if (!errors || errors.length === 0) {
         const _statements = statements.map(({ date, ...data }) => ({
           ...data,
-          date: parse(date, "dd/MM/yy", new Date())
+          date: dayjs(date, "DD/MM/YY").toDate()
         }));
         await importStatement($bank.id, _statements);
         $itemsSelected = [];

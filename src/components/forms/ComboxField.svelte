@@ -1,6 +1,5 @@
 <script>
   import { getFormContext } from "../../stores/form";
-  import { getAccountContext } from "../../modules/accounting";
   import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
 
@@ -10,7 +9,6 @@
     submitted: false,
     fieldsErrors: writable(undefined)
   };
-  const accountContext = getAccountContext();
   export let items = [];
   export let name = undefined;
   export const select = $fields && $fields[name] || undefined;
@@ -19,7 +17,7 @@
   export let valueId = "id"
   export let value = undefined;
 
-  $fields[name] = value;
+  $fields[name] = value || select;
   const dispatch = createEventDispatcher();
 
   $: {

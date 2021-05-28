@@ -58,6 +58,9 @@
   }
 
   function documentClickHandler(e) {
+    if (!element) {
+      return;
+    }
     if (e && (e.code === "Tab" || (e.type === "keyup" && e.code !== "Enter"))) return;
 
     if (element.contains(e.target) && element !== e.target && (e.type !== "keyup" || e.code === "Tab")) {

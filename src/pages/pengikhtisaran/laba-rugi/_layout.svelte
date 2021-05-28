@@ -2,7 +2,7 @@
 <script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getPreferenceContext, getBalanceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableLabaRugi from "./_components/TableLabaRugi.svelte";
   import DatePickr from "__@comps/DatePickr.svelte";
@@ -14,8 +14,8 @@
     $goto("/access-denied");
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { currentDateStore } = getPreferenceContext();
-  const { perDate, generateReport } = getBalanceContext();
+  const { currentDateStore } = stores.getPreferenceAccountingContext();
+  const { perDate, generateReport } = stores.getBalanceContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
   let generateReportHandler;

@@ -1,10 +1,10 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getInventoryContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import DetailCategoryInventory from "../_components/DetailCategoryInventory.svelte";
 
-  const { getCategoryInventory } = getInventoryContext();
+  const { getCategoryInventory } = stores.getInventoryContext();
 
   export let to = "../";
 

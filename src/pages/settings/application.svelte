@@ -3,7 +3,7 @@
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getCompanyContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { writable } from "svelte/store";
   import { createAclContext } from "./_acl-context";
 
@@ -12,7 +12,7 @@
     $goto("/access-denied");
   }
   const { notify, loading } = getApplicationContext();
-  const { companyStore, update } = getCompanyContext();
+  const { companyStore, update } = stores.getCompanyContext();
 
   let fields = writable({});
 

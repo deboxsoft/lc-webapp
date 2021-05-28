@@ -1,5 +1,4 @@
-import parse from "date-fns/parse";
-import isValid from "date-fns/isValid";
+import dayjs from "dayjs";
 
 export const TEMPLATE_PARSE = {
   STANDARD: "Standard",
@@ -16,10 +15,13 @@ function sanitizeString(_val: string = "") {
   return _val.trim().replace(/\s+/g, " ");
 }
 
-function sanitizeNumber(_val: string = "") {
-  _val = _val.replace(/\./g, "");
-  _val = _val.replace(/,/g, ".");
-  return parseFloat(_val);
+function sanitizeNumber(stringValue: string = "") {
+  stringValue = stringValue.trim();
+  let result = stringValue.replace(/[^0-9]/g, "");
+  if (/[,\\.]\d{2}$/.test(stringValue)) {
+    result = result.replace(/(\d{2})$/, ".$1");
+  }
+  return parseFloat(result);
 }
 
 function sanitizeAccount(_val: string) {
@@ -27,8 +29,8 @@ function sanitizeAccount(_val: string) {
 }
 
 function parseDate(val: string, format: string): Date | false {
-  const date = parse(val, format, new Date());
-  if (isValid(date)) {
+  const date = dayjs(val, format).toDate();
+  if (dayjs(date).isValid()) {
     return date;
   }
   return false;
@@ -38,7 +40,7 @@ export const bni_transform = (value: string, field: number) => {
   switch (field) {
     // date
     case 0:
-      return parse(value, "dd/MM/YYYY HH.mm.ss", new Date());
+      return dayjs(value, "DD/MM/YYYY HH.mm.ss").toDate();
     // description
     case 1:
       return sanitizeString(value);
@@ -50,7 +52,7 @@ export const bni_transform = (value: string, field: number) => {
 
 export const createTransformBank = (output: any[]) => {
   return (result, self: any) => {
-    if (parseDate(result.data[0], "dd/MM/yyyy")) {
+    if (parseDate(result.data[0], "DD/MM/YYYY")) {
       output.push({
         date: result.data[0],
         description: sanitizeString(`${result.data[1]}`),

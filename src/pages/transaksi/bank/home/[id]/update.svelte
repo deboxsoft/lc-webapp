@@ -1,7 +1,7 @@
 <!--routify:options title="Update Bank"-->
 <script>
   import { params, goto } from "@roxi/routify";
-  import { getBankContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import FormBank from "../_components/FormBank.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
@@ -10,7 +10,7 @@
   if (!updateGranted) {
     $goto("/access-denied");
   }
-  const { update, getBank } = getBankContext();
+  const { update, getBank } = stores.getBankContext();
   const { loading, notify } = getApplicationContext();
 
   $: bank = getBank($params.id);

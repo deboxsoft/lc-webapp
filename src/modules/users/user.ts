@@ -1,7 +1,11 @@
+import type { UserService } from "@deboxsoft/users-api";
 import type { UserContext } from "@deboxsoft/users-client/types/stores";
 
 import { stores, graphql } from "@deboxsoft/users-client";
 import { ApplicationContext, getApplicationContext } from "../app";
+
+let userService: UserService;
+export const getUserService = () => {};
 
 export const createUserContext = (
   { fetchGraphql, notify, env }: ApplicationContext = getApplicationContext()

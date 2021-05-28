@@ -1,11 +1,11 @@
 <script>
   import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import RowAccountBalance from "./RowAccountBalance.svelte";
 
   const { loading } = getApplicationContext();
-  const { getAccountsTree } = getAccountContext();
+  const { getAccountsTree } = stores.getAccountContext();
 
   let accounts;
   export let isBalanceFixed = false;

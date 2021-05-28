@@ -1,10 +1,10 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import DetailAccount from "../_components/DetailAccount.svelte";
 
-  const { getAccount } = getAccountContext();
+  const { getAccount } = stores.getAccountContext();
 
   export let to = "../";
 

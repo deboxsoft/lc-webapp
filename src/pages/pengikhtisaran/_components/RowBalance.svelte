@@ -39,7 +39,7 @@
 </tr>
 {#if account.children && expanded}
   {#each account.children as child}
-    <tr class="child" style="cursor: pointer">
+    <tr class="child">
       <td style="width: 10px"></td>
       <td>- {child.name}</td>
       <td class="d-table-cell d-xl-none">&nbsp;</td>

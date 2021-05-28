@@ -1,9 +1,9 @@
 <script>
   import CellRp from "__@comps/CellRp.svelte";
   import { writable } from "svelte/store";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
 
-  const { accountStore, getAccount } = getAccountContext();
+  const { accountStore, getAccount } = stores.getAccountContext();
   export let id = undefined;
   export let isBalanceSheet = false;
   export let value = undefined;
@@ -21,5 +21,5 @@
 </script>
 
 {#if $_store}
-  <CellRp {value} />
+  <CellRp {value} {...$$restProps} />
 {/if}

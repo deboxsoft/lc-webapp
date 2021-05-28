@@ -1,15 +1,21 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import Avatar from "__@comps/Avatar.svelte";
-  import { goto, route, redirect } from "@roxi/routify";
+  import { goto, route } from "@roxi/routify";
   import { getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
 
   const { authenticationStore, logout } = getAuthenticationContext();
+  const { loading } = getApplicationContext();
   $: profileName = $authenticationStore.profile.name;
   let triggerElement: HTMLElement;
 
   async function logoutHandler() {
+    $loading = true;
     await logout();
+    await tick();
+    $loading = false;
   }
 
   function passwordHandler() {

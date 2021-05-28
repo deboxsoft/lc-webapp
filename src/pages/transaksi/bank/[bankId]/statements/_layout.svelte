@@ -4,7 +4,7 @@
   import { url, params } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import { createBankStatementContext, getBankContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
 
   import TableStatementBank from "./_components/TableStatementBank.svelte";
@@ -12,11 +12,15 @@
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Rekonsiliasi Detail" });
-  const { notify, loading: loadingApp } = getApplicationContext();
+  const applicationContext = getApplicationContext();
+  const { notify, loading: loadingApp } = applicationContext;
 
   let loading = true;
-  const { getBank } = getBankContext();
-  const { findStatement, bank, reconcile, bankStatementStore } = createBankStatementContext(getBank($params.bankId));
+  const { getBank } = stores.getBankContext();
+  const { findStatement, bank, reconcile, bankStatementStore } = stores.createBankStatementContext({
+    bank: getBank($params.bankId),
+    ...applicationContext
+  });
   let itemsSelected;
   let errors = [];
   $: bankStatementList = $bankStatementStore;
@@ -36,9 +40,9 @@
       errors = [];
       for (const { status, ...statement } of bankStatementList) {
         if ($itemsSelected.includes(index)) {
-          const amount = statement.in || statement.out
+          const amount = statement.in || statement.out;
           if (!statement.accountId || !amount) {
-            errors.push(index)
+            errors.push(index);
           }
           statements.push(statement);
         }
@@ -56,7 +60,7 @@
       } else if (statements.length === 0) {
         notify("Belum ada data yang dipillih", "error");
       } else {
-        notify("Terdapat data yang belum lengkap", "error")
+        notify("Terdapat data yang belum lengkap", "error");
       }
     } catch (e) {
       // console.error(e);
