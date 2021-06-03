@@ -6,7 +6,7 @@
   import TableTransaction from "./_tables/TableTransaction.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { createAclContext } from "./_acl-context";
-  import { getApplicationContext } from "../../../modules/app";
+  import { getApplicationContext } from "__@modules/app";
   // import DatePickr from "__@comps/DatePickr.svelte";
 
   const { readGranted, createGranted } = createAclContext();

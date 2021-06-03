@@ -1,8 +1,8 @@
 import type { AuthenticationContext } from "@deboxsoft/users-client/types/stores";
 import type { FetchGraphql } from "@deboxsoft/module-graphql";
+import type { ApisContext } from "@deboxsoft/module-client";
 
 import { stores, graphql } from "@deboxsoft/users-client";
-import { ApplicationContext, getApplicationContext } from "../app";
 import { createJwtStore } from "__@stores/session";
 
 let authenticationService;
@@ -16,15 +16,12 @@ export const getAuthService = (fetch: FetchGraphql) => {
   return authService;
 };
 
-export const createAuthenticationContext = (
-  { fetch, fetchGraphql, notify, env }: ApplicationContext = getApplicationContext()
-): AuthenticationContext => {
-  authService = getAuthService(fetchGraphql);
+export const createAuthenticationContext = (apisContext: ApisContext): AuthenticationContext => {
+  authService = getAuthService(apisContext.fetchGraphql);
   const jwtStore = createJwtStore();
   return stores.createAuthenticationStoreService({
     jwtStore,
     authenticationService: authService,
-    notify: (env !== "production" && notify) || undefined,
     errors: {},
     notifications: {}
   });

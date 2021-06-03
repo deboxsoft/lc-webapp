@@ -5,12 +5,14 @@ import { stores, graphql } from "@deboxsoft/users-client";
 import { ApplicationContext, getApplicationContext } from "../app";
 
 let userService: UserService;
-export const getUserService = () => {};
+export const getUserService = () => userService;
 
 export const createUserContext = (
   { fetchGraphql, notify, env }: ApplicationContext = getApplicationContext()
 ): UserContext => {
-  const userService = new graphql.UserGraphqlClient(fetchGraphql);
+  if (userService) {
+    userService = new graphql.UserGraphqlClient(fetchGraphql);
+  }
   return stores.createUserStoreService({
     userService,
     notify: (env !== "production" && notify) || undefined,

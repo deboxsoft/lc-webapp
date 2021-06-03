@@ -1,8 +1,5 @@
 <script lang="ts">
-  import InfiniteLoading from "__@comps/loader/InfiniteLoading.svelte";
-
   export let items: any[] | undefined = undefined;
-  export let infiniteEnable = false;
 </script>
 
 <div class="dbx-table" {...$$restProps}>
@@ -17,11 +14,6 @@
     {:else}
       <slot />
     {/if}
-    <div>
-      {#if infiniteEnable}
-        <InfiniteLoading on:infinite />
-      {/if}
-    </div>
   </div>
 </div>
 

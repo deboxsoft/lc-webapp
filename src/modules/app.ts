@@ -1,14 +1,10 @@
-import type { GraphQLClient, FetchGraphql } from "@deboxsoft/module-graphql";
-
 import "./errors-map";
 import id from "dayjs/locale/id";
 import dayjs from "dayjs";
-import fetch from "cross-fetch";
+import { ApisContext, createApisContext } from "@deboxsoft/module-client";
 import { stores } from "@deboxsoft/accounting-client";
-import { SubscriptionClient } from "graphql-subscriptions-client";
 import { createUIContext } from "__@stores/ui";
 import { setContext, getContext } from "svelte";
-import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
 import { registerAccountingContext } from "./accounting";
@@ -22,11 +18,7 @@ const defaultConfig: Partial<NotifyConfig> = {
   timeout: 1000
 };
 
-export interface ApplicationContext {
-  client?: GraphQLClient;
-  fetchGraphqlWS: SubscriptionClient;
-  fetch: typeof fetch;
-  fetchGraphql: FetchGraphql;
+export interface ApplicationContext extends ApisContext {
   apiUrl: string;
   notify: (message: string, type?: TypeNoty, config?: NotifyConfig) => void;
   loading: Writable<boolean>;
@@ -70,21 +62,20 @@ export const createBaseApplicationContext = () => {
   };
   const loading = createLoadingStore();
   const config = writable({});
-  const { client, fetch: fetchGraphql } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
-  const fetchGraphqlWS = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
+  const apisContext = createApisContext({
+    graphqlUrl: process.env.DBX_ENV_GRAPHQL_URL,
+    graphqlWsUrl: process.env.DBX_ENV_GRAPHQL_WS
+  });
   const apiUrl = process.env.DBX_ENV_API_URL || "localhost";
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
   loading.set(true);
-  const configPromise = createConfigModule(fetchGraphql).then((_) => config.set(_));
+  const configPromise = createConfigModule(apisContext.fetchGraphql).then((_) => config.set(_));
   Promise.all([configPromise]).then(() => {
     loading.set(false);
   });
   const context: ApplicationContext = {
-    client,
-    fetch,
-    fetchGraphql,
-    fetchGraphqlWS,
+    ...apisContext,
     apiUrl,
     notify,
     loading,
@@ -93,18 +84,7 @@ export const createBaseApplicationContext = () => {
     uiControl
   };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
-  return {
-    client,
-    fetch,
-    fetchGraphql,
-    fetchGraphqlWS,
-    apiUrl,
-    notify,
-    loading,
-    env,
-    config,
-    uiControl
-  };
+  return context;
 };
 
 export const createApplicationContext = () => {
