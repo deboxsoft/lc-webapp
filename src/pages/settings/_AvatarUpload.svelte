@@ -77,8 +77,8 @@
     const baseConfigServer = {
       url: $config.avatarUploadPath,
       headers: {
-        "user-id": profile.id,
-        avatar: profile.avatar
+        "User-Id": profile.id,
+        Avatar: profile.avatar
       }
     };
     const _options = {

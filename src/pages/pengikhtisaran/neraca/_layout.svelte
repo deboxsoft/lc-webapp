@@ -39,7 +39,7 @@
     </div>
   </div>
   <div class="card d-flex flex-1 flex-column">
-    <div class="card-body d-flex flex-1">
+    <div class="card-body d-flex flex-1 flex-column">
       <TableNeraca date={$currentDateStore} bind:generateReportHandler />
     </div>
   </div>

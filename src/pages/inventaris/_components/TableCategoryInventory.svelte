@@ -33,3 +33,4 @@
     {/each}
   </tbody>
 </table>
+<div class="flex-1" />

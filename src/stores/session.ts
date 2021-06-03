@@ -1,4 +1,4 @@
-// import sha256 from "crypto-js/sha256.js";
+// import sha256 from "crypto-js";
 import { writable } from "svelte/store";
 import { createWritableStore } from "./localstorage";
 
@@ -8,6 +8,11 @@ export const browser = writable("UNKNOWN");
 export const ip = writable("UNKNOWN");
 export const os = writable("UNKNOWN");
 
+export type SessionInfo = {
+  name: string;
+  value: string;
+  version: string;
+};
 export const createJwtStore = () => createWritableStore("__tok", undefined);
 
 // export function audBuilder(bd) {

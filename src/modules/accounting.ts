@@ -5,7 +5,10 @@ import { stores } from "@deboxsoft/accounting-client";
 export const registerAccountingContext = (applicationContext: ApplicationContext) => {
   applicationContext.loading.set(true);
   const preferenceAccountingContext = stores.createPreferenceAccountingContext(applicationContext);
-  const accountContext = stores.createAccountContext({ preferenceAccountingContext, ...applicationContext });
+  const accountContext = stores.createAccountContext({
+    preferenceAccountingContext,
+    ...applicationContext
+  });
   return {
     load: () => {
       const preferenceLoad = preferenceAccountingContext.load();
