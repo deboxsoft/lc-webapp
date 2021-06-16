@@ -5,6 +5,6 @@
   const {authenticationStore} = getAuthenticationContext();
 
   $: if ($authenticationStore.authenticated) {
-    $redirect("/transaksi/akun-perkiraan")
+    $redirect("/dashboard")
   }
 </script>

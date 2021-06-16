@@ -82,7 +82,7 @@
   }
 
   .bank {
-    flex: 0 0 250px;
+    flex: 0 0 150px;
   }
 
   .account {
@@ -90,7 +90,7 @@
   }
 
   .name {
-    flex: 0 0 250px;
+    flex: 0 0 150px;
   }
 
   .balance {
