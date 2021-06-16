@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { derived } from "svelte/store";
   import { utils } from "@deboxsoft/module-core";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { getFormContext } from "__@stores/form";
@@ -23,11 +24,17 @@
   export const isValid: boolean = false;
 
   const { getAccountLeaf, getAccount } = stores.getAccountContext();
-  const accountStore = getAccountLeaf();
+  const accountStore = getAccountCredit();
 
   const { fields, fieldsErrors } = getFormContext();
 
 
+  function getAccountCredit () {
+    const accountStore = getAccountLeaf();
+    return derived(accountStore, (_) => _.filter((_) => {
+      return /^[^5].*/g.test(_.id);
+    }))
+  }
   // createFormContext({ schema: JournalAccountSchema, values: input, validateField });
 
   function validateField(_fieldName) {

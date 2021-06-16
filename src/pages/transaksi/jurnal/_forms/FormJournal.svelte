@@ -1,17 +1,17 @@
 <script lang="ts">
   import type { TransactionInput } from "@deboxsoft/accounting-api";
+  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
+  import { stores } from "@deboxsoft/accounting-client";
+  import { utils } from "@deboxsoft/module-core";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputDate from "__@comps/forms/InputDateField.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import InputRp from "__@comps/forms/InputNumberField.svelte";
+  import SaveIcon from "__@comps/icons/Save.svelte";
 
   import { createEventDispatcher } from "svelte";
-  import { writable } from "svelte/store";
-  import { utils } from "@deboxsoft/module-core";
-  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
-  import SaveIcon from "__@comps/icons/Save.svelte";
-  import { stores } from "@deboxsoft/accounting-client";
-  import InputRp from "__@comps/forms/InputNumberField.svelte";
-  import Form from "__@comps/forms/Form.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
-  import InputDate from "__@comps/forms/InputDateField.svelte";
+  import { derived, writable } from "svelte/store";
   import FormJournalAccount from "./FormJournalAccount.svelte";
 
   const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
@@ -25,6 +25,13 @@
   let isValid = writable(false);
   let fieldsErrors;
   let fields
+
+  function getAccountDebit () {
+    const accountStore = getAccountLeaf();
+    return derived(accountStore, (_) => {
+      return _.filter((_) => /^[^4].*/g.test(_.id));
+    })
+  }
 
   // handler
   function createUpdateAmountHandler() {
@@ -75,7 +82,7 @@
         <div class="form-group col-md-6">
           <label for="accountId">Debit</label>
 <!--            <AccountCombox id="accountId" accountStore={getAccountLeaf()} allowEmpty />-->
-          <AccountSelect id="accountId" accountStore={getAccountLeaf()} allowEmpty />
+          <AccountSelect id="accountId" accountStore={getAccountDebit()} allowEmpty />
         </div>
         <div class="form-group col-md-6">
           <label for="amount">Jumlah</label>
