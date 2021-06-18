@@ -1,16 +1,13 @@
 <!--routify:options title="Membuat kategori inventaris"-->
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import Form from "./_components/FormInventory.svelte";
+  import Form from "./_components/FormCategoryInventory.svelte";
   import { getApplicationContext } from "__@modules/app";
 
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = stores.getPreferenceContext();
   const { createCategory } = stores.getInventoryContext();
 
-  let inventory = {
-    date: $currentDateStore
-  };
+  let categoryInventory = {};
 
   async function onSubmit(values) {
     try {
@@ -25,4 +22,4 @@
   }
 </script>
 
-<Form {inventory} title="Membuat Data Kategori Inventaris" {onSubmit} />
+<Form {categoryInventory} title="Membuat Data Kategori Inventaris" {onSubmit} />

@@ -5,12 +5,9 @@
   import { getApplicationContext } from "__@modules/app";
 
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = stores.getPreferenceAccountingContext();
   const { create } = stores.getInventoryContext();
 
-  let inventory = {
-    date: $currentDateStore
-  };
+  let inventory = {};
 
   async function onSubmit(values) {
     try {
