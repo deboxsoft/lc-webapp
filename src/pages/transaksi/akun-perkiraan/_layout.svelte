@@ -65,5 +65,5 @@
       <TableAccount {accounts} />
     </div>
   </div>
+  <slot />
 </PageLayout>
-<slot />
