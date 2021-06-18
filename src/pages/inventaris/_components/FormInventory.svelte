@@ -15,7 +15,6 @@
   import ComboxField from "__@comps/forms/ComboxField.svelte";
 
   const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = stores.getPreferenceContext();
   const { categoryInventoryStore } = stores.getInventoryContext();
   const dispatch = createEventDispatcher();
 
