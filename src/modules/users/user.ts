@@ -10,7 +10,7 @@ export const getUserService = () => userService;
 export const createUserContext = (
   { fetchGraphql, notify, env }: ApplicationContext = getApplicationContext()
 ): UserContext => {
-  if (userService) {
+  if (!userService) {
     userService = new graphql.UserGraphqlClient(fetchGraphql);
   }
   return stores.createUserStoreService({
