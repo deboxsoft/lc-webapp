@@ -1,12 +1,13 @@
 <script>
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
 
   const { loading, notify } = getApplicationContext();
-  const { auth, approveGranted, rejectGranted, isUpdateOwnGranted, isRemoveOwnGranted } = getAclContext();
+  const { auth, approveGranted, rejectGranted, removeGranted, updateGranted } = getAclContext();
   const { approve, unApprove, reject, unReject } = stores.getTransactionContext();
 
   export let transaction;
@@ -64,47 +65,42 @@
 </script>
 
 <div class="list-icons">
-  <Dropdown let:toggle let:toggleClass>
-    <a
-      href="/#"
-      on:click|preventDefault={toggle}
-      class="list-icons-item align-items-center {toggleClass}"
-      target="_self"
-    >
+  <Dropdown>
+    <DropdownToggle class="list-icons-item align-items-center" tag="div">
       <i class="icon-menu9" />
-    </a>
-    <div slot="menu">
+    </DropdownToggle>
+    <svelte:fragment slot="menu">
       {#if approveGranted && !rejected && !fixed}
         {#if !approved}
           <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={approveHandler}
             ><i class="icon-check2" />Approve</a
           >
-        {:else}
-          <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={unApproveHandler}
-            ><i class="icon-undo2" />UnApprove</a
-          >
+        <!--{:else}-->
+        <!--  <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={unApproveHandler}-->
+        <!--    ><i class="icon-undo2" />UnApprove</a-->
+        <!--  >-->
         {/if}
       {/if}
-      {#if rejectGranted && !approved && !fixed}
-        {#if !rejected}
-          <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={rejectHandler}
-            ><i class="icon-cancel-circle2" />Reject</a
-          >
-        {:else}
-          <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={unRejectHandler}
-            ><i class="icon-undo" />UnReject</a
-          >
-        {/if}
-      {/if}
+      <!--{#if rejectGranted && !approved && !fixed}-->
+      <!--  {#if !rejected}-->
+      <!--    <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={rejectHandler}-->
+      <!--      ><i class="icon-cancel-circle2" />Reject</a-->
+      <!--    >-->
+      <!--  {:else}-->
+      <!--    <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={unRejectHandler}-->
+      <!--      ><i class="icon-undo" />UnReject</a-->
+      <!--    >-->
+      <!--  {/if}-->
+      <!--{/if}-->
       <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Transaksi</a>
       {#if !approved && !fixed}
-        {#if isUpdateOwnGranted(transaction.userId) && !rejected}
+        {#if updateGranted}
           <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-pencil" />Ubah Akun</a>
         {/if}
-        {#if isRemoveOwnGranted(transaction.userId)}
+        {#if removeGranted}
           <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Transaksi</a>
         {/if}
       {/if}
-    </div>
+    </svelte:fragment>
   </Dropdown>
 </div>

@@ -8,8 +8,8 @@ type Context = {
   readGranted: boolean;
   approveGranted: boolean;
   rejectGranted: boolean;
-  isUpdateOwnGranted: (userId: string) => boolean;
-  isRemoveOwnGranted: (userId: string) => boolean;
+  updateGranted: (userId: string) => boolean;
+  removeGranted: (userId: string) => boolean;
 };
 
 export const createAclContext = () => {
@@ -19,16 +19,16 @@ export const createAclContext = () => {
   const readGranted = permission.read().granted;
   const approveGranted = permission.approve().granted;
   const rejectGranted = permission.reject().granted;
-  const isUpdateOwnGranted = (userId) => auth.isOwner(userId) && permission.updateOwn().granted;
-  const isRemoveOwnGranted = (userId) => auth.isOwner(userId) && permission.deleteOwn().granted;
+  const updateGranted = (userId) => auth.isOwner(userId) || permission.update().granted;
+  const removeGranted = (userId) => auth.isOwner(userId) || permission.delete().granted;
   const context = {
     auth,
     createGranted,
     readGranted,
     approveGranted,
     rejectGranted,
-    isUpdateOwnGranted,
-    isRemoveOwnGranted
+    updateGranted,
+    removeGranted
   };
   setContext("acl-context", context);
   return context;
