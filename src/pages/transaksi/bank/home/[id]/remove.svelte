@@ -19,7 +19,7 @@
       await remove($params.id);
       $loading = false;
       $goto("../");
-      notify(`berhasil menghapus data bank id '${$params.id}'`);
+      notify(`berhasil menghapus data bank id '${$params.id}'`, "success");
     } catch (e) {
       $loading = false;
     }
@@ -33,11 +33,11 @@
 </script>
 
 <Modal open title="Hapus Content">
-  {#if loading || !$bank}
+  {#if $loading || !$bank}
     <Loader />
   {:else}
     <div class="alert alert-warning alert-styled-left">
-      Apa anda yakin akan menghapus bank "{$bank.bank}"?
+      Apa anda yakin akan menghapus bank "{$bank.name}"?
     </div>
   {/if}
   <svelte:fragment slot="footer">
