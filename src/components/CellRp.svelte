@@ -3,7 +3,7 @@
 
   export let value;
   export let spaceMinus: boolean = false;
-  let { class: className } = $$props;
+  export let className = $$props.class || "";
 </script>
 
 <div {...$$restProps} class="cell-rp {className}" class:-minus={value < 0}>

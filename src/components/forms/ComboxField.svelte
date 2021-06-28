@@ -16,6 +16,7 @@
   export let labelId = "label"
   export let valueId = "id"
   export let value = undefined;
+  export let placeHolder = "";
 
   $fields[name] = value || select;
   const dispatch = createEventDispatcher();
@@ -43,7 +44,7 @@
   on:change={createChangeHandler()}
 >
   {#if allowEmpty}
-    <option />
+    <option label={placeHolder} />
   {/if}
   {#each items as item}
     <option value={item[valueId] || item}>{item[labelId] || item}</option>

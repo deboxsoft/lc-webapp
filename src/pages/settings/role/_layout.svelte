@@ -3,6 +3,7 @@
   import { getAccessControlContext } from "__@modules/users";
   import { url, goto } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
 
   const { readUserGranted } = createAclContext();
@@ -27,20 +28,15 @@
         <div class="dbx-cell">{role}</div>
         <div class="dbx-cell -menu-list" style="width: 30px">
           <div class="list-icons">
-            <Dropdown let:toggle let:toggleClass>
-              <a
-                href="/#"
-                on:click|preventDefault={toggle}
-                class="list-icons-item align-items-center {toggleClass}"
-                target="_self"
-              >
+            <Dropdown>
+              <DropdownToggle class="list-icons-item align-items-center" tag="div">
                 <i class="icon-menu9" />
-              </a>
-              <div slot="menu">
+              </DropdownToggle>
+              <svelte:fragment slot="menu">
                 <a href={$url("./:role/view", { role })} class="dropdown-item"><i class="icon-eye" />Detail Role</a>
                 <a href={$url("./:role/update", { role })} class="dropdown-item"><i class="icon-pencil5" />Ubah Role</a>
                 <a href={$url("./:role/remove", { role })} class="dropdown-item"><i class="icon-minus2" />Hapus Role</a>
-              </div>
+              </svelte:fragment>
             </Dropdown>
           </div>
         </div>

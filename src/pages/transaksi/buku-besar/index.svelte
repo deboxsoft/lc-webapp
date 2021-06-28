@@ -28,11 +28,9 @@
 </script>
 
 <PageLayout breadcrumb={[]}>
-  <div class="header-elements" slot="header-elements">
-    <div class="list-icons">
-      <ComboxField name="balanceType" items={itemsComboBox} bind:value={cbValue} on:change={cbHandler} />
-    </div>
-  </div>
+  <svelte:fragment slot="breadcrumb-items-right">
+    <ComboxField class="breadcrumb-elements-item" name="balanceType" items={itemsComboBox} bind:value={cbValue} on:change={cbHandler} />
+  </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
       <TableAccountBalance bind:isBalanceFixed />

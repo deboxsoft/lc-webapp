@@ -94,10 +94,10 @@
       <!--{/if}-->
       <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Transaksi</a>
       {#if !approved && !fixed}
-        {#if updateGranted}
+        {#if updateGranted(transaction.userId)}
           <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-pencil" />Ubah Akun</a>
         {/if}
-        {#if removeGranted}
+        {#if removeGranted(transaction.userId)}
           <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Transaksi</a>
         {/if}
       {/if}

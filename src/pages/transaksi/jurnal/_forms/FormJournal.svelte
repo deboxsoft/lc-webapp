@@ -2,7 +2,7 @@
   import type { TransactionInput } from "@deboxsoft/accounting-api";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
-  import { utils } from "@deboxsoft/module-core";
+  import { debounce } from "@deboxsoft/module-core";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import Form from "__@comps/forms/Form.svelte";
   import InputDate from "__@comps/forms/InputDateField.svelte";
@@ -35,7 +35,7 @@
 
   // handler
   function createUpdateAmountHandler() {
-    return utils.debounce((e) => {
+    return debounce((e) => {
       // debit = e.detail;
     });
   }

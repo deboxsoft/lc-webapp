@@ -32,7 +32,7 @@
   }
 </script>
 
-<Modal open title="Hapus Content">
+<Modal open title="Hapus Content" onClose={closeHandler}>
   {#if $loading || !$bank}
     <Loader />
   {:else}

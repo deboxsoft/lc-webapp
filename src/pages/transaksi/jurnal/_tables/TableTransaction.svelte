@@ -9,9 +9,10 @@
   import InfiniteScroll from "__@comps/InfiniteScroll.svelte";
 
   const { loading } = getApplicationContext();
-  const { transactionStore, transactionPageInfo, find } = stores.getTransactionContext();
+  const { transactionPageInfo, find } = stores.getTransactionContext();
 
-  export const filter = {};
+  export let transactions = [];
+  export let filter;
 
   // state
   let submitting = false;
@@ -26,7 +27,7 @@
           next: $transactionPageInfo.next
         }
       },
-      { fetchMore: true }
+      { more: true }
     );
     submitting = false;
     $loading = false;
@@ -43,7 +44,7 @@
     <div class="dbx-cell status">Status</div>
     <div class="dbx-cell -menu-list" />
   </div>
-  {#each $transactionStore as transaction}
+  {#each transactions as transaction}
     <div class="dbx-tr">
       <div class="dbx-cell no">{transaction.id || ""}</div>
       <div class="dbx-cell date">
@@ -52,7 +53,7 @@
       <div class="dbx-cell account">
         <CellAccount id={transaction.accountId} />
       </div>
-      <div class="dbx-cell flex-grow-1">{transaction.description || ""}</div>
+      <div class="dbx-cell">{transaction.description || ""}</div>
       <div class="dbx-cell amount">
         <CellRp value={transaction.amount} />
       </div>

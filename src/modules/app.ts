@@ -9,7 +9,8 @@ import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
 import { registerAccountingContext } from "./accounting";
 import { createConfigModule } from "./config";
-import { createAuthenticationContext } from "./users";
+import { createUsersModuleContext } from "./users";
+import { createJwtStore, JwtStore } from "__@stores/jwt";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
 dayjs.locale(id);
@@ -25,6 +26,7 @@ export interface ApplicationContext extends ApisContext {
   env?: string;
   config?: Writable<any>;
   uiControl?: any;
+  jwtStore: JwtStore;
 }
 
 const APPLICATION_CONTEXT = "ApplicationContext";
@@ -66,6 +68,19 @@ export const createBaseApplicationContext = () => {
     graphqlUrl: process.env.DBX_ENV_GRAPHQL_URL,
     graphqlWsUrl: process.env.DBX_ENV_GRAPHQL_WS
   });
+  // jwt
+  const jwtStore = createJwtStore();
+  // subscribe jwt
+  jwtStore.subscribe((_) => {
+    if (_) {
+      apisContext.addHeader("Authorization", `Bearer ${_}`);
+    } else {
+      apisContext.addHeader("Authorization", undefined);
+      const headers = apisContext.getHeaders();
+      delete headers.Authorization;
+      apisContext.setHeaders(headers);
+    }
+  });
   const apiUrl = process.env.DBX_ENV_API_URL || "localhost";
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
@@ -81,7 +96,8 @@ export const createBaseApplicationContext = () => {
     loading,
     env,
     config,
-    uiControl
+    uiControl,
+    jwtStore
   };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   return context;
@@ -90,7 +106,7 @@ export const createBaseApplicationContext = () => {
 export const createApplicationContext = () => {
   const appContext = createBaseApplicationContext();
   // register service
-  const authenticationContext = createAuthenticationContext(appContext);
+  const authenticationContext = createUsersModuleContext(appContext);
   const accountingContext = registerAccountingContext(appContext);
   const companyContext = stores.createCompanyContext(appContext);
   return {

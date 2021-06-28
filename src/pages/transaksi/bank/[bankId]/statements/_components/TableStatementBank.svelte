@@ -85,7 +85,7 @@
         </div>
       {/if}
       <div class="dbx-cell text-center date">Tanggal</div>
-      <div class="dbx-cell d-sm-none d-md-flex">Diskripsi</div>
+      <div class="dbx-cell">Diskripsi</div>
       <div class="dbx-cell d-sm-none d-md-none d-xl-flex amount">Masuk</div>
       <div class="dbx-cell d-sm-none d-md-none d-xl-flex amount">Keluar</div>
       <div class="dbx-cell amount">Saldo</div>
@@ -109,9 +109,9 @@
         <div class="dbx-cell text-center date">
           {dayjs(bankStatement.date).format("DD-MMM-YYYY") || ""}
         </div>
-        <div class="dbx-cell d-sm-none d-md-flex">{bankStatement.description || ""}</div>
-        <div class="dbx-cell text-right amount"><CellRp value={bankStatement.in} /></div>
-        <div class="dbx-cell text-right amount"><CellRp value={bankStatement.out} /></div>
+        <div class="dbx-cell">{bankStatement.description || ""}</div>
+        <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellRp value={bankStatement.in} /></div>
+        <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellRp value={bankStatement.out} /></div>
         <div class="dbx-cell text-right amount"><CellRp value={bankStatement.balance} /></div>
         <div class="dbx-cell account" class:preview>
           {#if preview}
@@ -155,7 +155,7 @@
   }
 
   .amount {
-    flex: 0 0 150px;
+    flex: 0 0 125px;
   }
 
   .account {

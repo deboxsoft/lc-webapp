@@ -1,6 +1,5 @@
 // import sha256 from "crypto-js";
 import { writable } from "svelte/store";
-import { createWritableStore } from "./localstorage";
 
 // JWT-related
 export const aud = writable("UNKNOWN");
@@ -13,7 +12,6 @@ export type SessionInfo = {
   value: string;
   version: string;
 };
-export const createJwtStore = () => createWritableStore("__tok", undefined);
 
 // export function audBuilder(bd) {
 //   const version = parseInt(bd.browser.version);

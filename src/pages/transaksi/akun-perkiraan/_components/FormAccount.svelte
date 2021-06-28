@@ -24,7 +24,7 @@
   const parentAccountStore = getAccountParentList();
 
   // filtering account type
-  const accountTypeItems = $accountsType.filter(_ => {
+  $: accountTypeItems = $accountsType.filter(_ => {
     return !_.disable;
   })
   export let account = {};
@@ -244,11 +244,11 @@
   </Form>
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
-      Cancel
+      Batal
     </button>
     <button type="button" class="btn btn-primary ml-1" disabled={loading} on:click={submitHandler}>
       <i class="icon-floppy-disk mr-2" />
-      Save
+      Simpan
     </button>
   </svelte:fragment>
 </Modal>

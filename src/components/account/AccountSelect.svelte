@@ -8,6 +8,7 @@
   export let accountId: string | undefined = undefined;
   export let allowEmpty: boolean = false;
   export let name: string = "accountId";
+  export let placeholder = "Pilih Akun"
   export let disabled = false;
   export let selectedAccount = accountContext.getAccount(accountId);
   const dispatch = createEventDispatcher();
@@ -33,8 +34,9 @@
   {...$$restProps}
   {disabled}
   {name}
+  {allowEmpty}
   inputClassName="form-control"
-  placeholder="Pilih Akun"
+  {placeholder}
   items={$accountStore || []}
   pristineValue={accountId}
   on:change={changeHandler}
