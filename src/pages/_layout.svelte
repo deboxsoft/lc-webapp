@@ -127,6 +127,9 @@
 
 <!-- close footer -->
 <style lang="scss" global>
+  html {
+    scroll-behavior: smooth;
+  }
   #debox-app {
     display: flex;
     flex: 1;

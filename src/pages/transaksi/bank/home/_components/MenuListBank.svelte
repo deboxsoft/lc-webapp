@@ -1,6 +1,7 @@
 <script>
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { getAclContext } from "../../_acl-context";
 
   const { updateGranted, removeGranted } = getAclContext();
@@ -9,16 +10,11 @@
 </script>
 
 <div class="list-icons">
-  <Dropdown let:toggle let:toggleClass>
-    <a
-      href="/#"
-      on:click|preventDefault={toggle}
-      class="list-icons-item align-items-center {toggleClass}"
-      target="_self"
-    >
+  <Dropdown>
+    <DropdownToggle class="list-icons-item align-items-center" tag="div">
       <i class="icon-menu9" />
-    </a>
-    <div slot="menu">
+    </DropdownToggle>
+    <svelte:fragment slot="menu">
       <a href={$url("../:bankId/statements", { bankId: id })} class="dropdown-item"
         ><i class="icon-file-excel" />Rekonsiliasi</a
       >
@@ -28,6 +24,6 @@
       {#if removeGranted}
         <a href={$url("../home/:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Bank</a>
       {/if}
-    </div>
+    </svelte:fragment>
   </Dropdown>
 </div>

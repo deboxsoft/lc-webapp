@@ -4,7 +4,7 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
 </script>
 
-<PageLayout breadcrumb={[]}>
+<PageLayout headerPageDisable>
   <div class="row">
     <div class="col-xl-7">
       <div class="card" style="height: 100%; width: 100%">
@@ -15,7 +15,7 @@
           <div class="row">
             <div class="col-sm-4">
               <div class="d-flex align-items-center justify-content-center">
-                <a href={$url("/transaksi/journal")}>Transaksi</a>
+                <a href={$url("/transaksi/jurnal")}>Transaksi</a>
               </div>
             </div>
             <div class="col-sm-4">

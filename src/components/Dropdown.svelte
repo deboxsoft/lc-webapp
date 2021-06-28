@@ -1,5 +1,5 @@
 <script context="module">
-  import { setContext, getContext, tick } from "svelte";
+  import { setContext, getContext } from "svelte";
   import { writable } from "svelte/store";
 
   export const createContextDropdown = () => {
@@ -10,122 +10,124 @@
 
   export const getContextDropdown = () => getContext("dropdown-context");
 </script>
-
-<script lang="ts">
+<script>
+  import { onDestroy } from 'svelte';
+  import { createPopperActions } from "../utils";
+  import DropdownMenu from "./DropdownMenu.svelte";
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
 
-  const dropdownStore = createContextDropdown();
-  export let direction: "up-left" | "bottom-left" | "up-right" | "bottom-right" = "bottom-right";
-
-  export let show: boolean = false;
-  export let active: boolean = false;
-  export const size: Size = undefined;
-  export const top: number = 0;
-  export let toggle: (e?: any) => void = toggleHandler;
-  export const setActiveFromChild: boolean = false;
-  export let menuClass: string = "";
-
-  // state
-  let element;
-  let menuElement;
-  let { class: className } = $$props;
-
-  $: classes = clsx(className, "dbx-dropdown");
-  $: menuClasses = clsx(menuClass, "dropdown-menu", `-${direction}`);
-
+  const noop = () => undefined;
+  let context = createContextDropdown();
+  export let className = $$props.class;
+  export let active = false;
+  export let addonType = false;
+  export let direction = 'down';
+  export let dropup = false;
+  export let group = false;
+  export let inNavbar = false;
+  export let show = false;
+  export let isOpen = show;
+  export let nav = false;
+  export let setActiveFromChild = false;
+  export let size = '';
+  export let toggle = undefined;
+  export let menuProps = {};
+  const [popperRef, popperContent] = createPopperActions();
+  const validDirections = ['up', 'down', 'left', 'right', 'start', 'end'];
+  if (validDirections.indexOf(direction) === -1) {
+    throw new Error(
+      `Invalid direction sent: '${direction}' is not one of 'up', 'down', 'left', 'right', 'start', 'end'`
+    );
+  }
+  let component;
+  let dropdownDirection;
+  $: subItemIsActive = !!(
+    setActiveFromChild &&
+    component &&
+    typeof component.querySelector === 'function' &&
+    component.querySelector('.active')
+  );
   $: {
-    if (typeof document !== "undefined") {
-      if (active) {
-        ["click", "touchstart", "keyup"].forEach((event) =>
-          document.addEventListener(event, documentClickHandler, true)
+    if (direction === 'left') dropdownDirection = 'start';
+    else if (direction === 'right') dropdownDirection = 'end';
+    else dropdownDirection = direction;
+  }
+  $: classes = clsx(
+    className,
+    direction !== 'down' && `drop${dropdownDirection}`,
+    nav && active ? 'active' : false,
+    setActiveFromChild && subItemIsActive ? 'active' : false,
+    {
+      [`input-group-${addonType}`]: addonType,
+      'btn-group': group,
+      [`btn-group-${size}`]: !!size,
+      dropdown: !group && !addonType,
+      show: isOpen,
+      'nav-item': nav
+    }
+  );
+  $: {
+    if (typeof document !== 'undefined') {
+      if (isOpen) {
+        ['click', 'touchstart', 'keyup'].forEach((event) =>
+          document.addEventListener(event, handleDocumentClick, true)
         );
       } else {
-        ["click", "touchstart", "keyup"].forEach((event) =>
-          document.removeEventListener(event, documentClickHandler, true)
+        ['click', 'touchstart', 'keyup'].forEach((event) =>
+          document.removeEventListener(event, handleDocumentClick, true)
         );
       }
     }
   }
-
   $: {
-    dropdownStore.update(() => {
+    context.update(() => {
       return {
-        toggle,
-        open,
-        direction
+        toggle: handleToggle,
+        isOpen,
+        direction: direction === 'down' && dropup ? 'up' : direction,
+        inNavbar,
+        popperRef: nav ? noop : popperRef,
+        popperContent: nav ? noop : popperContent
       };
     });
   }
-
-  function documentClickHandler(e) {
-    if (!element) {
+  $: handleToggle = toggle || (() => (isOpen = !isOpen));
+  function handleDocumentClick(e) {
+    if (e && (e.which === 3 || (e.type === 'keyup' && e.which !== 9))) return;
+    if (
+      component.contains(e.target) &&
+      component !== e.target &&
+      (e.type !== 'keyup' || e.which === 9)
+    ) {
       return;
     }
-    if (e && (e.code === "Tab" || (e.type === "keyup" && e.code !== "Enter"))) return;
-
-    if (element.contains(e.target) && element !== e.target && (e.type !== "keyup" || e.code === "Tab")) {
-      return;
+    handleToggle(e);
+  }
+  onDestroy(() => {
+    if (typeof document !== 'undefined') {
+      ['click', 'touchstart', 'keyup'].forEach((event) =>
+        document.removeEventListener(event, handleDocumentClick, true)
+      );
     }
-    toggle(e);
-  }
+  });
 
-  function menuClickHandler() {
-    toggleHandler();
-  }
-
-  function toggleHandler() {
-    show = !show;
-    active = show;
-  }
-
-  function autoScrollComponent(node, { condition, dropdown }) {
-    const autoScroll = () => {
-      if (condition() == false) return;
-      const scrollFunction =
-        "scrollIntoViewIfNeeded" in Element.prototype
-          ? Element.prototype.scrollIntoViewIfNeeded
-          : Element.prototype.scrollIntoView;
-      const dropdownNode = dropdown();
-      if (dropdownNode != null) scrollFunction.call(dropdownNode);
-      scrollFunction.call(node);
-    };
-    autoScroll();
-    return {
-      update: async () => {
-        await tick();
-        autoScroll();
-      }
-    };
+  const closeHandler = () => {
+    isOpen = false;
   }
 </script>
 
-<div {...$$restProps} class={classes} class:show bind:this={element} use:autoScrollComponent={{
-    condition: () => show,
-    dropdown: () => menuElement
-  }}>
-  <slot {toggle} toggleClass="dbx-dropdown-toggle" />
-  <div bind:this={menuElement} class={menuClasses} class:show style="margin: 0;" on:click={menuClickHandler}>
-    <slot name="menu" />
+{#if nav}
+  <li {...$$restProps} class={classes} bind:this={component}>
+    <slot />
+    <DropdownMenu {...menuProps}>
+      <slot name="menu" />
+    </DropdownMenu>
+  </li>
+{:else}
+  <div {...$$restProps} class={classes} bind:this={component}>
+    <slot />
+    <DropdownMenu {...menuProps}>
+      <slot name="menu" {closeHandler} />
+    </DropdownMenu>
   </div>
-</div>
-
-<style lang="scss" global>
-  .dbx-dropdown {
-    display: block;
-    position: relative;
-  }
-  .dbx-dropdown-toggle {
-    position: relative;
-    white-space: nowrap;
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    &.-bottom-right {
-      right: 0;
-      top: auto;
-      left: auto;
-      bottom: auto;
-    }
-  }
-</style>
+{/if}

@@ -7,14 +7,14 @@
 
   const { notify, loading } = getApplicationContext();
   const { remove, getTransaction } = stores.getTransactionContext();
-  const { isRemoveOwnGranted } = getAclContext();
+  const { removeGranted } = getAclContext();
 
   let transaction;
 
   $: {
     transaction = getTransaction($params.id);
     if ($transaction) {
-      if (!isRemoveOwnGranted($transaction.userId)) {
+      if (!removeGranted($transaction.userId)) {
         $goto("/access-denied");
       }
     }
@@ -39,7 +39,7 @@
   }
 </script>
 
-{#if $transaction && isRemoveOwnGranted($transaction.userId) }
+{#if $transaction && removeGranted($transaction.userId) }
   <Modal open title="Hapus Content" onClose={closeHandler}>
     <div class="alert alert-warning alert-styled-left">
       Menghapus transaksi akan menhapus transaksi setelahnya. Apa anda yakin akan menghapus transaksi id `{$transaction.id}`?

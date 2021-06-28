@@ -2,7 +2,7 @@
   import type { BreadcrumbItem } from "__@stores/breadcrumb";
 
   import { layout, page, goto } from "@roxi/routify";
-  import Breadcrumb from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb.svelte";
+  import Breadcrumb from "__@comps/Breadcrumb.svelte";
   import { getUIContext } from "__@stores/ui";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { getApplicationContext } from "__@modules/app";
@@ -12,6 +12,8 @@
     $goto("../");
   };
   export let showBackButton = false;
+  export let breadcrumbDisable = false;
+  export let headerPageDisable = false;
 
   const { loading } = getApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
@@ -26,42 +28,46 @@
 </script>
 
 <div class="content-wrapper">
-  <div class="page-header page-header-light">
-    {#if $breadcrumbStore.length > 0}
-      <Breadcrumb itemList={$breadcrumbStore} />
-    {/if}
-    <div class="mb-1 mt-1 page-header-content header-elements-inline">
-      <h4>
-        {#if showBackButton}
-          <a href="/#" target="_self" on:click|preventDefault={backHandler}>
-            <i class="icon-arrow-left52 mr-2" />
-          </a>
-        {/if}
-        <span class="font-weight-semibold">{$layout.title} {($layout.title && $page.title && "-") || ""}</span>
-        {($layout.title !== $page.title && `  ${$page.title}`) || ""}
-      </h4>
-      <slot name="header-elements" />
-    </div>
-    {#if $$slots["navbar-second"]}
-      <div class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="text-center d-lg-none w-100">
-          <button
-            type="button"
-            class="navbar-toggler dropdown-toggle"
-            data-toggle="collapse"
-            data-target="#navbar-second"
-            on:click={togglerCollapseHandler}
-          >
-            <i class="icon-unfold mr-2" />
-            navigation
-          </button>
-        </div>
-        <div class="navbar-collapse collapse" id="navbar-second" class:show>
-          <slot name="navbar-second" />
-        </div>
+  {#if !headerPageDisable}
+    <div class="page-header page-header-light">
+      <div class="mb-1 mt-1 page-header-content header-elements-inline">
+        <h4>
+          {#if showBackButton}
+            <a href="/#" target="_self" on:click|preventDefault={backHandler}>
+              <i class="icon-arrow-left52 mr-2" />
+            </a>
+          {/if}
+          <span class="font-weight-semibold">{$layout.title} {($layout.title && $page.title && "-") || ""}</span>
+          {($layout.title !== $page.title && `  ${$page.title}`) || ""}
+        </h4>
+        <slot name="header-elements" />
       </div>
-    {/if}
-  </div>
+      {#if $breadcrumbStore.length > 0 && !breadcrumbDisable}
+        <Breadcrumb itemList={$breadcrumbStore}>
+          <slot name="breadcrumb-items-right" />
+        </Breadcrumb>
+      {/if}
+      {#if $$slots["navbar-second"]}
+        <div class="navbar navbar-expand-lg navbar-light bg-light">
+          <div class="text-center d-lg-none w-100">
+            <button
+              type="button"
+              class="navbar-toggler dropdown-toggle"
+              data-toggle="collapse"
+              data-target="#navbar-second"
+              on:click={togglerCollapseHandler}
+            >
+              <i class="icon-unfold mr-2" />
+              navigation
+            </button>
+          </div>
+          <div class="navbar-collapse collapse" id="navbar-second" class:show>
+            <slot name="navbar-second" />
+          </div>
+        </div>
+      {/if}
+    </div>
+  {/if}
   <div class="content">
     <slot />
   </div>

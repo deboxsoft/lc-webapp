@@ -30,8 +30,8 @@
             <Avatar size="50px" class="mr-2" />
           </div>
           <div class="media-body">
-            <div class="media-title font-weight-semibold">{profile.name}</div>
-            <div class="font-size-xs opacity-50"><i class="icon-pin font-size-sm" /> &nbsp;{profile.role}</div>
+            <div class="media-title font-weight-semibold">{profile.displayName}</div>
+            <div class="font-size-xs opacity-50"><i class="icon-pin font-size-sm" /> &nbsp;{profile.session && profile.session.role || "-"}</div>
           </div>
 
           <div class="ml-3 align-self-center"><a href="/#" class="text-white"><i class="icon-cog3" /></a></div>

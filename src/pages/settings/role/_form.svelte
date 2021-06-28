@@ -67,13 +67,13 @@
           selected: false
         },
         {
-          label: "ubah:pembuat",
-          value: "update:own",
+          label: "ubah",
+          value: "update:any",
           selected: false
         },
         {
-          label: "hapus:pembuat",
-          value: "delete:own",
+          label: "hapus",
+          value: "delete:any",
           selected: false
         }
       ]

@@ -3,14 +3,18 @@
   import { url, isActive } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import { createUserContext, createAccessControlContext, getAuthenticationContext } from "__@modules/users";
+  import { getAuthenticationContext, createUserContext, createAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Loader from "__@comps/loader/Loader.svelte";
 
-  const { find, findGroup } = createUserContext();
-  const { load } = createAccessControlContext();
-  const { loading } = getApplicationContext();
+  /**
+   *
+   * @type {ApplicationContext}
+   */
+  const { loading, apiUrl, fetchGraphql } = getApplicationContext();
+  const { find, findGroup } = createUserContext({ apiUrl, fetchGraphql });
   const authContext = getAuthenticationContext();
+  const { load } = createAccessControlContext({ authContext, apiUrl, fetchGraphql });
 
   const boot = () => {
     $loading = true;

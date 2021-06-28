@@ -11,9 +11,12 @@
 </script>
 
 <PageLayout breadcrumb={[]}>
-  <div class="header-elements" slot="header-elements">
-    <a href={$url('./create')} class="btn btn-primary btn-icon"><i class="icon-plus2" /></a>
-  </div>
+  <svelte:fragment slot="breadcrumb-items-right">
+    <a href={$url("./create")} class="breadcrumb-elements-item">
+      <i class="icon-plus2 mr-1" />
+      Tambah
+    </a>
+  </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
       <Table />

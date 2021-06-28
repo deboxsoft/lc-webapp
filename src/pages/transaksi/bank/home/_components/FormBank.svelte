@@ -183,7 +183,7 @@
   }
 </script>
 
-<Modal {title}>
+<Modal {title} onClose={cancelHandler}>
   <Form schema={BankInputSchema} values={bank} bind:fields>
     <div class="card">
       <div class="card-body">
@@ -225,12 +225,12 @@
             <AccountSelect id="account" name="accountId"  allowEmpty />
           </div>
         </div>
-        <div class="row">
-          <div class="form-group col-md-12">
-            <label for="balance">Saldo Terakhir</label>
-            <InputNumberField id="balance" name="balance" class="form-control" signed={false} />
-          </div>
-        </div>
+<!--        <div class="row">-->
+<!--          <div class="form-group col-md-12">-->
+<!--            <label for="balance">Saldo Terakhir</label>-->
+<!--            <InputNumberField id="balance" name="balance" class="form-control" signed={false} />-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
   </Form>

@@ -11,7 +11,9 @@
   export let disabled: boolean = false;
   export const formattedValue: string = "";
   export const options = {};
-  export const mode: "month-select" | undefined = undefined;
+  export const startDateKey = "startDate";
+  export const endDateKey = "endDate"
+  export const mode: "month-select" | "menu" | undefined = undefined;
   export const input: any = undefined;
   const { class: className } = $$props;
 
@@ -31,7 +33,7 @@
   }
 </script>
 
-<DatePickr {...$$restProps} {disabled} class={className} bind:value={$fields[name]}>
+<DatePickr {...$$restProps} {disabled} class={className} bind:value={$fields[name]} on:close>
   {#if $submitted}
     {#if invalid}
       <p class="invalid-tooltip">{msgError}</p>

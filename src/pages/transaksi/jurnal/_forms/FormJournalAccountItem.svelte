@@ -1,6 +1,6 @@
 <script lang="ts">
   import { derived } from "svelte/store";
-  import { utils } from "@deboxsoft/module-core";
+  import { debounce } from "@deboxsoft/module-core";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { getFormContext } from "__@stores/form";
   import { stores } from "@deboxsoft/accounting-client";
@@ -10,7 +10,6 @@
   import { getId } from "@deboxsoft/svelte-theme-limitless/utils";
   // import AccountCombox from "../../../../components/account/AccountCombox.svelte";
 
-  const { debounce } = utils;
   export let id = getId("journal-account-item");
   export let input;
   export const creditDisable: boolean = false;

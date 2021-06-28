@@ -1,8 +1,12 @@
-import { writable } from "svelte/store";
+import { Writable, writable } from "svelte/store";
+
+export type LocalstorageStore<T = string> = Writable<T> & {
+  clear: () => void;
+};
 
 // User/JWT-related
 // https://stackoverflow.com/a/61300826/2933427
-export const createWritableStore = (key, startValue) => {
+export const createLocalStore = (key, startValue): LocalstorageStore => {
   const { subscribe, set, update } = writable(startValue);
   const useLocalStorage = () => {
     const json = localStorage.getItem(key);

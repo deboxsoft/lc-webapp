@@ -54,36 +54,35 @@
 </script>
 
 <PageLayout showBackButton breadcrumb={[{ path: "./", title: "buku-besar" }, { title: "trial balance" }]}>
-    <div class="header-elements" slot="header-elements">
-      <div class="list-icons">
-        <DatePickr
-          id="date"
-          name="date"
-          mode="menu"
-          placeholder="Tanggal"
-          on:close={dateChangeHandler}
-          confirmEnable
-          defaultDate={[startDate, endDate]}
-          styleWrapper="width: 250px"
-        />
-      </div>
+  <svelte:fragment slot="breadcrumb-items-right">
+    <DatePickr
+      id="date"
+      wrapperClass="breadcrumb-elements-item p-0"
+      name="date"
+      mode="menu"
+      placeholder="Tanggal"
+      on:close={dateChangeHandler}
+      confirmEnable
+      defaultDate={[startDate, endDate]}
+      styleWrapper="width: 250px"
+    />
+  </svelte:fragment>
+  <div class="card d-flex flex-1">
+    <div class="card-body d-flex flex-1 flex-column">
+      {#if $loading}
+        <Loader />
+      {:else}
+        <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
+          <dl class="row mb-0">
+            <dt class="col-sm-3 mb-0">Akun Perkiraan</dt>
+            <p class="col-sm-9 mb-0">: <span class="font-weight-bold text-uppercase">{$account && $account.name || ""}</span></p>
+            <dt class="col-sm-3 mb-0">Kode</dt>
+            <p class="col-sm-9 mb-0">: {$account && $account.id || ""}</p>
+          </dl>
+        </div>
+        <TableTrialBalance />
+      {/if}
     </div>
-    <div class="card d-flex flex-1">
-      <div class="card-body d-flex flex-1 flex-column">
-        {#if $loading}
-          <Loader />
-        {:else}
-          <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
-            <dl class="row mb-0">
-              <dt class="col-sm-3 mb-0">Akun Perkiraan</dt>
-              <p class="col-sm-9 mb-0">: <span class="font-weight-bold text-uppercase">{$account && $account.name || ""}</span></p>
-              <dt class="col-sm-3 mb-0">Kode</dt>
-              <p class="col-sm-9 mb-0">: {$account && $account.id || ""}</p>
-            </dl>
-          </div>
-          <TableTrialBalance />
-        {/if}
-      </div>
-    </div>
+  </div>
 </PageLayout>
 <slot />
