@@ -10,6 +10,7 @@ const createPreprocess = (options) => {
     postcss: {
       plugins: [require("autoprefixer")]
     },
+    sourceMap: false,
     typescript: {
       compilerOptions: {
         allowJs: true
