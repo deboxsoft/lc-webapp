@@ -6,29 +6,47 @@
   import ComboBox from "__@comps/forms/ComboxField.svelte";
   import InputDate from "__@comps/forms/InputDateField.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import dayjs from "dayjs";
 
-  export let open = false;
-  export let params = {};
-  export let onFilter = () => {};
+  export let filter = {};
+  export let title = "Filter";
+  export let submit;
+  export let isReport = false;
+  export let openDialog;
+  export let closeDialog;
+  let endDate = isReport && new Date() || undefined;
+  let startDate = endDate && dayjs(endDate).startOf("month").toDate();
+
+  /**
+   *
+   * @type {undefined | Function}
+   */
+  export let onClose = undefined;
 
   const { accountStore } = stores.getAccountContext();
 
-  let values = params;
-
-  // filtering account type
-
-  function submitHandler() {
-    params = values || {};
-    onFilter();
-    open = false;
+  function transformInput({status, date, ...input}) {
+    if (Array.isArray(date)) {
+      startDate = date[0]
+      endDate = date[1]
+    } else if (date) {
+      startDate = date
+    }
+    return {
+      startDate,
+      endDate,
+      status: status === "" ? undefined : status,
+      ...input
+    }
   }
+
 </script>
 
-<Modal title="filter" bind:open>
-  <Form bind:values>
+<Modal {title} bind:onClose bind:openDialog bind:closeDialog >
+  <Form bind:values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable >
     <div class="form-group">
       <label for="date">Tanggal</label>
-      <InputDate name="date" mode="menu" placeholder="Tanggal" />
+      <InputDate name="date" mode="menu" placeholder="Tanggal" allowEmpty={!isReport} defaultDate={[startDate, endDate]} />
     </div>
     <div class="form-group">
       <label for="accountId">Akun Debit</label>
@@ -39,11 +57,5 @@
       <ComboBox id="status" name="status" items={["UNAPPROVED", "FIXED", "APPROVED"]} placeHolder="SEMUA" allowEmpty />
     </div>
   </Form>
-
-  <svelte:fragment slot="footer">
-    <button type="button" class="btn btn-primary ml-1" on:click={submitHandler}>
-      <i class="icon-filter4 mr-2" />
-      Filter
-    </button>
-  </svelte:fragment>
+  <slot name="footer" slot="footer" />
 </Modal>

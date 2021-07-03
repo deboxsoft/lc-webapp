@@ -27,17 +27,17 @@
   const {loading: topLoading} = applicationContext;
 
   let filter = {};
-  let openFilterForm;
+  let openFilterDialog;
+  let closeFilterDialog
   let textFilter = undefined;
   let fetchMor;
+  let submitFilter;
   let transactions = [];
 
-  $topLoading = true;
-  let loading;
+  $loading = true;
   filtering();
-  find({ filter }).then(() => {
-    loading = false;
-    $topLoading = false;
+  load({ filter }).then(() => {
+    $loading = false;
   });
 
   $: {
@@ -48,25 +48,13 @@
     if ($transactionStore) {
       const _reduce = (result, transaction) => {
         const keys = Object.keys(filter);
-        let _ok = true;
-        if (keys.length > 0) {
-          keys.forEach((key) => {
-            if (filter[key]) {
-              if (transaction[key] !== filter[key]) {
-                _ok = false;
-              }
-            }
-          });
-        }
-        if (_ok) {
-          if (textFilter) {
-            const regex = new RegExp(`.*${textFilter.toLowerCase()}.*`);
-            if (regex.test(transaction.description.toLowerCase())) {
-              result.push(transaction);
-            }
-          } else {
+        if (textFilter) {
+          const regex = new RegExp(`.*${textFilter.toLowerCase()}.*`);
+          if (regex.test(transaction.description.toLowerCase())) {
             result.push(transaction);
           }
+        } else {
+          result.push(transaction);
         }
         return result;
       }
@@ -78,15 +66,19 @@
     filtering();
   }
 
-  function filterHandler() {
+  async function filterHandler() {
+    filter = { ...filter, ...submitFilter() };
     textFilter = undefined;
-    $topLoading = true;
-    loading = true;
-    filtering();
+    $loading = true;
+    await findPage({
+      pageCursor: {},
+      filter
+    });
     tick().then(() => {
-      $topLoading = false;
-      loading = false;
-    })
+      filtering();
+      $loading = false;
+      closeFilterDialog();
+    });
   }
 
   const createExportMenuHandler = (close) => ({
@@ -105,7 +97,12 @@
   });
 </script>
 
-<FormFilter bind:params={filter} bind:open={openFilterForm} onFilter={filterHandler} />
+<FormFilter bind:closeDialog={closeFilterDialog} bind:openDialog={openFilterDialog} bind:submit={submitFilter}>
+  <button slot="footer" type="button" class="btn btn-primary ml-1" on:click={filterHandler}>
+    <i class="icon-filter4 mr-2" />
+    Filter
+  </button>
+</FormFilter>
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right" let:closeHandler={dropdownClose}>
     {#if createGranted}
@@ -114,9 +111,14 @@
         Posting
       </a>
     {/if}
-    <a href="/#" target="_self" on:click|preventDefault={() => {
-      openFilterForm = true;
-    }} class="breadcrumb-elements-item">
+    <a
+      href="/#"
+      target="_self"
+      on:click|preventDefault={() => {
+        openFilterDialog();
+      }}
+      class="breadcrumb-elements-item"
+    >
       <i class="icon-filter3 mr-1" />
       Filter
     </a>
@@ -131,20 +133,24 @@
         <a href="/#" target="_self" on:click|preventDefault={createExportMenuHandler(dropdownClose).print} class="dropdown-item">Print</a>
       </svelte:fragment>
     </Dropdown>
+    <a href={$url("./export")} class="breadcrumb-elements-item">
+      <i class="icon-file-download2 mr-1" />
+      Ekspor
+    </a>
   </svelte:fragment>
   <div class="header-elements" slot="header-elements">
-    <div class="form-group-feedback form-group-feedback-right">
-      <div class="list-icons">
-        <input class="form-control input" placeholder="search" on:input={filterHandler} />
-        <div class="form-control-feedback text-grey-600">
-          <i class="icon-search4" />
-        </div>
-      </div>
-    </div>
+    <!--    <div class="form-group-feedback form-group-feedback-right">-->
+    <!--      <div class="list-icons">-->
+    <!--        <input class="form-control input" placeholder="search" on:input={filterHandler} />-->
+    <!--        <div class="form-control-feedback text-grey-600">-->
+    <!--          <i class="icon-search4" />-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
   </div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
-      <TableTransaction bind:filter bind:loading {transactions} />
+      <TableTransaction bind:filter {transactions} />
     </div>
   </div>
   <slot />
