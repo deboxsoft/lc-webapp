@@ -4,22 +4,46 @@
   import ComboxField from "__@comps/forms/ComboxField.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import { getAccessControlContext } from "__@modules/users";
+  import AccountListBox from "__@comps/account/AccountListBox.svelte";
 
   const { grants } = getAccessControlContext();
   $: roles = Object.keys($grants);
   export const schema = z.object({
-    name: z.string().nonempty("nama wajib diisi")
+    name: z.string().nonempty("nama wajib diisi"),
+    role: z.string().nonempty("role wajib diisi"),
+    debitAccounts: z.array(z.string()).nullish(),
+    creditAccounts: z.array(z.string()).nullish()
   });
+  const transform = ({ debitAccounts, creditAccounts, ..._ }) => {
+    return {
+      ..._,
+      metadata: {
+        debitAccounts,
+        creditAccounts
+      }
+    };
+  };
 
   export let fields;
   export let groupUser = {};
   export let isNew = false;
   export let submitHandler;
+
+  $: values = transformValues(groupUser);
+
+  $: console.log(values, "values", groupUser);
+
+  function transformValues({ metadata = "{}", ..._ }) {
+    return {
+      ..._,
+      ...JSON.parse(metadata)
+    };
+  }
 </script>
 
-<Form bind:fields values={groupUser} {schema} bind:submitHandler>
-  <div class="card">
-    <div class="card-body">
+<div class="card">
+  <div class="card-body">
+    <Form bind:fields {values} {schema} {transform} bind:submitHandler>
       <div class="row">
         <div class="form-group col-12">
           <label for="name">Nama</label>
@@ -32,6 +56,16 @@
           <ComboxField id="role" items={roles} name="role" />
         </div>
       </div>
-    </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <AccountListBox name="debitAccounts" id="debitAccounts" label="Akun Debit" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <AccountListBox name="creditAccounts" id="debitAccounts" label="Akun Kredit" />
+        </div>
+      </div>
+    </Form>
   </div>
-</Form>
+</div>
