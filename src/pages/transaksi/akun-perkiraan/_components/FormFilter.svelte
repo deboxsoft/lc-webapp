@@ -5,7 +5,9 @@
   import Form from "__@comps/forms/Form.svelte";
   import ComboBox from "__@comps/forms/ComboxField.svelte";
 
-  export let open = false;
+  export let openDialog;
+  export let closeDialog;
+  export let onClose;
   export let params = {};
   export let onFilter = () => {};
 
@@ -20,11 +22,12 @@
   function submitHandler() {
     params = values || {};
     onFilter();
-    open = false;
+    closeDialog()
   }
+
 </script>
 
-<Modal title="filter" bind:open>
+<Modal title="filter" bind:openDialog bind:onClose bind:closeDialog>
   <Form bind:values>
     <label for="type">Klasifikasi Akun</label>
     <ComboBox
