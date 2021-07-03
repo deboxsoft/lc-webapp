@@ -17,7 +17,7 @@
   const { setBreadcrumbContext } = getBreadcrumbStore();
   const { accountStore, getAccountType, getAccount } = stores.getAccountContext();
   const { loading } = getApplicationContext();
-  const { csv, pdf, print } = createReportContext();
+  const reportContext = createReportContext();
 
   if (!readGranted) {
     $goto("/access-denied");
@@ -26,7 +26,8 @@
   setBreadcrumbContext({ path: $url("./"), title: "akun-perkiraan" });
   let accounts = [];
   let filter = undefined;
-  let openFilterForm;
+  let openFilterDialog;
+  let closeFilterDialog;
   let textFilter = undefined;
 
   let _buckets = []
@@ -75,21 +76,30 @@
 
   const createExportMenuHandler = (close) => ({
     pdf: () => {
-      pdf(accounts);
+      $loading = true;
+      reportContext.pdf((p) => {
+        if (p === 1) {
+          $loading = false;
+        }
+      });
       close();
     },
     csv: () => {
-      csv(accounts);
+      $loading = true;
+      reportContext.csv();
+      $loading = false;
       close();
     },
     print: () => {
-      print(accounts);
+      $loading = true;
+      reportContext.print();
+      $loading = false;
       close();
     }
   });
 </script>
 
-<FormFilter bind:params={filter} bind:open={openFilterForm} onFilter={filterHandler} />
+<FormFilter bind:params={filter} bind:openDialog={openFilterDialog} onFilter={filterHandler} />
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
@@ -102,7 +112,7 @@
       href="/#"
       target="_self"
       on:click|preventDefault={() => {
-        openFilterForm = true;
+        openFilterDialog();
       }}
       class="breadcrumb-elements-item"
     >

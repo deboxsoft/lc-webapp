@@ -10,7 +10,7 @@ export type AccountDefInput = Account & {
 
 export type Metadata = Record<string, string>;
 export const createReportContext = () => {
-  const { getAccount, getAccountType } = stores.getAccountContext();
+  const { getAccount, getAccountType, getAccountsTree, accountStore } = stores.getAccountContext();
   const processingData = (account: Account) => {
     let parent = "-";
     if (account.parentId) {
@@ -25,14 +25,38 @@ export const createReportContext = () => {
     ];
   };
   return {
-    pdf: (accounts: Account[], metadata: Metadata = {}) => {
+    pdf: (progressCB, metadata: Metadata = {}) => {
+      const accounts = get(accountStore);
+      const now = new Date();
       const doc = createPdfDef(accounts.map(processingData));
-      return pdfMake(doc).download(metadata.filename || "account.pdf");
+      return pdfMake(doc).download(metadata.filename || `account-${now.getTime()}.pdf`, null, {
+        progressCallback: progressCB
+      });
     },
-    csv: (accounts: Account[], metadata: Metadata = {}) => {
-      downloadCsv(accounts.map(processingData), "account.csv");
+    csv: (metadata: Metadata = {}) => {
+      const accounts = get(getAccountsTree());
+      const now = new Date();
+      downloadCsv(
+        accounts.reduce((result, account) => {
+          const type = get(getAccountType(account)).code || "-";
+          const output = [account.id, "", account.name, type];
+          result.push(output);
+
+          // children
+          if (Array.isArray(account.children)) {
+            account.children.forEach((child) => {
+              const _output = [child.id, child.parentId, child.name, type];
+              result.push(_output);
+            });
+          }
+          return result;
+        }, []),
+        `account-${now.getTime()}.csv`
+      );
     },
-    print: (accounts: Account[], metadata: Metadata = {}) => {
+    print: (metadata: Metadata = {}) => {
+      const accounts = get(accountStore);
+      console.log(accounts);
       const doc = createPdfDef(accounts.map(processingData));
       return pdfMake(doc).print();
     }
