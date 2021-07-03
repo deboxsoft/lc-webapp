@@ -16,12 +16,20 @@ export const csvParse = <T = any>(input: string, config: any = {}) => {
  * @param data
  * @param config @url{https://www.papaparse.com/docs#config}
  */
-export const csvUnparse = (data: any, config: any = {}): string => {
+export const csvUnparse = (
+  data: any,
+  config: any = {
+    delimiter: ";"
+  }
+): string => {
   return csvUtils.unparse(data, config);
 };
 
-export const downloadCsv = (data: any, filename: string) => {
-  const csv = csvUnparse(data, {});
+export const downloadCsv = (data: any = [], filename: string) => {
+  const csv = csvUnparse(
+    data.map((_) => _.map((__) => (typeof __ === "object" && __?.text ? __.text : __))),
+    {}
+  );
   const blob = new Blob([csv], { type: "application/octet-stream" });
   downloadFile(blob, filename);
 };
