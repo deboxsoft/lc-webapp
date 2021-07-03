@@ -156,6 +156,20 @@
         padding: 0;
       }
     }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: calc(2.25rem + 2px);
+      height: calc(2.25rem + 2px);
+
+      > i {
+        position: static;
+        min-width: 1rem;
+      }
+    }
   }
 
   .sidebar {
