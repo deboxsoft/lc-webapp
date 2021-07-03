@@ -16,8 +16,9 @@
     "onDayCreate"
   ]);
 
+  export let allowEmpty: boolean = false;
   export let defaultDate = new Date();
-  export let value: any = undefined;
+  export let value: any = "Tanggal";
   export let formattedValue: string = "";
   export let element: HTMLElement | null = null;
   export let options = {};
@@ -27,11 +28,13 @@
   export let disabled: boolean = false;
   export let iconDisable: boolean = false;
   export let styleWrapper = "";
+  export let showMonths = 2;
 
   let wrapperDisable: boolean = iconDisable;
   let input: any = undefined;
   const { class: className } = $$props;
   let flatPickr;
+  let cleared = true;
 
   $: classes = clsx(className);
   $: wrapperClasses = clsx(wrapperClass, !iconDisable && "form-group-feedback form-group-feedback-right");
@@ -47,10 +50,11 @@
       altFormat: "d-M-y",
       locale: Indonesian,
       dateFormat: "Z",
+      showMonths,
       plugins: [],
-      defaultDate,
       ...(element ? { wrap: true } : {}),
-      ...options
+      ...options,
+      ...(!allowEmpty && { defaultDate })
     };
     if (options.mode === "month-select") {
       options.plugins = [
@@ -131,6 +135,7 @@
   }
 
   function updateValue(newValue, dateStr) {
+    cleared = false;
     value = Array.isArray(newValue) && newValue.length === 1 ? newValue[0] : newValue;
     formattedValue = dateStr;
   }
@@ -145,18 +150,27 @@
       // }
     };
   }
+
+  function clearHandler() {
+    flatPickr.clear();
+    cleared = true;
+  }
 </script>
 
 {#if !wrapperDisable}
   <div class={wrapperClasses} style={styleWrapper}>
-    <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} {value} />
+    <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} value={value || "Tanggal"} />
     <div class="form-control-feedback text-grey-600">
-      <i class="fal fa-calendar" />
+      {#if allowEmpty && !cleared}
+        <a href="/#" target="_self" class="btn-light" on:click|preventDefault={clearHandler}><i class="icon-cross3" /></a>
+      {:else}
+        <i class="icon-calendar" />
+      {/if}
     </div>
     <slot />
   </div>
 {:else}
-  <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} {value} />
+  <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} />
   <slot />
 {/if}
 
