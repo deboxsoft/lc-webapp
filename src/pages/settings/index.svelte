@@ -6,12 +6,26 @@
   import { getUserContext, getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
 
-  const { update } = getUserContext();
+  const { update, findById } = getUserContext();
   const { notify, loading, config } = getApplicationContext();
   const { authenticationStore } = getAuthenticationContext();
 
   let fields;
-  $: profile = $authenticationStore.profile;
+  let profile;
+  $: {
+    if ($authenticationStore.profile) {
+      getProfileUser($authenticationStore.profile.session.userId).then((_) => {
+        profile = _;
+      });
+    }
+  }
+
+  async function getProfileUser(id) {
+    $loading = true;
+    const user = await findById(id);
+    $loading = false;
+    return user;
+  }
 
   async function saveHandler() {
     try {
@@ -27,7 +41,6 @@
       $loading = false;
     }
   }
-
 </script>
 
 {#if profile}

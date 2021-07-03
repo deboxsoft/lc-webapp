@@ -3,6 +3,7 @@
   import { getUserContext } from "__@modules/users";
   import GroupForm from "../_form.svelte";
   import Modal from "__@comps/Modal.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
 
@@ -24,8 +25,8 @@
   async function saveHandler() {
     try {
       $loading = true;
-      submitHandler();
-      const { id = $params.id, ...input } = $fields;
+      const inputs = submitHandler();
+      const { id = $params.id, ...input } = inputs;
       const result = await updateGroup($params.id, input);
       $goto("../");
       notify("Berhasil memperbarui user group", "success");
@@ -37,7 +38,11 @@
 </script>
 
 <Modal class="modal-lg" open title="Ubah group user" onClose={closeHandler}>
-  <GroupForm bind:fields bind:schema groupUser={$params} bind:submitHandler />
+  {#if $loading}
+    <Loader />
+  {:else}
+    <GroupForm bind:fields bind:schema groupUser={$params} bind:submitHandler />
+  {/if}
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
     <button class="btn bg-primary" on:click={saveHandler}>Simpan</button>
