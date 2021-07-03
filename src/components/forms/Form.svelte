@@ -15,6 +15,7 @@
   export let values: Record<string, any> = {};
   export let ignoreAttribs: string | string[] = "id";
   export let validateField: any = undefined;
+  export let transform: any = undefined;
   export let submittedEnable: boolean = false;
   export let checkValidateFirst: boolean = false;
   export let feedbackValidateDisable: boolean = false;
@@ -48,6 +49,7 @@
       !feedbackValidateDisable && ($submitted = true);
       const _values = validate();
       dispatch("submit", _values);
+      return _values;
     }catch (e) {
       if (e instanceof ZodError) {
         notify(`kesalahan validasi`, "error");
@@ -58,22 +60,30 @@
 
   function validate() {
     try {
-      return schema
-        .transform((input) => {
-          if (ignoreAttribs) {
-            if (Array.isArray(ignoreAttribs)) {
-              ignoreAttribs.forEach((_key) => {
-                if (input[key]) delete input[key];
-              });
-            } else if (typeof ignoreAttribs === "string") {
-              if (input[ignoreAttribs]) {
-                delete input[ignoreAttribs];
+      if (schema) {
+        return schema
+          .transform((input) => {
+            if (typeof transform === "function") {
+              return transform(input)
+            }
+            if (ignoreAttribs) {
+              if (Array.isArray(ignoreAttribs)) {
+                ignoreAttribs.forEach((_key) => {
+                  if (input[key]) delete input[key];
+                });
+              } else if (typeof ignoreAttribs === "string") {
+                if (input[ignoreAttribs]) {
+                  delete input[ignoreAttribs];
+                }
               }
             }
-          }
-          return input;
-        })
-        .parse($fields);
+            return input;
+          })
+          .parse($fields);
+      } else if (transform) {
+        return transform($fields)
+      }
+      return {};
     } catch (e) {
       if (e instanceof ZodError) {
         $fieldsErrors = e.flatten().fieldErrors;

@@ -8,6 +8,7 @@
   export let name: any;
   export const value: any = ($fields && $fields[name]) || undefined;
   export let id = name;
+  export let ref;
   const { class: className } = $$props;
 
   let invalid = true;
@@ -35,6 +36,7 @@
   {...$$restProps}
   {id}
   class={className}
+  bind:this={ref}
   bind:value={$fields[name]}
   class:is-valid={$submitted && !invalid}
   class:is-invalid={$submitted && invalid}

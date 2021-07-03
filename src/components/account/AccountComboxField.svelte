@@ -1,5 +1,5 @@
 <script>
-  import { getFormContext } from "../../stores/form";
+  import { getFormContext } from "__@stores/form";
   import { stores } from "@deboxsoft/accounting-client";
   import { createEventDispatcher } from "svelte";
 
