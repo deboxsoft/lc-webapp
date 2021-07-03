@@ -12,11 +12,17 @@ const fonts = {
 export const pdfStyles = {
   title: {},
   header: {
-    fontSize: 12,
+    fontSize: 9,
     bold: true
   },
   cell: {
-    fontSize: 10
+    fontSize: 8
+  },
+  "cell-date": {
+    alignment: "center"
+  },
+  "cell-rp": {
+    alignment: "right"
   }
 };
 
