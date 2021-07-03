@@ -1,5 +1,4 @@
 <script>
-  import {onMount} from "svelte";
   import { Router } from "@roxi/routify";
   import { routes } from "../.routify/routes";
   import { createUIContext as createContextStore } from "__@root/stores/ui";
@@ -24,7 +23,6 @@
         showMobileSidebar
           ? document.body.classList.add(showMobileSidebarClass)
           : document.body.classList.remove(showMobileSidebarClass);
-        modalOpen ? document.body.classList.add("modal-open") : document.body.classList.remove("modal-open");
       }
     };
   };

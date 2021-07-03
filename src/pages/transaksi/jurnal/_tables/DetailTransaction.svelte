@@ -1,10 +1,10 @@
 <script>
   import { goto, params } from "@roxi/routify";
+  import dayjs from "dayjs";
   import Modal from "__@comps/Modal.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import CellRp from "__@comps/CellRp.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
-
   export let backUrl;
   export let transaction;
 
@@ -13,13 +13,13 @@
   }
 </script>
 
-<Modal title={($params.id && `Detail Transaksi '${$params.id}'`) || ""} class="modal-lg">
+<Modal title={($params.id && `Detail Transaksi '${$params.id}'`) || ""} class="modal-lg" onClose={closeHandler}>
   {#if transaction}
     <dl class="row">
       <dt class="col-sm-3">No. Bukti/Kwitansi</dt>
-      <p class="col-sm-9">: {transaction.no || "-"}</p>
+      <p class="col-sm-9">: {transaction.no|| "-"}</p>
       <dt class="col-sm-3">Tanggal</dt>
-      <p class="col-sm-9">: {transaction.date || "-"}</p>
+      <p class="col-sm-9">: {dayjs(transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
       <dt class="col-sm-3">Deskripsi</dt>
       <p class="col-sm-9">: {transaction.description || "-"}</p>
       <dt class="col-sm-3">Status</dt>
@@ -27,8 +27,10 @@
         :
         <span
           class="badge"
-          class:badge-warning={transaction.status === "UNAPPROVED"}
-          class:badge-success={transaction.status === "APPROVED"}>{transaction.status || ""}</span
+          class:badge-primary={transaction.status === "UNAPPROVED"}
+          class:badge-danger={transaction.status === "REJECTED"}
+          class:badge-light={transaction.status === "FIXED"}
+          class:badge-success={transaction.status === "APPROVED"}>{transaction.status}</span
         >
       </p>
     </dl>
@@ -49,12 +51,12 @@
           <td><CellRp value={transaction.amount} /></td>
           <td class="text-right">-</td>
         </tr>
-        {#each transaction.accounts as journalAccount, index (journalAccount.index)}
+        {#each transaction.creditAccounts as accountAmount, index (accountAmount.index)}
           <tr>
-            <td>{journalAccount.accountId || "-"}</td>
-            <td><CellAccount id={journalAccount.accountId} /></td>
+            <td>{accountAmount.id || "-"}</td>
+            <td><CellAccount id={accountAmount.id} /></td>
             <td class="text-right">-</td>
-            <td><CellRp value={journalAccount.amount} /></td>
+            <td><CellRp value={accountAmount.amount} /></td>
           </tr>
         {/each}
       </tbody>

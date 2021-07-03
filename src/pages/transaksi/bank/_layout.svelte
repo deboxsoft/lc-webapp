@@ -1,13 +1,20 @@
 <!--routify:options title="Data Bank"-->
-<script lang="ts">
-  import { createBankContext } from "__@modules/accounting";
-  import { url } from "@roxi/routify";
+<script>
+  import { stores } from "@deboxsoft/accounting-client";
+  import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import Loader from "__@comps/loader/Loader.svelte"
+  import { createAclContext } from "./_acl-context";
+  import { getApplicationContext } from "__@modules/app";
 
+  const { readGranted } = createAclContext();
+  if (!readGranted) {
+    $goto("/access-denied");
+  }
   const { setBreadcrumbContext } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Data bank" });
-  const { find } = createBankContext();
+  const applicationContext = getApplicationContext();
+  const { find } = stores.createBankContext(applicationContext);
   let loading = true;
   find().then((result) => {
     loading = false;

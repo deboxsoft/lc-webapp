@@ -1,11 +1,16 @@
 <!--routify:options title="Update Bank"-->
 <script>
-  import { params } from "@roxi/routify";
-  import { getBankContext } from "__@modules/accounting";
+  import { params, goto } from "@roxi/routify";
+  import { stores } from "@deboxsoft/accounting-client";
   import FormBank from "../_components/FormBank.svelte";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../../_acl-context";
 
-  const { update, getBank } = getBankContext();
+  const { updateGranted } = getAclContext();
+  if (!updateGranted) {
+    $goto("/access-denied");
+  }
+  const { update, getBank } = stores.getBankContext();
   const { loading, notify } = getApplicationContext();
 
   $: bank = getBank($params.id);
@@ -14,7 +19,7 @@
     try {
       $loading = true;
       await update($params.id, values);
-      notify(`Berhasil mengupdate data bank id '${$params.id}'`);
+      notify(`Berhasil mengupdate data bank`, "success");
       $loading = false;
     } catch (e) {
       $loading = false;

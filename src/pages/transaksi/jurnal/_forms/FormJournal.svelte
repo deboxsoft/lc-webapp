@@ -1,21 +1,21 @@
 <script lang="ts">
   import type { TransactionInput } from "@deboxsoft/accounting-api";
+  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
+  import { stores } from "@deboxsoft/accounting-client";
+  import { debounce } from "@deboxsoft/module-core";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputDate from "__@comps/forms/InputDateField.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import InputRp from "__@comps/forms/InputNumberField.svelte";
+  import SaveIcon from "__@comps/icons/Save.svelte";
 
   import { createEventDispatcher } from "svelte";
-  import { writable } from "svelte/store";
-  import { utils } from "@deboxsoft/module-core";
-  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
-  import SaveIcon from "__@comps/icons/Save.svelte";
-  import { getTransactionContext, getAccountContext } from "__@modules/accounting";
-  import InputRp from "__@comps/forms/InputNumberField.svelte";
-  import Form from "__@comps/forms/Form.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
-  import InputDate from "__@comps/forms/InputDateField.svelte";
+  import { derived, writable } from "svelte/store";
   import FormJournalAccount from "./FormJournalAccount.svelte";
 
-  const { getTransactionType, transactionTypeStore } = getTransactionContext();
-  const { getAccountLeaf } = getAccountContext();
+  const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
+  const { getAccountLeaf } = stores.getAccountContext();
   const dispatch = createEventDispatcher();
   // props
   export let values: Partial<TransactionInput> = {};
@@ -23,10 +23,19 @@
   export const title: string = "";
 
   let isValid = writable(false);
+  let fieldsErrors;
+  let fields
+
+  function getAccountDebit () {
+    const accountStore = getAccountLeaf();
+    return derived(accountStore, (_) => {
+      return _.filter((_) => /^[^4].*/g.test(_.id));
+    })
+  }
 
   // handler
   function createUpdateAmountHandler() {
-    return utils.debounce((e) => {
+    return debounce((e) => {
       // debit = e.detail;
     });
   }
@@ -37,13 +46,13 @@
 
 </script>
 
-<Form checkValidateFirst schema={TransactionInputSchema} {isValid} bind:values on:submit>
+<Form checkValidateFirst schema={TransactionInputSchema} bind:fieldsErrors bind:fields {isValid} bind:values on:submit>
   <div class="card">
     <div class="card-body">
       <div class="row">
         <div class="form-group col-md-6">
           <label for="date">Tanggal</label>
-          <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" value={new Date()} disabled />
+          <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" value={new Date()} disabled={values.status === "UNAPPROVED"} />
         </div>
         <div class="form-group col-md-6">
           <label for="no">No Bukti/kwitansi</label>
@@ -73,7 +82,7 @@
         <div class="form-group col-md-6">
           <label for="accountId">Debit</label>
 <!--            <AccountCombox id="accountId" accountStore={getAccountLeaf()} allowEmpty />-->
-          <AccountSelect id="accountId" accountStore={getAccountLeaf()} allowEmpty />
+          <AccountSelect id="accountId" accountStore={getAccountDebit()} allowEmpty />
         </div>
         <div class="form-group col-md-6">
           <label for="amount">Jumlah</label>

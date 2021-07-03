@@ -69,7 +69,7 @@ export default [
     preserveEntrySignatures: false,
     input: ["src/main.ts"],
     output: {
-      sourcemap: dev,
+      sourcemap: false,
       format: "esm",
       dir: buildDir,
       // for performance, disabling filename hashing in development
@@ -84,6 +84,7 @@ export default [
         "__@root": path.join(__dirname, "src"),
         "process.env.DBX_ENV_GRAPHQL_URL": `"${process.env.DBX_ENV_GRAPHQL_URL}"`,
         "process.env.DBX_ENV_GRAPHQL_WS": `"${process.env.DBX_ENV_GRAPHQL_WS}"`,
+        "process.env.DBX_ENV_API_URL": `"${process.env.DBX_ENV_API_URL}"`,
         "process.env.NODE_ENV": `"${production}"`
       }),
       svelte({

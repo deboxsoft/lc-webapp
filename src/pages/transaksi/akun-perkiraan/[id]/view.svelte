@@ -1,10 +1,10 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import DetailAccount from "../_components/DetailAccount.svelte";
 
-  const { getAccount } = getAccountContext();
+  const { getAccount } = stores.getAccountContext();
 
   export let to = "../";
 
@@ -16,7 +16,7 @@
 </script>
 
 {#if $account}
-  <Modal title="Akun Perkiraan">
+  <Modal title="Akun Perkiraan" onClose={closeHandler}>
     <DetailAccount account={$account} />
     <svelte:fragment slot="footer">
       <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

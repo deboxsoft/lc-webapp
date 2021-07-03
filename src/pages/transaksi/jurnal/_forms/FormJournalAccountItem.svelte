@@ -1,20 +1,20 @@
 <script lang="ts">
-  import { utils } from "@deboxsoft/module-core";
+  import { derived } from "svelte/store";
+  import { debounce } from "@deboxsoft/module-core";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { getFormContext } from "__@stores/form";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import AutoComplete from "__@comps/AutoComplete.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import { getId } from "@deboxsoft/svelte-theme-limitless/utils";
   // import AccountCombox from "../../../../components/account/AccountCombox.svelte";
 
-  const { debounce } = utils;
   export let id = getId("journal-account-item");
   export let input;
   export const creditDisable: boolean = false;
   export let index: number;
-  export let fieldName: string = "accounts";
+  export let fieldName: string = "creditAccounts";
   export const minusCurrencyEnable: boolean = true;
   export let onRemoveJournalAccount = () => {
   };
@@ -22,12 +22,18 @@
   };
   export const isValid: boolean = false;
 
-  const { getAccountLeaf, getAccount } = getAccountContext();
-  const accountStore = getAccountLeaf();
+  const { getAccountLeaf, getAccount } = stores.getAccountContext();
+  const accountStore = getAccountCredit();
 
   const { fields, fieldsErrors } = getFormContext();
 
 
+  function getAccountCredit () {
+    const accountStore = getAccountLeaf();
+    return derived(accountStore, (_) => _.filter((_) => {
+      return /^[^5].*/g.test(_.id);
+    }))
+  }
   // createFormContext({ schema: JournalAccountSchema, values: input, validateField });
 
   function validateField(_fieldName) {
@@ -45,9 +51,9 @@
   }
 
   function accountSelectedHandler(e) {
-    input.accountId = e.detail;
+    input.id = e.detail;
     updateHandler();
-    validateField("accountId");
+    validateField("id");
   }
 
   function createUpdateAmountHandler() {
@@ -77,8 +83,8 @@
       inputClassName="form-control"
       placeholder="Pilih Akun"
       items={$accountStore || []}
-      pristineValue={input.accountId}
-      bind:value={input.accountId}
+      pristineValue={input.id}
+      bind:value={input.id}
       on:change={accountSelectedHandler}
       labelFunction={(account) => account && `${account.id} - ${account.name}`}
       valueFieldName="id"

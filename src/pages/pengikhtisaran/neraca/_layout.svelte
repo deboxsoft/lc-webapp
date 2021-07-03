@@ -1,22 +1,27 @@
 <!--routify:options title="Neraca"-->
 <script>
-  import { url } from "@roxi/routify";
+  import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getPreferenceContext, getBalanceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableNeraca from "./_components/TableNeraca.svelte";
   import DatePickr from "__@comps/DatePickr.svelte";
+  import { createAclContext } from "./_acl-context";
 
+  const { readGranted } = createAclContext();
+  if (!readGranted) {
+    $goto("/access-denied");
+  }
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { currentDateStore } = getPreferenceContext();
-  const { perDate, generateReport } = getBalanceContext();
+  const { currentDateStore } = stores.getPreferenceAccountingContext();
+  const { balanceSheetReportPerDate } = stores.getBalanceContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
   let generateReportHandler;
 
   function dateChangeHandler(e) {
-    $perDate = e.detail[0][0];
-    generateReportHandler();
+    const perDate = e.detail[0][0];
+    generateReportHandler(perDate);
   }
 </script>
 
@@ -34,8 +39,8 @@
     </div>
   </div>
   <div class="card d-flex flex-1 flex-column">
-    <div class="card-body d-flex flex-1">
-      <TableNeraca bind:generateReportHandler />
+    <div class="card-body d-flex flex-1 flex-column">
+      <TableNeraca date={$currentDateStore} bind:generateReportHandler />
     </div>
   </div>
 </PageLayout>

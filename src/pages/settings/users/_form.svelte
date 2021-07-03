@@ -25,7 +25,14 @@
       <div class="row">
         <div class="form-group col-12">
           <label for="username">Username</label>
-          <InputField id="username" name="username" type="text" class="form-control" placeholder="Username" disabled={isUpdate} />
+          <InputField
+            id="username"
+            name="username"
+            type="text"
+            class="form-control"
+            placeholder="Username"
+            disabled={isUpdate}
+          />
         </div>
       </div>
       <div class="row">

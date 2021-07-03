@@ -1,28 +1,32 @@
-import type { GraphQLClient, FetchGraphql } from "@deboxsoft/module-graphql";
-
-import { SubscriptionClient } from "graphql-subscriptions-client";
+import "./errors-map";
+import id from "dayjs/locale/id";
+import dayjs from "dayjs";
+import { ApisContext, createApisContext } from "@deboxsoft/module-client";
+import { stores } from "@deboxsoft/accounting-client";
 import { createUIContext } from "__@stores/ui";
 import { setContext, getContext } from "svelte";
-import { createGraphqlClient } from "@deboxsoft/module-client";
 import Notify, { Options as NotyOptions, Type as TypeNoty } from "noty";
 import { Writable, writable } from "svelte/store";
-import { registerAccountingContext, createCompanyContext } from "./accounting";
-import { createAuthenticationContext } from "./users";
+import { registerAccountingContext } from "./accounting";
+import { createConfigModule } from "./config";
+import { createUsersModuleContext } from "./users";
+import { createJwtStore, JwtStore } from "__@stores/jwt";
 
 type NotifyConfig = Omit<NotyOptions, "text">;
+dayjs.locale(id);
 const defaultConfig: Partial<NotifyConfig> = {
   theme: "metroui",
   timeout: 1000
 };
 
-export interface ApplicationContext {
-  client?: GraphQLClient;
-  subscriptionClient: SubscriptionClient;
-  fetch: FetchGraphql;
+export interface ApplicationContext extends ApisContext {
+  apiUrl: string;
   notify: (message: string, type?: TypeNoty, config?: NotifyConfig) => void;
   loading: Writable<boolean>;
   env?: string;
+  config?: Writable<any>;
   uiControl?: any;
+  jwtStore: JwtStore;
 }
 
 const APPLICATION_CONTEXT = "ApplicationContext";
@@ -32,39 +36,81 @@ const notify = (message: string, type?: TypeNoty, config: NotifyConfig = {}) => 
 };
 
 export const createBaseApplicationContext = () => {
-  let loading = writable(true);
-  const { client, fetch } = createGraphqlClient(process.env.DBX_ENV_GRAPHQL_URL || "", {});
-  const subscriptionClient = new SubscriptionClient(process.env.DBX_ENV_GRAPHQL_WS);
+  // let loadingStore = writable(true);
+  const createLoadingStore = () => {
+    let countLoading = 0;
+    const { subscribe, set, update } = writable(true);
+    return {
+      subscribe,
+      update,
+      set: (val) => {
+        let prev;
+        subscribe((_) => {
+          prev = _;
+        });
+        if (val) {
+          countLoading++;
+          if (!prev) {
+            set(true);
+          }
+        } else {
+          countLoading = countLoading > 0 ? countLoading - 1 : 0;
+          if (prev && countLoading === 0) {
+            set(false);
+          }
+        }
+      }
+    };
+  };
+  const loading = createLoadingStore();
+  const config = writable({});
+  const apisContext = createApisContext({
+    graphqlUrl: process.env.DBX_ENV_GRAPHQL_URL,
+    graphqlWsUrl: process.env.DBX_ENV_GRAPHQL_WS
+  });
+  // jwt
+  const jwtStore = createJwtStore();
+  // subscribe jwt
+  jwtStore.subscribe((_) => {
+    if (_) {
+      apisContext.addHeader("Authorization", `Bearer ${_}`);
+    } else {
+      apisContext.addHeader("Authorization", undefined);
+      const headers = apisContext.getHeaders();
+      delete headers.Authorization;
+      apisContext.setHeaders(headers);
+    }
+  });
+  const apiUrl = process.env.DBX_ENV_API_URL || "localhost";
   const env = process.env.NODE_ENV;
   const uiControl = createUIContext();
-
-  const context: ApplicationContext = { client, fetch, notify, loading, env, uiControl, subscriptionClient };
-  setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
-  return {
-    client,
-    fetch,
+  loading.set(true);
+  const configPromise = createConfigModule(apisContext.fetchGraphql).then((_) => config.set(_));
+  Promise.all([configPromise]).then(() => {
+    loading.set(false);
+  });
+  const context: ApplicationContext = {
+    ...apisContext,
+    apiUrl,
     notify,
     loading,
     env,
+    config,
     uiControl,
-    subscriptionClient
+    jwtStore
   };
+  setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
+  return context;
 };
 
 export const createApplicationContext = () => {
-  const { loading, fetch, env, notify, subscriptionClient, client, uiControl } = createBaseApplicationContext();
+  const appContext = createBaseApplicationContext();
   // register service
-  const authenticationContext = createAuthenticationContext({ fetch, notify, env, loading, subscriptionClient });
-  const accountingContext = registerAccountingContext({ fetch, notify, env, loading, subscriptionClient });
-  const companyContext = createCompanyContext({ fetch, env, notify, loading, subscriptionClient });
+  const authenticationContext = createUsersModuleContext(appContext);
+  const accountingContext = registerAccountingContext(appContext);
+  const companyContext = stores.createCompanyContext(appContext);
   return {
-    client,
-    fetch,
-    notify,
-    loading,
-    env,
-    uiControl,
-    subscriptionClient,
+    ...appContext,
     accountingContext,
     authenticationContext,
     companyContext

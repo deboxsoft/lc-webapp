@@ -2,7 +2,7 @@
   import { ZodError } from "@deboxsoft/zod";
   import { goto } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
-  import { getAccountContext, getPreferenceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { beforeUpdate } from "svelte";
   import { AccountSchema } from "@deboxsoft/accounting-api";
   import { writable, get } from "svelte/store";
@@ -19,12 +19,12 @@
 
   // context
   const { notify } = getApplicationContext();
-  const { preferenceStore } = getPreferenceContext();
-  const { accountStore, getAccount, getAccountParentList, accountsType, getAccountChildren } = getAccountContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  const { accountStore, getAccount, getAccountParentList, accountsType, getAccountChildren } = stores.getAccountContext();
   const parentAccountStore = getAccountParentList();
 
   // filtering account type
-  const accountTypeItems = $accountsType.filter(_ => {
+  $: accountTypeItems = $accountsType.filter(_ => {
     return !_.disable;
   })
   export let account = {};
@@ -160,7 +160,7 @@
   }
 </script>
 
-<Modal {title}>
+<Modal {title} onClose={cancelHandler}>
   <Form
     {submitted}
     {fieldsErrors}
@@ -222,23 +222,6 @@
               placeholder="Kode"
               disabled={isUpdate}
             >
-              <!--                readonly={(idReadOnly && !$accountState.isParent) || undefined}-->
-              <!--{#if !$accountState.isParent}-->
-              <!--  <div class="input-group-append">-->
-              <!--    <button-->
-              <!--      type="button"-->
-              <!--      class="btn btn-light"-->
-              <!--      on:click|preventDefault={idCustomHandler}-->
-              <!--      disabled={isUpdate}-->
-              <!--    >-->
-              <!--      {#if idReadOnly || undefined}-->
-              <!--        <i class="fal fa-lock-alt" />-->
-              <!--      {:else}-->
-              <!--        <i class="fal fa-lock-open-alt" />-->
-              <!--      {/if}-->
-              <!--    </button>-->
-              <!--  </div>-->
-              <!--{/if}-->
             </InputNumberField>
           </div>
         </div>
@@ -261,11 +244,11 @@
   </Form>
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
-      Cancel
+      Batal
     </button>
     <button type="button" class="btn btn-primary ml-1" disabled={loading} on:click={submitHandler}>
-      <i class="fal fa-save mr-2" />
-      Save
+      <i class="icon-floppy-disk mr-2" />
+      Simpan
     </button>
   </svelte:fragment>
 </Modal>

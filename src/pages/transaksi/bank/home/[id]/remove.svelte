@@ -1,11 +1,16 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { getBankContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../../_acl-context";
 
-  const { remove, getBank } = getBankContext();
+  const { removeGranted } = getAclContext();
+  if (!removeGranted) {
+    $goto("/access-denied");
+  }
+  const { remove, getBank } = stores.getBankContext();
   const { loading, notify } = getApplicationContext();
 
   async function removeHandler() {
@@ -14,7 +19,7 @@
       await remove($params.id);
       $loading = false;
       $goto("../");
-      notify(`berhasil menghapus data bank id '${$params.id}'`);
+      notify(`berhasil menghapus data bank id '${$params.id}'`, "success");
     } catch (e) {
       $loading = false;
     }
@@ -27,12 +32,12 @@
   }
 </script>
 
-<Modal open title="Hapus Content">
-  {#if loading || !$bank}
+<Modal open title="Hapus Content" onClose={closeHandler}>
+  {#if $loading || !$bank}
     <Loader />
   {:else}
     <div class="alert alert-warning alert-styled-left">
-      Apa anda yakin akan menghapus bank "{$bank.bank}"?
+      Apa anda yakin akan menghapus bank "{$bank.name}"?
     </div>
   {/if}
   <svelte:fragment slot="footer">

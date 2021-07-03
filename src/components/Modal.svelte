@@ -1,62 +1,74 @@
 <script>
-  import { fade } from "svelte/transition";
-  import { onMount } from "svelte";
-  import Modal from "@deboxsoft/svelte-components-base/utils/Modal.svelte";
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+  import { createEventDispatcher } from "svelte";
+  import { clsx } from "@deboxsoft/module-client";
   import { getApplicationContext } from "__@modules/app";
+  import Backdrop from "./utils/Backdrop.svelte";
+  import Portal from "./utils/Portal.svelte";
 
   const { uiControl } = getApplicationContext();
+  const dispatch = createEventDispatcher();
 
+  /**
+   *
+   * @type {undefined | Function}
+   */
   export let onClose = undefined;
-
-  export let onEscapeKeyDown = () => {
-    // console.log("escape")
+  export let buttonCloseDisable = false;
+  export let title = undefined;
+  export let disableHeader = false;
+  export let theme = undefined;
+  export let className = $$props.class;
+  export let initialFocusElement = undefined;
+  export let returnFocusElement = undefined;
+  export let ariaModalLegacy = false;
+  export const openDialog = () => {
+      _open = true;
   };
-  let { class: className } = $$props;
+
+  export const closeDialog = () => {
+    onClose && onClose()
+    _open = false;
+  }
+
+  let _open = false
+
   $: classes = clsx("modal-dialog modal-dialog-centered", className);
 
-  export let open = true;
-  export let title = undefined;
-  let uiStore = uiControl.store;
-  onMount(() => {
-    $uiStore.modalOpen = true;
-    return () => {
-      open = false;
-      $uiStore.modalOpen = false;
-    };
-  });
-
   function closeHandler() {
-    onClose();
+    closeDialog();
   }
 </script>
 
-<Modal {onClose} {open} class={clsx("modal", open && "show")} disableBackdropClick={false} {onEscapeKeyDown}>
-  <div class="modal" class:show={open} tabindex="-1" transition:fade={{ duration: 200 }}>
-    <div {...$$restProps} class={classes}>
-      <div class="modal-content">
-        {#if $$slots["header"] || title}
-          <div class="modal-header bg-light">
-            <slot name="header">
-              <h5 class="modal-title">{title}</h5>
-            </slot>
-            {#if onClose}
-              <button type="button" class="close" data-dismiss="modal" on:click={closeHandler}>×</button>
-            {/if}
+{#if _open}
+  <Portal class="modal">
+    <Backdrop onClose={closeHandler} {initialFocusElement} {ariaModalLegacy} {returnFocusElement}>
+      <div {...$$restProps} class={classes}>
+        <div class="modal-content">
+          {#if $$slots["header"] || title || onClose}
+            <div class={clsx("modal-header", theme && `bg-${theme}`)}>
+              {#if $$slots["header"] || title}
+                <slot name="header">
+                  <h5 class="modal-title">{title}</h5>
+                </slot>
+              {/if}
+              {#if !buttonCloseDisable}
+                <button type="button" class="close" data-dismiss="modal" on:click={closeHandler}>×</button>
+              {/if}
+            </div>
+          {/if}
+          <div class="modal-body">
+            <slot />
           </div>
-        {/if}
-        <div class="modal-body">
-          <slot />
+          {#if $$slots["footer"]}
+            <div class={clsx("modal-footer", theme && `bg-${theme}`)}>
+              <slot name="footer" />
+            </div>
+          {/if}
         </div>
-        {#if $$slots["footer"]}
-          <div class="modal-footer bg-light">
-            <slot name="footer" />
-          </div>
-        {/if}
       </div>
-    </div>
-  </div>
-</Modal>
+    </Backdrop>
+  </Portal>
+{/if}
 
 <style lang="scss" global>
   .dbx-theme {
@@ -66,8 +78,35 @@
     .modal {
       position: fixed;
       z-index: 1000;
-      &.show {
-        display: block;
+      display: block;
+      .card {
+        margin-bottom: unset;
+
+        .card-header,
+        .card-body,
+        .card-footer {
+          padding: 1rem;
+        }
+      }
+
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 1rem;
+      }
+
+      .modal-header:not([class*="bg-"]) {
+        padding-bottom: 0;
+        border-bottom-width: 0;
+      }
+
+      .modal-footer:not([class*="bg-"]) {
+        padding-top: 0;
+        border-top-width: 0;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
       }
     }
   }

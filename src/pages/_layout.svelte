@@ -1,18 +1,19 @@
 <!-- routify:options preload="proximity" -->
 <script lang="ts">
-  import { redirect, layout, url, ready } from "@roxi/routify";
+  import { url, ready } from "@roxi/routify";
   import initial from "initials";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
   import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
   import SidebarMobileToggler from "@deboxsoft/svelte-theme-limitless/components/SidebarMobileToggler.svelte";
   import SidebarContent from "__@root/layout/SidebarContent.svelte";
   import NavbarLeft from "__@root/layout/NavbarLeftLayout.svelte";
   import NavbarRight from "__@root/layout/NavbarRightLayout.svelte";
+  import Login from "__@root/layout/Login.svelte";
   import Footer from "__@root/layout/FooterLayout.svelte";
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
-  import { accountingMenus as menus } from "__@root/stores/menus";
+  import { getMenus } from "__@root/stores/menus";
   import TopLoader from "__@comps/loader/TopLoader.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import { createApplicationContext } from "__@modules/app";
@@ -21,15 +22,15 @@
   const { authenticationContext, accountingContext, loading, companyContext } = createApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
-  const { authenticationStore } = authenticationContext;
+  const { authenticationStore, getAccessControl } = authenticationContext;
   const { companyStore, getCompany } = companyContext;
 
   // init loading
-  let loginPage = $layout.path === "/login";
   let mounted = false;
-  let authenticating = true;
+  let submitting = true;
   let accountingLoaded = false;
   let company;
+  let menus = [];
 
   onMount(() => {
     mounted = true;
@@ -39,40 +40,50 @@
   getCompany();
 
   $: {
-    if (!authenticating && !$authenticationStore.authenticated) {
-      $redirect("./login");
-    } else if ($authenticationStore.authenticated && !accountingLoaded) {
-      accountingLoaded = true;
-      $loading = true;
-      accountingContext.load().then(() => {
+    if (!submitting && $authenticationStore.authenticated) {
+      tick().then(() => {
+        menus = getMenus(authenticationContext);
+        if (!accountingLoaded) {
+          accountingLoaded = true;
+          accountingContext
+            .load()
+            .then(() => {
+              $loading = false;
+              $ready();
+            })
+            .catch((e) => {
+              console.error(e);
+              $loading = false;
+              $ready();
+            });
+        }
         $loading = false;
       });
     }
   }
 
-  authenticationContext.authenticate().then(() => {
-    if ($authenticationStore.authenticated) {
-      accountingLoaded = true;
-      accountingContext.load().then(() => {
-        authenticating = false;
-        $ready();
-      });
-    } else {
-      $ready();
-    }
-    authenticating = false;
-  });
+  authenticationContext
+    .authenticate()
+    .then(() => {
+      submitting = false;
+      $loading = false;
+    })
+    .catch(() => {
+      $loading = false;
+    });
 </script>
 
 <TopLoader loading={$loading} />
-{#if authenticating}
+{#if submitting}
   <Loader />
 {:else if $authenticationStore.authenticated}
   <div class="main-layout">
     <!-- Navbar -->
     <Navbar class="-background-blue" expand="md" isDark>
       <div class="navbar-brand wmin-200">
-        <a href={$url("/")} class="d-inline-block">{initial($companyStore.name)?.toUpperCase() || "LC"} | {$companyStore.unit || ""}</a>
+        <a href={$url("/")} class="d-inline-block"
+          >{initial($companyStore.name)?.toUpperCase() || "LC"} | {$companyStore.unit || ""}</a
+        >
       </div>
       <div class="d-md-none">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
@@ -111,11 +122,14 @@
     </div>
   </div>
 {:else}
-  <slot />
+  <Login />
 {/if}
 
 <!-- close footer -->
 <style lang="scss" global>
+  html {
+    scroll-behavior: smooth;
+  }
   #debox-app {
     display: flex;
     flex: 1;
@@ -128,6 +142,33 @@
   .dbx-theme {
     .dbx-icon {
       font-size: 1rem;
+    }
+
+    .table {
+      .list-icons-item .dbx-icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      tr .-menu-list {
+        text-align: center;
+        width: 30px;
+        padding: 0;
+      }
+    }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: calc(2.25rem + 2px);
+      height: calc(2.25rem + 2px);
+
+      > i {
+        position: static;
+        min-width: 1rem;
+      }
     }
   }
 

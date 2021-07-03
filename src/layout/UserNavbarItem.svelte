@@ -1,16 +1,22 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import Avatar from "__@comps/Avatar.svelte";
   import { goto, route } from "@roxi/routify";
   import { getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
 
   const { authenticationStore, logout } = getAuthenticationContext();
-  export const avatarSrc: string = $authenticationStore.profile.avatar;
-  export let profileName: string = $authenticationStore.profile.name;
+  const { loading } = getApplicationContext();
+  $: profileName = $authenticationStore.profile.displayName;
   let triggerElement: HTMLElement;
 
   async function logoutHandler() {
+    $loading = true;
     await logout();
+    await tick();
+    $loading = false;
   }
 
   function passwordHandler() {
@@ -22,22 +28,17 @@
   }
 </script>
 
-<Dropdown class="dropdown-user" isNavItem let:toggle let:toggleClass top={30}>
-  <a
-    href="/#"
-    on:click|preventDefault={toggle}
-    class="{toggleClass} d-flex align-items-center navbar-nav-link"
-    target="_self"
-  >
-    <Avatar name={profileName} size="34px" class="mr-2" />
+<Dropdown class="dropdown-user" nav direction="end">
+  <DropdownToggle class="d-flex align-items-center navbar-nav-link" tag="div">
+    <Avatar size="34px" class="mr-2" />
     <!--    <img src={avatarSrc} class="rounded-circle mr-2" height="34" alt="" />-->
     <span>{profileName}</span>
-  </a>
+  </DropdownToggle>
   <!-- menu -->
-  <div slot="menu">
+  <svelte:fragment slot="menu">
     <!--    <a href="/#" class="dropdown-item" on:click|preventDefault={profileHandler}><i class="far fa-user" />Pengaturan Profile</a>-->
     <!--    <a href="/#" class="dropdown-item" on:click|preventDefault={passwordHandler}><i class="icon-lock5" />Ganti Password</a>-->
     <!--    <div class="dropdown-divider" />-->
     <a href="/#" class="dropdown-item" on:click|preventDefault={logoutHandler}><i class="icon-switch2" /> Logout</a>
-  </div>
+  </svelte:fragment>
 </Dropdown>

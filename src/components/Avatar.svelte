@@ -1,8 +1,20 @@
+<script context="module">
+  import { writable } from "svelte/store";
+
+  export let submitting = writable(false);
+</script>
 <script>
   import i from "initials";
+  import { getApplicationContext } from "__@modules/app";
+  import { getAuthenticationContext } from "__@modules/users";
+  import Loader from "__@comps/loader/Loader.svelte";
+
+  const { config } = getApplicationContext();
+  const { authenticationStore } = getAuthenticationContext();
+
+  $: profile = $authenticationStore.profile;
 
   export let style = "";
-  export let name = "Avatar";
   export let initials = undefined;
   export let src = undefined;
   export let bgColor = "#cccccc";
@@ -18,29 +30,40 @@
   let { class: className = "" } = $$props;
   let imageFail = false;
   let imageLoading = true;
+
+  $: srcImg = src || `${$config.avatarUrl}${profile.id}/${profile.avatar}`;
 </script>
 
 <div
-  aria-label={name}
+  aria-label={profile.name}
   class="wrapper {className}"
   style="{style}--borderRadius:{square
     ? 0
     : borderRadius}; --size:{size}; --bgColor:{background};
   --src:{src}; --textColor:{textColor}; --abbrLength:{abbrLength}"
 >
-  {#if src && !imageFail}
+  {#if $submitting}
+    <Loader />
+  {:else if srcImg && !imageFail}
     <div class={imageLoading ? "imageLoading" : ""}>
       <img
         alt=""
         class={`innerImage`}
-        {src}
-        on:error={() => (imageFail = true)}
-        on:load={() => (imageLoading = false)}
+        src={srcImg}
+        on:error={() => {
+          imageLoading = false;
+          imageFail = true;
+        }}
+        on:load={() => {
+          imageFail = false;
+          imageLoading = false;
+        }}
       />
     </div>
   {:else}
     <div class="innerInitials">{abbr}</div>
   {/if}
+  <slot />
 </div>
 
 <style>

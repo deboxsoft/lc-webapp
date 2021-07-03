@@ -1,15 +1,21 @@
 <!--routify:options title="Laba Rugi"-->
 <script>
-  import { url } from "@roxi/routify";
+  import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getPreferenceContext, getBalanceContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableLabaRugi from "./_components/TableLabaRugi.svelte";
   import DatePickr from "__@comps/DatePickr.svelte";
 
+  import { createAclContext } from "./_acl-context";
+
+  const { readGranted } = createAclContext();
+  if (!readGranted) {
+    $goto("/access-denied");
+  }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { currentDateStore } = getPreferenceContext();
-  const { perDate, generateReport } = getBalanceContext();
+  const { currentDateStore } = stores.getPreferenceAccountingContext();
+  const { perDate, generateReport } = stores.getBalanceContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
   let generateReportHandler;
@@ -33,9 +39,9 @@
       />
     </div>
   </div>
-  <div class="card d-flex flex-1">
-    <div class="card-body d-flex flex-1 h-100">
-      <TableLabaRugi bind:generateReportHandler />
+  <div class="card d-flex flex-1 flex-column">
+    <div class="card-body d-flex flex-1 flex-column">
+      <TableLabaRugi date={$currentDateStore} bind:generateReportHandler />
     </div>
   </div>
 </PageLayout>

@@ -1,12 +1,18 @@
 <script>
+  import { goto } from "@roxi/routify";
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getCompanyContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { writable } from "svelte/store";
+  import { createAclContext } from "./_acl-context";
 
+  const { readGranted, updateGranted } = createAclContext();
+  if (!readGranted) {
+    $goto("/access-denied");
+  }
   const { notify, loading } = getApplicationContext();
-  const { companyStore, update } = getCompanyContext();
+  const { companyStore, update } = stores.getCompanyContext();
 
   let fields = writable({});
 
@@ -37,8 +43,10 @@
         <InputField id="unit" name="unit" type="text" class="form-control" placeholder="Unit" />
       </div>
     </div>
-    <div class="card-footer text-right">
-      <button class="btn bg-primary" on:click={saveHandler} disabled={submitting}>Simpan</button>
-    </div>
+    {#if updateGranted}
+      <div class="card-footer text-right">
+        <button class="btn bg-primary" on:click={saveHandler} disabled={submitting}>Simpan</button>
+      </div>
+    {/if}
   </div>
 </Form>

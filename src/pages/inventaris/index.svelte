@@ -1,18 +1,9 @@
-<!--routify:options title="menu"-->
+<!--routify:options title=""-->
 <script lang="ts">
-  import MenuOpen from "@deboxsoft/svelte-icons/MenuOpen.svelte";
-  import PageLayout from "__@root/layout/PageLayout.svelte";
-  import CardMenuContainer from "__@comps/CardMenuContainer.svelte";
-  import CardMenu from "__@comps/CardMenu.svelte";
+  import Table from "./_components/TableInventory.svelte";
 </script>
-
-<PageLayout breadcrumb={[]}>
-  <CardMenuContainer>
-    <CardMenu label="Pencatatan" path="./pencatatan">
-      <MenuOpen />
-    </CardMenu>
-    <CardMenu label="Penyusutan" path="./penyusutan" >
-      <MenuOpen />
-    </CardMenu>
-  </CardMenuContainer>
-</PageLayout>
+<div class="card d-flex flex-1 flex-column">
+  <div class="card-body d-flex flex-1 flex-column">
+    <Table />
+  </div>
+</div>

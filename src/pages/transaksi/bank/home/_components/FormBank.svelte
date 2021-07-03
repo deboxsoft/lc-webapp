@@ -5,19 +5,16 @@
   import { BankInputSchema } from "@deboxsoft/accounting-api";
   import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
-  import { getBankContext } from "__@modules/accounting";
 
   // components
   import Modal from "__@comps/Modal.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import Form from "__@comps/forms/Form.svelte";
-  import InputDateField from "__@comps/forms/InputDateField.svelte";
   import InputNumberField from "__@comps/forms/InputNumberField.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import ComboxField from "__@comps/forms/ComboxField.svelte";
 
-  const { notify } = getApplicationContext();
-  const { bankStore } = getBankContext();
+  const { notify, loading } = getApplicationContext();
   const dispatch = createEventDispatcher();
 
   // props
@@ -26,8 +23,9 @@
   export let onSubmit;
   export let title;
   export let to = "./";
+
+  // state
   let fields;
-  let loading = false;
   let idReadOnly = true;
   let fieldsErrors = writable([]);
   let submitted = writable(false);
@@ -153,12 +151,12 @@
     "The Bank of Tokyo Mitsubishi UFJ"
   ];
 
-  async function submitHandler(e) {
-    loading = true;
+  async function submitHandler() {
+    $loading = true;
     try {
       BankInputSchema.parse($fields);
       await onSubmit($fields);
-      loading = false;
+      $loading = false;
       $goto(to);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -176,7 +174,7 @@
         }
         notify(`${fieldName} ${error.errors[0].message}`, "error");
       }
-      loading = false;
+      $loading = false;
     }
   }
 
@@ -185,7 +183,7 @@
   }
 </script>
 
-<Modal {title}>
+<Modal {title} onClose={cancelHandler}>
   <Form schema={BankInputSchema} values={bank} bind:fields>
     <div class="card">
       <div class="card-body">
@@ -224,19 +222,15 @@
         <div class="row">
           <div class="form-group col-12">
             <label for="account">Akun Perkiraan</label>
-            <AccountSelect allowEmpty />
+            <AccountSelect id="account" name="accountId"  allowEmpty />
           </div>
         </div>
-        <div class="row">
-          <div class="form-group col-md-6">
-            <label for="balance">Saldo Terakhir</label>
-            <InputNumberField id="balance" name="balance" class="form-control" signed={false} />
-          </div>
-          <div class="form-group col-md-6">
-            <label for="date">Tanggal</label>
-            <InputDateField id="date" name="date" class="form-control" placeholder="Tanggal" />
-          </div>
-        </div>
+<!--        <div class="row">-->
+<!--          <div class="form-group col-md-12">-->
+<!--            <label for="balance">Saldo Terakhir</label>-->
+<!--            <InputNumberField id="balance" name="balance" class="form-control" signed={false} />-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
   </Form>
@@ -244,8 +238,8 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
       Cancel
     </button>
-    <button type="button" class="btn btn-primary ml-1" disabled={loading} on:click={submitHandler}>
-      <i class="fal fa-save mr-2" />
+    <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>
+      <i class="icon-floppy-disk mr-2" />
       Save
     </button>
   </svelte:fragment>

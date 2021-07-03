@@ -3,7 +3,12 @@
   import Modal from "__@comps/Modal.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
+  import { getAclContext } from "../../_acl-context";
 
+  const { removeUserGranted } = getAclContext();
+  if (!removeUserGranted) {
+    $goto("/access-denied");
+  }
   const { remove, getUser } = getUserContext();
   const { notify, loading } = getApplicationContext();
 

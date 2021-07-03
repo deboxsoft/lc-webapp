@@ -2,11 +2,11 @@
   import { get } from "svelte/store";
   import Table from "__@comps/Table.svelte";
   import { goto } from "@roxi/routify";
-  import { getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import AccountCell from "__@comps/account/CellAccount.svelte";
   import MenuListAccount from "./MenuListAccount.svelte";
 
-  const { getAccountType } = getAccountContext();
+  const { getAccountType } = stores.getAccountContext();
   export let accounts = [];
   function createUpdateHandler(id) {
     return () => {
@@ -55,7 +55,7 @@
   } 
 
   .parent {
-    flex: 0 0 150px;
+    flex: 0 0 210px;
   }
 
   .type {

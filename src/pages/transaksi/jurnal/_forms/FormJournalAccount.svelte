@@ -12,8 +12,8 @@
 
   // context formJournal
   const { schema, fields, fieldsErrors, isValid, validateField } = getFormContext();
-  const accountsValidate = validateField("accounts");
-  const journalAccountSchema = schema.pick({ accounts: true });
+  const accountsValidate = validateField("creditAccounts");
+  const journalAccountSchema = schema.pick({ creditAccounts: true });
   createFormContext({ schema: journalAccountSchema });
 
   const createJournalAccount = () => ({ index: getId({ prefix: "account-input", size: 3 }) });
@@ -22,12 +22,12 @@
 
   let debit: any;
   let diff: number = NaN;
-  let journalAccountsStore = writable($fields.accounts.map((_) => ({ ..._, ...createJournalAccount() })));
+  let journalAccountsStore = writable($fields.creditAccounts.map((_) => ({ ..._, ...createJournalAccount() })));
   let credit: any;
 
   // validation form journal
   // hack hapus FieldsError.account
-  delete $fieldsErrors["accounts"];
+  delete $fieldsErrors["creditAccounts"];
   $: {
     let _credit = 0;
     $journalAccountsStore.forEach((_) => {
@@ -48,14 +48,14 @@
 
   function addJournalAccountHandler() {
     $journalAccountsStore = [...$journalAccountsStore, createJournalAccount()];
-    $fields.accounts = $journalAccountsStore;
+    $fields.creditAccounts = $journalAccountsStore;
     accountsValidate($journalAccountsStore);
   }
 
   function updateJournalAccountHandler(input: JournalAccountInput) {
     const i = $journalAccountsStore.findIndex((_) => _.index === input.index);
     $journalAccountsStore[i] = input;
-    $fields.accounts = $journalAccountsStore;
+    $fields.creditAccounts = $journalAccountsStore;
     accountsValidate($journalAccountsStore);
   }
 
@@ -63,7 +63,7 @@
     let inputs = $journalAccountsStore;
     inputs = inputs.filter((_) => _.index !== index);
     $journalAccountsStore = inputs;
-    $fields.accounts = $journalAccountsStore;
+    $fields.creditAccounts = $journalAccountsStore;
     accountsValidate($journalAccountsStore);
   }
 </script>

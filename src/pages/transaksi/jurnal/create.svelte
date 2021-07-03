@@ -1,24 +1,29 @@
 <!--routify:options title="Transaksi Baru"-->
 <script lang="ts">
   import { goto } from "@roxi/routify";
-  import { getTransactionContext, getAccountContext } from "__@modules/accounting";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
+  import {getAclContext} from "./_acl-context"
   import Modal from "__@comps/Modal.svelte";
   import FormJournal from "./_forms/FormJournal.svelte";
 
   // context
-  const { create, getTransaction } = getTransactionContext();
-  const { accountStore } = getAccountContext();
+  const { create, getTransaction } = stores.getTransactionContext();
+  const { createGranted } = getAclContext();
+  const { accountStore } = stores.getAccountContext();
   const { authenticationStore } = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
+
+  if (!createGranted) {
+    $goto("/access-denied");
+  }
 
   // form
   let transaction = {
     date: new Date(),
     type: "JOURNAL",
-    total: 0,
-    accounts: [{}],
+    creditAccounts: [{}],
     userId: $authenticationStore.profile.id
   };
 
@@ -41,7 +46,7 @@
   }
 </script>
 
-<Modal title="Transaksi Baru" class="modal-lg">
+<Modal title="Transaksi Baru" class="modal-full" onClose={cancelHandler}>
   <div class="d-flex flex-column flex-1">
     <FormJournal values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} />
   </div>
