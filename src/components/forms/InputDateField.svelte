@@ -1,20 +1,23 @@
-<script lang="ts">
+<script>
   import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import { getFormContext } from "__@stores/form";
-  import DatePickr from "__@comps/DatePickr.svelte";
+  import DatePicker from "@deboxsoft/svelte-datepicker/src/components/DatePicker.svelte"
   import { createEventDispatcher } from "svelte";
 
   const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
   const dispatcher = createEventDispatcher();
 
   export let name;
-  export let disabled: boolean = false;
-  export let formattedValue: string = "";
+  export let disabled = false;
+  export let formattedValue = "";
   export let options = {};
   export let startDateKey = "startDate";
   export let endDateKey = "endDate"
-  export let mode: "month-select" | "menu" | undefined = undefined;
-  export let input: any = undefined;
+  /**
+   * @type {"month-select" | "menu" | undefined}
+   */
+  export let mode = undefined;
+  export let input = undefined;
   const { class: className } = $$props;
 
   let classes = "";
@@ -33,10 +36,18 @@
   }
 </script>
 
-<DatePickr {...$$restProps} {mode} {disabled} class={className} bind:value={$fields[name]} on:close>
-  {#if $submitted}
-    {#if invalid}
-      <p class="invalid-tooltip">{msgError}</p>
+<!--<DatePickr {...$$restProps} {mode} {disabled} class={className} bind:value={$fields[name]} on:close>-->
+<!--  {#if $submitted}-->
+<!--    {#if invalid}-->
+<!--      <p class="invalid-tooltip">{msgError}</p>-->
+<!--    {/if}-->
+<!--  {/if}-->
+<!--</DatePickr>-->
+
+<DatePicker class={className} range placeholder="Tanggal" applyLabel="Pilih" closeLabel="Tutup"  >
+    {#if $submitted}
+      {#if invalid}
+        <p class="invalid-tooltip">{msgError}</p>
+      {/if}
     {/if}
-  {/if}
-</DatePickr>
+</DatePicker>
