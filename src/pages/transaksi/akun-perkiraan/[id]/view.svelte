@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
@@ -8,15 +9,21 @@
 
   export let to = "../";
 
+  let openDialog;
+
   $: account = getAccount($params.id);
 
+
+  onMount(() => {
+    openDialog();
+  });
   function closeHandler() {
     $goto(to, {});
   }
 </script>
 
 {#if $account}
-  <Modal title="Akun Perkiraan" onClose={closeHandler}>
+  <Modal title="Akun Perkiraan" onClose={closeHandler} bind:openDialog>
     <DetailAccount account={$account} />
     <svelte:fragment slot="footer">
       <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

@@ -3,7 +3,7 @@
   import { goto } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import { beforeUpdate } from "svelte";
+  import { beforeUpdate, onMount } from "svelte";
   import { AccountSchema } from "@deboxsoft/accounting-api";
   import { writable, get } from "svelte/store";
   import { sortUtilsFunc } from "__@root/utils";
@@ -32,6 +32,7 @@
   export let onSubmit;
   export let title;
   export let to = "../";
+  let openDialog;
   let loading = false;
   let idReadOnly = true;
   let fieldsErrors = writable([]);
@@ -57,6 +58,11 @@
     id: "kode",
     name: "nama"
   };
+
+
+  onMount(() => {
+    openDialog();
+  });
 
   beforeUpdate(() => {
     if (!isUpdate && idReadOnly) {
@@ -102,7 +108,7 @@
       AccountSchema.parse($accountState);
       await onSubmit($accountState);
       loading = false;
-      $goto(to);
+      closeHandler();
     } catch (error) {
       if (error instanceof ZodError) {
         $fieldsErrors = error.flatten().fieldErrors;
@@ -115,7 +121,7 @@
     }
   }
 
-  function cancelHandler() {
+  function closeHandler() {
     $goto(to);
   }
 
@@ -160,7 +166,7 @@
   }
 </script>
 
-<Modal {title} onClose={cancelHandler}>
+<Modal {title} onClose={closeHandler} bind:openDialog>
   <Form
     {submitted}
     {fieldsErrors}
@@ -243,7 +249,7 @@
     </div>
   </Form>
   <svelte:fragment slot="footer">
-    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Batal
     </button>
     <button type="button" class="btn btn-primary ml-1" disabled={loading} on:click={submitHandler}>
