@@ -31,8 +31,6 @@
 
   $: values = transformValues(groupUser);
 
-  $: console.log(values, "values", groupUser);
-
   function transformValues({ metadata = "{}", ..._ }) {
     return {
       ..._,

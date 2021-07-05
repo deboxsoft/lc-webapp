@@ -17,7 +17,6 @@
   }
   function getGroup(id) {
     const i = $groupStore.findIndex((_) => _.id === id);
-    console.log(id, i, $groupStore);
     return $groupStore[i];
   }
 </script>
