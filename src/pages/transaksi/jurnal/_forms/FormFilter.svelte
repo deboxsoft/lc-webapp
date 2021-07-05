@@ -1,6 +1,5 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-
   import Modal from "__@comps/Modal.svelte";
   import Form from "__@comps/forms/Form.svelte";
   import ComboBox from "__@comps/forms/ComboxField.svelte";
@@ -16,6 +15,10 @@
   export let closeDialog;
   let endDate = isReport && new Date() || undefined;
   let startDate = endDate && dayjs(endDate).startOf("month").toDate();
+  let state = filter;
+  if (endDate) {
+    filter.date = [startDate, endDate]
+  }
 
   /**
    *
@@ -25,17 +28,20 @@
 
   const { accountStore } = stores.getAccountContext();
 
-  function transformInput({status, date, ...input}) {
+  function transformInput({status, date, accountId, ...input}) {
+    let _startDate, _endDate;
+
     if (Array.isArray(date)) {
-      startDate = date[0]
-      endDate = date[1]
+      _startDate = date[0]
+      _endDate = date[1]
     } else if (date) {
-      startDate = date
+      _startDate = date
     }
     return {
-      startDate,
-      endDate,
+      startDate: _startDate,
+      endDate: _endDate,
       status: status === "" ? undefined : status,
+      accountId: accountId || undefined,
       ...input
     }
   }
@@ -43,14 +49,14 @@
 </script>
 
 <Modal {title} bind:onClose bind:openDialog bind:closeDialog >
-  <Form bind:values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable >
+  <Form values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable >
     <div class="form-group">
       <label for="date">Tanggal</label>
-      <InputDate name="date" mode="menu" placeholder="Tanggal" allowEmpty={!isReport} defaultDate={[startDate, endDate]} />
+      <InputDate mode="menu" placeholder="Tanggal" allowEmpty={!isReport} defaultDate={[filter.startDate, filter.endDate]} />
     </div>
     <div class="form-group">
       <label for="accountId">Akun Debit</label>
-      <AccountSelect id="accountId" placeholder="SEMUA" allowEmpty name="accountId" accountStore={accountStore} />
+      <AccountSelect id="accountId" placeholder="SEMUA" allowEmpty name="accountId" {accountStore} />
     </div>
     <div class="form-group">
       <label for="status">Status</label>

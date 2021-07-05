@@ -1,6 +1,6 @@
 <!--routify:options title="Transaksi Jurnal"-->
 <script>
-  import {tick} from "svelte";
+  import { tick } from "svelte";
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
@@ -11,10 +11,7 @@
   import { getApplicationContext } from "__@modules/app";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import { createReportContext } from "./_export";
-  // import DatePickr from "__@comps/DatePickr.svelte";
 
-  const report = createReportContext();
   const { readGranted, createGranted } = createAclContext();
   if (!readGranted) {
     $goto("/access-denied");
@@ -23,8 +20,11 @@
   const applicationContext = getApplicationContext();
   const accountContext = stores.getAccountContext();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { load, find, transactionStore } = stores.createTransactionContext({ accountContext, ...applicationContext });
-  const {loading: topLoading} = applicationContext;
+  const { load, findPage, transactionStore } = stores.createTransactionContext({
+    accountContext,
+    ...applicationContext
+  });
+  const { loading } = applicationContext;
 
   let filter = {};
   let openFilterDialog;
@@ -57,7 +57,7 @@
           result.push(transaction);
         }
         return result;
-      }
+      };
       transactions = $transactionStore.reduce(_reduce, []);
     }
   }
@@ -67,7 +67,7 @@
   }
 
   async function filterHandler() {
-    filter = { ...filter, ...submitFilter() };
+    filter = submitFilter();
     textFilter = undefined;
     $loading = true;
     await findPage({
@@ -81,23 +81,13 @@
     });
   }
 
-  const createExportMenuHandler = (close) => ({
-    pdf: () => {
-     report.pdf(transactions);
-      close();
-    },
-    csv: () => {
-      report.csv(transactions);
-      close();
-    },
-    print: () => {
-      report.print(transactions);
-      close();
-    }
+  const createImportMenuHandler = (close) => ({
+    cashier: () => {},
+    payment: () => {}
   });
 </script>
 
-<FormFilter bind:closeDialog={closeFilterDialog} bind:openDialog={openFilterDialog} bind:submit={submitFilter}>
+<FormFilter {filter} bind:closeDialog={closeFilterDialog} bind:openDialog={openFilterDialog} bind:submit={submitFilter}>
   <button slot="footer" type="button" class="btn btn-primary ml-1" on:click={filterHandler}>
     <i class="icon-filter4 mr-2" />
     Filter
@@ -124,13 +114,24 @@
     </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
-        <i class="icon-file-download2 mr-1" />
-        Ekspor
+        <i class="icon-file-upload2 mr-1" />
+        Impor
       </DropdownToggle>
-      <svelte:fragment slot="menu">
-        <a href="/#" target="_self" on:click|preventDefault={createExportMenuHandler(dropdownClose).pdf} class="dropdown-item">Download PDF</a>
-        <a href="/#" target="_self" on:click|preventDefault={createExportMenuHandler(dropdownClose).csv} class="dropdown-item">Download CSV</a>
-        <a href="/#" target="_self" on:click|preventDefault={createExportMenuHandler(dropdownClose).print} class="dropdown-item">Print</a>
+      <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
+        <a
+          href="/#"
+          target="_self"
+          on:click|preventDefault={createExportMenuHandler(dropdownClose).pdf}
+          class="dropdown-item"
+        >
+          <i class="icon-file-excel" />Kasir</a
+        >
+        <a
+          href="/#"
+          target="_self"
+          on:click|preventDefault={createExportMenuHandler(dropdownClose).csv}
+          class="dropdown-item"><i class="icon-file-excel" />Pembayaran</a
+        >
       </svelte:fragment>
     </Dropdown>
     <a href={$url("./export")} class="breadcrumb-elements-item">

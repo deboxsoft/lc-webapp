@@ -13,14 +13,14 @@
   const { accountStore } = stores.getAccountContext();
   const { updateGranted } = getAclContext();
 
-
-  let transaction;
+  let transaction, openDialog;
   $: _transaction = getTransaction($params.id);
   $: {
     if ($_transaction) {
       if (!updateGranted($_transaction.userId)) {
         $goto("/access-denied");
       } else {
+        openDialog();
         transaction = { ...$_transaction, date: new Date($_transaction.date) };
       }
     }
@@ -31,7 +31,7 @@
     try {
       await update($params.id, values);
       notify(`transaksi id '${$params.id}' berhasil diperbarui`, "success");
-      $goto("../");
+      closeHandler();
       $loading = false;
     } catch (e) {
       notify(e.message, "error");
@@ -39,15 +39,15 @@
     }
   }
 
-  function cancelHandler() {
+  function closeHandler() {
     $goto("../");
   }
 </script>
 
-{#if transaction && updateGranted(transaction.userId)}
-  <Modal title="Update Transaksi" class="modal-lg" onClose={cancelHandler}>
-    <div class="d-flex flex-column h-100">
-      <FormJournal values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} />
-    </div>
-  </Modal>
-{/if}
+<FormJournal
+  title="Update Transaksi"
+  values={transaction}
+  loading={$loading}
+  on:submit={submitHandler}
+  on:cancel={closeHandler}
+/>

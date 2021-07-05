@@ -1,23 +1,35 @@
 <script>
+  import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
   import dayjs from "dayjs";
   import Modal from "__@comps/Modal.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import CellRp from "__@comps/CellRp.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
+
   export let backUrl;
   export let transaction;
 
+  let openDialog;
+
+  onMount(() => {
+    openDialog();
+  })
   function closeHandler() {
     $goto(backUrl, {});
   }
 </script>
 
-<Modal title={($params.id && `Detail Transaksi '${$params.id}'`) || ""} class="modal-lg" onClose={closeHandler}>
+<Modal
+  title={($params.id && `Detail Transaksi '${$params.id}'`) || ""}
+  class="modal-lg"
+  bind:openDialog
+  onClose={closeHandler}
+>
   {#if transaction}
     <dl class="row">
       <dt class="col-sm-3">No. Bukti/Kwitansi</dt>
-      <p class="col-sm-9">: {transaction.no|| "-"}</p>
+      <p class="col-sm-9">: {transaction.no || "-"}</p>
       <dt class="col-sm-3">Tanggal</dt>
       <p class="col-sm-9">: {dayjs(transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
       <dt class="col-sm-3">Deskripsi</dt>

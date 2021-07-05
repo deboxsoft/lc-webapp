@@ -69,16 +69,20 @@
     <DropdownToggle class="list-icons-item align-items-center" tag="div">
       <i class="icon-menu9" />
     </DropdownToggle>
-    <svelte:fragment slot="menu">
+    <svelte:fragment slot="menu" let:closeHandler>
       {#if approveGranted && !rejected && !fixed}
         {#if !approved}
-          <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={approveHandler}
-            ><i class="icon-check2" />Approve</a
+          <a
+            href="/#"
+            class="dropdown-item"
+            target="_self"
+            on:click|preventDefault={approveHandler}
+            on:mouseup={closeHandler}><i class="icon-check2" />Approve</a
           >
-        <!--{:else}-->
-        <!--  <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={unApproveHandler}-->
-        <!--    ><i class="icon-undo2" />UnApprove</a-->
-        <!--  >-->
+          <!--{:else}-->
+          <!--  <a href="/#" class="dropdown-item" target="_self" on:click|preventDefault={unApproveHandler}-->
+          <!--    ><i class="icon-undo2" />UnApprove</a-->
+          <!--  >-->
         {/if}
       {/if}
       <!--{#if rejectGranted && !approved && !fixed}-->
@@ -92,13 +96,19 @@
       <!--    >-->
       <!--  {/if}-->
       <!--{/if}-->
-      <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Transaksi</a>
+      <a href={$url("./:id/view", { id })} class="dropdown-item" on:mouseup={closeHandler}
+        ><i class="icon-eye" />Lihat Transaksi</a
+      >
       {#if !approved && !fixed}
         {#if updateGranted(transaction.userId)}
-          <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-pencil" />Ubah Akun</a>
+          <a href={$url("./:id/update", { id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-pencil" />Ubah Akun</a
+          >
         {/if}
         {#if removeGranted(transaction.userId)}
-          <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Transaksi</a>
+          <a href={$url("./:id/remove", { id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-trash-alt" />Hapus Transaksi</a
+          >
         {/if}
       {/if}
     </svelte:fragment>
