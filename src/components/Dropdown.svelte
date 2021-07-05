@@ -14,7 +14,7 @@
   import { onDestroy } from 'svelte';
   import { createPopperActions } from "../utils";
   import DropdownMenu from "./DropdownMenu.svelte";
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+  import { clsx } from "@deboxsoft/module-client";
 
   const noop = () => undefined;
   let context = createContextDropdown();
