@@ -56,7 +56,6 @@ export const createReportContext = () => {
     },
     print: (metadata: Metadata = {}) => {
       const accounts = get(accountStore);
-      console.log(accounts);
       const doc = createPdfDef(accounts.map(processingData));
       return pdfMake(doc).print();
     }
