@@ -9,6 +9,13 @@
 
   const { bankStore, find } = stores.getBankContext();
   const { getAccount } = stores.getAccountContext();
+
+  export let bankList;
+
+  $: {
+    bankList = $bankStore;
+  }
+
   let loading = true;
   find().then(() => {
     loading = false;
@@ -18,7 +25,7 @@
 {#if loading}
   <Loader />
 {:else}
-  <Table items={$bankStore} let:item={bank}>
+  <Table items={bankList} let:item={bank}>
     <div class="dbx-thead" slot="header">
       <div class="dbx-cell bank">Bank</div>
       <div class="dbx-cell d-sm-none d-xl-flex name">Rekening</div>
@@ -67,7 +74,6 @@
         <BalanceAccount class="flex-1 align-items-center" id={bank.accountId} />
       </div>
       <div class="dbx-cell d-flex text-right balance">
-        {bank.accountId}
         <BalanceAccount class="flex-1 align-items-center" id={bank.accountId} value={(_value) => parseFloat(bank.balance) - _value} />
       </div>
       <div class="dbx-cell -menu-list d-flex align-items-center" style="width: 30px">

@@ -40,7 +40,6 @@
   }
 </script>
 
-<!--<div class="card bg-light mb-0">-->
 {#if !isPreview}
   <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
     <dl class="row mb-0">
@@ -76,9 +75,6 @@
       {/each}
     </div>
   </DropZone>
-  <!--    </div>-->
 {:else}
   <TableStatementBank preview bankStatementList={$fileData} bind:itemsSelected bind:errors />
 {/if}
-
-<!--</div>-->
