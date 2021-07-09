@@ -55,7 +55,6 @@
       display: flex;
       padding-right: 5px;
       height: 30px;
-      cursor: pointer;
 
       .dbx-cell {
         font-size: 0.9em;

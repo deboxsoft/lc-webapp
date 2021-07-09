@@ -20,7 +20,7 @@
       {
         name: "offset",
         options: {
-          offset: [0, 2]
+          offset: [0, 0]
         }
       }
     ],

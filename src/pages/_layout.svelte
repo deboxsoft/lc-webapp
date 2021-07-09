@@ -142,6 +142,20 @@
   .dbx-theme {
     .dbx-icon {
       font-size: 1rem;
+      &.mr-3 {
+        margin-right: 1rem !important;
+      }
+
+      svg {
+        height: 16px;
+        width: 16px;
+        margin: auto 1rem auto 0;
+      }
+
+      &.icon-sm svg {
+        height: 8px;
+        width: 8px;
+      }
     }
 
     .table {

@@ -20,7 +20,7 @@ export function sanitizeAccount(_val: string) {
 
 export function parseDate(val: string) {
   // DD/MM/YYYY
-  if (/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(val)) {
+  if (/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]((19|20)\d\d|\d\d)/.test(val)) {
     // fix to MM/DD/YYYY
     const _split = val.split("/");
     return dayjs(`${_split[1]}/${_split[0]}/${_split[2]}`, "DD/MM/YYYY").toDate();

@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
@@ -12,9 +13,13 @@
     $goto("/access-denied");
   }
 
-  let accountId;
+  let accountId, openDialog;
 
   $: accountId = $params.id;
+
+  onMount(() => {
+    openDialog();
+  });
 
   async function removeHandler() {
     try {
@@ -34,7 +39,7 @@
   }
 </script>
 
-<Modal open title="Hapus Content" onClose={closeHandler}>
+<Modal open title="Hapus Content" onClose={closeHandler} bind:openDialog>
   <div class="alert alert-warning alert-styled-left">
     Menghapus akun akan berpengaruh pada transaksi. Apa anda yakin akan menghapus kode akun `{accountId}`?
   </div>

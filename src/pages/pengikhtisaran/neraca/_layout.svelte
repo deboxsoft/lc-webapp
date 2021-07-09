@@ -5,7 +5,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableNeraca from "./_components/TableNeraca.svelte";
-  import DatePickr from "__@comps/DatePickr.svelte";
+  import DatePickr from "__@comps/forms/InputDateField.svelte";
   import { createAclContext } from "./_acl-context";
 
   const { readGranted } = createAclContext();

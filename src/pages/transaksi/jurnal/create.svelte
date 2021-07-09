@@ -1,11 +1,10 @@
 <!--routify:options title="Transaksi Baru"-->
-<script lang="ts">
+<script>
   import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import {getAclContext} from "./_acl-context"
-  import Modal from "__@comps/Modal.svelte";
+  import { getAclContext } from "./_acl-context";
   import FormJournal from "./_forms/FormJournal.svelte";
 
   // context
@@ -20,6 +19,7 @@
   }
 
   // form
+  let openDialog;
   let transaction = {
     date: new Date(),
     type: "JOURNAL",
@@ -32,9 +32,9 @@
     $loading = true;
     try {
       await create(values);
-      $goto("./");
       notify("transaksi berhasil disimpan", "success");
       $loading = false;
+      cancelHandler();
     } catch (e) {
       $loading = false;
       notify(e.message, "error");
@@ -46,8 +46,4 @@
   }
 </script>
 
-<Modal title="Transaksi Baru" class="modal-full" onClose={cancelHandler}>
-  <div class="d-flex flex-column flex-1">
-    <FormJournal values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} />
-  </div>
-</Modal>
+<FormJournal title="Transaksi Baru" values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} />

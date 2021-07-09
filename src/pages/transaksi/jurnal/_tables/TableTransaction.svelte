@@ -6,10 +6,11 @@
   import CellAccount from "__@comps/account/CellAccount.svelte";
   import MenuListTransaction from "./MenuListTransaction.svelte";
   import Table from "__@comps/Table.svelte";
+  import Button from "__@comps/Button.svelte";
   import InfiniteScroll from "__@comps/InfiniteScroll.svelte";
 
   const { loading } = getApplicationContext();
-  const { transactionPageInfo, find } = stores.getTransactionContext();
+  const { transactionPageInfo, findPage } = stores.getTransactionContext();
 
   export let transactions = [];
   export let filter;
@@ -20,7 +21,7 @@
   export async function infiniteHandler() {
     submitting = true;
     $loading = true;
-    await find(
+    await findPage(
       {
         filter,
         pageCursor: {
@@ -36,28 +37,28 @@
 
 <Table>
   <div class="dbx-thead" slot="header">
-    <div class="dbx-cell no">No Transaksi</div>
+    <div class="dbx-cell d-none d-md-flex no">No Transaksi</div>
     <div class="dbx-cell date">Tanggal</div>
-    <div class="dbx-cell account">Debit</div>
+    <div class="dbx-cell d-none d-xl-flex account">Debit</div>
     <div class="dbx-cell ">Deskripsi</div>
     <div class="dbx-cell amount">Jumlah</div>
-    <div class="dbx-cell status">Status</div>
+    <div class="dbx-cell d-none d-sm-flex status">Status</div>
     <div class="dbx-cell -menu-list" />
   </div>
   {#each transactions as transaction}
     <div class="dbx-tr">
-      <div class="dbx-cell no">{transaction.id || ""}</div>
+      <div class="dbx-cell d-none d-md-flex no">{transaction.id || ""}</div>
       <div class="dbx-cell date">
         {dayjs(transaction.date).format("DD-MM-YY") || ""}
       </div>
-      <div class="dbx-cell account">
+      <div class="dbx-cell d-none d-xl-flex account">
         <CellAccount id={transaction.accountId} />
       </div>
       <div class="dbx-cell">{transaction.description || ""}</div>
       <div class="dbx-cell amount">
         <CellRp value={transaction.amount} />
       </div>
-      <div class="dbx-cell status">
+      <div class="dbx-cell d-none d-sm-flex status">
         <span
           class="badge"
           class:badge-primary={transaction.status === "UNAPPROVED"}
@@ -71,17 +72,19 @@
       </div>
     </div>
   {/each}
-  <!--{#if $transactionPageInfo.hasNext}-->
-  <!--  <div class="dbx-tr">-->
-  <!--    <Button class="btn btn-light w-100" on:click={infiniteHandler} {submitting}> Load More </Button>-->
-  <!--  </div>-->
-  <!--{/if}-->
-  <InfiniteScroll
-    elementScroll={window}
-    hasMore={$transactionPageInfo.hasNext}
-    on:loadMore={infiniteHandler}
-    threshold={100}
-  />
+  {#if $transactionPageInfo.hasNext}
+    <div class="dbx-tr" style="height: 50px">
+      <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
+        ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+      </Button>
+    </div>
+  {/if}
+  <!--  <InfiniteScroll-->
+  <!--    elementScroll={window}-->
+  <!--    hasMore={$transactionPageInfo.hasNext}-->
+  <!--    on:loadMore={infiniteHandler}-->
+  <!--    threshold={100}-->
+  <!--  />-->
 </Table>
 
 <style lang="scss">

@@ -15,7 +15,6 @@
     lastTabbableChild = tabbableChildren[tabbableChildren.length - 1];
     // Wait for children to mount before trying to focus `initialFocusElement`
     tick().then(() => {
-      console.log(initialFocusElement, "focus");
       if (initialFocusElement) {
         initialFocusElement.focus();
       } else {

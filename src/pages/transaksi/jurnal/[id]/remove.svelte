@@ -9,13 +9,15 @@
   const { remove, getTransaction } = stores.getTransactionContext();
   const { removeGranted } = getAclContext();
 
-  let transaction;
+  let transaction, openDialog;
 
   $: {
     transaction = getTransaction($params.id);
     if ($transaction) {
       if (!removeGranted($transaction.userId)) {
         $goto("/access-denied");
+      } else {
+        openDialog();
       }
     }
   }
@@ -25,7 +27,7 @@
       $loading = true;
       const id = $transaction.id
       await remove(id);
-      $goto("../");
+      closeHandler();
       notify(`transaksi id '${id}' berhasil dihapus`, "success");
       $loading = false;
     } catch (e) {
@@ -39,14 +41,12 @@
   }
 </script>
 
-{#if $transaction && removeGranted($transaction.userId) }
-  <Modal open title="Hapus Content" onClose={closeHandler}>
-    <div class="alert alert-warning alert-styled-left">
-      Menghapus transaksi akan menhapus transaksi setelahnya. Apa anda yakin akan menghapus transaksi id `{$transaction.id}`?
-    </div>
-    <svelte:fragment slot="footer">
-      <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
-      <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>
-    </svelte:fragment>
-  </Modal>
-{/if}
+<Modal open title="Hapus Content" onClose={closeHandler} bind:openDialog>
+  <div class="alert alert-warning alert-styled-left">
+    Menghapus transaksi akan menhapus transaksi setelahnya. Apa anda yakin akan menghapus transaksi id `{$transaction.id}`?
+  </div>
+  <svelte:fragment slot="footer">
+    <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
+    <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>
+  </svelte:fragment>
+</Modal>

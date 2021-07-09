@@ -1,11 +1,17 @@
 <!--routify:options title="Update Bank"-->
 <script>
+  import {onMount} from "svelte";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import FormBank from "../_components/FormBank.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
 
+  let openDialog;
+
+  onMount(() => {
+    openDialog()
+  })
   const { updateGranted } = getAclContext();
   if (!updateGranted) {
     $goto("/access-denied");
@@ -27,4 +33,4 @@
   }
 </script>
 
-<FormBank bank={$bank} isUpdate {onSubmit} title="Update Bank" to={$params.to} />
+<FormBank bind:openDialog bank={$bank} isUpdate {onSubmit} title="Update Bank" to={$params.to} />

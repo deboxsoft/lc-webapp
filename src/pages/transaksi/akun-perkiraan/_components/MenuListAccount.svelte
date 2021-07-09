@@ -15,13 +15,19 @@
     <DropdownToggle class="list-icons-item align-items-center" tag="div">
       <i class="icon-menu9" />
     </DropdownToggle>
-    <svelte:fragment slot="menu">
-      <a href={$url("./:id/view", { id })} class="dropdown-item"><i class="icon-eye" />Lihat Akun</a>
+    <svelte:fragment slot="menu" let:closeHandler>
+      <a href={$url("./:id/view", { id })} class="dropdown-item" on:mouseup={closeHandler}
+        ><i class="icon-eye" />Lihat Akun</a
+      >
       {#if updateGranted}
-        <a href={$url("./:id/update", { id })} class="dropdown-item"><i class="icon-pencil" />Ubah Akun</a>
+        <a href={$url("./:id/update", { id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-pencil" />Ubah Akun</a
+        >
       {/if}
       {#if !removeActDisable && removeGranted}
-        <a href={$url("./:id/remove", { id })} class="dropdown-item"><i class="icon-trash-alt" />Hapus Akun</a>
+        <a href={$url("./:id/remove", { id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-trash-alt" />Hapus Akun</a
+        >
       {/if}
     </svelte:fragment>
   </Dropdown>

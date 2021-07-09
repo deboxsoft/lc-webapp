@@ -10,7 +10,7 @@
   <!--{#if spaceMinus && (value < 0)}-->
   <!--  <div class="space-sign" />-->
   <!--{/if}-->
-  <div class="sign">Rp.</div>
+  <div class="sign">Rp. </div>
   <div class="space" />
   <div class="value">{value ? convertToRp(parseFloat(value).toFixed(2)) : "-"}</div>
   {#if spaceMinus && value > 0}
@@ -21,6 +21,7 @@
 <style lang="scss" global>
   .cell-rp {
     display: flex;
+    flex: 1;
     &.-minus {
       color: red;
     }
