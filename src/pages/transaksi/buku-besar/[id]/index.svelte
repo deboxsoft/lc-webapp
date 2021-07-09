@@ -8,7 +8,7 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
   import TableTrialBalance from "../_components/TableTrialBalance.svelte";
-  import DatePickr from "__@comps/DatePickr.svelte";
+  import DatePickr from "__@comps/forms/InputDateField.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
 
   // context
@@ -23,7 +23,6 @@
   let account = writable({});
 
   $: account = getAccount($params.id);
-  $: console.log($account);
 
   $: {
     if ($account) {

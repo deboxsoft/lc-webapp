@@ -49,7 +49,7 @@
   $: classes = clsx(className);
 
   $: {
-    if ($fieldsErrors[name]) {
+    if ($fieldsErrors && $fieldsErrors[name]) {
       invalid = true;
       msgError = $fieldsErrors[name];
     } else {

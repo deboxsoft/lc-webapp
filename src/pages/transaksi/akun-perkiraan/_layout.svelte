@@ -107,6 +107,10 @@
         <i class="icon-plus2 mr-1" />
         Tambah
       </a>
+      <a href={$url("./import")} class="breadcrumb-elements-item">
+        <i class="icon-file-upload2 mr-1" />
+        Impor
+      </a>
     {/if}
     <a
       href="/#"

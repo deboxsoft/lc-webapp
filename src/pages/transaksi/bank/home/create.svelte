@@ -1,5 +1,6 @@
 <!--routify:options title="Create Bank"-->
 <script>
+  import { onMount} from "svelte";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import FormBank from "./_components/FormBank.svelte";
@@ -14,6 +15,12 @@
   const { currentDateStore } = stores.getPreferenceAccountingContext();
   const { create } = stores.getBankContext();
 
+  $loading = true;
+  let openDialog;
+  onMount(() => {
+    openDialog();
+    $loading = false;
+  });
   let bank = {
     date: $currentDateStore
   };
@@ -24,6 +31,7 @@
       await create(values);
       $loading = false;
       notify(`Berhasil membuat data bank ${values.name}`, "success");
+      $goto("./")
     } catch (e) {
       notify(e.message, "error");
       $loading = false;
@@ -31,4 +39,4 @@
   }
 </script>
 
-<FormBank {bank} title="Membuat Data Bank" {onSubmit} to={$params.to} />
+<FormBank bind:openDialog {bank} title="Membuat Data Bank" {onSubmit} to={$params.to} />

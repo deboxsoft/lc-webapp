@@ -1,96 +1,125 @@
 <!--routify:options title="Import Statement"-->
 <script>
-  import dayjs from "dayjs";
+  import { onMount } from "svelte";
+  import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
-  import FormImport from "./_components/FormImport.svelte";
-  import Modal from "__@comps/Modal.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
-  import { writable, get } from "svelte/store";
+  import FormImport from "__@comps/forms/FormImport.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
+  import TablePreview from "./_components/TableStatementBank.svelte";
+  import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
+  import BankInfo from "./_components/BankInfo.svelte";
 
-  const { loading: loadingApp, notify } = getApplicationContext();
+  // tranform step from csv
+  const transformStep = (output) => {
+    return (result, self) => {
+      const date = parseDate(result.data[0]);
+      if (date) {
+        output.push({
+          date,
+          description: sanitizeString(`${result.data[1]}`),
+          in: sanitizeNumber(result.data[2]),
+          out: sanitizeNumber(result.data[3]),
+          balance: sanitizeNumber(result.data[4]),
+          accountId: sanitizeAccount(result.data[5])
+        });
+      }
+    };
+  };
+
+  const { loading, notify } = getApplicationContext();
   const { getAccount } = stores.getAccountContext();
   const { importStatement, bank } = stores.getBankStatementContext();
+
+  const title = "Rekonsiliasi data bank";
   let fileLoaded = false;
   let isPreview = false;
-  let fileData = writable(undefined);
   let files = writable([]);
   let itemsSelected;
-  let loading = false;
+  let submitting = false;
   let errors = [];
+  let balanceBank = 0;
+  let balanceAccount = 0;
+  let account
+  let submit, openDialog, closeDialog;
+
+  $: {
+    account = getAccount($bank.accountId);
+    $account && (balanceAccount = $account.balance);
+    $bank && (balanceBank = $bank.balance)
+  }
+
+  onMount(() => {
+    openDialog();
+    $loading = false;
+  });
 
   async function submitHandler() {
-    $loadingApp = true;
-    try {
-      // filter
-      errors = [];
-      const statements = $fileData.filter((_, index) => {
-        if ($itemsSelected.includes(index)) {
-          const account = get(getAccount(_.accountId));
-          if (!account || (!_.in && !_.out)) {
-            errors.push(index);
-          }
-          return true;
-        }
-        return false;
-      });
-      if (!errors || errors.length === 0) {
-        const _statements = statements.map(({ date, ...data }) => ({
-          ...data,
-          date: dayjs(date, "DD/MM/YY").toDate()
-        }));
-        await importStatement($bank.id, _statements);
-        $itemsSelected = [];
-        notify("data berhasil tersimpan", "success");
-        $goto("./");
-        $loadingApp = false;
-      } else {
-        notify("data belum lengkap", "error");
-      }
-    } catch (e) {
-      // notify(e.message, "error");
-    } finally {
-      $loadingApp = false;
+    errors = [];
+    if (!errors || errors.length === 0) {
+      await importStatement($bank.id, _statements);
+      notify("data berhasil tersimpan", "success");
+      $goto("./");
+    } else {
+      notify("data belum lengkap", "error");
     }
   }
 
-  function previewHandler() {
-    isPreview = true;
+  /**
+   *
+   * @param listData {*[]}
+   */
+  function previewHandler(listData) {
+    errors = [];
+    if (listData) {
+      balanceAccount = $account.balance;
+      balanceBank = $bank.balance;
+      listData.forEach((_, index) => {
+        console.log(_);
+        if (_.date === "" || !_.balance || _.accountId === "" || (!_.in && !_.out) || (_.in && _.out)) {
+          errors.push(index);
+        }
+        balanceBank = _.balance;
+        _.in && (balanceAccount += _.in);
+        _.out && (balanceAccount -= _.out);
+      });
+    }
+    if (errors.length > 0 || !listData || listData.length === 0) {
+      throw new Error("Terjadi kesalahan input data, mohon diperiksa kembali.");
+    }
   }
 
-  function backHandler() {
-    isPreview = false;
+  function closeHandler() {
     fileLoaded = false;
+    balanceBank = $bank.balance;
+    balanceAccount = $account.balance;
     files.set([]);
+    $goto("./");
   }
 
-  function cancelHandler() {
-    $goto("./");
+  function resetHandler() {
+    balanceBank = $bank.balance;
+    balanceAccount = $account.balance;
   }
 </script>
 
-<Modal title="Import Statement Bank" class="modal-full">
-  {#if loading}
-    <Loader />
-  {:else}
-    <FormImport bind:fileLoaded bind:fileData bind:isPreview bind:files bind:itemsSelected bind:errors />
-  {/if}
-  <div slot="footer">
-    <button type="button" on:click={cancelHandler} class="btn btn-outline-primary mr-2"
-      ><i class="icon-cancel-circle2 mr-2" />Tutup</button
-    >
-    {#if !isPreview}
-      <button type="button" on:click={previewHandler} class="btn bg-primary mr-2" disabled={!fileLoaded}
-        ><i class="icon-file-eye2 mr-2" />preview</button
-      >
-    {:else}
-      <button type="button" on:click={backHandler} class="btn btn-outline-primary mr-2"
-        ><i class="icon-reset mr-2" />Reset</button
-      >
-      <button type="button" on:click={submitHandler} class="btn btn-primary mr-2" disabled={!fileLoaded || loading}
-        ><i class="icon-floppy-disk mr-2" />Simpan</button
-      >
-    {/if}
-  </div>
-</Modal>
+<FormImport
+  bind:fileLoaded
+  bind:files
+  bind:isPreview
+  bind:errors
+  bind:openDialog
+  bind:closeDialog
+  let:fileData
+  {title}
+  {transformStep}
+  onPreview={previewHandler}
+  onClose={closeHandler}
+  onReset={resetHandler}
+  onSubmit={submitHandler}
+>
+  <svelte:fragment slot="info">
+    <BankInfo {account} {bank} {balanceAccount} {balanceBank} />
+  </svelte:fragment>
+  <TablePreview preview bind:submit bankStatementList={fileData} bind:errors />
+</FormImport>

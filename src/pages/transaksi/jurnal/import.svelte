@@ -1,114 +1,154 @@
 <!--routify:options title="Import Statement"-->
 <script>
-  import dayjs from "dayjs";
-  import { goto } from "@roxi/routify";
+  import { onMount } from "svelte";
+  import { writable, derived } from "svelte/store";
+  import { goto, params } from "@roxi/routify";
   import FormImport from "__@comps/forms/FormImport.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
-  import { writable, get, derived } from "svelte/store";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
+  import TablePreview from "./_tables/TablePreview.svelte";
+  import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
+  import CellRp from "__@comps/CellRp.svelte";
 
-  const { loading: loadingApp, notify } = getApplicationContext();
+  const { loading, notify } = getApplicationContext();
   const { getAccount, accountStore } = stores.getAccountContext();
   const { import: importTransaction, transactionTypeStore } = stores.getTransactionContext();
+
+  // tranform step from csv
+  const transformStep = (output) => {
+    return (result, self) => {
+      const date = parseDate(result.data[0]);
+      if (date) {
+        output.push({
+          date,
+          no: sanitizeString(`${result.data[1]}`),
+          description: sanitizeString(`${result.data[2]}`),
+          amount: sanitizeNumber(result.data[3]),
+          accountId: sanitizeAccount(result.data[4])
+        });
+      }
+    };
+  };
 
   /**
    *
    * @type {"journal" | "payment" | "cashier"}
    */
-  export let action = "journal";
-
+  const action = $params.action;
+  const title = action === "cashier" ? "Impor Transaksi Kasir" : "Impor Transaksi Pembayaran";
   let fileLoaded = false;
-  let isPreview = false;
-  let fileData = writable(undefined);
   let files = writable([]);
-  let itemsSelected;
-  let loading = false;
+  let submitting = false;
   let errors = [];
-  let accountId;
+  let balance = 0;
+  let accountId,
+    accountsCash = writable([]);
+  let submit, openDialog, closeDialog, isPreview;
 
-  function getAccountsCash() {
-    return derived(accountStore, (_) => {
-      return _.filter((__) => !__.isParent && /^101/.test(_.id));
+  $: account = getAccount(accountId);
+  // const parentAccountsCash = ["1010100", "1010200", "1010300", "1010400"];
+  $loading = true;
+  onMount(() => {
+    openDialog();
+    $loading = false;
+  });
+
+  function getAccountsCash(e) {
+    return derived(accountStore, (_ = []) => {
+      return _.filter((__) => {
+        return !__.isParent && /^101/.test(__.parentId);
+      });
     });
   }
 
+  $: accountsCash = getAccountsCash(accountStore);
+
   async function submitHandler() {
-    $loadingApp = true;
-    try {
-      // filter
-      errors = [];
-      const statements = $fileData.filter((_, index) => {
-        if ($itemsSelected.includes(index)) {
-          const account = get(getAccount(_.accountId));
-          if (!account || (!_.in && !_.out)) {
-            errors.push(index);
-          }
-          return true;
-        }
-        return false;
-      });
-      if (!errors || errors.length === 0) {
-        const _statements = statements.map(({ date, ...data }) => ({
-          ...data,
-          date: dayjs(date, "DD/MM/YY").toDate()
-        }));
-        await importStatement($bank.id, _statements);
-        $itemsSelected = [];
-        notify("data berhasil tersimpan", "success");
-        $goto("./");
-        $loadingApp = false;
-      } else {
-        notify("data belum lengkap", "error");
-      }
-    } catch (e) {
-      // notify(e.message, "error");
-    } finally {
-      $loadingApp = false;
+    // filter
+    errors = [];
+    const inputs = submit();
+    if (!errors || errors.length === 0) {
+      await importTransaction(inputs);
+      $goto("./");
+      $loading = false;
+    } else {
+      throw errors;
     }
   }
 
-  function previewHandler() {
-    isPreview = true;
+  /**
+   *
+   * @param listData {*[]}
+   */
+  function previewHandler(listData) {
+    if (listData) {
+      balance = 0;
+      errors = [];
+      listData.forEach((_, index) => {
+        if (!(_.date || _.amount || _.accountId)) {
+          errors.push(index);
+        }
+        balance += parseFloat(_.amount);
+      });
+    }
   }
 
-  function backHandler() {
-    isPreview = false;
+  function closeHandler() {
     fileLoaded = false;
     files.set([]);
-  }
-
-  function cancelHandler() {
     $goto("./");
   }
+
 </script>
 
 <FormImport
   bind:fileLoaded
-  bind:fileData
-  bind:isPreview
   bind:files
-  bind:itemsSelected
+  bind:isPreview
   bind:errors
-  onPreview={previewHandler}
+  bind:openDialog
+  bind:closeDialog
+  let:fileData
+  {title}
+  {transformStep}
   onClose={closeHandler}
+  onPreview={previewHandler}
   onSubmit={submitHandler}
 >
   <!-- form upload  -->
-  <div slot="intro">
+  <svelte:fragment slot="intro">
     {#if action === "cashier"}
-      <div class="form-group">
-        <label for="accountId">Akun Kas yang didebit</label>
-        <AccountSelect id="accountId" bind:accountId accountStore={getAccountsCash()} />
+      <div class="row form-group">
+        <label class="col-form-label col-md-2" for="accountId">Akun Kas yang didebit</label>
+        <div class="col-md-10 d-inline-flex align-items-center">
+          : <AccountSelect class="ml-1" id="accountId" bind:accountId accountStore={accountsCash} />
+        </div>
       </div>
     {:else if action === "payment"}
-      <div class="form-group">
-        <label for="accountId">Akun Kas yang didebit</label>
-        <AccountSelect id="accountId" bind:accountId accountStore={getAccountsCash()} />
+      <div class="row form-group">
+        <label class="col-form-label col-md-2" for="accountId">Akun Kas yang dikredit</label>
+        <div class="col-md-10 d-inline-flex align-items-center">
+          : <AccountSelect class="ml-1" id="accountId" bind:accountId accountStore={accountsCash} />
+        </div>
       </div>
     {/if}
-  </div>
+    <div class="row">
+      <div class="col-md-2">Saldo</div>
+      <div class="col-md-10 d-inline-flex align-items-center">
+        : <div style="width: 150px"><CellRp class="ml-1" value={$account && $account.balance} /></div>
+      </div>
+    </div>
+    {#if isPreview}
+      <div class="row">
+        <div class="col-form-label col-md-2">Total {action === "cashier" ? "Pemasukan" : "Pengeluaran"}</div>
+        <div class="col-md-10 d-inline-flex align-items-center">
+          : <div style="width: 150px"><CellRp class="ml-1" value={balance} /></div>
+        </div>
+      </div>
+    {/if}
+  </svelte:fragment>
 
   <!-- preview -->
-  <div />
+  <TablePreview bind:submit {action} dataList={fileData} {accountId} bind:errors />
 </FormImport>

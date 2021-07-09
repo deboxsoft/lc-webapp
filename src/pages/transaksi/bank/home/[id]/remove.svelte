@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
@@ -12,6 +13,10 @@
   }
   const { remove, getBank } = stores.getBankContext();
   const { loading, notify } = getApplicationContext();
+  let openDialog;
+  onMount(() => {
+    openDialog();
+  })
 
   async function removeHandler() {
     $loading = true;
@@ -32,7 +37,7 @@
   }
 </script>
 
-<Modal open title="Hapus Content" onClose={closeHandler}>
+<Modal bind:openDialog open title="Hapus Content" onClose={closeHandler}>
   {#if $loading || !$bank}
     <Loader />
   {:else}

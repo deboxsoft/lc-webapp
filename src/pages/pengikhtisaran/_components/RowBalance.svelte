@@ -14,16 +14,12 @@
 
 <tr on:click={expandHandler} style="cursor: pointer;">
   <td colspan="2" class="d-table-cell">
-    <div class="d-flex flex-row">
-      <div class="align-self-center mr-1">
-        <div class="arrow-icon">
-          {#if expanded}
-            <IconArrowDown />
-          {:else}
-            <IconArrowRight />
-          {/if}
-        </div>
-      </div>
+    <div class="d-flex flex-row align-items-center">
+      {#if expanded}
+        <IconArrowDown class="icon-sm pt-1 mr-1" />
+      {:else}
+        <IconArrowRight class="icon-sm pt-1 mr-1" />
+      {/if}
       <div>
         {account.name}
       </div>
@@ -56,9 +52,5 @@
 <style>
   .balance {
     width: 200px;
-  }
-  .arrow-icon {
-    width: 8px;
-    height: 8px;
   }
 </style>
