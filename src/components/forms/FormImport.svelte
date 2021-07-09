@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { writable } from "svelte/store";
   import DropZone from "svelte-file-dropzone/src/components/Dropzone.svelte";
   import { csvParse } from "__@root/utils";
   import Modal from "__@comps/Modal.svelte";
@@ -8,16 +9,22 @@
   const { loading, notify } = getApplicationContext();
   export let fileLoaded = false;
   export let isPreview = false;
-  export let fileData = writable(undefined);
+  export let title = "";
   export let files = writable([]);
-  export let itemsSelected;
-  export let errors;
-  export let transformStep = (output) => output;
-  export let onSubmit = () => {return Promise.resolve()}
-  export let onClose = () => {}
-  export let onPreview = () => {}
+  export let openDialog;
+  export let closeDialog;
+  export let errors = [];
+  export let transformStep = (output) => (_) => output.push(_);
+  export let onSubmit = () => {
+    return Promise.resolve();
+  };
+  export let onClose = () => {};
+  export let onReset = () => {};
+  export let onPreview = () => {};
 
   let submitting = false;
+  let fileData = writable([]);
+  let alertMessage;
 
   $: fileLoaded = $files.length > 0;
 
@@ -45,19 +52,20 @@
     try {
       $loading = true;
       await onSubmit($fileData);
-      notify("data berhasil tersimpan", "success")
+      notify("data berhasil disimpan", "success");
       closeHandler();
     } catch (e) {
-      notify(e.message, "error")
+      notify("data tidak berhasil disimpan", "error");
     } finally {
       $loading = false;
     }
   }
 
-  function backHandler() {
+  function resetHandler() {
     isPreview = false;
     fileLoaded = false;
     files.set([]);
+    onReset();
   }
 
   function closeHandler() {
@@ -67,56 +75,74 @@
   function previewHandler() {
     try {
       isPreview = true;
-      onPreview();
+      onPreview($fileData);
     } catch (e) {
-      if (Array.isArray(e)) {
-        errors = e;
+      notify(e.message, "error");
+      alertMessage = {
+        message: e.message,
+        type: "error"
       }
     }
   }
+
+
+  function alertDismissHandler() {
+    alertMessage = undefined;
+  }
 </script>
 
-<Modal title="Import Statement Bank" class="modal-full" onClose={closeHandler}>
-  {#if loading}
+<Modal bind:openDialog bind:closeDialog {title} class="modal-full" onClose={closeHandler}>
+  {#if $loading}
     <Loader />
-  {:else if !isPreview}
-    <slot name="intro" />
-    <DropZone on:drop={handleFileSelect} accept=".csv" multiple={false} disableDefaultStyles>
-      <div class="dropzone mt-2">
-        <div class="dz-default dz-message"><span>Drop files CSV <span>or CLICK</span></span></div>
-        {#each $files as file}
-          <div class="dz-preview dz-file-preview">
-            <div class="dz-details">
-              <div class="dz-filename"><span data-dz-name>{file.name}</span></div>
-              <div class="dz-size" data-dz-size>{file.size}</div>
-              <div class="dz-size">{file.lastModifiedDate}</div>
-              <img alt="csv file" data-dz-thumbnail />
-            </div>
-            <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress /></div>
-            <div class="dz-success-mark"><span>✔</span></div>
-            <div class="dz-error-mark"><span>✘</span></div>
-            <div class="dz-error-message"><span data-dz-errormessage /></div>
-          </div>
-        {/each}
-      </div>
-    </DropZone>
   {:else}
-    <slot />
+    {#if alertMessage}
+      <div class="alert alert-dismissible border-0" class:alert-danger={alertMessage.type === "error"}>
+        <button type="button" class="close" on:click={alertDismissHandler}><span>x</span></button>
+        {alertMessage.message}
+      </div>
+    {/if}
+    <slot name="info" />
+    {#if !isPreview}
+      <DropZone on:drop={handleFileSelect} accept=".csv" multiple={false} disableDefaultStyles>
+        <div class="dropzone mt-2">
+          <div class="dz-default dz-message"><span>Drop files CSV <span>or CLICK</span></span></div>
+          {#each $files as file}
+            <div class="dz-preview dz-file-preview">
+              <div class="dz-details">
+                <div class="dz-filename"><span data-dz-name>{file.name}</span></div>
+                <div class="dz-size" data-dz-size>{file.size}</div>
+                <div class="dz-size">{file.lastModifiedDate}</div>
+                <img alt="csv file" data-dz-thumbnail />
+              </div>
+              <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress /></div>
+              <div class="dz-success-mark"><span>✔</span></div>
+              <div class="dz-error-mark"><span>✘</span></div>
+              <div class="dz-error-message"><span data-dz-errormessage /></div>
+            </div>
+          {/each}
+        </div>
+      </DropZone>
+    {:else}
+      <slot fileData={$fileData} />
+    {/if}
   {/if}
   <div slot="footer">
     <button type="button" on:click={closeHandler} class="btn btn-outline-primary mr-2"
-    ><i class="icon-cancel-circle2 mr-2" />Tutup</button
+      ><i class="icon-cancel-circle2 mr-2" />Tutup</button
     >
     {#if !isPreview}
       <button type="button" on:click={previewHandler} class="btn bg-primary mr-2" disabled={!fileLoaded}
-      ><i class="icon-file-eye2 mr-2" />preview</button
+        ><i class="icon-file-eye2 mr-2" />preview</button
       >
     {:else}
-      <button type="button" on:click={backHandler} class="btn btn-outline-primary mr-2"
-      ><i class="icon-reset mr-2" />Reset</button
+      <button type="button" on:click={resetHandler} class="btn btn-outline-primary mr-2"
+        ><i class="icon-reset mr-2" />Reset</button
       >
-      <button type="button" on:click={submitHandler} class="btn btn-primary mr-2" disabled={!fileLoaded || submitting || errors}
-      ><i class="icon-floppy-disk mr-2" />Simpan</button
+      <button
+        type="button"
+        on:click={submitHandler}
+        class="btn btn-primary mr-2"
+        disabled={!fileLoaded || submitting || errors.length > 0}><i class="icon-floppy-disk mr-2" />Simpan</button
       >
     {/if}
   </div>

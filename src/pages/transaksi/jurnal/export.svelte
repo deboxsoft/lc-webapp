@@ -177,7 +177,7 @@
   }
 </script>
 
-<FormFilter open title="Ekspor" bind:openDialog isReport bind:submit={submitFilter} onClose={closeHandler}>
+<FormFilter title="Ekspor" bind:openDialog isReport bind:submit={submitFilter} onClose={closeHandler}>
   <div slot="footer">
     <button class="btn btn-primary" on:click={downloadPdfHandler}><i class="icon-file-pdf mr-2" />Download PDF</button>
     <button class="btn btn-primary" on:click={downloadCsvHandler}><i class="icon-file-excel mr-2" />Download CSV</button

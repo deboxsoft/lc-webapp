@@ -23,6 +23,8 @@
   export let onSubmit;
   export let title;
   export let to = "./";
+  export let openDialog;
+  export let closeDialog;
 
   // state
   let fields;
@@ -178,12 +180,12 @@
     }
   }
 
-  function cancelHandler() {
+  function closeHandler() {
     $goto(to);
   }
 </script>
 
-<Modal {title} onClose={cancelHandler}>
+<Modal bind:openDialog bind:closeDialog {title} onClose={closeHandler}>
   <Form schema={BankInputSchema} values={bank} bind:fields>
     <div class="card">
       <div class="card-body">
@@ -235,7 +237,7 @@
     </div>
   </Form>
   <svelte:fragment slot="footer">
-    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Cancel
     </button>
     <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>

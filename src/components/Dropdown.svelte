@@ -17,7 +17,7 @@
   import { clsx } from "@deboxsoft/module-client";
 
   const noop = () => undefined;
-  let context = createContextDropdown();
+  export const context = createContextDropdown();
   export let className = $$props.class;
   export let active = false;
   export let addonType = false;
@@ -31,8 +31,9 @@
   export let setActiveFromChild = false;
   export let size = '';
   export let toggle = undefined;
+  export let popperOptions = undefined;
   export let menuProps = {};
-  const [popperRef, popperContent] = createPopperActions();
+  const [popperRef, popperContent] = createPopperActions(popperOptions);
   const validDirections = ['up', 'down', 'left', 'right', 'start', 'end'];
   if (validDirections.indexOf(direction) === -1) {
     throw new Error(
@@ -91,8 +92,13 @@
       };
     });
   }
-  $: handleToggle = toggle || (() => (isOpen = !isOpen));
+  let handleToggle = toggle || (() => {
+    return (isOpen = !isOpen);
+  });
   function handleDocumentClick(e) {
+    if (!isOpen) {
+      return;
+    }
     if (e && (e.which === 3 || (e.type === 'keyup' && e.which !== 9))) return;
     if (
       component.contains(e.target) &&

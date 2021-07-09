@@ -11,6 +11,8 @@
   import { getApplicationContext } from "__@modules/app";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import FalCashRegister from '@deboxsoft/svelte-icons/fal/FalCashRegister.svelte';
+  import FalMoneyBill from '@deboxsoft/svelte-icons/fal/FalMoneyBill.svelte';
 
   const { readGranted, createGranted } = createAclContext();
   if (!readGranted) {
@@ -80,11 +82,6 @@
       closeFilterDialog();
     });
   }
-
-  const createImportMenuHandler = (close) => ({
-    cashier: () => {},
-    payment: () => {}
-  });
 </script>
 
 <FormFilter {filter} bind:closeDialog={closeFilterDialog} bind:openDialog={openFilterDialog} bind:submit={submitFilter}>
@@ -119,18 +116,15 @@
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
         <a
-          href="/#"
-          target="_self"
-          on:click|preventDefault={createExportMenuHandler(dropdownClose).pdf}
+          href={$url("./import", {action: "cashier"})}
           class="dropdown-item"
         >
-          <i class="icon-file-excel" />Kasir</a
+          <FalCashRegister class="mr-3" /> Kasir</a
         >
         <a
-          href="/#"
-          target="_self"
-          on:click|preventDefault={createExportMenuHandler(dropdownClose).csv}
-          class="dropdown-item"><i class="icon-file-excel" />Pembayaran</a
+          href={$url("./import", {action: "payment"})}
+          class="dropdown-item">
+          <FalMoneyBill class="mr-3" />Pembayaran</a
         >
       </svelte:fragment>
     </Dropdown>

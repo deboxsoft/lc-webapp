@@ -23,7 +23,7 @@
     "dropdown-toggle-split": split,
     "nav-link": nav
   });
-  function toggleButton(e) {
+  export function toggle(e) {
     if (disabled) {
       e.preventDefault();
       return;
@@ -49,7 +49,7 @@
     {...$$restProps}
     bind:this={inner}
     on:click
-    on:click={toggleButton}
+    on:click={toggle}
     href="#nav"
     aria-expanded={$context.isOpen}
     class={classes}
@@ -64,7 +64,7 @@
     {...$$restProps}
     bind:this={inner}
     on:click
-    on:click={toggleButton}
+    on:click={toggle}
     aria-expanded={$context.isOpen}
     class={btnClasses}
   >
@@ -76,9 +76,10 @@
   <span
     use:popperRef
     {...$$restProps}
+    style="cursor: pointer;{$$props.style || ''}"
     bind:this={inner}
     on:click
-    on:click={toggleButton}
+    on:click={toggle}
     aria-expanded={$context.isOpen}
     class={classes}
   >
@@ -90,9 +91,10 @@
   <div
     use:popperRef
     {...$$restProps}
+    style="cursor: pointer;{$$props.style || ''}"
     bind:this={inner}
     on:click
-    on:click={toggleButton}
+    on:click={toggle}
     aria-expanded={$context.isOpen}
     class={classes}
   >

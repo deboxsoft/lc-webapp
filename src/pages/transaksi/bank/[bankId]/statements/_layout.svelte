@@ -11,6 +11,7 @@
   import { createReportContext } from "./_export";
 
   import TableStatementBank from "./_components/TableStatementBank.svelte";
+  import BankInfo from "./_components/BankInfo.svelte";
   // import DatePickr from "__@comps/DatePickr.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
@@ -21,16 +22,18 @@
 
   let loading = true;
   const { getBank } = stores.getBankContext();
-  const { findStatement, bank, reconcile, bankStatementStore } = stores.createBankStatementContext({
+  const { getAccount } = stores.getAccountContext();
+  const { findPageStatement, bank, reconcile, bankStatementStore } = stores.createBankStatementContext({
     bank: getBank($params.bankId),
     ...applicationContext
   });
   let itemsSelected;
   let errors = [];
   $: bankStatementList = $bankStatementStore;
+  $: account = getAccount($bank.accountId)
 
   if ($bank.id && loading) {
-    findStatement($bank.id, {}).then(() => {
+    findPageStatement($bank.id, {}).then(() => {
       loading = false;
     });
   }
@@ -96,10 +99,6 @@
       <i class="icon-file-upload2 mr-1" />
       Import
     </a>
-    <a href="/#" target="_self" on:click|preventDefault={reconcileHandler} class="breadcrumb-elements-item" >
-      <i class="icon-file-spreadsheet2 mr-1" />
-      Rekonsiliasi
-    </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />
@@ -138,6 +137,7 @@
   </svelte:fragment>
   <div class="card flex-column flex-1 d-flex">
     <div class="card-body d-flex flex-column flex-1">
+      <BankInfo {bank} {account} />
       <TableStatementBank bind:loading bind:itemsSelected bind:bankStatementList bind:errors />
     </div>
   </div>

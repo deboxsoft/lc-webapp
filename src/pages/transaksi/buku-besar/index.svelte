@@ -31,8 +31,8 @@
   <svelte:fragment slot="breadcrumb-items-right">
     <ComboxField class="breadcrumb-elements-item" name="balanceType" items={itemsComboBox} bind:value={cbValue} on:change={cbHandler} />
   </svelte:fragment>
-  <div class="card d-flex flex-1 flex-column">
-    <div class="card-body d-flex flex-1">
+  <div class="card d-flex flex-1">
+    <div class="card-body d-flex flex-1 flex-column">
       <TableAccountBalance bind:isBalanceFixed />
     </div>
   </div>
