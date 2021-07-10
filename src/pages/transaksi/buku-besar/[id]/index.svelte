@@ -13,7 +13,7 @@
 
   // context
   const { loading, ...appContext } = getApplicationContext();
-  const { getGeneralLedger } = stores.createGeneralLedgerContext(appContext);
+  const { findPageGeneralLedger } = stores.createGeneralLedgerContext(appContext);
   const { accountStore, getAccount } = stores.getAccountContext();
   const { currentDateStore } = stores.getPreferenceAccountingContext();
 
@@ -32,12 +32,12 @@
 
   async function fetchGeneralLedger() {
     $loading = true;
-    const params = {
+    const filter = {
       startDate,
       endDate,
       accountId: $account.id
     };
-    await getGeneralLedger(params);
+    await findPageGeneralLedger({ filter });
     $loading = false;
   }
 
@@ -74,9 +74,11 @@
         <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
           <dl class="row mb-0">
             <dt class="col-sm-3 mb-0">Akun Perkiraan</dt>
-            <p class="col-sm-9 mb-0">: <span class="font-weight-bold text-uppercase">{$account && $account.name || ""}</span></p>
+            <p class="col-sm-9 mb-0">
+              : <span class="font-weight-bold text-uppercase">{($account && $account.name) || ""}</span>
+            </p>
             <dt class="col-sm-3 mb-0">Kode</dt>
-            <p class="col-sm-9 mb-0">: {$account && $account.id || ""}</p>
+            <p class="col-sm-9 mb-0">: {($account && $account.id) || ""}</p>
           </dl>
         </div>
         <TableTrialBalance />
