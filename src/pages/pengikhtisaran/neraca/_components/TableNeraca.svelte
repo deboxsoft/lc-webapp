@@ -7,8 +7,15 @@
   import CellRp from "__@comps/CellRp.svelte";
   import RowBalance from "../../_components/RowBalance.svelte";
   import RowTotalBalance from "../../_components/RowTotalBalance.svelte";
+  import { createFoldStore } from "__@stores/fold";
+  import { derived } from "svelte/store";
 
   const { loading } = getApplicationContext();
+  const foldStore = createFoldStore({ key: "neraca", initial: {} });
+  const isExpand = (key) => derived(foldStore, (_) => _[key] || false);
+  const toggleExpand = (key) => () => {
+    $foldStore = {...$foldStore, ...{[key]: !$foldStore[key]}}
+  }
   const { balanceSheetReportPerDate } = stores.getBalanceContext();
 
   export let date;
@@ -64,7 +71,7 @@
     <tbody>
       <!--    aktiva -->
       {#each balanceSheetReport.assetsCurrent.accounts as account}
-        <RowBalance {account} />
+        <RowBalance {isExpand} toggle={toggleExpand} {account} />
       {/each}
       <RowTotalBalance label="TOTAL AKTIVA" balance={balanceSheetReport.assetsCurrent.balance} />
       <!--{#each balanceSheetReport.assetsFixed.accounts as account}-->
