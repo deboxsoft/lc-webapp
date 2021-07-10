@@ -6,7 +6,7 @@ export type LocalstorageStore<T = string> = Writable<T> & {
 
 // User/JWT-related
 // https://stackoverflow.com/a/61300826/2933427
-export const createLocalStore = (key, startValue): LocalstorageStore => {
+export const createLocalStore = (key, startValue = null): LocalstorageStore => {
   const { subscribe, set, update } = writable(startValue);
   const useLocalStorage = () => {
     const json = localStorage.getItem(key);

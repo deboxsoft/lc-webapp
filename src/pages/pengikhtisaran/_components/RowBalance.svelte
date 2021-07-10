@@ -1,27 +1,29 @@
-<script lang="ts">
+<script>
   import IconArrowRight from "@deboxsoft/svelte-icons/ico/icoArrowRight3.svelte";
   import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
   import CellRp from "__@comps/CellRp.svelte";
+  import { writable } from "svelte/store";
 
   export let account;
   export let isBalanceFixed = true;
-  let expanded = false;
-
-  function expandHandler() {
-    expanded = !expanded;
-  }
+  export let toggle;
+  export let isExpand = () => writable(false);
+  $: expanded = isExpand(account.id);
 </script>
 
-<tr on:click={expandHandler} style="cursor: pointer;">
+<tr on:click={toggle(account.id)} style="cursor: pointer;">
   <td colspan="2" class="d-table-cell">
     <div class="d-flex flex-row align-items-center">
-      {#if expanded}
+      {#if $expanded}
         <IconArrowDown class="icon-sm pt-1 mr-1" />
       {:else}
         <IconArrowRight class="icon-sm pt-1 mr-1" />
       {/if}
       <div>
         {account.name}
+        <div class="text-muted font-size-sm">
+          {account.id}
+        </div>
       </div>
     </div>
   </td>
@@ -33,11 +35,16 @@
   </td>
   <td class="d-none d-xl-table-cell">&nbsp;</td>
 </tr>
-{#if account.children && expanded}
+{#if account.children && $expanded}
   {#each account.children as child}
     <tr class="child">
       <td style="width: 10px"></td>
-      <td>- {child.name}</td>
+      <td style="padding-left: 1.25rem">
+        {child.name}
+        <div class="text-muted font-size-sm">
+          {account.id}
+        </div>
+      </td>
       <td class="d-table-cell d-xl-none">&nbsp;</td>
       <td class="d-table-cell d-md-none">&nbsp;</td>
       <td class="text-right balance">

@@ -2,11 +2,16 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
+  import { createFoldStore } from "__@stores/fold";
   import RowAccountBalance from "./RowAccountBalance.svelte";
 
   const { loading } = getApplicationContext();
   const { getAccountsTree } = stores.getAccountContext();
-
+  const foldStore = createFoldStore({ key: "neraca", initial: {} });
+  const isExpand = (key) => derived(foldStore, (_) => _[key] || false);
+  const toggleExpand = (key) => () => {
+    $foldStore = {...$foldStore, ...{[key]: !$foldStore[key]}}
+  }
   let accounts;
   export let isBalanceFixed = false;
   $: {
@@ -38,7 +43,7 @@
     </thead>
     <tbody>
       {#each $accounts as account}
-        <RowAccountBalance {isBalanceFixed} {account} />
+        <RowAccountBalance {isExpand} toggle={toggleExpand} {isBalanceFixed} {account} />
       {/each}
     </tbody>
   </table>
