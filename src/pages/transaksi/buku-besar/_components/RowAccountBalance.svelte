@@ -6,11 +6,9 @@
 
   export let account;
   export let isBalanceFixed;
-  let expanded = false;
-
-  function expandHandler() {
-    expanded = !expanded;
-  }
+  export let toggle;
+  export let isExpand = () => writable(false);
+  $: expanded = isExpand(account.id);
 
   function createTrialBalanceHandler(accountId) {
     return () => {
@@ -19,10 +17,10 @@
   }
 </script>
 
-<tr class="table-active" on:click={expandHandler} style="cursor: pointer;">
+<tr class="table-active" on:click={toggle(account.id)} style="cursor: pointer;">
   <td class="d-table-cell" colspan="2">
     <div class="d-flex flex-row align-items-center">
-      {#if expanded}
+      {#if $expanded}
         <IconArrowDown class="icon-sm pt-1 mr-1" />
       {:else}
         <IconArrowRight class="icon-sm pt-1 mr-1" />
@@ -37,7 +35,7 @@
     <CellRp value={isBalanceFixed ? account.balanceFixed : account.balance} />
   </td>
 </tr>
-{#if account.children && expanded}
+{#if account.children && $expanded}
   {#each account.children as child}
     <tr class="child" style="cursor: pointer" on:click={createTrialBalanceHandler(child.id)}>
       <td style="width: 10px" />
