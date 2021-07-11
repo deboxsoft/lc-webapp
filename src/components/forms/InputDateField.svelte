@@ -1,5 +1,4 @@
 <script>
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
   import { getFormContext } from "__@stores/form";
   import DatePicker from "@deboxsoft/svelte-datepicker/src/components/DatePicker.svelte";
   import { CalendarStyle } from "@deboxsoft/svelte-datepicker/src/calendar-style";
@@ -15,6 +14,9 @@
   export let endDateKey = "endDate";
   export let name = undefined;
   export let allowEmpty = false;
+  export let className = $$props.class || "";
+  export let width = "100%";
+  export let showClearButton = false;
   export let selected = $fields
     ? name
       ? $fields[name]
@@ -28,9 +30,7 @@
    */
   export let mode = undefined;
   export let input = undefined;
-  const { class: className } = $$props;
 
-  let classes = "";
   let invalid = true;
   let msgError;
 
@@ -46,8 +46,6 @@
     dispatcher("apply", detail);
   }
 
-  $: classes = clsx(className);
-
   $: {
     if ($fieldsErrors && $fieldsErrors[name]) {
       invalid = true;
@@ -59,17 +57,20 @@
 </script>
 
 <DatePicker
+  {...$$restProps}
   class="form-control"
   {range}
   {allowEmpty}
   placeholder="Tanggal"
+  format="DD-MMM-YY"
   applyLabel="Pilih"
   closeLabel="Tutup"
   bind:selected
-  styling={new CalendarStyle({ buttonWidth: "100%", datepickerWidth: "100%" })}
-  wrapperInputClass="form-group form-group-feedback form-group-feedback-right"
-  showClearButton
+  styling={new CalendarStyle({ buttonWidth: "100%", datepickerWidth: width })}
+  wrapperInputClass="form-group form-group-feedback form-group-feedback-right {className}"
+  {showClearButton}
   on:range-selected={applyHandler}
+  on:date-selected={applyHandler}
   end
 >
   {#if $submitted}
@@ -78,3 +79,9 @@
     {/if}
   {/if}
 </DatePicker>
+
+<style global>
+  .datepicker button {
+    outline: none;
+  }
+</style>

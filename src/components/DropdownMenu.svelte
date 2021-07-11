@@ -6,6 +6,7 @@
   export let dark = false;
   export let end = false;
   export let right = true;
+  export let offset = [0, 0];
   const popperPlacement = (direction, end) => {
     let prefix = direction;
     if (direction === "up") prefix = "top";
@@ -20,7 +21,7 @@
       {
         name: "offset",
         options: {
-          offset: [0, 0]
+          offset
         }
       }
     ],

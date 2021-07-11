@@ -31,9 +31,8 @@
   export let setActiveFromChild = false;
   export let size = '';
   export let toggle = undefined;
-  export let popperOptions = undefined;
   export let menuProps = {};
-  const [popperRef, popperContent] = createPopperActions(popperOptions);
+  const [popperRef, popperContent] = createPopperActions();
   const validDirections = ['up', 'down', 'left', 'right', 'start', 'end'];
   if (validDirections.indexOf(direction) === -1) {
     throw new Error(
