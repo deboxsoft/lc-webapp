@@ -52,7 +52,7 @@
   <Form values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable >
     <div class="form-group">
       <label for="date">Tanggal</label>
-      <InputDate mode="menu" placeholder="Tanggal" allowEmpty={!isReport} defaultDate={[filter.startDate, filter.endDate]} />
+      <InputDate mode="menu" placeholder="Tanggal" allowEmpty={!isReport} defaultDate={[filter.startDate, filter.endDate]} showClearButton />
     </div>
     <div class="form-group">
       <label for="accountId">Akun Debit</label>
