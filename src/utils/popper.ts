@@ -1,15 +1,13 @@
 import { createPopper } from "@popperjs/core/dist/esm/popper";
 
 // Code derived from https://github.com/bryanmylee/svelte-popperjs/blob/master/src/index.ts
-export function createPopperActions(customOptions = {}) {
+export function createPopperActions() {
   let contentNode;
   let popperInstance = null;
   let referenceNode;
 
-  const initPopper = (contentOptions = {}) => {
-    let options = { ...contentOptions, ...customOptions };
+  const initPopper = (options = {}) => {
     if (referenceNode && contentNode) {
-      console.log("create instance");
       popperInstance = createPopper(referenceNode, contentNode, options);
     }
   };
@@ -28,15 +26,14 @@ export function createPopperActions(customOptions = {}) {
     };
   };
 
-  const contentAction = (node, contentOptions) => {
+  const contentAction = (node, options) => {
     contentNode = node;
-    initPopper(contentOptions);
+    initPopper(options);
 
     return {
-      update(newContentOptions) {
-        const options = newContentOptions;
-        if (popperInstance && options) {
-          popperInstance.setOptions(options);
+      update(_options) {
+        if (popperInstance && _options) {
+          popperInstance.setOptions(_options);
         }
       },
       destroy() {
