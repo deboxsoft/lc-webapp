@@ -87,7 +87,7 @@
   .dbx-theme {
     .table td,
     .table th {
-      padding: 0.5rem 0.75rem;
+      padding: 0.125rem 0.75rem;
     }
     .content-wrapper {
       overflow: hidden;
