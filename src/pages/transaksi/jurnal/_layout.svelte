@@ -91,7 +91,7 @@
   </button>
 </FormFilter>
 <PageLayout breadcrumb={[]}>
-  <svelte:fragment slot="breadcrumb-items-right" let:closeHandler={dropdownClose}>
+  <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
       <a href={$url("./create")} class="breadcrumb-elements-item">
         <i class="icon-plus2 mr-1" />
