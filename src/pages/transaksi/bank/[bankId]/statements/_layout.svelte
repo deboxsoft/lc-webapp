@@ -93,7 +93,7 @@
   });
 </script>
 
-<PageLayout breadcrumb={[]}>
+<PageLayout showBackButton breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     <a href={$url("./import")} class="breadcrumb-elements-item">
       <i class="icon-file-upload2 mr-1" />
@@ -104,11 +104,12 @@
         <i class="icon-file-download2 mr-1" />
         Ekspor
       </DropdownToggle>
-      <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
+      <svelte:fragment slot="menu" let:closeHandler>
         <a
           href="/#"
           target="_self"
-          on:click|preventDefault={createExportMenuHandler(dropdownClose).pdf}
+          on:click|preventDefault={createExportMenuHandler(closeHandler).pdf}
+          on:mouseup={closeHandler}
           class="dropdown-item"
         >
           <i class="icon-file-pdf" />
@@ -118,6 +119,7 @@
           href="/#"
           target="_self"
           on:click|preventDefault={createExportMenuHandler(dropdownClose).csv}
+          on:mouseup={closeHandler}
           class="dropdown-item"
         >
           <i class="icon-file-excel" />
@@ -127,6 +129,7 @@
           href="/#"
           target="_self"
           on:click|preventDefault={createExportMenuHandler(dropdownClose).print}
+          on:mouseup={closeHandler}
           class="dropdown-item"
         >
           <i class="icon-printer2" />
