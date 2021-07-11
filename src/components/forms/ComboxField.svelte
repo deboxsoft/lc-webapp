@@ -17,6 +17,7 @@
   export let valueId = "id"
   export let value = undefined;
   export let placeHolder = "";
+  export let className = $$props.class || "";
 
   $fields[name] = value || select;
   const dispatch = createEventDispatcher();
@@ -39,7 +40,7 @@
 
 <select
   {...$$restProps}
-  class="form-control form-control-uniform"
+  class="form-control form-control-uniform {className}"
   bind:value={$fields[name]}
   on:change={createChangeHandler()}
 >
