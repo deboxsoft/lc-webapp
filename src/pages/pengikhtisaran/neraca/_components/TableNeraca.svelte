@@ -1,10 +1,9 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import { onMount, tick } from "svelte";
-
   import Loader from "__@comps/loader/Loader.svelte";
   import CellRp from "__@comps/CellRp.svelte";
+  import { parsingBalanceSheetReport } from "../../_components/_utils";
   import RowBalance from "../../_components/RowBalance.svelte";
   import RowTotalBalance from "../../_components/RowTotalBalance.svelte";
   import { createFoldStore } from "__@stores/fold";
@@ -17,8 +16,6 @@
     $foldStore = {...$foldStore, ...{[key]: !$foldStore[key]}}
   }
   const { balanceSheetReportPerDate } = stores.getBalanceContext();
-
-  export let date;
   let balanceSheetReport;
   let statementIncomeReport;
   let assetsBalance;
@@ -26,39 +23,23 @@
   let statementIncomeBalance;
   let revenueBalance;
   let expenseBalance;
-  let mounted = false;
-
-
-  onMount(() => {
-    tick().then(async () => {
-      await generateReportHandler(date);
-      mounted = true;
-    });
-  });
-
+  export let report;
   export async function generateReportHandler(date) {
     $loading = true;
-    const result = await balanceSheetReportPerDate(date);
-    parsingResult(result);
+    const data = await balanceSheetReportPerDate(date);
+    report = parsingBalanceSheetReport(data);
+    balanceSheetReport = report.balanceSheetReport;
+    statementIncomeReport = report.statementIncomeReport;
+    assetsBalance = report.assetsBalance;
+    revenueBalance = report.revenueBalance;
+    expenseBalance = report.expenseBalance;
+    statementIncomeBalance = report.statementIncomeBalance;
+    liabilitiesBalance = report.liabilitiesBalance;
     $loading = false;
-  }
-
-  function parsingResult(result) {
-    balanceSheetReport = result.balanceSheetReport;
-    statementIncomeReport = result.statementIncomeReport;
-    assetsBalance = balanceSheetReport.assetsCurrent.balance + balanceSheetReport.assetsFixed.balance;
-    revenueBalance = statementIncomeReport.revenue.balance + statementIncomeReport.revenueOther.balance;
-    expenseBalance = statementIncomeReport.expense.balance + statementIncomeReport.expenseOther.balance;
-    statementIncomeBalance = revenueBalance - expenseBalance;
-    liabilitiesBalance =
-      balanceSheetReport.liabilitiesCurrent.balance +
-      balanceSheetReport.liabilitiesFixed.balance +
-      balanceSheetReport.equities.balance +
-      statementIncomeBalance;
   }
 </script>
 
-{#if $loading || !mounted}
+{#if $loading || !report}
   <Loader />
 {:else}
   <table class="table text-nowrap table-hover">
@@ -88,7 +69,7 @@
       <!--      </tr>-->
       <!--pasiva-->
       {#each balanceSheetReport.liabilitiesCurrent.accounts as account}
-        <RowBalance {account} />
+        <RowBalance {isExpand} toggle={toggleExpand} {account} />
       {/each}
       <RowTotalBalance label="TOTAL PASIVA" balance={balanceSheetReport.liabilitiesCurrent.balance} />
       <!--{#each balanceSheetReport.liabilitiesFixed.accounts as account}-->
