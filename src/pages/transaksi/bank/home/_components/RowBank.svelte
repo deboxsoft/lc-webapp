@@ -66,16 +66,8 @@
     <Dropdown
       class="h-100 d-flex justify-content-center"
       bind:context={dropdownContext}
-      popperOptions={{
-        modifiers: [
-          { name: "flip" },
-          {
-            name: "offset",
-            options: {
-              offset: [0, -20]
-            }
-          }
-        ]
+      menuProps={{
+        offset: [0, -15]
       }}
     >
       <DropdownToggle bind:toggle class="list-icons-item d-flex flex-1 align-items-center" tag="div">
