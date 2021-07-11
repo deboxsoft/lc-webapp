@@ -1,10 +1,9 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import { onMount, tick } from "svelte";
-
   import Loader from "__@comps/loader/Loader.svelte";
   import CellRp from "__@comps/CellRp.svelte";
+  import { parsingRevenueReport } from "../../_components/_utils";
   import RowBalance from "../../_components/RowBalance.svelte";
   import RowTotalBalance from "../../_components/RowTotalBalance.svelte";
   import { createFoldStore } from "__@root/stores/fold";
@@ -21,31 +20,20 @@
   let statementIncomeBalance;
   let revenueBalance;
   let expenseBalance;
-  let mounted = false;
-
-  onMount(() => {
-    tick().then(async () => {
-      await generateReportHandler(date);
-      mounted = true;
-    });
-  });
-
+  export let report;
   export async function generateReportHandler(date) {
     $loading = true;
-    const result = await balanceSheetReportPerDate(date);
-    parsingResult(result);
+    const data = await balanceSheetReportPerDate(date);
+    report = parsingRevenueReport(data);
+    statementIncomeReport = report.statementIncomeReport;
+    revenueBalance = report.revenueBalance;
+    expenseBalance = report.expenseBalance;
+    statementIncomeBalance = report.statementIncomeBalance;
     $loading = false;
-  }
-
-  function parsingResult(result) {
-    statementIncomeReport = result.statementIncomeReport;
-    revenueBalance = statementIncomeReport.revenue.balance + statementIncomeReport.revenueOther.balance;
-    expenseBalance = statementIncomeReport.expense.balance + statementIncomeReport.expenseOther.balance;
-    statementIncomeBalance = revenueBalance - expenseBalance;
   }
 </script>
 
-{#if $loading || !mounted}
+{#if $loading || !report}
   <Loader />
 {:else}
   <table class="table text-nowrap">
@@ -75,7 +63,7 @@
       <!--    </tr>-->
       <!--Biaya-->
       {#each statementIncomeReport.expense.accounts as account}
-        <RowBalance {account} />
+        <RowBalance {isExpand} toggle={toggleExpand} {account} />
       {/each}
       <RowTotalBalance label="TOTAL BIAYA" balance={statementIncomeReport.expense.balance} />
       <!--{#each statementIncomeReport.expenseOther.accounts as account}-->
