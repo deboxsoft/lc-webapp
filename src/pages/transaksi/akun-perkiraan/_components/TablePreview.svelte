@@ -12,7 +12,7 @@
   const { getAccountType } = stores.getAccountContext();
   /**
    * @type {{
-   *   code: string,
+   *   id: string,
    *   parentId: string,
    *   name: number
    *  type: string
@@ -31,7 +31,7 @@
    */
   export const submit = () => {
     return dataList.map((_, index) => ({
-      id: _.code,
+      id: _.id,
       name: _.name,
       isParent: !_.parentId,
       type: _.type,

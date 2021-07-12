@@ -48,6 +48,7 @@
   async function submitHandler() {
     errors = [];
     const inputs = submit();
+    console.log(inputs);
     if (!errors || errors.length === 0) {
       await importAccount(inputs);
       $goto("./");
