@@ -26,35 +26,55 @@
   let openFilterDialog;
   let date = new Date();
   $loading = true;
+  let report;
   $: {
-    generateReportHandler && generateReportHandler(date).then((_) => {
-      $loading = false;
-      return _;
-    });
-  }
-  const createExportMenuHandler = (close) => ({
-    pdf: () => {
-      $loading = true;
-      reportContext.pdf((p) => {
-        if (p === 1) {
-          $loading = false;
-        }
+    generateReportHandler &&
+      generateReportHandler(date).then((_) => {
+        $loading = false;
+        return _;
       });
-      close();
-    },
-    csv: () => {
-      $loading = true;
-      reportContext.csv();
-      $loading = false;
-      close();
-    },
-    print: () => {
-      $loading = true;
-      reportContext.print();
-      $loading = false;
-      close();
-    }
-  });
+  }
+  const createExportMenuHandler = (close) => {
+    const title = "NERACA";
+    const getItemListReport = () => {
+      const { balanceSheetReport, statementIncomeBalance, assetsBalance, liabilitiesBalance } = report;
+      return [
+        balanceSheetReport.assetsCurrent.accounts,
+        { label: "TOTAL AKTIVA", balance: balanceSheetReport.assetsCurrent.balance },
+        balanceSheetReport.liabilitiesCurrent.accounts,
+        { label: "TOTAL PASIVA", balance: balanceSheetReport.liabilitiesCurrent.balance },
+        { label: "LABA/RUGI", balance: statementIncomeBalance },
+        { label: "SELISIH", balance: assetsBalance - liabilitiesBalance }
+      ];
+    };
+    return {
+      pdf: () => {
+        $loading = true;
+        reportContext.pdf(
+          getItemListReport(),
+          (p) => {
+            if (p === 1) {
+              $loading = false;
+            }
+          },
+          { title }
+        );
+        close();
+      },
+      csv: () => {
+        $loading = true;
+        reportContext.csv(getItemListReport(), { title });
+        $loading = false;
+        close();
+      },
+      print: () => {
+        $loading = true;
+        reportContext.print(getItemListReport(), { title });
+        $loading = false;
+        close();
+      }
+    };
+  };
 
   function applyDateHandler({ detail }) {
     generateReportHandler(date);
@@ -64,13 +84,7 @@
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">
-      <DatePickr
-        id="date"
-        name="date"
-        selected={date}
-        on:apply={applyDateHandler}
-        range={false}
-      />
+      <DatePickr id="date" name="date" selected={date} on:apply={applyDateHandler} range={false} />
     </div>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
@@ -110,7 +124,7 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableNeraca bind:generateReportHandler />
+      <TableNeraca bind:report bind:generateReportHandler />
     </div>
   </div>
 </PageLayout>

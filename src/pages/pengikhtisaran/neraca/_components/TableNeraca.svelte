@@ -31,8 +31,6 @@
     balanceSheetReport = report.balanceSheetReport;
     statementIncomeReport = report.statementIncomeReport;
     assetsBalance = report.assetsBalance;
-    revenueBalance = report.revenueBalance;
-    expenseBalance = report.expenseBalance;
     statementIncomeBalance = report.statementIncomeBalance;
     liabilitiesBalance = report.liabilitiesBalance;
     $loading = false;

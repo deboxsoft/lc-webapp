@@ -35,15 +35,15 @@
       });
   }
   const createExportMenuHandler = (close) => {
-    const title = "laba-rugi";
+    const title = "LABA-RUGI";
     const getItemListReport = () => {
-      const { statementIncomeReport, revenueBalance, expenseBalance } = report;
+      const { statementIncomeReport, revenueBalance, expenseBalance, statementIncomeBalance } = report;
       return [
         statementIncomeReport.revenue.accounts,
         { label: "TOTAL PENDAPATAN", balance: statementIncomeReport.revenue.balance },
         statementIncomeReport.expense.accounts,
         { label: "TOTAL BIAYA", balance: statementIncomeReport.expense.balance },
-        { label: "LABA/RUGI", balance: revenueBalance - expenseBalance }
+        { label: "LABA/RUGI", balance: statementIncomeBalance }
       ];
     };
     return {
