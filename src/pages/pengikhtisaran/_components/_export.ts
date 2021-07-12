@@ -1,15 +1,18 @@
 import type { Account } from "@deboxsoft/accounting-api";
+import dayjs from "dayjs";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
-import { downloadCsv, numericCell as balanceCell, textCell as nameCell } from "__@root/utils";
+import { downloadCsv, numericCell as balanceCell, textCell as nameCell, emptyCell } from "__@root/utils";
 
 const options = {
-  paddingChild: 10,
+  formatDate: "DD MMMM YYYY",
+  paddingChild: 0,
+  paddingParent: 10,
   backgroundColorParent: "#eeeeee",
   backgroundColorSubtotal: "#cccccc",
   backgroundColorTotal: "#999999"
 };
 
-export type Metadata = Record<string, string>;
+export type Metadata = Record<string, any>;
 export const createReportContext = () => {
   const processingAccounts = (accounts: Account[], isCsv = false) => {
     const _parseAccount = (account: Account) => {
@@ -17,10 +20,10 @@ export const createReportContext = () => {
         fillColor: options.backgroundColorParent
       };
       const defParent = [
-        nameCell(account.name, { isCsv, params: paramsParent }),
-        { text: "", ...paramsParent },
+        nameCell(account.name, { isCsv, params: { ...paramsParent, margin: [options.paddingParent, 0, 0, 0] } }),
+        emptyCell({ isCsv, params: paramsParent }),
         balanceCell(account.balanceFixed, { isCsv, params: paramsParent }),
-        { text: "", ...paramsParent }
+        emptyCell({ isCsv, params: paramsParent })
       ];
       const defChild = [];
       if (account.children) {
@@ -29,8 +32,8 @@ export const createReportContext = () => {
           defChild.push([
             nameCell(child.name, { isCsv, params: { ...paramsChildren, margin: [options.paddingChild, 0, 0, 0] } }),
             balanceCell(child.balanceFixed, { isCsv, params: paramsChildren }),
-            { text: "", ...paramsChildren },
-            { text: "", ...paramsChildren }
+            emptyCell({ isCsv, params: paramsChildren }),
+            emptyCell({ isCsv, params: paramsChildren })
           ]);
         }
       }
@@ -45,8 +48,8 @@ export const createReportContext = () => {
 
   const _parseCalculateResult = (label, balance, { isCsv = false, params = {} }) => [
     nameCell(label, { isCsv, params }),
-    { text: "", ...params },
-    { text: "", ...params },
+    emptyCell({ isCsv, params }),
+    emptyCell({ isCsv, params }),
     balanceCell(balance, { isCsv, params })
   ];
 
@@ -58,9 +61,9 @@ export const createReportContext = () => {
       fillColor: options.backgroundColorTotal
     };
     return [
-      ...processingAccounts(list[0]),
+      ...processingAccounts(list[0], isCsv),
       _parseCalculateResult(list[1].label, list[1].balance, { isCsv, params: paramsSubtotal }),
-      ...processingAccounts(list[2]),
+      ...processingAccounts(list[2], isCsv),
       _parseCalculateResult(list[3].label, list[3].balance, { isCsv, params: paramsSubtotal }),
       ...list
         .slice(4)
@@ -78,7 +81,7 @@ export const createReportContext = () => {
     },
     csv: (list: any[], metadata: Metadata = {}) => {
       const now = new Date();
-      downloadCsv(processingData(list), `${metadata.title}-${now.getTime()}.csv`);
+      downloadCsv(processingData(list, true), `${metadata.title}-${now.getTime()}.csv`);
     },
     print: (list: any[], metadata: Metadata = {}) => {
       const doc = createPdfDef(processingData(list), metadata);
@@ -87,7 +90,8 @@ export const createReportContext = () => {
   };
 };
 
-function createPdfDef(dataDef = [], { title }: Metadata) {
+function createPdfDef(dataDef = [], { title, date = new Date() }: Metadata) {
+  const perDate = dayjs(date).format(options.formatDate);
   const headerDef = [
     {
       text: "AKUN PERKIRAAN",
@@ -106,7 +110,7 @@ function createPdfDef(dataDef = [], { title }: Metadata) {
   return {
     content: [
       {
-        text: `Laporan: ${title}`,
+        text: `LAPORAN: ${title} - PER ${perDate}`,
         style: "title",
         alignment: "center"
       },
