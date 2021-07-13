@@ -2,7 +2,7 @@
 <script lang="ts">
   import { url, ready } from "@roxi/routify";
   import initial from "initials";
-  import { onMount, tick } from "svelte";
+  import { onMount } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
   import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
   import SidebarMobileToggler from "@deboxsoft/svelte-theme-limitless/components/SidebarMobileToggler.svelte";
@@ -19,7 +19,13 @@
   import { createApplicationContext } from "__@modules/app";
 
   // context and store
-  const { authenticationContext, accountingContext, loading, companyContext } = createApplicationContext();
+  const {
+    authenticationContext,
+    accountingContext,
+    loading,
+    companyContext,
+    configPromise
+  } = createApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
   const { authenticationStore, getAccessControl } = authenticationContext;
@@ -27,54 +33,57 @@
 
   // init loading
   let mounted = false;
-  let submitting = true;
+  let state = "server-load";
   let accountingLoaded = false;
   let company;
   let menus = [];
+
+  $: console.log(`state : ${state}`);
 
   onMount(() => {
     mounted = true;
   });
 
-  // loading data company
-  getCompany();
-
   $: {
-    if (!submitting && $authenticationStore.authenticated) {
-      tick().then(() => {
-        menus = getMenus(authenticationContext);
-        if (!accountingLoaded) {
-          accountingLoaded = true;
-          accountingContext
-            .load()
-            .then(() => {
-              $loading = false;
-              $ready();
-            })
-            .catch((e) => {
-              console.error(e);
-              $loading = false;
-              $ready();
-            });
-        }
-        $loading = false;
-      });
+    if (state === "server-complete" && $authenticationStore.authenticated) {
+      state = "menus-load";
+      menus = getMenus(authenticationContext);
+      state = "menus-complete";
+      if (!accountingLoaded) {
+        state = "accounting-load";
+        accountingLoaded = true;
+        accountingContext
+          .load()
+          .then(() => {
+            state = "accounting-complete";
+            $loading = false;
+            $ready();
+            state = "complete";
+          })
+          .catch((e) => {
+            state = "accounting-error";
+            console.error(e);
+            $loading = false;
+            $ready();
+          });
+      }
     }
   }
-
-  authenticationContext
-    .authenticate()
+  const authenticatePromise = authenticationContext.authenticate();
+  const companyPromise = getCompany();
+  Promise.all([configPromise, authenticatePromise, companyPromise])
     .then(() => {
-      submitting = false;
-      $loading = false;
+      state = "server-complete";
+      ("response promise");
     })
-    .catch(() => {
+    .catch((e) => {
+      state = "error";
       $loading = false;
     });
 </script>
 
 <TopLoader loading={$loading} />
-{#if submitting}
+{#if state !== "complete"}
   <Loader />
 {:else if $authenticationStore.authenticated}
   <div class="main-layout">

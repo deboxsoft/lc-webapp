@@ -27,6 +27,7 @@ export interface ApplicationContext extends ApisContext {
   config?: Writable<any>;
   uiControl?: any;
   jwtStore: JwtStore;
+  configPromise: Promise<any>;
 }
 
 const APPLICATION_CONTEXT = "ApplicationContext";
@@ -86,9 +87,9 @@ export const createBaseApplicationContext = () => {
   const uiControl = createUIContext();
   loading.set(true);
   const configPromise = createConfigModule(apisContext.fetchGraphql).then((_) => config.set(_));
-  Promise.all([configPromise]).then(() => {
-    loading.set(false);
-  });
+  // Promise.all([configPromise]).then(() => {
+  //   loading.set(false);
+  // });
   const context: ApplicationContext = {
     ...apisContext,
     apiUrl,
@@ -97,7 +98,8 @@ export const createBaseApplicationContext = () => {
     env,
     config,
     uiControl,
-    jwtStore
+    jwtStore,
+    configPromise
   };
   setContext<ApplicationContext>(APPLICATION_CONTEXT, context);
   return context;
