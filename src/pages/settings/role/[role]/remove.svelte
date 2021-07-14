@@ -5,7 +5,12 @@
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
   import { getAclContext } from "../../_acl-context";
+  import { onMount } from "svelte";
 
+  let openDialog;
+  onMount(() => {
+    openDialog();
+  });
   const { removeUserGranted } = getAclContext();
   if (!removeUserGranted) {
     $goto("/access-denied");
@@ -16,7 +21,7 @@
   async function removeHandler() {
     try {
       const _grants = get(grants);
-      delete _grants[$params.role]
+      delete _grants[$params.role];
       await save(_grants);
       notify(`Berhasil menghapus role ${$params.role}`, "success");
       $goto("../");
@@ -30,7 +35,7 @@
   }
 </script>
 
-<Modal open title="Hapus Role">
+<Modal bind:openDialog title="Hapus Role">
   <div class="alert alert-warning alert-styled-left">
     Apa anda yakin akan menghapus role `{$params.role}`?
   </div>

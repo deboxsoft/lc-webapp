@@ -3,8 +3,14 @@
   import Modal from "__@comps/Modal.svelte";
   import RoleForm from "./_form.svelte";
   import { getAclContext } from "../_acl-context";
+  import { onMount } from "svelte";
 
   const { createUserGranted } = getAclContext();
+  let openDialog;
+
+  onMount(() => {
+    openDialog()
+  });
   if (!createUserGranted) {
     $goto("/access-denied");
   }
@@ -15,7 +21,7 @@
   }
 </script>
 
-<Modal class="modal-full" open title="Membuat role" onClose={closeHandler}>
+<Modal class="modal-full" bind:openDialog title="Membuat role" onClose={closeHandler}>
   <RoleForm  bind:saveHandler onSaved={() => $goto("./")} />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>

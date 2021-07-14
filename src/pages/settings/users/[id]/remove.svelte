@@ -4,7 +4,12 @@
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
+  import { onMount } from "svelte";
 
+  let openDialog;
+  onMount(() => {
+    openDialog()
+  });
   const { removeUserGranted } = getAclContext();
   if (!removeUserGranted) {
     $goto("/access-denied");
@@ -32,7 +37,7 @@
   }
 </script>
 
-<Modal open title="Hapus User">
+<Modal bind:openDialog title="Hapus User">
   {#if $user}
     <div class="alert alert-warning alert-styled-left">
       Apa anda yakin akan menghapus user `{$user.username}`?

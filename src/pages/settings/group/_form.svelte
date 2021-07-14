@@ -5,6 +5,7 @@
   import InputField from "__@comps/forms/InputField.svelte";
   import { getAccessControlContext } from "__@modules/users";
   import AccountListBox from "__@comps/account/AccountListBox.svelte";
+  import InputCheckSwitchery from "../../../components/forms/InputCheckSwitchery.svelte";
 
   const { grants } = getAccessControlContext();
   $: roles = Object.keys($grants);
@@ -14,15 +15,64 @@
     debitAccounts: z.array(z.string()).nullish(),
     creditAccounts: z.array(z.string()).nullish()
   });
-  const transform = ({ debitAccounts, creditAccounts, ..._ }) => {
+  const transform = ({ debitAccounts, creditAccounts, mainPage, sideMenuHidden, ..._ }) => {
     return {
       ..._,
       metadata: {
         debitAccounts,
-        creditAccounts
+        creditAccounts,
+        mainPage,
+        sideMenuHidden
       }
     };
   };
+
+  const pageList = [
+    {
+      label: "Dashboard",
+      href: "/"
+    },
+    {
+      label: "Akun Transaksi",
+      href: "/transaksi/akun-perkiraan"
+    },
+    {
+      label: "Jurnal",
+      href: "/transaksi/jurnal"
+    },
+    {
+      label: "Bank",
+      href: "/transaksi/bank"
+    },
+    {
+      label: "Buku Besar",
+      href: "/transaksi/buku-besar"
+    },
+    {
+      label: "Laporan Laba-Rugi",
+      href: "/pengikhtisaran/laba-rugi"
+    },
+    {
+      label: "Laporan Neraca",
+      href: "/pengikhtisaran/neraca"
+    },
+    {
+      label: "Inventaris",
+      href: "/inventaris"
+    },
+    {
+      label: "BDD",
+      href: "/bdd"
+    },
+    {
+      label: "Persediaan",
+      href: "/Persediaan"
+    },
+    {
+      label: "Pengaturan",
+      href: "/settings"
+    }
+  ];
 
   export let fields;
   export let groupUser = {};
@@ -54,14 +104,26 @@
           <ComboxField id="role" items={roles} name="role" />
         </div>
       </div>
+
       <div class="row">
         <div class="form-group col-12">
-          <AccountListBox name="debitAccounts" id="debitAccounts" label="Akun Debit" />
+          <AccountListBox name="debitAccounts" id="debitAccounts" label="Custom Akun Debit" />
         </div>
       </div>
       <div class="row">
         <div class="form-group col-12">
-          <AccountListBox name="creditAccounts" id="debitAccounts" label="Akun Kredit" />
+          <AccountListBox name="creditAccounts" id="debitAccounts" label="Custom Akun Kredit" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <label for="mainPage">Halaman Utama</label>
+          <ComboxField id="mainPage" valueId="href" items={pageList} name="mainPage" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-12">
+          <InputCheckSwitchery name="sideMenuHidden" label="Sembunyikan Menu Kiri" />
         </div>
       </div>
     </Form>

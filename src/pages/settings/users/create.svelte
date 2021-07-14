@@ -5,7 +5,12 @@
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
+  import { onMount } from "svelte";
 
+  let openDialog;
+  onMount(() => {
+    openDialog()
+  });
   const { createUserGranted } = getAclContext();
   if (!createUserGranted) {
     $goto("/access-denied");
@@ -36,7 +41,7 @@
   }
 </script>
 
-<Modal class="modal-lg" open title="Membuat User" onClose={closeHandler}>
+<Modal class="modal-lg" bind:openDialog title="Membuat User" onClose={closeHandler}>
   <UserForm bind:fields bind:schema bind:submitHandler />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>

@@ -7,7 +7,12 @@
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Alert from "__@comps/Alert.svelte";
+  import { onMount } from "svelte";
 
+  let openDialog;
+  onMount(() => {
+    openDialog();
+  });
   const { notify, loading } = getApplicationContext();
   const { authenticationStore, changePassword } = getAuthenticationContext();
   const schema = z.object({
@@ -52,7 +57,7 @@
   }
 </script>
 
-<Modal class="modal-lg" open title="Ganti Password">
+<Modal class="modal-lg" bind:openDialog title="Ganti Password">
   <Form bind:fields {schema} bind:submitted bind:submitHandler>
     <div class="card">
       <div class="card-body">

@@ -1,5 +1,5 @@
 <script>
-  import * as z from "@deboxsoft/zod";
+  import { RegisterUserInputSchema, UpdateUserInputSchema } from "@deboxsoft/users-api";
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import ComboxField from "__@comps/forms/ComboxField.svelte";
@@ -9,14 +9,10 @@
 
   export let isUpdate = false;
   export let submitHandler;
-  export const schema = z.object({
-    username: isUpdate ? z.string().optional().nullable() : z.string().min(5).nonempty(),
-    password: isUpdate ? z.string().optional().nullable() : z.string().min(5).nonempty(),
-    name: z.string().nonempty(),
-    email: z.string().email()
-  });
   export let user = {};
   export let fields;
+
+  const schema = isUpdate ? UpdateUserInputSchema : RegisterUserInputSchema;
 </script>
 
 <Form bind:fields values={user} {schema} bind:submitHandler>

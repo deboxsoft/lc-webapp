@@ -6,11 +6,17 @@
   import UserForm from "../_form.svelte";
   import Modal from "__@comps/Modal.svelte";
   import { getAclContext } from "../../_acl-context";
+  import { onMount } from "svelte";
 
   let fields;
   let user;
   let schema;
   let submitHandler;
+  let openDialog;
+
+  onMount(() => {
+    openDialog()
+  });
 
   const { updateUserGranted } = getAclContext();
   if (!updateUserGranted) {
@@ -33,6 +39,7 @@
       $loading = false;
       $goto("../");
     } catch (e) {
+      console.log(e);
       $loading = false;
     }
   }
@@ -42,7 +49,7 @@
   }
 </script>
 
-<Modal class="modal-lg" open title="Mengedit user" onClose={closeHandler}>
+<Modal class="modal-lg" bind:openDialog title="Mengedit user" onClose={closeHandler}>
   {#if !$user}
     <Loader />
   {:else}
