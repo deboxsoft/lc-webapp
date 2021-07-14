@@ -13,7 +13,6 @@
 
   $: account = getAccount($params.id);
 
-
   onMount(() => {
     openDialog();
   });
@@ -22,13 +21,13 @@
   }
 </script>
 
-{#if $account}
-  <Modal title="Akun Perkiraan" onClose={closeHandler} bind:openDialog>
+<Modal title="Akun Perkiraan" onClose={closeHandler} bind:openDialog>
+  {#if $account}
     <DetailAccount account={$account} />
-    <svelte:fragment slot="footer">
-      <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
-        Close
-      </button>
-    </svelte:fragment>
-  </Modal>
-{/if}
+  {/if}
+  <svelte:fragment slot="footer">
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
+      Close
+    </button>
+  </svelte:fragment>
+</Modal>
