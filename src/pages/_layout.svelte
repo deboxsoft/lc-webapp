@@ -2,7 +2,7 @@
 <script lang="ts">
   import { url, ready } from "@roxi/routify";
   import initial from "initials";
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
   import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
   import SidebarMobileToggler from "@deboxsoft/svelte-theme-limitless/components/SidebarMobileToggler.svelte";
@@ -38,8 +38,6 @@
   let company;
   let menus = [];
 
-  $: console.log(`state : ${state}`);
-
   onMount(() => {
     mounted = true;
   });
@@ -74,7 +72,7 @@
   Promise.all([configPromise, authenticatePromise, companyPromise])
     .then(() => {
       state = "server-complete";
-      ("response promise");
+      $loading = false;
     })
     .catch((e) => {
       state = "error";
@@ -83,7 +81,7 @@
 </script>
 
 <TopLoader loading={$loading} />
-{#if state !== "complete"}
+{#if state !== "complete" && state !== "error"}
   <Loader />
 {:else if $authenticationStore.authenticated}
   <div class="main-layout">

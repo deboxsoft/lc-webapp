@@ -118,6 +118,16 @@
     .lock-icon {
       width: 34px;
       height: 34px;
+
+      .dbx-icon {
+        font-size: 1.25rem;
+        width: 100%;
+        height: 100%;
+        svg {
+          width: 100%;
+          height: auto;
+        }
+      }
     }
 
     .input-icon-wrapper {

@@ -87,9 +87,9 @@ export const createBaseApplicationContext = () => {
   const uiControl = createUIContext();
   loading.set(true);
   const configPromise = createConfigModule(apisContext.fetchGraphql).then((_) => config.set(_));
-  // Promise.all([configPromise]).then(() => {
-  //   loading.set(false);
-  // });
+  Promise.all([configPromise]).then(() => {
+    loading.set(false);
+  });
   const context: ApplicationContext = {
     ...apisContext,
     apiUrl,
