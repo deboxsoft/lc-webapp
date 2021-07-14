@@ -27,6 +27,9 @@
       {/if}
       <div>
         {account.name}
+        <div class="text-muted font-size-sm">
+          {account.id}
+        </div>
       </div>
     </div>
   </td>
@@ -39,7 +42,11 @@
   {#each account.children as child}
     <tr class="child" style="cursor: pointer" on:click={createTrialBalanceHandler(child.id)}>
       <td style="width: 10px" />
-      <td>- {child.name}</td>
+      <td>{child.name}
+        <div class="text-muted font-size-sm">
+          {account.id}
+        </div>
+      </td>
       <td class="text-right balance">
         <CellRp value={isBalanceFixed ? child.balanceFixed : child.balance} />
       </td>

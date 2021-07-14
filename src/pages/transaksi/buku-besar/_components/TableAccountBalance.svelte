@@ -4,6 +4,8 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { createFoldStore } from "__@stores/fold";
   import RowAccountBalance from "./RowAccountBalance.svelte";
+  import {calculateBalance} from "../_utils";
+  import { derived } from "svelte/store";
 
   const { loading } = getApplicationContext();
   const { getAccountsTree } = stores.getAccountContext();
@@ -12,21 +14,12 @@
   const toggleExpand = (key) => () => {
     $foldStore = {...$foldStore, ...{[key]: !$foldStore[key]}}
   }
-  let accounts;
+  export let accounts;
   export let isBalanceFixed = false;
   $: {
     accounts = getAccountsTree();
     // calculate balance
-    for (const account of $accounts) {
-      if (account.children) {
-        account.balance = 0;
-        account.balanceFixed = 0;
-        for (const child of account.children) {
-          account.balance += child.balance || 0;
-          account.balanceFixed += child.balanceFixed || 0;
-        }
-      }
-    }
+    calculateBalance($accounts);
   }
 </script>
 
