@@ -10,8 +10,6 @@
   const { updateGranted, removeGranted } = getAclContext();
   let dropdownContext;
 
-  $: console.log(dropdownContext);
-
   export let className = $$props.class || "";
   export let bank;
   let toggle;

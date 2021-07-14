@@ -3,9 +3,10 @@
 
   export let bank;
   export let account;
-  export let balanceBank = $bank.balance;
   export let balanceAccount = $account.balance;
   export let hiddenBalance = false;
+
+  $: balanceBank = $bank.balance;
 </script>
 
 <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">

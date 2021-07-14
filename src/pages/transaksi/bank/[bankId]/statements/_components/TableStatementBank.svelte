@@ -1,6 +1,6 @@
 <script>
   import dayjs from "dayjs";
-  import { writable } from "svelte/store";
+  // import { writable } from "svelte/store";
   import { stores } from "@deboxsoft/accounting-client";
   import Table from "__@comps/Table.svelte";
   import AccountCell from "__@comps/account/CellAccount.svelte";
@@ -13,45 +13,45 @@
   export let preview = false;
   export let loading;
   export let errors = [];
-  export let itemsSelected = writable([]);
+  // export let itemsSelected = writable([]);
   let isSelectAll = preview;
 
   $: accountChildren = getAccountLeaf();
 
-  $: {
-    if (preview && bankStatementList) {
-      checkSelectAll();
-    }
-  }
+  // $: {
+  //   if (preview && bankStatementList) {
+  //     checkSelectAll();
+  //   }
+  // }
 
-  function checkSelectAll() {
-    if (isSelectAll) {
-      let _tmp = [];
-      bankStatementList.forEach((_, index) => {
-        if (_.status !== "RECONCILED") {
-          _tmp.push(index);
-        }
-      });
-      itemsSelected.set(_tmp);
-    } else {
-      itemsSelected.set([]);
-    }
-  }
+  // function checkSelectAll() {
+  //   if (isSelectAll) {
+  //     let _tmp = [];
+  //     bankStatementList.forEach((_, index) => {
+  //       if (_.status !== "RECONCILED") {
+  //         _tmp.push(index);
+  //       }
+  //     });
+  //     itemsSelected.set(_tmp);
+  //   } else {
+  //     itemsSelected.set([]);
+  //   }
+  // }
 
-  function toggleSelectedAllHandler() {
-    isSelectAll = !isSelectAll;
-    checkSelectAll();
-  }
+  // function toggleSelectedAllHandler() {
+  //   isSelectAll = !isSelectAll;
+  //   checkSelectAll();
+  // }
 
-  function createCheckSelectHandler(index) {
-    return () => {
-      if ($itemsSelected.includes(index)) {
-        $itemsSelected = [...$itemsSelected.filter((_) => _ !== index)];
-      } else {
-        $itemsSelected = [...$itemsSelected, index];
-      }
-    };
-  }
+  // function createCheckSelectHandler(index) {
+  //   return () => {
+  //     if ($itemsSelected.includes(index)) {
+  //       $itemsSelected = [...$itemsSelected.filter((_) => _ !== index)];
+  //     } else {
+  //       $itemsSelected = [...$itemsSelected, index];
+  //     }
+  //   };
+  // }
 </script>
 
 {#if loading}

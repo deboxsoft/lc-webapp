@@ -23,7 +23,7 @@
     try {
       await remove($params.id);
       $loading = false;
-      $goto("../");
+      closeHandler();
       notify(`berhasil menghapus data bank id '${$params.id}'`, "success");
     } catch (e) {
       $loading = false;

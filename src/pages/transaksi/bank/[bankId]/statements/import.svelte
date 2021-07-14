@@ -29,7 +29,8 @@
 
   const { loading, notify } = getApplicationContext();
   const { getAccount } = stores.getAccountContext();
-  const { importStatement, bank } = stores.getBankStatementContext();
+  const { reconcile, bank } = stores.getBankStatementContext();
+  const { setLastBalance } = stores.getBankContext();
 
   const title = "Rekonsiliasi data bank";
   let fileLoaded = false;
@@ -40,13 +41,13 @@
   let errors = [];
   let balanceBank = 0;
   let balanceAccount = 0;
-  let account
+  let account;
   let submit, openDialog, closeDialog;
 
   $: {
     account = getAccount($bank.accountId);
     $account && (balanceAccount = $account.balance);
-    $bank && (balanceBank = $bank.balance)
+    $bank && (balanceBank = $bank.balance);
   }
 
   onMount(() => {
@@ -54,14 +55,14 @@
     $loading = false;
   });
 
-  async function submitHandler() {
+  async function submitHandler(_statements) {
     errors = [];
     if (!errors || errors.length === 0) {
-      await importStatement($bank.id, _statements);
-      notify("data berhasil tersimpan", "success");
+      await reconcile($bank.id, _statements);
+      setLastBalance($bank.id, balanceBank);
       $goto("./");
     } else {
-      notify("data belum lengkap", "error");
+      throw new Error("submit failed");
     }
   }
 
@@ -75,7 +76,6 @@
       balanceAccount = $account.balance;
       balanceBank = $bank.balance;
       listData.forEach((_, index) => {
-        console.log(_);
         if (_.date === "" || !_.balance || _.accountId === "" || (!_.in && !_.out) || (_.in && _.out)) {
           errors.push(index);
         }

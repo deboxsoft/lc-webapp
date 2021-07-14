@@ -14,29 +14,30 @@
     bankList = $bankStore;
   }
 
-  let loading = true;
+  let state = "find-start";
   find().then(() => {
-    loading = false;
+    state = "find-finish";
   });
 </script>
 
-{#if loading}
-  <Loader />
-{:else}
-  <Table items={bankList} let:item={bank}>
-    <tr slot="header">
-      <td>Bank</td>
-      <td>Rekening</td>
-      <td >Akun Perkiraan</td>
-      <td>Saldo Bank</td>
-      <td>Saldo Akun Perkiraan</td>
-      <td>Selisih</td>
-      <td />
-    </tr>
-    <RowBank class="dbx-tr" {bank} />
-  </Table
-  >
-{/if}
+<Table>
+  <tr slot="header">
+    <td>Bank</td>
+    <td>Rekening</td>
+    <td>Akun Perkiraan</td>
+    <td>Saldo Bank</td>
+    <td>Saldo Akun Perkiraan</td>
+    <td>Selisih</td>
+    <td />
+  </tr>
+  {#if state === "find-start"}
+    <Loader />
+  {:else}
+    {#each bankList as bank}
+      <RowBank class="dbx-tr" {bank} />
+    {/each}
+  {/if}
+</Table>
 
 <style lang="scss">
   .dbx-table {

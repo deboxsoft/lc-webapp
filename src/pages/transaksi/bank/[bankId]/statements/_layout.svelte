@@ -99,7 +99,7 @@
       <i class="icon-file-upload2 mr-1" />
       Import
     </a>
-    <Dropdown class="breadcrumb-elements-item dropdown p-0">
+    <Dropdown class="breadcrumb-elements-item dropdown p-0" let:dropdownClose>
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />
         Ekspor
