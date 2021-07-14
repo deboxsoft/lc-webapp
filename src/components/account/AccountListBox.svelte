@@ -5,17 +5,19 @@
   import { generateId } from "@deboxsoft/module-client";
 
   const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
-  const { getAccountsTree } = stores.getAccountContext();
+  const { getAccountsTree, accountStore } = stores.getAccountContext();
 
   export let id = generateId();
   export let name;
   export let selected = $fields && $fields[name];
   export let label = name;
   let options = [];
-  let accountStore = getAccountsTree();
+  let accountsTree = getAccountsTree();
+  $: console.log($accountStore);
   $: {
-    if ($accountStore) {
-      options = $accountStore.map((_) => ({
+    if ($accountsTree) {
+      console.log($accountsTree);
+      options = $accountsTree.map((_) => ({
         label: _.name,
         options: _.children.map((__) => ({
           label: __.name,
