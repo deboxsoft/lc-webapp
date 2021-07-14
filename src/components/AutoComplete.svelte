@@ -417,7 +417,8 @@
           if (debug) {
             console.log("Found selected item: " + i + ": " + JSON.stringify(listItem));
           }
-          highlight();
+          filteredListItems = [listItems[i]];
+          // highlight();
           break;
         }
       }
@@ -524,7 +525,7 @@
       if (dropdownNode != null) scrollFunction.call(dropdownNode);
       scrollFunction.call(node);
     };
-    autoScrollEnable && autoScroll();
+    // autoScrollEnable && autoScroll();
     return {
       update: async () => {
         await tick();

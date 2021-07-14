@@ -14,7 +14,7 @@
   export let endDateKey = "endDate";
   export let name = undefined;
   export let allowEmpty = false;
-  export let className = $$props.class || "";
+  export let className = $$props.class || "form-control";
   export let width = "100%";
   export let showClearButton = false;
   export let selected = $fields
@@ -58,7 +58,7 @@
 
 <DatePicker
   {...$$restProps}
-  class="form-control"
+  class={className}
   {range}
   {allowEmpty}
   placeholder="Tanggal"
@@ -67,7 +67,7 @@
   closeLabel="Tutup"
   bind:selected
   styling={new CalendarStyle({ buttonWidth: "100%", datepickerWidth: width })}
-  wrapperInputClass="form-group form-group-feedback form-group-feedback-right {className}"
+  wrapperInputClass="form-group-feedback form-group-feedback-right"
   {showClearButton}
   on:range-selected={applyHandler}
   on:date-selected={applyHandler}

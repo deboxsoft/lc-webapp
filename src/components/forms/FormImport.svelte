@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { writable } from "svelte/store";
   import DropZone from "svelte-file-dropzone/src/components/Dropzone.svelte";
   import { csvParse } from "__@root/utils";
@@ -22,9 +22,14 @@
   export let onReset = () => {};
   export let onPreview = () => {};
 
-  let submitting = false;
   let fileData = writable([]);
-  let alertMessage;
+
+
+  let alertMessage = "";
+  /**
+   * @type{ "verified" | "unverified" | "error" | "process" | "success" | "failed" }
+   */
+  let statusFormState = "unverified";
 
   $: fileLoaded = $files.length > 0;
 
@@ -51,10 +56,14 @@
   async function submitHandler() {
     try {
       $loading = true;
+      statusFormState = "process";
       await onSubmit($fileData);
       notify("data berhasil disimpan", "success");
+      statusFormState = "success";
       closeHandler();
     } catch (e) {
+      console.error(e);
+      statusFormState = "failed";
       notify("data tidak berhasil disimpan", "error");
     } finally {
       $loading = false;
@@ -65,6 +74,9 @@
     isPreview = false;
     fileLoaded = false;
     files.set([]);
+    errors = [];
+    statusFormState = "unverified";
+    alertMessage = undefined;
     onReset();
   }
 
@@ -76,7 +88,12 @@
     try {
       isPreview = true;
       onPreview($fileData);
+      if (errors.length > 0) {
+        throw new Error("Data tidak lengkap, mohon diperiksa kembali.")
+      }
+      statusFormState = "verified";
     } catch (e) {
+      statusFormState = "unverified";
       notify(e.message, "error");
       alertMessage = {
         message: e.message,
@@ -142,7 +159,7 @@
         type="button"
         on:click={submitHandler}
         class="btn btn-primary mr-2"
-        disabled={!fileLoaded || submitting || errors.length > 0}><i class="icon-floppy-disk mr-2" />Simpan</button
+        disabled={statusFormState !== "verified"}><i class="icon-floppy-disk mr-2" />Simpan</button
       >
     {/if}
   </div>
