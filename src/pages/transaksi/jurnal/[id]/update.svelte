@@ -3,7 +3,6 @@
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import Modal from "__@comps/Modal.svelte";
   import FormJournal from "../_forms/FormJournal.svelte";
   import { getAclContext } from "../_acl-context";
 
@@ -13,14 +12,15 @@
   const { accountStore } = stores.getAccountContext();
   const { updateGranted } = getAclContext();
 
-  let transaction, openDialog;
+  let transaction,
+    open = false;
   $: _transaction = getTransaction($params.id);
   $: {
     if ($_transaction) {
       if (!updateGranted($_transaction.userId)) {
         $goto("/access-denied");
       } else {
-        openDialog();
+        open = true;
         transaction = { ...$_transaction, date: new Date($_transaction.date) };
       }
     }
@@ -44,10 +44,12 @@
   }
 </script>
 
-<FormJournal
-  title="Update Transaksi"
-  values={transaction}
-  loading={$loading}
-  on:submit={submitHandler}
-  on:cancel={closeHandler}
-/>
+{#if open}
+  <FormJournal
+    title="Update Transaksi"
+    values={transaction}
+    loading={$loading}
+    on:submit={submitHandler}
+    on:cancel={closeHandler}
+  />
+{/if}

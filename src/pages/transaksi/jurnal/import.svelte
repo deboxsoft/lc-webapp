@@ -1,7 +1,7 @@
 <!--routify:options title="Import Statement"-->
 <script>
   import { onMount } from "svelte";
-  import { writable, derived } from "svelte/store";
+  import { writable, derived, get } from "svelte/store";
   import { goto, params } from "@roxi/routify";
   import FormImport from "__@comps/forms/FormImport.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
@@ -10,9 +10,11 @@
   import TablePreview from "./_tables/TablePreview.svelte";
   import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
   import CellRp from "__@comps/CellRp.svelte";
+  import { getAuthenticationContext } from "../../../modules/users";
 
   const { loading, notify } = getApplicationContext();
   const { getAccount, accountStore } = stores.getAccountContext();
+  const { authenticationStore, getProfile } = getAuthenticationContext();
   const { import: importTransaction, transactionTypeStore } = stores.getTransactionContext();
 
   // tranform step from csv
@@ -36,6 +38,7 @@
    * @type {"journal" | "payment" | "cashier"}
    */
   const action = $params.action;
+  const type = action === "cashier" ? "CASHIER" : "PAYMENT";
   const title = action === "cashier" ? "Impor Transaksi Kasir" : "Impor Transaksi Pembayaran";
   let fileLoaded = false;
   let files = writable([]);
@@ -67,7 +70,15 @@
   async function submitHandler() {
     // filter
     errors = [];
-    const inputs = submit();
+    const inputs = submit().map((_) => {
+      const profile = getProfile();
+      const userId = profile.session.userId;
+      return ({
+        type,
+        userId,
+        ..._
+      });
+    });
     if (!errors || errors.length === 0) {
       await importTransaction(inputs);
       $goto("./");
@@ -91,6 +102,11 @@
         }
         balance += parseFloat(_.amount);
       });
+      const account = get(getAccount(accountId));
+      const accountBalance = (account && account.balance) || 0;
+      if (action === "payment" && balance > accountBalance) {
+        throw new Error("Saldo kas tidak mencukupi.");
+      }
     }
   }
 
@@ -99,7 +115,6 @@
     files.set([]);
     $goto("./");
   }
-
 </script>
 
 <FormImport
@@ -117,7 +132,7 @@
   onSubmit={submitHandler}
 >
   <!-- form upload  -->
-  <svelte:fragment slot="intro">
+  <svelte:fragment slot="info">
     {#if action === "cashier"}
       <div class="row form-group">
         <label class="col-form-label col-md-2" for="accountId">Akun Kas yang didebit</label>

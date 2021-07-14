@@ -2,19 +2,37 @@
   import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
   import dayjs from "dayjs";
+  import { stores } from "@deboxsoft/accounting-client";
+  import { stores as usersStore } from "@deboxsoft/users-client";
   import Modal from "__@comps/Modal.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import CellRp from "__@comps/CellRp.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
+  import { get } from "svelte/store";
+
+  const { getTransactionType } = stores.getTransactionContext();
+  const { getUser } = usersStore.getAuthenticationContext();
 
   export let backUrl;
   export let transaction;
 
-  let openDialog;
+  let openDialog, user, transactionType;
+
+  $: {
+    if (transaction) {
+      transactionType = get(getTransactionType(transaction.type));
+      init();
+    }
+  }
+
+  async function init() {
+    user = await getUser(transaction.userId);
+    state = "finish";
+  }
 
   onMount(() => {
     openDialog();
-  })
+  });
   function closeHandler() {
     $goto(backUrl, {});
   }
@@ -34,6 +52,10 @@
       <p class="col-sm-9">: {dayjs(transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
       <dt class="col-sm-3">Deskripsi</dt>
       <p class="col-sm-9">: {transaction.description || "-"}</p>
+      <dt class="col-sm-3">Jenis Transaksi</dt>
+      <p class="col-sm-9">: {(transactionType && transactionType.name) || "-"}</p>
+      <dt class="col-sm-3">Di Input Oleh</dt>
+      <p class="col-sm-9">: {user && user.name || "-"}</p>
       <dt class="col-sm-3">Status</dt>
       <p class="col-sm-9">
         :

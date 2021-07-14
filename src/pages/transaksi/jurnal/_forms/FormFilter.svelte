@@ -27,8 +27,9 @@
   export let onClose = undefined;
 
   const { accountStore } = stores.getAccountContext();
+  const {transactionTypeStore} = stores.getTransactionContext();
 
-  function transformInput({status, date, accountId, ...input}) {
+  function transformInput({status, date, type, accountId, ...input}) {
     let _startDate, _endDate;
 
     if (Array.isArray(date)) {
@@ -41,6 +42,7 @@
       startDate: _startDate,
       endDate: _endDate,
       status: status === "" ? undefined : status,
+      type: type === "" ? undefined : type,
       accountId: accountId || undefined,
       ...input
     }
@@ -57,6 +59,10 @@
     <div class="form-group">
       <label for="accountId">Akun Debit</label>
       <AccountSelect id="accountId" placeholder="SEMUA" allowEmpty name="accountId" {accountStore} />
+    </div>
+    <div class="form-group">
+      <label for="type">Jenis Transaksi</label>
+      <ComboBox id="type" name="type" items={$transactionTypeStore} labelId="name" valueId="code" placeHolder="SEMUA" allowEmpty />
     </div>
     <div class="form-group">
       <label for="status">Status</label>
