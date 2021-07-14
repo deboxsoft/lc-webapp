@@ -7,7 +7,6 @@
   import MenuListTransaction from "./MenuListTransaction.svelte";
   import Table from "__@comps/Table.svelte";
   import Button from "__@comps/Button.svelte";
-  import InfiniteScroll from "__@comps/InfiniteScroll.svelte";
 
   const { loading } = getApplicationContext();
   const { transactionPageInfo, findPage } = stores.getTransactionContext();
@@ -79,12 +78,6 @@
       </Button>
     </div>
   {/if}
-  <!--  <InfiniteScroll-->
-  <!--    elementScroll={window}-->
-  <!--    hasMore={$transactionPageInfo.hasNext}-->
-  <!--    on:loadMore={infiniteHandler}-->
-  <!--    threshold={100}-->
-  <!--  />-->
 </Table>
 
 <style lang="scss">
