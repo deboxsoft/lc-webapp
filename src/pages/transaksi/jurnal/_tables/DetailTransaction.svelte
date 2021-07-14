@@ -15,6 +15,10 @@
 
   export let backUrl;
   export let transaction;
+  /**
+   * @type {"loading" | "finish"}
+   */
+  let state = "loading";
 
   let openDialog, user, transactionType;
 
@@ -44,12 +48,14 @@
   bind:openDialog
   onClose={closeHandler}
 >
-  {#if transaction}
+  {#if transaction && state === "finish"}
     <dl class="row">
       <dt class="col-sm-3">No. Bukti/Kwitansi</dt>
       <p class="col-sm-9">: {transaction.no || "-"}</p>
       <dt class="col-sm-3">Tanggal</dt>
       <p class="col-sm-9">: {dayjs(transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
+      <dt class="col-sm-3">Tanggal Transaksi</dt>
+      <p class="col-sm-9">: {dayjs(transaction.dateTransaction || transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
       <dt class="col-sm-3">Deskripsi</dt>
       <p class="col-sm-9">: {transaction.description || "-"}</p>
       <dt class="col-sm-3">Jenis Transaksi</dt>

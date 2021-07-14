@@ -3,7 +3,9 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { writable } from "svelte/store";
   import DetailTransaction from "../_tables/DetailTransaction.svelte";
+  import { getApplicationContext } from "__@modules/app";
 
+  const { transactionService } = getApplicationContext();
   const context = stores.getTransactionContext();
   let backUrl = $params.backUrl || "../";
 
@@ -11,7 +13,14 @@
   let isMounted = false;
   $: {
     if ($params.id) {
-      transaction = context && context.getTransaction($params.id);
+      if (context) {
+        transaction = context.getTransaction($params.id);
+      } else if (transactionService) {
+        const { findById } = transactionService;
+        findById($params.id).then((_) => {
+          transaction = _;
+        });
+      }
     }
   }
 </script>
