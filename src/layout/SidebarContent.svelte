@@ -1,8 +1,8 @@
-<script lang="ts">
+<script>
   import { url, isActive } from "@roxi/routify";
-  import Icon from "@deboxsoft/svelte-theme-limitless/components/Icon.svelte";
-  import Accordion from "@deboxsoft/svelte-theme-limitless/components/Accordion.svelte";
-  import AccordionItem from "@deboxsoft/svelte-theme-limitless/components/AccordionItem.svelte";
+  import Icon from "__@root/layout/Icon.svelte";
+  import Accordion from "__@root/layout/Accordion.svelte";
+  import AccordionItem from "__@root/layout/AccordionItem.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import Avatar from "__@comps/Avatar.svelte";
 
@@ -13,7 +13,7 @@
 
   export let menus;
 
-  let collapse: boolean = false;
+  let collapse = false;
 </script>
 
 <!-- Header -->

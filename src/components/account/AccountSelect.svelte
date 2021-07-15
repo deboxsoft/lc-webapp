@@ -1,13 +1,13 @@
-<script lang="ts">
+<script>
   import { stores } from "@deboxsoft/accounting-client";
   import AutoCompleteField from "__@comps/forms/AutoCompleteField.svelte";
   import { createEventDispatcher } from "svelte";
 
   const accountContext = stores.getAccountContext();
   export let accountStore = accountContext.accountStore;
-  export let accountId: string | undefined = undefined;
-  export let allowEmpty: boolean = false;
-  export let name: string = "accountId";
+  export let accountId = undefined;
+  export let allowEmpty = false;
+  export let name = "accountId";
   export let placeholder = "Pilih Akun"
   export let disabled = false;
   export let selectedAccount = accountContext.getAccount(accountId);

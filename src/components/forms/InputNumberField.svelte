@@ -1,24 +1,24 @@
-<script lang="ts">
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+<script>
+  import { clsx } from "@deboxsoft/module-client";
   import AutoNumeric from "autonumeric";
   import { getFormContext } from "__@stores/form";
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
 
-  export let formContextDisable: boolean = false;
+  export let formContextDisable = false;
   const context = (!formContextDisable && getFormContext()) || {};
   const dispatcher = createEventDispatcher();
 
-  export let options: any = {};
-  export let fields: any = context?.fields;
-  export let fieldsErrors: any = context?.fieldsError;
-  export let prependDisable: boolean = false;
-  export let textPosition: "left" | "right" = "right";
-  export let name: string;
-  export let disabled: boolean = false;
-  export let format: "currency" | "number" = "currency";
-  export let resultType: "string" | "number" = "number";
+  export let options = {};
+  export let fields = context?.fields;
+  export let fieldsErrors = context?.fieldsError;
+  export let prependDisable = false;
+  export let textPosition = "right";
+  export let name;
+  export let disabled = false;
+  export let format = "currency";
+  export let resultType = "number";
   export let pristineValue = undefined;
-  export let value: any = undefined;
+  export let value = undefined;
 
   const defaultOptions = {
     decimalPlaces: format === "currency" ? 2 : 0,

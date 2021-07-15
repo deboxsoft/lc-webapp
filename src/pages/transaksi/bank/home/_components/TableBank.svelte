@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { stores } from "@deboxsoft/accounting-client";
   import Table from "__@comps/tables/DataTable.svelte";
 

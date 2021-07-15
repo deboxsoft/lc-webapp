@@ -1,5 +1,5 @@
 <!--routify:options title="Akun Perkiraan"-->
-<script lang="ts">
+<script>
   import { url, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";

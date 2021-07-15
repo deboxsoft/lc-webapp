@@ -1,18 +1,18 @@
-<script lang="ts">
+<script>
   import { writable } from "svelte/store";
   import { getFormContext } from "__@stores/form";
   import { createEventDispatcher } from "svelte";
 
   const { validateField, fields = writable({}), fieldsErrors, submitted } = getFormContext() || {};
-  const dispatcher: any = createEventDispatcher();
-  export let name: any;
-  export const value: any = ($fields && $fields[name]) || undefined;
+  const dispatcher= createEventDispatcher();
+  export let name;
+  export let value;
   export let id = name;
   export let ref;
   const { class: className } = $$props;
 
   let invalid = true;
-  let msgError: string[] | undefined;
+  let msgError;
 
   $: {
     if ($fieldsErrors && $fieldsErrors[name]) {
@@ -25,7 +25,7 @@
 
   function createInputHandler() {
     const _validate = validateField(name);
-    return (e: any) => {
+    return (e) => {
       _validate();
       dispatcher("input", e);
     };

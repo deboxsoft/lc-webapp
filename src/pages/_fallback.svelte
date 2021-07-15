@@ -1,6 +1,3 @@
-<script lang="ts">
-  import { url } from "@roxi/routify";
-</script>
 
 <!-- Container -->
 <div class="flex-fill">

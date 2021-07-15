@@ -1,8 +1,8 @@
-<script lang="ts">
+<script>
   import { convertToRp } from "__@root/utils";
 
   export let value;
-  export let spaceMinus: boolean = false;
+  export let spaceMinus= false;
   export let className = $$props.class || "";
 </script>
 

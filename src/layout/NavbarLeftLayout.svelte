@@ -1,8 +1,8 @@
-<script lang="ts">
+<script>
   import MenuIcon from "__@comps/icons/Bars.svelte";
   import { getUIContext } from "__@root/stores/ui";
 
-  export let showToggleMenu: boolean = false;
+  export let showToggleMenu = false;
 
   const { toggleMinimizeSidebar } = getUIContext();
 </script>

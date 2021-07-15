@@ -1,7 +1,4 @@
-<script lang="ts">
-  import type { ZodObject, ZodRawShape } from "@deboxsoft/zod";
-  import type { Writable } from "svelte/store";
-
+<script>
   import { createEventDispatcher, tick, onMount } from "svelte";
   import { writable } from "svelte/store";
   import { ZodError } from "@deboxsoft/zod";
@@ -11,15 +8,15 @@
   const dispatch = createEventDispatcher();
   const { notify } = getApplicationContext();
 
-  export let schema: ZodObject<ZodRawShape> | undefined = undefined;
-  export let values: Record<string, any> = {};
-  export let ignoreAttribs: string | string[] = "id";
-  export let validateField: any = undefined;
-  export let transform: any = undefined;
-  export let submittedEnable: boolean = false;
-  export let checkValidateFirst: boolean = false;
-  export let feedbackValidateDisable: boolean = false;
-  export let isValid: Writable<boolean> = writable(false);
+  export let schema = undefined;
+  export let values = {};
+  export let ignoreAttribs = "id";
+  export let validateField = undefined;
+  export let transform = undefined;
+  export let submittedEnable = false;
+  export let checkValidateFirst = false;
+  export let feedbackValidateDisable = false;
+  export let isValid = writable(false);
 
   const { submitted: _submitted, fieldsErrors: _fieldsErrors, fields: _fields } = createFormContext({
     schema,

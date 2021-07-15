@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { createEventDispatcher, tick } from "svelte";
   import { createPopper } from "@popperjs/core/lib/popper-lite";
   import flip from "@popperjs/core/lib/modifiers/flip";
@@ -37,10 +37,10 @@
   export let textCleanFunction = function (userEnteredText) {
     return userEnteredText;
   };
-  export let searchFunction: ((search?: any) => Promise<any>) | false = false;
-  export let beforeChange: (before?: any, after?: any) => boolean = () => true;
+  export let searchFunction = false;
+  export let beforeChange = () => true;
   export let selectFirstIfEmpty = false;
-  export let pristineValue: any = undefined;
+  export let pristineValue = undefined;
   export let minCharactersToSearch = 1;
   export let maxItemsToShowInList = 0;
   export let noResultsText = "No results found";
@@ -176,7 +176,7 @@
     };
   }
   $: prepareListItems(items);
-  function prepareUserEnteredText(userEnteredText?: string) {
+  function prepareUserEnteredText(userEnteredText) {
     if (userEnteredText === undefined || userEnteredText === null) {
       return "";
     }

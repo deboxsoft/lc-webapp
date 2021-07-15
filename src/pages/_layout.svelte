@@ -1,11 +1,11 @@
 <!-- routify:options preload="proximity" -->
-<script lang="ts">
+<script>
   import { url, ready } from "@roxi/routify";
   import initial from "initials";
-  import { onMount, tick } from "svelte";
-  import Navbar from "@deboxsoft/svelte-theme-limitless/navigation/Navbar.svelte";
-  import Sidebar from "@deboxsoft/svelte-theme-limitless/navigation/Sidebar.svelte";
-  import SidebarMobileToggler from "@deboxsoft/svelte-theme-limitless/components/SidebarMobileToggler.svelte";
+  import { onMount } from "svelte";
+  import Navbar from "__@root/layout/Navbar.svelte";
+  import Sidebar from "__@root/layout/Sidebar.svelte";
+  import SidebarMobileToggler from "__@root/layout/SidebarMobileToggler.svelte";
   import SidebarContent from "__@root/layout/SidebarContent.svelte";
   import NavbarLeft from "__@root/layout/NavbarLeftLayout.svelte";
   import NavbarRight from "__@root/layout/NavbarRightLayout.svelte";

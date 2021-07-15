@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import SkeletonScreen from "./SkeletonScreen.svelte";
 </script>
 

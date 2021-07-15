@@ -1,9 +1,9 @@
-<script lang="ts">
+<script>
   import { writable } from "svelte/store";
   import { stores } from "@deboxsoft/accounting-client";
 
   const { accountStore, getAccount } = stores.getAccountContext();
-  export let id: string | undefined = undefined;
+  export let id = undefined;
   let _store = writable({});
   $: {
     _store = getAccount(id);

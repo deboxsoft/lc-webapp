@@ -1,5 +1,5 @@
 <!--routify:options title="Transaksi"-->
-<script lang="ts">
+<script>
   import { url, goto } from "@roxi/routify";
   import { getAuthenticationContext } from "__@modules/users";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";

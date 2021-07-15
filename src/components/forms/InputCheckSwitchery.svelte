@@ -1,20 +1,20 @@
-<script lang="ts">
+<script>
   import { getFormContext } from "__@stores/form";
   import { createEventDispatcher } from "svelte";
-  import { clsx, getId } from "@deboxsoft/svelte-theme-limitless/utils";
+  import { clsx, generateId } from "@deboxsoft/module-client";
 
   const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
-  const dispatcher: any = createEventDispatcher();
-  export let id: string = getId();
-  export let name: string;
-  export let label: string = "";
-  export let disabled: boolean = false;
-  export let checked: boolean = ($fields && $fields[name]) || false;
+  const dispatcher = createEventDispatcher();
+  export let id = generateId();
+  export let name;
+  export let label = "";
+  export let disabled = false;
+  export let checked = ($fields && $fields[name]) || false;
 
   let { class: className } = $$props;
-  let classes: string | undefined;
+  let classes;
   let invalid = true;
-  let msgError: string[] | undefined;
+  let msgError;
 
   $: {
     if ($fieldsErrors[name]) {

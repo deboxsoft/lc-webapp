@@ -1,5 +1,5 @@
 <!--routify:options title="Pengikhtisaran"-->
-<script lang="ts">
+<script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { stores } from "@deboxsoft/accounting-client";

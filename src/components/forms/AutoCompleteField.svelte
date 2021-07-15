@@ -1,5 +1,5 @@
-<script lang="ts">
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+<script>
+  import { clsx } from "@deboxsoft/module-client";
   import { getFormContext } from "__@stores/form";
   import AutoComplete from "__@comps/AutoComplete.svelte";
   import { createEventDispatcher } from "svelte";
@@ -8,13 +8,13 @@
   const dispatcher = createEventDispatcher();
 
   export let name;
-  export let pristineValue: any = undefined;
-  export let items: any[];
-  export let valueFieldName: string | undefined = undefined;
-  export let labelFunction: undefined | ((val: any) => string) = undefined;
-  export let keywordsFunction: undefined | ((val: any) => string) = undefined;
-  export let allowEmpty: boolean = false;
-  export let inputClassName: string = "";
+  export let pristineValue= undefined;
+  export let items;
+  export let valueFieldName = undefined;
+  export let labelFunction = undefined;
+  export let keywordsFunction = undefined;
+  export let allowEmpty  = false;
+  export let inputClassName = "";
   export let disabled = false;
   const { class: className } = $$props;
 

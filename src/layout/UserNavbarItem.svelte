@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { tick } from "svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";

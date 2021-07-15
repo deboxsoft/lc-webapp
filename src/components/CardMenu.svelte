@@ -1,12 +1,21 @@
-<script lang="ts">
-  import type { SvelteComponentDev } from "svelte/internal";
-
+<script>
   import { url } from "@roxi/routify";
 
-  export let label: string = "";
-  export let path: string = "./";
-  export const icon: typeof SvelteComponentDev | undefined = undefined;
+  export let label = "";
+  export let path = "./";
+  export const icon = undefined;
 </script>
+
+<div class="card-menu card">
+  <a href={$url(path)}>
+    <div class="card-body">
+      <div class="label">{label}</div>
+      <div class="icon">
+        <slot />
+      </div>
+    </div>
+  </a>
+</div>
 
 <style lang="scss" global>
   .card.card-menu {
@@ -45,14 +54,3 @@
     }
   }
 </style>
-
-<div class="card-menu card">
-  <a href={$url(path)}>
-    <div class="card-body">
-      <div class="label">{label}</div>
-      <div class="icon">
-        <slot />
-      </div>
-    </div>
-  </a>
-</div>

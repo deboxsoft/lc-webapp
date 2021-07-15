@@ -1,5 +1,5 @@
-<script lang="ts">
-  export let items: any[] | undefined = undefined;
+<script>
+  export let items = undefined;
 </script>
 
 <div class="dbx-table" {...$$restProps}>

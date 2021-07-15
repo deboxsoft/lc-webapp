@@ -1,13 +1,11 @@
-<script lang="ts">
-  import type { BreadcrumbItem } from "__@stores/breadcrumb";
-
+<script>
   import { layout, page, goto } from "@roxi/routify";
   import Breadcrumb from "__@comps/Breadcrumb.svelte";
   import { getUIContext } from "__@stores/ui";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { getApplicationContext } from "__@modules/app";
 
-  export let breadcrumb: BreadcrumbItem | BreadcrumbItem[] | undefined = undefined;
+  export let breadcrumb = undefined;
   export let backHandler = () => {
     $goto("../");
   };

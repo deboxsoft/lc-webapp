@@ -1,5 +1,5 @@
 <!--routify:options title="dashboard"-->
-<script lang="ts">
+<script>
   import { url } from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";
 </script>

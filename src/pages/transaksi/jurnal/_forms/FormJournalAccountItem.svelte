@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import { derived } from "svelte/store";
   import { debounce } from "@deboxsoft/module-core";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
@@ -7,20 +7,20 @@
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import AutoComplete from "__@comps/AutoComplete.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
-  import { getId } from "@deboxsoft/svelte-theme-limitless/utils";
+  import { generateId } from "@deboxsoft/module-client";
   // import AccountCombox from "../../../../components/account/AccountCombox.svelte";
 
-  export let id = getId("journal-account-item");
+  export let id = generateId("journal-account-item");
   export let input;
-  export const creditDisable: boolean = false;
-  export let index: number;
-  export let fieldName: string = "creditAccounts";
-  export const minusCurrencyEnable: boolean = true;
+  export const creditDisable = false;
+  export let index;
+  export let fieldName = "creditAccounts";
+  export const minusCurrencyEnable = true;
   export let onRemoveJournalAccount = () => {
   };
   export let onUpdateJournalAccount = () => {
   };
-  export const isValid: boolean = false;
+  export const isValid = false;
 
   const { getAccountLeaf, getAccount } = stores.getAccountContext();
   const accountStore = getAccountCredit();

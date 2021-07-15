@@ -1,5 +1,5 @@
 <!--routify:options title="Bank"-->
-<script lang="ts">
+<script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";

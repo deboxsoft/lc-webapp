@@ -1,8 +1,8 @@
-<script lang="ts">
+<script>
 
-  export let options: Record<string, any> = {previewTemplate: "<div />"};
-  export let autoDiscover: boolean = false;
-  export let events: Record<string, any> = {}
+  export let options = {previewTemplate: "<div />"};
+  export let autoDiscover = false;
+  export let events = {}
 
   const {class: className} = $$props;
 

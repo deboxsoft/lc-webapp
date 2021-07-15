@@ -1,5 +1,5 @@
 <!--routify:options title="menu"-->
-<script lang="ts">
+<script>
   import MenuOpen from "@deboxsoft/svelte-icons/ico/icoMenuOpen.svelte";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import CardMenuContainer from "__@comps/CardMenuContainer.svelte";

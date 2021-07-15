@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import UserNavbarItem from "./UserNavbarItem.svelte";
   import { getAuthenticationContext } from "__@modules/users";
 

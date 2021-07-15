@@ -1,9 +1,7 @@
-<script lang="ts">
-  import type { JournalAccountInput } from "@deboxsoft/accounting-api";
-
+<script>
   import { getFormContext, createFormContext } from "__@stores/form";
   import { writable } from "svelte/store";
-  import { getId } from "@deboxsoft/svelte-theme-limitless/utils";
+  import { generateId } from "@deboxsoft/module-client";
   import ListPlusIcon from "__@comps/icons/ListPlus.svelte";
   import CheckIcon from "__@comps/icons/Check.svelte";
   import CloseIcon from "__@comps/icons/Close.svelte";
@@ -16,7 +14,7 @@
   const journalAccountSchema = schema.pick({ creditAccounts: true });
   createFormContext({ schema: journalAccountSchema });
 
-  const createJournalAccount = () => ({ index: getId({ prefix: "account-input", size: 3 }) });
+  const createJournalAccount = () => ({ index: generateId({ prefix: "account-input", size: 3 }) });
 
   export const total: number = 0;
 

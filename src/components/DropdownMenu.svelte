@@ -1,5 +1,5 @@
 <script>
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+  import { clsx } from "@deboxsoft/module-client";
   import { getContextDropdown } from "./Dropdown.svelte";
   const context = getContextDropdown();
   export let className = $$props.class || "";

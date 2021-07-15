@@ -1,5 +1,5 @@
 <!--routify:options title="menu"-->
-<script lang="ts">
+<script>
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "__@modules/users";
   import MenuOpen from "@deboxsoft/svelte-icons/ico/icoMenuOpen.svelte";

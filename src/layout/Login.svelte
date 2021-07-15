@@ -1,7 +1,7 @@
-<script lang="ts">
+<script>
   import { goto } from "@roxi/routify";
   import { z } from "@deboxsoft/zod";
-  import { clsx } from "@deboxsoft/svelte-theme-limitless/utils";
+  import { clsx } from "@deboxsoft/module-client";
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import IoMdLock from "@deboxsoft/svelte-icons/io/IoMdLock.svelte";
