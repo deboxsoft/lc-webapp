@@ -4,7 +4,7 @@ import type { ACLContext } from "__@root/types";
 
 export const createAclContext = () => {
   const auth = getAuthenticationContext();
-  const permission = auth.getPermission("bdd");
+  const permission = auth.getPermission("stock");
   const createGranted = permission.create().granted;
   const readGranted = permission.read().granted;
   const updateGranted = permission.update().granted;

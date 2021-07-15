@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import {redirect} from "@roxi/routify";
   import {getAuthenticationContext} from "__@modules/users"
 

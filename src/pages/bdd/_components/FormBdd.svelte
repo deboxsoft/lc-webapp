@@ -5,7 +5,7 @@
 
   import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { InventoryInputSchema } from "@deboxsoft/accounting-api";
+  import { BddInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
 
@@ -16,11 +16,11 @@
   import ComboxField from "__@comps/forms/ComboxField.svelte";
 
   const { notify, loading } = getApplicationContext();
-  const { categoryInventoryStore } = stores.getInventoryContext();
+  const { getAmortization, amortizationStore } = stores.getBddContext();
   const dispatch = createEventDispatcher();
 
   // props
-  export let inventory;
+  export let bdd;
   export const isUpdate = false;
   export let onSubmit;
   export let title;
@@ -60,41 +60,66 @@
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form schema={InventoryInputSchema}  values={inventory} bind:fields bind:submitted>
+  <Form schema={BddInputSchema} values={bdd} bind:fields bind:submitted>
     <div class="row">
       <div class="form-group col-12 col-md-6">
         <label for="name">Nama</label>
         <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
       </div>
       <div class="form-group col-12 col-md-6">
-        <label for="purchaseDate">Tanggal Pembelian</label>
+        <label for="date">Tanggal</label>
         <InputDate
-          id="purchaseDate"
-          name="purchaseDate"
+          id="date"
+          name="date"
           class="form-control"
-          placeholder="Tanggal Pembelian"
+          placeholder="Tanggal"
           value={new Date()}
+          range={false}
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-12 col-md-6">
+        <label for="dateStart">Tanggal Mulai</label>
+        <InputDate
+          id="dateStart"
+          name="dateStart"
+          class="form-control"
+          placeholder="Tanggal Mulai"
+          value={new Date()}
+          range={false}
+        />
+      </div>
+      <div class="form-group col-12 col-md-6">
+        <label for="dateEnd">Tanggal Akhir</label>
+        <InputDate
+          id="dateEnd"
+          name="dateEnd"
+          class="form-control"
+          placeholder="Tanggal Akhir"
+          value={new Date()}
+          range={false}
         />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="categoryId">Kategori</label>
+        <label for="categoryId">Kategori Amortisasi</label>
         <ComboxField
-          id="categoryId"
-          name="categoryId"
+          id="amortizationId"
+          name="amortizationId"
           class="form-control"
-          items={$categoryInventoryStore}
+          items={$amortizationStore}
           valueId="id"
           labelId="name"
-          placeholder="Kategori"
+          placeholder="Kategori Amortisasi"
         />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
         <label for="creditAccount">Akun Kredit</label>
-        <AccountSelect id="creditAccount" name="creditAccount" placeholder="Akun Kredit" />
+        <AccountSelect id="creditAccount" name="creditAccount" placeholder="Akun Aset" />
       </div>
     </div>
     <div class="row">

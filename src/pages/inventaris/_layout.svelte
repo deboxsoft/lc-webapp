@@ -26,16 +26,22 @@
     {:else}
       <ul class="nav navbar-nav">
         <li class="nav-item">
-          <a href={$url("./")} class="navbar-nav-link" class:active={$isActive("./index")}> data inventaris </a>
+          <a href={$url("./home")} class="navbar-nav-link" class:active={$isActive("./home")}>
+            <i class="icon-list2 mr-2" />
+            Daftar Inventaris
+          </a>
         </li>
         <li class="nav-item">
-          <a href={$url("./category")} class="navbar-nav-link" class:active={$isActive("./category")}> kategori </a>
+          <a href={$url("./category")} class="navbar-nav-link" class:active={$isActive("./category")}>
+            <i class="icon-grid4 mr-2" />
+            Kategori
+          </a>
         </li>
       </ul>
       <ul class="navbar-nav ml-xl-auto">
-        {#if $isActive("./index")}
+        {#if $isActive("./home")}
           <li class="nav-item">
-            <a href={$url("./create")} class="navbar-nav-link">
+            <a href={$url("./home/create")} class="navbar-nav-link">
               <i class="icon-plus2" />
               Tambah Inventaris
             </a>
@@ -43,7 +49,7 @@
         {/if}
         {#if $isActive("./category")}
           <li class="nav-item">
-            <a href={$url("./create-category")} class="navbar-nav-link">
+            <a href={$url("./category/create")} class="navbar-nav-link">
               <i class="icon-plus2" />
               Tambah Kategori
             </a>

@@ -4,7 +4,7 @@
   import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { InventoryInputSchema } from "@deboxsoft/accounting-api";
+  import { BddInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import Form from "__@comps/forms/Form.svelte";
@@ -13,13 +13,13 @@
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   const { notify, loading } = getApplicationContext();
-  const { categoryInventoryStore } = stores.getInventoryContext();
+  const { amortizationStore } = stores.getBddContext();
   const dispatch = createEventDispatcher();
 
   const depreciationMethods = [{ id: "STRAIGHT_LINE", label: "Garis Lurus" }];
 
   // props
-  export let categoryInventory;
+  export let categoryAmortization;
   export const isUpdate = false;
   export let onSubmit;
   export let title;
@@ -55,7 +55,7 @@
 </script>
 
 <Modal bind:openDialog {title} onClose={cancelHandler}>
-  <Form schema={InventoryInputSchema} values={categoryInventory} bind:fields bind:submitted>
+  <Form schema={BddInputSchema} values={categoryAmortization} bind:fields bind:submitted>
     <div class="row">
       <div class="form-group col-12">
         <label for="name">Nama</label>

@@ -1,8 +1,8 @@
 import type { SvelteComponentDev } from "svelte/internal";
 import InventoryIcon from "__@comps/icons/Inventory.svelte";
 import TransactionIcon from "__@comps/icons/Exchange.svelte";
-// import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
-// import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";
+import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
+import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";
 import LayerGroupIcon from "__@comps/icons/LayerGroup.svelte";
 import type { AuthenticationContext } from "@deboxsoft/users-client/types/stores";
 // import FileSpreadSheet from "__@comps/icons/FileSpreadsheet.svelte";
@@ -26,19 +26,10 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const balanceSheetShow = auth.getQuery().read("balanceSheet").granted;
   const statementIncomeShow = auth.getQuery().read("statementIncome").granted;
   const inventoryShow = auth.getQuery().read("inventory").granted;
+  const bddShow = auth.getQuery().read("bdd").granted;
+  const stockShow = auth.getQuery().read("stock").granted;
 
   return [
-    // {
-    //   label: "Manajemen User",
-    //   url: "/users",
-    //   icon: "icon-people",
-    //   children: [
-    //     {
-    //       label: "Data User",
-    //       url: "/"
-    //     }
-    //   ]
-    // },
     {
       label: "Pencatatan Transaksi",
       url: "/transaksi",
@@ -87,44 +78,26 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
         }
       ]
     },
-    // {
-    //   label: "Persediaan [add-on]",
-    //   url: "/persediaan",
-    //   type: "module",
-    //   icon: WarehouseIcon,
-    //   children: [
-    //     {
-    //       label: "Stock In",
-    //       url: "/persediaan/stock-in"
-    //     },
-    //     {
-    //       label: "Stock Out",
-    //       url: "/persediaan/stock-out"
-    //     }
-    //   ]
-    // },
+    {
+      label: "Persediaan",
+      url: "/persediaan",
+      type: "module",
+      icon: WarehouseIcon,
+      show: stockShow
+    },
     {
       label: "Inventaris",
       url: "/inventaris",
       icon: InventoryIcon,
       show: inventoryShow
     },
-    // {
-    //   label: "Amortisasi [add-on]",
-    //   url: "/amortisasi",
-    //   type: "module",
-    //   icon: MoneyCheckAltIcon,
-    //   children: [
-    //     {
-    //       label: "BDD Transaksi",
-    //       url: "/amortisasi/bdd"
-    //     },
-    //     {
-    //       label: "Akumulasi Amortisasi",
-    //       url: "/amortisasi/akumulasi"
-    //     }
-    //   ]
-    // },
+    {
+      label: "BDD",
+      url: "/bdd",
+      type: "module",
+      icon: MoneyCheckAltIcon,
+      show: bddShow
+    },
     // {
     //   label: "Pelaporan Keuangan",
     //   url: "/laporan",

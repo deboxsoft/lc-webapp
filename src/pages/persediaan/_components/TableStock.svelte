@@ -2,9 +2,9 @@
   import { stores } from "@deboxsoft/accounting-client";
   import Loader from "__@comps/loader/Loader.svelte";
   import Table from "__@comps/tables/DataTable.svelte";
-  import RowListInventory from "./RowListInventory.svelte";
+  import RowListStock from "./RowListStock.svelte";
 
-  const { findPage, inventoryStore, getCategoryInventory } = stores.getInventoryContext();
+  const { findPage, stockStore } = stores.getStockTransferContext();
   let state = "find-start";
   findPage({filter: {}, pageCursor: {}}).then(() => {
     state = "find-finish";
@@ -24,8 +24,8 @@
   {#if state === "find-start"}
     <Loader />
   {/if}
-  {#each $inventoryStore as inventory}
-    <RowListInventory {inventory} />
+  {#each $stockStore as stock}
+    <RowListStock {stock} />
   {/each}
 </Table>
 <div class="flex-1" />

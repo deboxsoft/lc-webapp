@@ -1,14 +1,6 @@
-import type { AuthenticationContext } from "@deboxsoft/users-client/types/stores";
 import { setContext, getContext } from "svelte";
 import { getAuthenticationContext } from "__@modules/users";
-
-type Context = {
-  auth: AuthenticationContext;
-  createGranted: boolean;
-  readGranted: boolean;
-  updateGranted: boolean;
-  removeGranted: boolean;
-};
+import type { ACLContext } from "__@root/types";
 
 export const createAclContext = () => {
   const auth = getAuthenticationContext();
@@ -29,5 +21,5 @@ export const createAclContext = () => {
 };
 
 export const getAclContext = () => {
-  return getContext<Context>("acl-context");
+  return getContext<ACLContext>("acl-context");
 };
