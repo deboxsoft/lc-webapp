@@ -14,14 +14,14 @@ type Context = {
 
 export const createAclContext = () => {
   const auth = getAuthenticationContext();
-  const permission = auth.getPermission("setting");
-  const userPermission = auth.getPermission("user");
-  const readGranted = permission.read().granted;
-  const updateGranted = permission.update().granted;
-  const readUserGranted = userPermission.read().granted;
-  const createUserGranted = userPermission.create().granted;
-  const updateUserGranted = userPermission.update().granted;
-  const removeUserGranted = userPermission.delete().granted;
+  const query = auth.getQuery("setting");
+  const userQuery = auth.getQuery("user");
+  const readGranted = query.read().granted;
+  const updateGranted = query.update().granted;
+  const readUserGranted = userQuery.read().granted;
+  const createUserGranted = userQuery.create().granted;
+  const updateUserGranted = userQuery.update().granted;
+  const removeUserGranted = userQuery.delete().granted;
   const context = {
     auth,
     readGranted,

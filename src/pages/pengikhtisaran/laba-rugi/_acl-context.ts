@@ -12,8 +12,8 @@ type Context = {
 
 export const createAclContext = () => {
   const auth = getAuthenticationContext();
-  const permission = auth.getPermission("statementIncome");
-  const readGranted = permission.read().granted;
+  const query = auth.getQuery("statementIncome");
+  const readGranted = query.read().granted;
   const context = {
     auth,
     readGranted

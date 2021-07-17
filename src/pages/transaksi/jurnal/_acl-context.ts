@@ -12,18 +12,32 @@ type Context = {
   removeGranted: (userId: string) => boolean;
 };
 
+const resource = "transaction";
+
 export const createAclContext = () => {
   const auth = getAuthenticationContext();
-  const permission = auth.getPermission("transaction");
-  const createGranted = permission.create().granted;
-  const readGranted = permission.read().granted;
-  const approveGranted = permission.approve().granted;
-  const rejectGranted = permission.reject().granted;
-  const updateGranted = (userId) => auth.isOwner(userId) || permission.update().granted;
-  const removeGranted = (userId) => auth.isOwner(userId) || permission.delete().granted;
+  const query = auth.getQuery(resource);
+  const createGranted = query.create().granted;
+  const readGranted = query.read().granted;
+  const approveGranted = query.approve().granted;
+  const rejectGranted = query.reject().granted;
+  const updateGranted = (userId) => auth.isOwner(userId) || query.update().granted;
+  const removeGranted = (userId) => auth.isOwner(userId) || query.delete().granted;
+  const createPaymentGranted = auth.getPermission({
+    resource,
+    action: "create-payment",
+    possession: "any"
+  }).granted;
+  const createCashierGranted = auth.getPermission({
+    resource,
+    action: "create-cashier",
+    possession: "any"
+  }).granted;
   const context = {
     auth,
     createGranted,
+    createPaymentGranted,
+    createCashierGranted,
     readGranted,
     approveGranted,
     rejectGranted,
