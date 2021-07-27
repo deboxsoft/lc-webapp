@@ -13,10 +13,8 @@
   export let label = name;
   let options = [];
   let accountsTree = getAccountsTree();
-  $: console.log($accountStore);
   $: {
     if ($accountsTree) {
-      console.log($accountsTree);
       options = $accountsTree.map((_) => ({
         label: _.name,
         options: _.children.map((__) => ({
