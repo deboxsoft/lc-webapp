@@ -1,20 +1,34 @@
+<script context="module">
+  import { writable } from "svelte/store";
+
+  export let loading = writable(false);
+</script>
 <script>
   import { getApplicationContext } from "__@modules/app";
-  import { getAuthenticationContext } from "__@modules/users";
-  import Avatar, { submitting as submittingAvatar } from "__@comps/Avatar.svelte";
+  import Avatar from "__@comps/Avatar.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
 
-  export let submitting = submittingAvatar;
+
+  export let label = "";
   const { config } = getApplicationContext();
-  const { authenticationStore } = getAuthenticationContext();
-  let profile, label, srcImg;
-
-  $: {
-    profile = $authenticationStore && $authenticationStore.profile;
-    if (profile) {
-      label = label.displayName;
-      srcImg = `${$config.avatarUrl}${profile.id}/${profile.avatar}`;
-    }
-  }
+  export let src = $config.brandUrl;
+  export let imageFail;
 </script>
 
-<Avatar {label} src={srcImg} />
+<Avatar {...$$restProps} {label} bind:src bind:imageFail square initialDisable>
+  {#if $loading }
+    <Loader />
+  {/if}
+  <slot />
+</Avatar>
+
+<style lang="scss" global>
+  .dbx-theme {
+    .navbar-brand {
+      img {
+        height: 1.25rem;
+        margin-right: 10px;
+      }
+    }
+  }
+</style>

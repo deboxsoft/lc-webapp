@@ -39,7 +39,6 @@
       $loading = false;
       $goto("../");
     } catch (e) {
-      console.log(e);
       $loading = false;
     }
   }

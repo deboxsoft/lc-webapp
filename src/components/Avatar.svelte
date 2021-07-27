@@ -1,50 +1,41 @@
-<script context="module">
-  import { writable } from "svelte/store";
-
-  export let submitting = writable(false);
-</script>
 <script>
   import i from "initials";
-  import { getApplicationContext } from "__@modules/app";
-  import { getAuthenticationContext } from "__@modules/users";
-  import Loader from "__@comps/loader/Loader.svelte";
-
-  const { config } = getApplicationContext();
-  const { authenticationStore } = getAuthenticationContext();
-
-  $: profile = $authenticationStore.profile;
 
   export let style = "";
   export let initials = undefined;
-  export let src = undefined;
+  export let label = "";
+  export let src;
   export let bgColor = "#cccccc";
   export let textColor = "white";
   export let size = "50px";
   export let borderRadius = "50%";
   export let square = false;
   export let randomBgColor = false;
+  export let loading = false;
+  export let initialDisable = false;
   const background = bgColor;
-  const abbr = (initials || i(name)).toUpperCase();
-  const abbrLength = abbr.length;
-
   let { class: className = "" } = $$props;
-  let imageFail = false;
-  let imageLoading = true;
 
-  $: srcImg = src || `${$config.avatarUrl}${profile.id}/${profile.avatar}`;
+  export let imageFail = false;
+  let imageLoading = true;
+  let abbr, abbrLength;
+
+  $: {
+    abbr = initials || i(label).toUpperCase();
+    abbrLength = abbr.length;
+  }
+  $: srcImg = src;
 </script>
 
 <div
-  aria-label={profile.name}
+  aria-label={label}
   class="wrapper {className}"
   style="{style}--borderRadius:{square
     ? 0
     : borderRadius}; --size:{size}; --bgColor:{background};
   --src:{src}; --textColor:{textColor}; --abbrLength:{abbrLength}"
 >
-  {#if $submitting}
-    <Loader />
-  {:else if srcImg && !imageFail}
+  {#if srcImg && !imageFail}
     <div class={imageLoading ? "imageLoading" : ""}>
       <img
         alt=""
@@ -60,7 +51,7 @@
         }}
       />
     </div>
-  {:else}
+  {:else if !initialDisable}
     <div class="innerInitials">{abbr}</div>
   {/if}
   <slot />

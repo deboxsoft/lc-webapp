@@ -4,7 +4,7 @@
   import Accordion from "__@root/layout/Accordion.svelte";
   import AccordionItem from "__@root/layout/AccordionItem.svelte";
   import { getAuthenticationContext } from "__@modules/users";
-  import Avatar from "__@comps/Avatar.svelte";
+  import AvatarProfile from "./AvatarProfile.svelte";
 
   const { authenticationStore } = getAuthenticationContext();
   let scrollbar;
@@ -27,7 +27,7 @@
       <div class="card-body">
         <div class="media">
           <div class="mr-3">
-            <Avatar size="50px" class="mr-2" />
+            <AvatarProfile size="75px" class="mr-2" />
           </div>
           <div class="media-body">
             <div class="media-title font-weight-semibold">{profile.displayName}</div>

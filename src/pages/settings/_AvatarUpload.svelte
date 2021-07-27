@@ -1,5 +1,5 @@
 <script>
-  import i from "initials";
+  import initials from "initials";
   import { afterUpdate, onDestroy, tick } from "svelte";
   import FilePond from "filepond";
   import locale_id from "filepond/locale/id-id.js";
@@ -9,7 +9,7 @@
   import FilePondPluginImageResize from "filepond-plugin-image-resize";
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "__@modules/users";
-  import Avatar, { submitting } from "__@comps/Avatar.svelte";
+  import AvatarProfile, { loading } from "__@root/layout/AvatarProfile.svelte";
 
   FilePond.registerPlugin(
     FilePondPluginFileValidateType,
@@ -21,10 +21,10 @@
   const { config } = getApplicationContext();
   const { authenticationStore } = getAuthenticationContext();
 
-  export let name = "profile";
+  export let label = "profile";
   export let size = undefined;
 
-  const initial = i(name).toUpperCase();
+  const initial = initials(label).toUpperCase();
   $: profile = $authenticationStore.profile;
 
   export let options = {
@@ -66,7 +66,6 @@
   };
 
   let el;
-  let src;
   let instance;
   let isSupported = FilePond.supported();
   let imageFail = false;
@@ -107,34 +106,39 @@
     }
   });
 
-  function oninit() {}
+  function oninit() {
+  }
 
-  function onwarning() {}
+  function onwarning() {
+  }
 
-  function onerror(e) {}
+  function onerror(e) {
+  }
 
-  function oninitfile() {}
+  function oninitfile() {
+  }
 
   function onprocessfile(error, file) {
     profile.avatar = file.serverId;
     $authenticationStore = { ...$authenticationStore, ...{ profile } };
     tick().then(() => {
-      $submitting = false;
+      $loading = false;
     });
   }
 
-  function onaddfile(err, fileItem) {}
+  function onaddfile(err, fileItem) {
+  }
 
   async function inputFileHandler({ target }) {
-    $submitting = true;
+    $loading = true;
     const result = await instance.addFile(target.files[0]);
     instance.processFile();
   }
+
 </script>
 
 <div class="card-img-actions">
-  <!--{#if !instance || instance.status <= 1}-->
-  <Avatar size="150px" {src} {submitting}>
+  <AvatarProfile {size} {...$$restProps} >
     <div class="card-img-actions-overlay rounded-circle card-img">
       <label>
         <div
@@ -146,5 +150,5 @@
         <input type="file" style="display: none" on:input={inputFileHandler} accept="image/png,image/jpeg" />
       </label>
     </div>
-  </Avatar>
+  </AvatarProfile>
 </div>

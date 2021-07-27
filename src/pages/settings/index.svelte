@@ -2,7 +2,7 @@
 <script>
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
-  import Avatar from "./_AvatarUpload.svelte";
+  import AvatarUpload from "./_AvatarUpload.svelte";
   import { getUserContext, getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
 
@@ -49,7 +49,7 @@
       <div class="card-body">
         <div class="row">
           <div class="col-2 d-flex justify-content-center">
-            <Avatar src={profile.avatar} name={profile.name} size="100px" />
+            <AvatarUpload label={profile.displayName} size="125px" />
           </div>
           <div class="col-10">
             <div class="form-group col-12">

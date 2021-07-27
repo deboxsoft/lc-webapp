@@ -2,7 +2,7 @@
   import { tick } from "svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import Avatar from "__@comps/Avatar.svelte";
+  import AvatarProfile from "./AvatarProfile.svelte";
   import { goto, route } from "@roxi/routify";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
@@ -30,7 +30,7 @@
 
 <Dropdown class="dropdown-user" nav direction="end">
   <DropdownToggle class="d-flex align-items-center navbar-nav-link" tag="div">
-    <Avatar size="34px" class="mr-2" />
+    <AvatarProfile size="34px" class="mr-2" />
     <!--    <img src={avatarSrc} class="rounded-circle mr-2" height="34" alt="" />-->
     <span>{profileName}</span>
   </DropdownToggle>

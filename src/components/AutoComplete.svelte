@@ -145,7 +145,7 @@
     if (length > 0) {
       _items.forEach((item, i) => {
         const listItem = getListItem(item);
-        if (listItem == undefined) {
+        if (listItem === undefined) {
           console.log("Undefined item for: ", item);
         }
         listItems[i] = listItem;
@@ -412,7 +412,7 @@
         if (debug) {
           console.log("Item " + i + ": " + JSON.stringify(listItem));
         }
-        if (selectedItem == listItem.item) {
+        if (selectedItem === listItem.item) {
           highlightIndex = i;
           if (debug) {
             console.log("Found selected item: " + i + ": " + JSON.stringify(listItem));
@@ -434,7 +434,6 @@
         flip
       ]
     });
-    console.log(popperInstance);
   }
 
   function destroyPopper() {
@@ -516,7 +515,7 @@
 
   function autoScrollComponent(node, { condition, dropdown }) {
     const autoScroll = () => {
-      if (condition() == false) return;
+      if (condition() === false) return;
       const scrollFunction =
         "scrollIntoViewIfNeeded" in Element.prototype
           ? Element.prototype.scrollIntoViewIfNeeded
