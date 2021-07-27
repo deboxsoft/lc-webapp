@@ -8,6 +8,10 @@ const ConfigQuery = gql`
       avatarUploadUrl
       avatarUploadPath
       avatarUrl
+      brandUploadUrl
+      brandUploadPath
+      brandUrl
+      version
     }
   }
 `;
