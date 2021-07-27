@@ -41,7 +41,7 @@
 
 {#if _open}
   <Portal class="modal">
-    <Backdrop {initialFocusElement} {ariaModalLegacy} {returnFocusElement}>
+    <Backdrop onClose={closeHandler} {initialFocusElement} {ariaModalLegacy} {returnFocusElement}>
       <div {...$$restProps} class={classes}>
         <div class="modal-content">
           {#if $$slots["header"] || title || onClose}

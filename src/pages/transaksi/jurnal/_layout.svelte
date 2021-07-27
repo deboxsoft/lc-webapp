@@ -14,7 +14,7 @@
   import FalCashRegister from '@deboxsoft/svelte-icons/fal/FalCashRegister.svelte';
   import FalMoneyBill from '@deboxsoft/svelte-icons/fal/FalMoneyBill.svelte';
 
-  const { readGranted, createGranted } = createAclContext();
+  const { readGranted, createGranted} = createAclContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
@@ -95,17 +95,6 @@
         Posting
       </a>
     {/if}
-    <a
-      href="/#"
-      target="_self"
-      on:click|preventDefault={() => {
-        openFilterDialog();
-      }}
-      class="breadcrumb-elements-item"
-    >
-      <i class="icon-filter3 mr-1" />
-      Filter
-    </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-upload2 mr-1" />
@@ -125,6 +114,17 @@
         >
       </svelte:fragment>
     </Dropdown>
+    <a
+      href="/#"
+      target="_self"
+      on:click|preventDefault={() => {
+        openFilterDialog();
+      }}
+      class="breadcrumb-elements-item"
+    >
+      <i class="icon-filter3 mr-1" />
+      Filter
+    </a>
     <a href={$url("./export")} class="breadcrumb-elements-item">
       <i class="icon-file-download2 mr-1" />
       Ekspor

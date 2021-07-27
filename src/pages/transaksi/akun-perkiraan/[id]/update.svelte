@@ -28,7 +28,6 @@
       $loading = false;
       notify(`kode akun '${$params.id}' berhasil diperbarui`, "success");
     } catch (e) {
-      console.log(e);
       notify(e.message, "error");
       $loading = false;
     }
