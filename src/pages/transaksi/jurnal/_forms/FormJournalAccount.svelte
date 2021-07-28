@@ -16,12 +16,12 @@
 
   const createJournalAccount = () => ({ index: generateId({ prefix: "account-input", size: 3 }) });
 
-  export const total: number = 0;
+  export const total = 0;
 
-  let debit: any;
-  let diff: number = NaN;
+  let debit;
+  let diff = NaN;
   let journalAccountsStore = writable($fields.creditAccounts.map((_) => ({ ..._, ...createJournalAccount() })));
-  let credit: any;
+  let credit;
 
   // validation form journal
   // hack hapus FieldsError.account
@@ -50,14 +50,14 @@
     accountsValidate($journalAccountsStore);
   }
 
-  function updateJournalAccountHandler(input: JournalAccountInput) {
+  function updateJournalAccountHandler(input) {
     const i = $journalAccountsStore.findIndex((_) => _.index === input.index);
     $journalAccountsStore[i] = input;
     $fields.creditAccounts = $journalAccountsStore;
     accountsValidate($journalAccountsStore);
   }
 
-  function removeJournalAccountHandler(index: number) {
+  function removeJournalAccountHandler(index) {
     let inputs = $journalAccountsStore;
     inputs = inputs.filter((_) => _.index !== index);
     $journalAccountsStore = inputs;

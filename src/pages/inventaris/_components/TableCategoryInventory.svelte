@@ -6,15 +6,12 @@
 
   const { categoryInventoryStore, findCategory } = stores.getInventoryContext();
   let state = "find-start";
-  findCategory().then(() => {
-    state = "find-finish";
-  });
 </script>
 
 <Table class="table table-hover text-nowrap">
   <tr slot="header">
     <th>Nama</th>
-    <th>Umur Aset</th>
+    <th>Kelompok Depresiasi</th>
     <th>Akun Aset</th>
     <th>Akun Akumulasi Depresiasi</th>
     <th>Akun Beban Depresiasi</th>

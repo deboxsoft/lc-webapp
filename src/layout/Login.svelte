@@ -8,14 +8,18 @@
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Alert from "__@comps/Alert.svelte";
+  import { getMenus } from "__@root/stores/menus";
 
-  const { login, jwtStore } = getAuthenticationContext();
+  const authenticationContext = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
 
   const schema = z.object({
     username: z.string().min(5),
     password: z.string().min(5)
   });
+
+  export let menus;
+  export let onLoginSuccess;
 
   // state
   let formClass;
@@ -27,8 +31,11 @@
 
   async function submitHandler() {
     try {
+      console.log("login");
       $loading = true;
-      authenticationStore = await login({ username: $fields.username }, $fields.password);
+      authenticationStore = await authenticationContext.login({ username: $fields.username }, $fields.password);
+      console.log("login-success");
+      onLoginSuccess($authenticationStore);
       $goto("/");
       $loading = false;
     } catch (e) {

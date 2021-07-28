@@ -10,13 +10,14 @@
   const { authenticationStore, logout } = getAuthenticationContext();
   const { loading } = getApplicationContext();
   $: profileName = $authenticationStore.profile.displayName;
-  let triggerElement: HTMLElement;
+  let triggerElement;
 
   async function logoutHandler() {
     $loading = true;
-    await logout();
+    await logout(undefined);
     await tick();
     $loading = false;
+    $goto("/");
   }
 
   function passwordHandler() {

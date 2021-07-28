@@ -27,7 +27,7 @@
         offset: [0, -15]
       }}
     >
-      <DropdownToggle class="list-icons-item align-items-center" tag="div">
+      <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">
         <i class="icon-menu9" />
       </DropdownToggle>
       <svelte:fragment slot="menu">

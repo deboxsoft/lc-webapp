@@ -19,15 +19,15 @@ export type MenuItem = {
 export type MenuList = MenuItem[];
 
 export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
-  const accountShow = auth.getQuery().read("account").granted;
-  const transactionShow = auth.getQuery().read("transaction").granted;
-  const ledgerShow = auth.getQuery().read("ledger").granted;
-  const bankShow = auth.getQuery().read("bank").granted;
-  const balanceSheetShow = auth.getQuery().read("balanceSheet").granted;
-  const statementIncomeShow = auth.getQuery().read("statementIncome").granted;
-  const inventoryShow = auth.getQuery().read("inventory").granted;
-  const bddShow = auth.getQuery().read("bdd").granted;
-  const stockShow = auth.getQuery().read("stock").granted;
+  const accountShow = auth.getQuery("account").read().granted;
+  const transactionShow = auth.getQuery("transaction").read().granted;
+  const ledgerShow = auth.getQuery("ledger").read().granted;
+  const bankShow = auth.getQuery("bank").read().granted;
+  const balanceSheetShow = auth.getQuery("balanceSheet").read().granted;
+  const statementIncomeShow = auth.getQuery("statementIncome").read().granted;
+  const inventoryShow = auth.getQuery("inventory").read().granted;
+  const bddShow = auth.getQuery("bdd").read().granted;
+  const stockShow = auth.getQuery("stock").read().granted;
 
   return [
     {

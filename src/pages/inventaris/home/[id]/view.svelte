@@ -14,7 +14,7 @@
     openDialog();
   });
 
-  $: inventory = getInventoryContext($params.id);
+  $: inventory = getInventory($params.id);
 
   function closeHandler() {
     $goto(to, {});

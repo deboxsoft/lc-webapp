@@ -73,7 +73,8 @@
           name="purchaseDate"
           class="form-control"
           placeholder="Tanggal Pembelian"
-          value={new Date()}
+          value={new Date()},
+          range=""
         />
       </div>
     </div>

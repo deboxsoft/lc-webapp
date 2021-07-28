@@ -4,7 +4,7 @@
   import Table from "__@comps/tables/DataTable.svelte";
   import RowCategoryInventory from "./RowCategoryAmortization.svelte";
 
-  const { categoryInventoryStore, findCategory } = stores.getInventoryContext();
+  const { amortizationStore, findCategory } = stores.getBddContext();
   let state = "find-start";
   findCategory().then(() => {
     state = "find-finish";

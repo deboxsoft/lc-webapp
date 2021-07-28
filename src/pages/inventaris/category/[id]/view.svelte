@@ -8,7 +8,7 @@
 
   export let to = "../";
 
-  $: categoryInventory = getInventoryContext($params.category);
+  $: categoryInventory = getCategoryInventory($params.category);
 
   function closeHandler() {
     $goto(to, {});

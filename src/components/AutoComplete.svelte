@@ -17,7 +17,7 @@
     }
     return labelFieldName ? item[labelFieldName] : item;
   };
-  export let keywordsFunction = function (item: any) {
+  export let keywordsFunction = function (item) {
     item = Array.isArray(item) && item.length > 0 ? item[1] : item;
     if (item === undefined || item === null) {
       return "";
@@ -82,31 +82,31 @@
   // apply a className to the control
   let { class: className } = $$props;
   // the text displayed when no option is selected
-  export let placeholder: string | undefined = undefined;
+  export let placeholder = undefined;
   // apply a className to the input control
-  export let inputClassName: string | undefined = undefined;
+  export let inputClassName = undefined;
   // apply a id to the input control
-  export let id: string | undefined = undefined;
+  export let id = undefined;
   // generate an HTML input with this name, containing the current value
-  export let name: string | undefined = undefined;
+  export let name = undefined;
   // apply a className to the dropdown div
-  export let dropdownClassName: string | undefined = undefined;
+  export let dropdownClassName = undefined;
   // option to hide the dropdown arrow
-  export let hideArrow: boolean = true;
+  export let hideArrow = true;
   // option to show clear selection button
-  export let showClear: boolean = false;
+  export let showClear = false;
   // adds the disabled tag to the HTML input
-  export let disabled: boolean = false;
+  export let disabled = false;
   // add the title to the HTML input
-  export let title: string | undefined = undefined;
-  export let debug: boolean = false;
+  export let title = undefined;
+  export let debug = false;
   // selected item state
-  export let selectedItem: any = undefined;
-  export let value: any = undefined;
-  export let allowEmpty: boolean = false;
-  export let autoScrollEnable: boolean = false;
-  let text: string | undefined;
-  let filteredTextLength: number = 0;
+  export let selectedItem = undefined;
+  export let value = undefined;
+  export let allowEmpty = false;
+  export let autoScrollEnable = false;
+  let text;
+  let filteredTextLength = 0;
 
   function onSelectedItemChanged(_selectedItem) {
     value = valueFunction(_selectedItem);
@@ -116,20 +116,20 @@
   }
   $: onSelectedItemChanged(selectedItem);
   // HTML elements
-  let input: any;
-  let list: HTMLElement & { scrollIntoViewIfNeeded?: Function };
-  let showList: boolean;
-  let dropdownElement: any;
+  let input;
+  let list;
+  let showList;
+  let dropdownElement;
   // UI state
   let popperInstance;
-  let opened: boolean = false;
-  let highlightIndex: number = -1;
+  let opened = false;
+  let highlightIndex = -1;
   $: showList = opened && ((items && items.length > 0) || filteredTextLength > 0);
   // view model
-  let filteredListItems: any[];
-  let listItems: any[] = [];
+  let filteredListItems;
+  let listItems = [];
 
-  function prepareListItems(_items: any[]) {
+  function prepareListItems(_items) {
     let tStart;
     if (debug) {
       tStart = performance.now();
@@ -194,7 +194,7 @@
     }
     return textFilteredLowerCase;
   }
-  async function search(_text: string) {
+  async function search(_text) {
     let tStart;
     if (debug) {
       tStart = performance.now();

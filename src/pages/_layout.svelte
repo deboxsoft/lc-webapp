@@ -1,7 +1,7 @@
 <!-- routify:options preload="proximity" -->
 <script>
-  import { url, ready } from "@roxi/routify";
-  import { onMount } from "svelte";
+  import { url, ready, params } from "@roxi/routify";
+  import { onMount, tick } from "svelte";
   import Navbar from "__@root/layout/Navbar.svelte";
   import Sidebar from "__@root/layout/Sidebar.svelte";
   import SidebarMobileToggler from "__@root/layout/SidebarMobileToggler.svelte";
@@ -42,9 +42,52 @@
     mounted = true;
   });
 
-  $: {
-    if (state === "server-complete" && $authenticationStore.authenticated) {
-      state = "menus-load";
+  const authenticatePromise = authenticationContext.authenticate();
+  const companyPromise = getCompany();
+  Promise.all([configPromise, authenticatePromise, companyPromise])
+    .then(() => {
+      authenticateHandler($authenticationStore);
+    })
+    .catch((e) => {
+      state = "server-error";
+      $loading = false;
+    });
+
+  function loginHandler({ metadata }) {
+    console.log("login-handler");
+    authenticateHandler({ metadata });
+  }
+
+  function authenticateHandler({ metadata }) {
+    try {
+      const acl = getAccessControl();
+      tick().then(() => {
+        console.log("authenticate handler");
+        const grants = metadata && metadata.grants;
+        console.log(grants);
+        if (grants) {
+          console.log("set grants");
+          acl.setGrants(grants);
+          buildMenus();
+        } else {
+          throw new Error("authenticated-error");
+        }
+        state = "server-complete";
+        $loading = false;
+      });
+    } catch (e) {
+      state = "authenticated-error";
+      console.error(e);
+      $loading = false;
+    }
+  }
+
+  function buildMenus() {
+    state = "menus-load";
+    const acl = getAccessControl();
+    const grants = acl.getGrants();
+    const role = $authenticationStore.profile?.session?.role;
+    if (role && grants && grants[role]) {
       menus = getMenus(authenticationContext);
       state = "menus-complete";
       if (!accountingLoaded) {
@@ -65,19 +108,10 @@
             $ready();
           });
       }
+    } else {
+      console.error("menus failed", grants, role);
     }
   }
-  const authenticatePromise = authenticationContext.authenticate();
-  const companyPromise = getCompany();
-  Promise.all([configPromise, authenticatePromise, companyPromise])
-    .then(() => {
-      state = "server-complete";
-      $loading = false;
-    })
-    .catch((e) => {
-      state = "server-error";
-      $loading = false;
-    });
 </script>
 
 <TopLoader loading={$loading} />
@@ -124,7 +158,7 @@
       </div>
     </div>
   {:else}
-    <Login />
+    <Login bind:menus onLoginSuccess={loginHandler} />
   {/if}
 {:else}
   <Loader />

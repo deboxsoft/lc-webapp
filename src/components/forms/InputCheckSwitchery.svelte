@@ -29,7 +29,7 @@
 
   function createToggleHandler() {
     const _validate = validateField(name);
-    return (e: any) => {
+    return (e) => {
       if (!disabled) {
         checked = !checked;
         $fields && ($fields[name] = checked)

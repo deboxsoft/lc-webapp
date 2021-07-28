@@ -37,7 +37,7 @@
   // createFormContext({ schema: JournalAccountSchema, values: input, validateField });
 
   function validateField(_fieldName) {
-    return (value: unknown) => {
+    return (value) => {
       const parsed = TransactionInputSchema.pick({ [_fieldName]: true }).safeParse({ [_fieldName]: $fields[fieldName][index][_fieldName] });
       // @ts-ignore
       const { success, error } = parsed;

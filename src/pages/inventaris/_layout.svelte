@@ -11,10 +11,15 @@
   const { readGranted } = createAclContext();
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
-  stores.createInventoryContext(applicationContext);
+  const { findCategory } = stores.createInventoryContext(applicationContext);
   if (!readGranted) {
     $goto("/access-denied");
   }
+
+  $loading = true;
+  findCategory().then(() => {
+    $loading = false;
+  });
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "inventaris" });
 </script>

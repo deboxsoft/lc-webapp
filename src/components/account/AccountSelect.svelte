@@ -23,7 +23,7 @@
     }
   }
 
-  function changeHandler(e: any) {
+  function changeHandler(e) {
     accountId = e.detail;
     selectedAccount = accountContext.getAccount(accountId);
     dispatch("change", $selectedAccount);

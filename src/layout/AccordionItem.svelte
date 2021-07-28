@@ -25,7 +25,7 @@
     if (unsubscribe) unsubscribe();
   });
 
-  const ctx = getContext<AccordionContext>("Accordion");
+  const ctx = getContext("Accordion");
   // handler
   function handleClick(e) {
     href === "/#" && e.preventDefault();

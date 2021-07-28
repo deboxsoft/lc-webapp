@@ -30,9 +30,9 @@
   let { class: className } = $$props;
 
   // state
-  let msgError: string[] | undefined;
-  let invalid: boolean = false;
-  let classes: string = "";
+  let msgError;
+  let invalid = false;
+  let classes = "";
   let submitted = context.submitted;
   let autoNumeric;
   let inputEl;

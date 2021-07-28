@@ -7,7 +7,9 @@
   const { notify, loading } = getApplicationContext();
   const { create } = stores.getInventoryContext();
 
-  let inventory = {};
+  let inventory = {
+    quantity: 1
+  };
 
   async function onSubmit(values) {
     try {
