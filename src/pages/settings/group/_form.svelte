@@ -12,6 +12,8 @@
   export const schema = z.object({
     name: z.string().nonempty("nama wajib diisi"),
     role: z.string().nonempty("role wajib diisi"),
+    mainPage: z.string().nullish(),
+    sideMenuHidden: z.boolean().nullish(),
     debitAccounts: z.array(z.string()).nullish(),
     creditAccounts: z.array(z.string()).nullish()
   });

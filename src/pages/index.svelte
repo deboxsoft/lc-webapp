@@ -5,6 +5,6 @@
   const {authenticationStore} = getAuthenticationContext();
 
   $: if ($authenticationStore.authenticated) {
-    $redirect("/dashboard")
+    $redirect($authenticationStore.metadata?.mainPage, "/dashboard")
   }
 </script>
