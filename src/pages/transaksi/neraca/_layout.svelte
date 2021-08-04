@@ -1,17 +1,16 @@
-<!--routify:options title="Laba Rugi"-->
+<!--routify:options title="Neraca"-->
 <script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getApplicationContext } from "__@modules/app";
+  import { getApplicationContext } from "../../../modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import TableLabaRugi from "./_components/TableLabaRugi.svelte";
-  import DatePickr from "__@comps/forms/InputDateField.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "./_acl-context";
-  import { createReportContext } from "../_components/_export";
-  import { parsingRevenueReport } from "../_components/_utils";
+  import TableNeraca from "../../pengikhtisaran/neraca/_components/TableNeraca.svelte";
+  import { createReportContext } from "../../pengikhtisaran/_components/_export";
+  import { parsingBalanceSheetReport } from "../../pengikhtisaran/_components/_utils";
 
   const { readGranted } = createAclContext();
   const { loading } = getApplicationContext();
@@ -19,28 +18,35 @@
   if (!readGranted) {
     $goto("/access-denied");
   }
-  const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { balanceSheetReportPerDate } = stores.getBalanceContext();
+  const { setBreadcrumbContext } = getBreadcrumbStore();
+  const { balanceSheetReport } = stores.getBalanceContext();
+  const { accountStore } = stores.getAccountContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
   let openFilterDialog;
   let date = new Date();
-  $loading = true;
   let report;
-  generateReportHandler(date).then((_) => {
-    $loading = false;
-    return _;
-  });
+  $loading = true;
+  $: {
+    if ($preferenceStore && $accountStore) {
+      generateReportHandler().then((_) => {
+        $loading = false;
+      });
+    }
+  }
+
   const createExportMenuHandler = (close) => {
-    const title = "LABA-RUGI";
+    const title = "NERACA";
     const getItemListReport = () => {
-      const { statementIncomeReport, revenueBalance, expenseBalance, statementIncomeBalance } = report;
+      const { balanceSheetReport, statementIncomeBalance, assetsBalance, liabilitiesBalance } = report;
       return [
-        statementIncomeReport.revenue.accounts,
-        { label: "TOTAL PENDAPATAN", balance: statementIncomeReport.revenue.balance },
-        statementIncomeReport.expense.accounts,
-        { label: "TOTAL BIAYA", balance: statementIncomeReport.expense.balance },
-        { label: "LABA/RUGI", balance: statementIncomeBalance }
+        balanceSheetReport.assetsCurrent.accounts,
+        { label: "TOTAL AKTIVA", balance: balanceSheetReport.assetsCurrent.balance },
+        balanceSheetReport.liabilitiesCurrent.accounts,
+        { label: "TOTAL PASIVA", balance: balanceSheetReport.liabilitiesCurrent.balance },
+        { label: "LABA/RUGI", balance: statementIncomeBalance },
+        { label: "SELISIH", balance: assetsBalance - liabilitiesBalance }
       ];
     };
     return {
@@ -72,23 +78,15 @@
     };
   };
 
-  export async function generateReportHandler(date) {
-    $loading = true;
-    const data = await balanceSheetReportPerDate(date);
-    report = parsingRevenueReport(data);
-    $loading = false;
-  }
-
-  function applyDateHandler({ detail }) {
-    generateReportHandler(detail.date);
+  async function generateReportHandler() {
+    const data = await balanceSheetReport();
+    console.log("generate report handler");
+    report = parsingBalanceSheetReport(data);
   }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">
-      <DatePickr id="date" name="date" selected={date} on:apply={applyDateHandler} range={false} />
-    </div>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />
@@ -127,7 +125,7 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableLabaRugi bind:report />
+      <TableNeraca bind:report />
     </div>
   </div>
 </PageLayout>

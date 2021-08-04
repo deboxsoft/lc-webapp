@@ -3,7 +3,6 @@
   import { getApplicationContext } from "__@modules/app";
   import Loader from "__@comps/loader/Loader.svelte";
   import CellRp from "__@comps/CellRp.svelte";
-  import { parsingRevenueReport } from "../../_components/_utils";
   import RowBalance from "../../_components/RowBalance.svelte";
   import RowTotalBalance from "../../_components/RowTotalBalance.svelte";
   import { createFoldStore } from "__@root/stores/fold";
@@ -21,19 +20,20 @@
   let revenueBalance;
   let expenseBalance;
   export let report;
-  export async function generateReportHandler(date) {
-    $loading = true;
-    const data = await balanceSheetReportPerDate(date);
-    report = parsingRevenueReport(data);
-    statementIncomeReport = report.statementIncomeReport;
-    revenueBalance = report.revenueBalance;
-    expenseBalance = report.expenseBalance;
-    statementIncomeBalance = report.statementIncomeBalance;
-    $loading = false;
+
+  $: {
+    if (report) {
+      statementIncomeReport = report.statementIncomeReport;
+      revenueBalance = report.revenueBalance;
+      expenseBalance = report.expenseBalance;
+      statementIncomeBalance = report.statementIncomeBalance;
+    }
   }
+
+
 </script>
 
-{#if $loading || !report}
+{#if !report}
   <Loader />
 {:else}
   <table class="table text-nowrap">

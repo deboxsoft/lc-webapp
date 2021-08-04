@@ -5,13 +5,12 @@
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import TableLabaRugi from "./_components/TableLabaRugi.svelte";
-  import DatePickr from "__@comps/forms/InputDateField.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "./_acl-context";
-  import { createReportContext } from "../_components/_export";
-  import { parsingRevenueReport } from "../_components/_utils";
+  import TableLabaRugi from "../../pengikhtisaran/laba-rugi/_components/TableLabaRugi.svelte";
+  import { createReportContext } from "../../pengikhtisaran/_components/_export";
+  import { parsingRevenueReport } from "../../pengikhtisaran/_components/_utils";
 
   const { readGranted } = createAclContext();
   const { loading } = getApplicationContext();
@@ -20,17 +19,21 @@
     $goto("/access-denied");
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { balanceSheetReportPerDate } = stores.getBalanceContext();
+  const { balanceSheetReport } = stores.getBalanceContext();
+  const { accountStore } = stores.getAccountContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
   let openFilterDialog;
-  let date = new Date();
   $loading = true;
   let report;
-  generateReportHandler(date).then((_) => {
-    $loading = false;
-    return _;
-  });
+  $: {
+    if ($preferenceStore && $accountStore) {
+      generateReportHandler().then((_) => {
+        $loading = false;
+      });
+    }
+  }
   const createExportMenuHandler = (close) => {
     const title = "LABA-RUGI";
     const getItemListReport = () => {
@@ -72,23 +75,17 @@
     };
   };
 
-  export async function generateReportHandler(date) {
+  export async function generateReportHandler() {
     $loading = true;
-    const data = await balanceSheetReportPerDate(date);
+    const data = await balanceSheetReport();
     report = parsingRevenueReport(data);
     $loading = false;
   }
 
-  function applyDateHandler({ detail }) {
-    generateReportHandler(detail.date);
-  }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">
-      <DatePickr id="date" name="date" selected={date} on:apply={applyDateHandler} range={false} />
-    </div>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />

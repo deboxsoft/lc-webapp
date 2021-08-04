@@ -11,6 +11,7 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "./_acl-context";
   import { createReportContext } from "../_components/_export";
+  import { parsingBalanceSheetReport } from "../_components/_utils";
 
   const { readGranted } = createAclContext();
   const { loading } = getApplicationContext();
@@ -22,18 +23,15 @@
   const { balanceSheetReportPerDate } = stores.getBalanceContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
-  let generateReportHandler;
   let openFilterDialog;
   let date = new Date();
   $loading = true;
   let report;
-  $: {
-    generateReportHandler &&
-      generateReportHandler(date).then((_) => {
-        $loading = false;
-        return _;
-      });
-  }
+  generateReportHandler(date).then((_) => {
+    $loading = false;
+  });
+
+
   const createExportMenuHandler = (close) => {
     const title = "NERACA";
     const getItemListReport = () => {
@@ -76,8 +74,15 @@
     };
   };
 
+  async function generateReportHandler(date) {
+    $loading = true;
+    const data = await balanceSheetReportPerDate(date);
+    report = parsingBalanceSheetReport(data);
+    $loading = false;
+  }
+
   function applyDateHandler({ detail }) {
-    generateReportHandler(date);
+    generateReportHandler(detail.date);
   }
 </script>
 
@@ -124,7 +129,7 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableNeraca bind:report bind:generateReportHandler />
+      <TableNeraca bind:report />
     </div>
   </div>
 </PageLayout>
