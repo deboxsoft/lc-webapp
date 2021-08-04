@@ -109,7 +109,6 @@
   function oninitfile() {}
 
   function onprocessfile(error, file) {
-    console.log(file);
     tick().then(() => {
       $loading = false;
     });

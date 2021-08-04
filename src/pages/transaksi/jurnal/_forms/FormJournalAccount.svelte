@@ -6,7 +6,7 @@
   import CheckIcon from "__@comps/icons/Check.svelte";
   import CloseIcon from "__@comps/icons/Close.svelte";
   import { convertToRp } from "__@root/utils";
-  import JournalAccountItemForm from "./FormJournalAccountItem.svelte";
+  import FormJournalAccountItem from "./FormJournalAccountItem.svelte";
 
   // context formJournal
   const { schema, fields, fieldsErrors, isValid, validateField } = getFormContext();
@@ -79,7 +79,7 @@
       </thead>
       <tbody>
         {#each $journalAccountsStore as journalAccountInput, index (journalAccountInput.index)}
-          <JournalAccountItemForm
+          <FormJournalAccountItem
             {index}
             input={journalAccountInput}
             onRemoveJournalAccount={removeJournalAccountHandler}
