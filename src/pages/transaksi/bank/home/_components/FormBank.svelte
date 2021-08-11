@@ -10,7 +10,7 @@
   import Modal from "__@comps/Modal.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import Form from "__@comps/forms/Form.svelte";
-  import InputNumberField from "__@comps/forms/InputNumberField.svelte";
+  // import InputNumberField from "__@comps/forms/InputNumberField.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import ComboxField from "__@comps/forms/ComboxField.svelte";
 
@@ -19,12 +19,10 @@
 
   // props
   export let bank;
-  export const isUpdate = false;
   export let onSubmit;
   export let title;
   export let to = "./";
   export let openDialog;
-  export let closeDialog;
 
   // state
   let fields;
@@ -185,7 +183,7 @@
   }
 </script>
 
-<Modal bind:openDialog bind:closeDialog {title} onClose={closeHandler}>
+<Modal bind:openDialog {title} onClose={closeHandler}>
   <Form schema={BankInputSchema} values={bank} bind:fields>
     <div class="card">
       <div class="card-body">
