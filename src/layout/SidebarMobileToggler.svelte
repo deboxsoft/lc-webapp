@@ -13,7 +13,6 @@
   // handler
   function toggleShowMobileHandler() {
     if (onToggleShowMobileSidebar) {
-      console.log("show mobile toggler");
       onToggleShowMobileSidebar();
     }
   }

@@ -31,10 +31,8 @@
 
   async function submitHandler() {
     try {
-      console.log("login");
       $loading = true;
       authenticationStore = await authenticationContext.login({ username: $fields.username }, $fields.password);
-      console.log("login-success");
       onLoginSuccess($authenticationStore);
       $goto("/");
       $loading = false;

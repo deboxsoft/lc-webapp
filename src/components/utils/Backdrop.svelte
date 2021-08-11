@@ -13,7 +13,7 @@
   export let returnFocusElement = undefined;
   export let ariaModalLegacy = false;
   const clickHandler = () => {
-    onClose && onClose();
+    //onClose && onClose();
   }
   const keydownHandler = (event) => {
     if (event.key === "Escape") {
