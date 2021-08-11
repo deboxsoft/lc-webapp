@@ -8,13 +8,17 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import CellRp from "__@comps/CellRp.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
+  import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
 
-  const { getTransactionType } = stores.getTransactionContext();
+  const { loading, notify } = getApplicationContext();
+  const { getTransactionType, approve, reject } = stores.getTransactionContext();
   const { getUser } = usersStore.getAuthenticationContext();
 
   export let backUrl;
   export let transaction;
+  export let rejectButtonEnable = false;
+  export let approveButtonEnable = false;
   /**
    * @type {"loading" | "finish"}
    */
@@ -30,13 +34,41 @@
   }
 
   async function init() {
-    user = await getUser(transaction.userId);
-    state = "finish";
+    try {
+      user = await getUser(transaction.userId);
+    } catch (e) {
+    } finally {
+      state = "finish";
+    }
   }
 
   onMount(() => {
     openDialog();
   });
+
+  async function approveHandler() {
+    $loading = true;
+    if (await approve([transaction.id])) {
+      transaction.status = "APPROVED";
+      notify(`transaksi id '${transaction.id}' telah diapprove`, "success");
+    } else {
+      notify(`approve transaksi id '${transaction.id}' tidak berhasil`, "error");
+    }
+    $loading = false;
+    closeHandler();
+  }
+
+  async function rejectHandler() {
+    $loading = true;
+    if (await reject([id])) {
+      transaction.status = "REJECTED";
+      notify(`transaksi id '${id}' telah direject`, "success");
+    } else {
+      notify(`approve transaksi id '${id}' tidak berhasil`, "error");
+    }
+    $loading = false;
+    closeHandler();
+  }
   function closeHandler() {
     $goto(backUrl, {});
   }
@@ -61,7 +93,7 @@
       <dt class="col-sm-3">Jenis Transaksi</dt>
       <p class="col-sm-9">: {(transactionType && transactionType.name) || "-"}</p>
       <dt class="col-sm-3">Di Input Oleh</dt>
-      <p class="col-sm-9">: {user && user.name || "-"}</p>
+      <p class="col-sm-9">: {(user && user.name) || "-"}</p>
       <dt class="col-sm-3">Status</dt>
       <p class="col-sm-9">
         :
@@ -108,5 +140,11 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Close
     </button>
+    {#if rejectButtonEnable}
+      <button type="button" class="btn btn-danger" on:click={rejectHandler}> Reject </button>
+    {/if}
+    {#if approveButtonEnable}
+      <button type="button" class="btn btn-primary" on:click={approveHandler}> Approve </button>
+    {/if}
   </svelte:fragment>
 </Modal>

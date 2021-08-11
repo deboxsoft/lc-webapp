@@ -102,7 +102,7 @@
       {#if !approved && !fixed}
         {#if updateGranted(transaction.userId)}
           <a href={$url("./:id/update", { id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-pencil" />Ubah Akun</a
+            ><i class="icon-pencil" />Edit Transaksi</a
           >
         {/if}
         {#if removeGranted(transaction.userId)}

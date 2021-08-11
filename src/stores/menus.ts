@@ -21,6 +21,7 @@ export type MenuList = MenuItem[];
 export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const accountShow = auth.getQuery("account").read().granted;
   const transactionShow = auth.getQuery("transaction").read().granted;
+  const transactionOwnShow = auth.getQuery("transaction").readOwn().granted;
   const ledgerShow = auth.getQuery("ledger").read().granted;
   const bankShow = auth.getQuery("bank").read().granted;
   const balanceSheetShow = auth.getQuery("balanceSheet").read().granted;
@@ -35,7 +36,7 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       url: "/transaksi",
       type: "module",
       icon: TransactionIcon,
-      show: accountShow || transactionShow || ledgerShow || bankShow,
+      show: accountShow || transactionShow || transactionOwnShow || ledgerShow || bankShow,
       children: [
         {
           label: "Akun Perkiraan",
@@ -45,7 +46,7 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
         {
           label: "Jurnal",
           url: "/transaksi/jurnal",
-          show: transactionShow
+          show: transactionShow || transactionOwnShow
         },
         {
           label: "Rekonsiliasi Bank",
@@ -56,6 +57,16 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
           label: "Buku Besar",
           url: "/transaksi/buku-besar",
           show: ledgerShow
+        },
+        {
+          label: "Laba Rugi Perkiraan",
+          url: "/transaksi/laba-rugi",
+          show: statementIncomeShow
+        },
+        {
+          label: "Neraca Perkiraan",
+          url: "/transaksi/neraca",
+          show: balanceSheetShow
         }
       ]
     },

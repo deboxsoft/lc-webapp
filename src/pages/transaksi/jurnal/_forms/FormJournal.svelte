@@ -12,11 +12,14 @@
   import Modal from "__@comps/Modal.svelte";
 
   import { createEventDispatcher } from "svelte";
-  import { derived, writable } from "svelte/store";
+  import { writable } from "svelte/store";
   import FormJournalAccount from "./FormJournalAccount.svelte";
+  import { getAuthenticationContext } from "__@modules/users";
+  import { filteringAccountDebit } from "../../../../utils";
 
   const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
   const { getAccountLeaf } = stores.getAccountContext();
+  const { authenticationStore } = getAuthenticationContext();
   const dispatch = createEventDispatcher();
   // props
   export let values = {};
@@ -34,9 +37,7 @@
 
   function getAccountDebit() {
     const accountStore = getAccountLeaf();
-    return derived(accountStore, (_) => {
-      return _.filter((_) => /^[^4].*/g.test(_.id));
-    });
+    return filteringAccountDebit(accountStore);
   }
 
   // handler

@@ -51,19 +51,19 @@
         {dayjs(generalLedger.date).format("DD-MM-YY") || ""}
       </div>
       <div class="dbx-cell no">
-        <a
-          href="/#"
-          on:click|preventDefault={() =>
-            $goto(
-              "/transaksi/jurnal/:id/view",
-              { id: generalLedger.transactionId, backUrl: window.location.href },
-              true,
-              true
-            )}
-          target="_self"
-        >
+<!--        <a-->
+<!--          href="/#"-->
+<!--          on:click|preventDefault={() =>-->
+<!--            $goto(-->
+<!--              "/transaksi/jurnal/:id/view",-->
+<!--              { id: generalLedger.transactionId, backUrl: window.location.href },-->
+<!--              true,-->
+<!--              true-->
+<!--            )}-->
+<!--          target="_self"-->
+<!--        >-->
           {generalLedger.transactionId}
-        </a>
+<!--        </a>-->
       </div>
       <td class="dbx-cell">
         {generalLedger.description || ""}

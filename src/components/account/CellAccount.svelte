@@ -11,5 +11,5 @@
 </script>
 
 {#if $_store}
-  <div>{$_store.name || "-"}</div>
+  <div {...$$restProps}>{$_store.name || "-"}</div>
 {/if}

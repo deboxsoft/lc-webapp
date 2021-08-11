@@ -5,7 +5,7 @@
   import { writable } from "svelte/store";
 
   export let account;
-  export let isBalanceFixed = true;
+  export let isBalanceFixed = false;
   export let toggle;
   export let isExpand = () => writable(false);
   $: expanded = isExpand(account.id);

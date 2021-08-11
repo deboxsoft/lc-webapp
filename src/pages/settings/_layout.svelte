@@ -14,7 +14,7 @@
   const { loading, apiUrl, fetchGraphql } = getApplicationContext();
   const { find, findGroup } = createUserContext({ apiUrl, fetchGraphql });
   const authContext = getAuthenticationContext();
-  const { load } = createAccessControlContext({ authContext, apiUrl, fetchGraphql });
+  const { load, grants } = createAccessControlContext({ authContext, apiUrl, fetchGraphql });
 
   const boot = () => {
     $loading = true;

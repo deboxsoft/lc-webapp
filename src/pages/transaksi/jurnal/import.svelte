@@ -1,7 +1,7 @@
 <!--routify:options title="Import Statement"-->
 <script>
   import { onMount } from "svelte";
-  import { writable, derived, get } from "svelte/store";
+  import { writable, get } from "svelte/store";
   import { goto, params } from "@roxi/routify";
   import FormImport from "__@comps/forms/FormImport.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
@@ -11,6 +11,7 @@
   import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
   import CellRp from "__@comps/CellRp.svelte";
   import { getAuthenticationContext } from "../../../modules/users";
+  import { filteringAccountCredit, filteringAccountDebit } from "../../../utils";
 
   const { loading, notify } = getApplicationContext();
   const { getAccount, accountStore } = stores.getAccountContext();
@@ -58,11 +59,13 @@
   });
 
   function getAccountsCash(e) {
-    return derived(accountStore, (_ = []) => {
-      return _.filter((__) => {
-        return !__.isParent && /^101/.test(__.parentId);
-      });
-    });
+    console.log(type, "type");
+    if (type === "CASHIER") {
+      return filteringAccountDebit(accountStore);
+    } else if (type === "PAYMENT") {
+      return filteringAccountCredit(accountStore);
+    }
+    return accountStore;
   }
 
   $: accountsCash = getAccountsCash(accountStore);
@@ -73,11 +76,11 @@
     const inputs = submit().map((_) => {
       const profile = getProfile();
       const userId = profile.session.userId;
-      return ({
+      return {
         type,
         userId,
         ..._
-      });
+      };
     });
     if (!errors || errors.length === 0) {
       await importTransaction(inputs);
@@ -159,6 +162,15 @@
         <div class="col-form-label col-md-2">Total {action === "cashier" ? "Pemasukan" : "Pengeluaran"}</div>
         <div class="col-md-10 d-inline-flex align-items-center">
           : <div style="width: 150px"><CellRp class="ml-1" value={balance} /></div>
+        </div>
+      </div>
+    {:else}
+      <div class="row">
+        <div class="col-md-2">Download Template</div>
+        <div class="col-md-10 d-inline-flex align-items-center">
+          :<a href={`/templates/${action === "cashier" ? "kasir" : "pembayaran"}.csv`} class="ml-1" target="_self"
+            >{action === "cashier" ? "kasir" : "pembayaran"}.csv</a
+          >
         </div>
       </div>
     {/if}

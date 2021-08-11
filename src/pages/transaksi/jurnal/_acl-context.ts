@@ -19,6 +19,7 @@ export const createAclContext = () => {
   const query = auth.getQuery(resource);
   const createGranted = query.create().granted;
   const readGranted = query.read().granted;
+  const readOwnGranted = query.readOwn().granted;
   const approveGranted = query.approve().granted;
   const rejectGranted = query.reject().granted;
   const updateGranted = (userId) => auth.isOwner(userId) || query.update().granted;
@@ -39,6 +40,7 @@ export const createAclContext = () => {
     createPaymentGranted,
     createCashierGranted,
     readGranted,
+    readOwnGranted,
     approveGranted,
     rejectGranted,
     updateGranted,

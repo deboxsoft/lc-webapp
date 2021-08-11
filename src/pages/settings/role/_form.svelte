@@ -62,8 +62,8 @@
           selected: false
         },
         {
-          label: "memposting penerimaan",
-          value: "create-receipt:any",
+          label: "memposting penerimaan/kasir",
+          value: "create-cashier:any",
           selected: false
         },
         {

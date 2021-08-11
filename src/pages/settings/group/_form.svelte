@@ -1,11 +1,11 @@
-<script>
+<script lang="ts">
   import * as z from "@deboxsoft/zod";
   import Form from "__@comps/forms/Form.svelte";
   import ComboxField from "__@comps/forms/ComboxField.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import { getAccessControlContext } from "__@modules/users";
   import AccountListBox from "__@comps/account/AccountListBox.svelte";
-  import InputCheckSwitchery from "../../../components/forms/InputCheckSwitchery.svelte";
+  // import InputCheckSwitchery from "../../../components/forms/InputCheckSwitchery.svelte";
 
   const { grants } = getAccessControlContext();
   $: roles = Object.keys($grants);
@@ -123,11 +123,11 @@
           <ComboxField id="mainPage" valueId="href" items={pageList} name="mainPage" />
         </div>
       </div>
-      <div class="row">
-        <div class="form-group col-12">
-          <InputCheckSwitchery name="sideMenuHidden" label="Sembunyikan Menu Kiri" />
-        </div>
-      </div>
+<!--      <div class="row">-->
+<!--        <div class="form-group col-12">-->
+<!--          <InputCheckSwitchery name="sideMenuHidden" label="Sembunyikan Menu Kiri" />-->
+<!--        </div>-->
+<!--      </div>-->
     </Form>
   </div>
 </div>

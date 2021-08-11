@@ -1,5 +1,4 @@
 <script>
-  import { derived } from "svelte/store";
   import { debounce } from "@deboxsoft/module-core";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { getFormContext } from "__@stores/form";
@@ -8,6 +7,8 @@
   import AutoComplete from "__@comps/AutoComplete.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import { generateId } from "@deboxsoft/module-client";
+  import { filteringAccountCredit } from "../../../../utils";
+
   // import AccountCombox from "../../../../components/account/AccountCombox.svelte";
 
   export let id = generateId("journal-account-item");
@@ -30,9 +31,7 @@
 
   function getAccountCredit () {
     const accountStore = getAccountLeaf();
-    return derived(accountStore, (_) => _.filter((_) => {
-      return /^[^5].*/g.test(_.id);
-    }))
+    return filteringAccountCredit(accountStore);
   }
   // createFormContext({ schema: JournalAccountSchema, values: input, validateField });
 

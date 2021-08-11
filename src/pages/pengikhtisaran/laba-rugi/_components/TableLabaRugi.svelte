@@ -9,7 +9,8 @@
   import { derived } from "svelte/store";
 
   const { loading } = getApplicationContext();
-  const foldStore = createFoldStore({ key: "laba-rugi", initial: {} });
+  export let key = "laba-rugi";
+  const foldStore = createFoldStore({ key, initial: {} });
   const isExpand = (key) => derived(foldStore, (_) => _[key] || false);
   const toggleExpand = (key) => () => {
     $foldStore = {...$foldStore, ...{[key]: !$foldStore[key]}}

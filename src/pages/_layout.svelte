@@ -1,6 +1,6 @@
 <!-- routify:options preload="proximity" -->
 <script>
-  import { url, ready, params } from "@roxi/routify";
+  import { url, ready } from "@roxi/routify";
   import { onMount, tick } from "svelte";
   import Navbar from "__@root/layout/Navbar.svelte";
   import Sidebar from "__@root/layout/Sidebar.svelte";
@@ -19,13 +19,8 @@
   import Brand from "__@comps/Brand.svelte";
 
   // context and store
-  const {
-    authenticationContext,
-    accountingContext,
-    loading,
-    companyContext,
-    configPromise
-  } = createApplicationContext();
+  const { authenticationContext, accountingContext, loading, companyContext, configPromise } =
+    createApplicationContext();
   const { toggleShowMobileSidebar } = getUIContext();
   createBreadcrumbStore({ initial: [{ title: "home", path: $url("/") }] });
   const { authenticationStore, getAccessControl } = authenticationContext;
@@ -54,31 +49,27 @@
     });
 
   function loginHandler({ metadata }) {
-    console.log("login-handler");
     authenticateHandler({ metadata });
   }
 
-  function authenticateHandler({ metadata }) {
+  async function authenticateHandler({ metadata }) {
     try {
       const acl = getAccessControl();
-      tick().then(() => {
-        console.log("authenticate handler");
-        const grants = metadata && metadata.grants;
-        console.log(grants);
-        if (grants) {
-          console.log("set grants");
-          acl.setGrants(grants);
-          buildMenus();
-        } else {
-          throw new Error("authenticated-error");
-        }
-        state = "server-complete";
-        $loading = false;
-      });
+      await tick();
+      const grants = metadata && metadata.grants;
+      if (grants) {
+        acl.setGrants(grants);
+        buildMenus();
+      } else {
+        throw new Error("authenticated-error");
+      }
+      state = "server-complete";
+      $loading = false;
     } catch (e) {
       state = "authenticated-error";
-      console.error(e);
       $loading = false;
+      console.log($loading);
+      console.error(e);
     }
   }
 
@@ -108,8 +99,6 @@
             $ready();
           });
       }
-    } else {
-      console.error("menus failed", grants, role);
     }
   }
 </script>

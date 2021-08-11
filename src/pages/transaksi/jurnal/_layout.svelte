@@ -11,34 +11,35 @@
   import { getApplicationContext } from "__@modules/app";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import FalCashRegister from '@deboxsoft/svelte-icons/fal/FalCashRegister.svelte';
-  import FalMoneyBill from '@deboxsoft/svelte-icons/fal/FalMoneyBill.svelte';
+  import FalCashRegister from "@deboxsoft/svelte-icons/fal/FalCashRegister.svelte";
+  import FalMoneyBill from "@deboxsoft/svelte-icons/fal/FalMoneyBill.svelte";
+  import { getAuthenticationContext } from "../../../modules/users";
 
-  const { readGranted, createGranted} = createAclContext();
-  if (!readGranted) {
+  const { getProfile } = getAuthenticationContext();
+  const { readGranted, readOwnGranted, createGranted, createCashierGranted, createPaymentGranted } = createAclContext();
+  if (!readGranted && !readOwnGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   const applicationContext = getApplicationContext();
   const accountContext = stores.getAccountContext();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { load, findPage, transactionStore } = stores.getTransactionContext();
+  const { load, findPage, transactionStore } = stores.createTransactionContext({
+    accountContext,
+    ...applicationContext
+  });
   const { loading } = applicationContext;
 
   let filter = {};
   let openFilterDialog;
-  let closeFilterDialog
+  let closeFilterDialog;
   let textFilter = undefined;
   let fetchMor;
   let submitFilter;
   let transactions = [];
 
-  $loading = true;
-  filtering();
-  load({ filter }).then(() => {
-    $loading = false;
-  });
-
+  $: console.log(createCashierGranted, "kasir");
+  init();
   $: {
     $transactionStore, filtering();
   }
@@ -46,7 +47,6 @@
   function filtering() {
     if ($transactionStore) {
       const _reduce = (result, transaction) => {
-        const keys = Object.keys(filter);
         if (textFilter) {
           const regex = new RegExp(`.*${textFilter.toLowerCase()}.*`);
           if (regex.test(transaction.description.toLowerCase())) {
@@ -65,13 +65,25 @@
     filtering();
   }
 
+  async function init() {
+    $loading = true;
+    if (readGranted) {
+      filter = {};
+    } else if (readOwnGranted) {
+      const profile = await getProfile();
+      filter.userId = profile.session.userId;
+    }
+    await load({ filter, pageCursor: {} });
+    $loading = false;
+  }
+
   async function filterHandler() {
-    filter = submitFilter();
+    const _filter = Object.assign(filter, submitFilter());
     textFilter = undefined;
     $loading = true;
     await findPage({
       pageCursor: {},
-      filter
+      filter: _filter
     });
     tick().then(() => {
       filtering();
@@ -95,25 +107,25 @@
         Posting
       </a>
     {/if}
-    <Dropdown class="breadcrumb-elements-item dropdown p-0">
-      <DropdownToggle class="breadcrumb-elements-item" caret nav>
-        <i class="icon-file-upload2 mr-1" />
-        Impor
-      </DropdownToggle>
-      <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
-        <a
-          href={$url("./import", {action: "cashier"})}
-          class="dropdown-item"
-        >
-          <FalCashRegister class="mr-3" /> Kasir</a
-        >
-        <a
-          href={$url("./import", {action: "payment"})}
-          class="dropdown-item">
-          <FalMoneyBill class="mr-3" />Pembayaran</a
-        >
-      </svelte:fragment>
-    </Dropdown>
+    {#if createPaymentGranted || createCashierGranted}
+      <Dropdown class="breadcrumb-elements-item dropdown p-0">
+        <DropdownToggle class="breadcrumb-elements-item" caret nav>
+          <i class="icon-file-upload2 mr-1" />
+          Impor
+        </DropdownToggle>
+        <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
+          {#if createCashierGranted}
+            <a href={$url("./import", { action: "cashier" })} class="dropdown-item">
+              <FalCashRegister class="mr-3" /> Kasir</a
+            >
+          {:else if createPaymentGranted}
+            <a href={$url("./import", { action: "payment" })} class="dropdown-item">
+              <FalMoneyBill class="mr-3" />Pembayaran</a
+            >
+          {/if}
+        </svelte:fragment>
+      </Dropdown>
+    {/if}
     <a
       href="/#"
       target="_self"

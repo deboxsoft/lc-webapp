@@ -80,7 +80,6 @@
 
   async function generateReportHandler() {
     const data = await balanceSheetReport();
-    console.log("generate report handler");
     report = parsingBalanceSheetReport(data);
   }
 </script>
@@ -125,7 +124,7 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableNeraca bind:report />
+      <TableNeraca key="neraca-perkiraan" bind:report />
     </div>
   </div>
 </PageLayout>
