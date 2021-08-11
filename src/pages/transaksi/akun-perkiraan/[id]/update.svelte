@@ -15,7 +15,7 @@
 
   let account;
   $: {
-    account = getAccount($params.id);
+    account = $accountStore && getAccount($params.id);
   }
 
   async function onSubmit({ children, ...values }) {
@@ -34,4 +34,6 @@
   }
 </script>
 
-<FormAccount account={$account} {onSubmit} isUpdate title="Update Akun" to={$params.to} />
+{#if $account}
+  <FormAccount account={$account} {onSubmit} isUpdate title="Update Akun" to={$params.to} />
+{/if}
