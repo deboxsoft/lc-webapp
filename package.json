@@ -20,8 +20,8 @@
     "lint": "run-p lint:svelte lint:eslint lint:tsc"
   },
   "dependencies": {
-    "@deboxsoft/accounting-api": "dev",
-    "@deboxsoft/accounting-client": "dev",
+    "@deboxsoft/accounting-api": "^1.2.1-beta.27",
+    "@deboxsoft/accounting-client": "^1.2.1-beta.33",
     "@deboxsoft/module-client": "~2.2.1",
     "@deboxsoft/module-core": "~2.2.1",
     "@deboxsoft/module-graphql": "~2.2.1",
@@ -73,7 +73,6 @@
     "@rollup/plugin-replace": "^2.3.4",
     "@rollup/plugin-sucrase": "^3.1.0",
     "@types/file-saver": "^2.0.2",
-    "@types/flatpickr": "^3.1.2",
     "@types/nanoid": "^2.1.0",
     "@types/nconf": "^0.10.0",
     "@types/node": "*",

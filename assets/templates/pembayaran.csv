@@ -1,0 +1,7 @@
+;;Template Transaksi Pembayaran;;;
+Tanggal;no;Keterangan;Jumlah;No akun;Akun
+01/02/21;;Pembayaran listrik;50000;5010101;Biaya Listrik
+16/02/21;;Pembayaran listrik;40000;5010101;Biaya Listrik
+19/02/21;;Pembayaran listrik;60000;5010101;Biaya Listrik
+28/02/21;;Pembayaran listrik;60000;5010101;Biaya Listrik
+28/02/21;;Pembayaran listrik;60000;5010101;Biaya Listrik
