@@ -1,21 +1,14 @@
-<!--routify:options title="menu"-->
 <script>
-  import MenuOpen from "@deboxsoft/svelte-icons/ico/icoMenuOpen.svelte";
-  import PageLayout from "__@root/layout/PageLayout.svelte";
-  import CardMenuContainer from "__@comps/CardMenuContainer.svelte";
-  import CardMenu from "__@comps/CardMenu.svelte";
+  import { getAuthenticationContext } from "__@modules/users";
+  import { redirect } from "@roxi/routify";
+  const authContext = getAuthenticationContext();
+  const statementIncomeShow = auth.getQuery().read("statementIncome").granted;
+  const balanceSheetShow = auth.getQuery().read("balanceSheet").granted;
+  if (statementIncomeShow) {
+    $redirect("./laba-rugi");
+  } else if (balanceSheetShow) {
+    $redirect("./neraca");
+  } else {
+    $redirect("/access-denied")
+  }
 </script>
-
-<PageLayout breadcrumb={[]}>
-  <CardMenuContainer>
-    <CardMenu label="Laba Rugi" path="./laba-rugi">
-      <MenuOpen />
-    </CardMenu>
-    <CardMenu label="Aktiva Tetap" path="./aktiva-tetap" >
-      <MenuOpen />
-    </CardMenu>
-    <CardMenu label="Neraca" path="./neraca" >
-      <MenuOpen />
-    </CardMenu>
-  </CardMenuContainer>
-</PageLayout>

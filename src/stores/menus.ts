@@ -1,11 +1,11 @@
 import type { SvelteComponentDev } from "svelte/internal";
+import type { AuthenticationContext } from "@deboxsoft/users-client/types/stores";
 import InventoryIcon from "__@comps/icons/Inventory.svelte";
 import TransactionIcon from "__@comps/icons/Exchange.svelte";
 import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
 import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";
 import LayerGroupIcon from "__@comps/icons/LayerGroup.svelte";
-import type { AuthenticationContext } from "@deboxsoft/users-client/types/stores";
-// import FileSpreadSheet from "__@comps/icons/FileSpreadsheet.svelte";
+import FileSpreadSheet from "__@comps/icons/FileSpreadsheet.svelte";
 
 export type MenuItem = {
   label?: string;
@@ -20,10 +20,12 @@ export type MenuList = MenuItem[];
 
 export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const accountShow = auth.getQuery("account").read().granted;
+  const programShow = auth.getQuery("program").read().granted;
   const transactionShow = auth.getQuery("transaction").read().granted;
   const transactionOwnShow = auth.getQuery("transaction").readOwn().granted;
   const ledgerShow = auth.getQuery("ledger").read().granted;
   const bankShow = auth.getQuery("bank").read().granted;
+  const cashierShow = auth.getQuery("cashier").read().granted;
   const balanceSheetShow = auth.getQuery("balanceSheet").read().granted;
   const statementIncomeShow = auth.getQuery("statementIncome").read().granted;
   const inventoryShow = auth.getQuery("inventory").read().granted;
@@ -36,13 +38,8 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       url: "/transaksi",
       type: "module",
       icon: TransactionIcon,
-      show: accountShow || transactionShow || transactionOwnShow || ledgerShow || bankShow,
+      show: transactionShow || transactionOwnShow || ledgerShow || bankShow,
       children: [
-        {
-          label: "Akun Perkiraan",
-          url: "/transaksi/akun-perkiraan",
-          show: accountShow
-        },
         {
           label: "Jurnal",
           url: "/transaksi/jurnal",
@@ -52,6 +49,11 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
           label: "Rekonsiliasi Bank",
           url: "/transaksi/bank",
           show: bankShow
+        },
+        {
+          label: "Kasir",
+          url: "/transaksi/kasir",
+          show: cashierShow
         },
         {
           label: "Buku Besar",
@@ -109,22 +111,25 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       icon: MoneyCheckAltIcon,
       show: bddShow
     },
-    // {
-    //   label: "Pelaporan Keuangan",
-    //   url: "/laporan",
-    //   type: "module",
-    //   icon: FileSpreadSheet,
-    //   children: [
-    //     // {
-    //     //   label: "Dashboard",
-    //     //   url: "/dashboard"
-    //     // },
-    //     {
-    //       label: "Financial Report",
-    //       url: "/laporan/financial"
-    //     }
-    //   ]
-    // },
+    {
+      label: "Master Data",
+      type: "module",
+      icon: FileSpreadSheet,
+      show: accountShow,
+      url: "/master",
+      children: [
+        {
+          label: "Akun Perkiraan",
+          url: "/master/akun-perkiraan",
+          show: accountShow
+        },
+        {
+          label: "Program",
+          url: "/master/program",
+          show: programShow
+        }
+      ]
+    },
     {
       label: "Pengaturan",
       url: "/settings",
