@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@deboxsoft/accounting-api": "^1.2.1-beta.27",
-    "@deboxsoft/accounting-client": "^1.2.1-beta.33",
+    "@deboxsoft/accounting-client": "^1.2.1-beta.39",
+    "@deboxsoft/lc-cashier-api": "^1.0.1-beta.1",
+    "@deboxsoft/lc-cashier-client": "^1.0.1-beta.1",
     "@deboxsoft/module-client": "~2.2.1",
     "@deboxsoft/module-core": "~2.2.1",
     "@deboxsoft/module-graphql": "~2.2.1",
