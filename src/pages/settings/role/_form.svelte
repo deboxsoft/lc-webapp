@@ -30,7 +30,34 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
+          value: "update:any",
+          selected: false
+        },
+        {
+          label: "hapus",
+          value: "delete:any",
+          selected: false
+        }
+      ]
+    },
+    program: {
+      label: "program",
+      selected: false,
+      indeterminate: false,
+      actions: [
+        {
+          label: "buat",
+          value: "create:any",
+          selected: false
+        },
+        {
+          label: "lihat",
+          value: "read:any",
+          selected: false
+        },
+        {
+          label: "edit",
           value: "update:any",
           selected: false
         },
@@ -62,11 +89,6 @@
           selected: false
         },
         {
-          label: "memposting penerimaan/kasir",
-          value: "create-cashier:any",
-          selected: false
-        },
-        {
           label: "memposting pembayaran",
           value: "create-payment:any",
           selected: false
@@ -82,7 +104,34 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
+          value: "update:any",
+          selected: false
+        },
+        {
+          label: "hapus",
+          value: "delete:any",
+          selected: false
+        }
+      ]
+    },
+    cashier: {
+      label: "kasir",
+      selected: false,
+      indeterminate: false,
+      actions: [
+        {
+          label: "posting",
+          value: "create:any",
+          selected: false
+        },
+        {
+          label: "lihat",
+          value: "read:any",
+          selected: false
+        },
+        {
+          label: "edit",
           value: "update:any",
           selected: false
         },
@@ -109,7 +158,7 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
           value: "update:any",
           selected: false
         },
@@ -177,7 +226,7 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
           value: "update:any",
           selected: false
         },
@@ -204,7 +253,7 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
           value: "update:any",
           selected: false
         },
@@ -231,7 +280,7 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
           value: "update:any",
           selected: false
         },
@@ -268,7 +317,7 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
           value: "update:any",
           selected: false
         },
@@ -290,7 +339,7 @@
           selected: false
         },
         {
-          label: "ubah",
+          label: "edit",
           value: "update:any",
           selected: false
         }
@@ -360,7 +409,7 @@
           }
         });
       });
-      // rubah klo ada space
+      // redit klo ada space
       role = role.replace(/ /g, "_").toUpperCase();
       const inputs = {
         ...$grants,
@@ -403,7 +452,7 @@
     <div class="row px-2">
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[0], resources[1], resources[6]] as resourceKey}
+          {#each [resources[0], resources[1], resources[2]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
@@ -417,7 +466,7 @@
       </div>
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[2], resources[3], resources[4], resources[5], resources[7]] as resourceKey}
+          {#each [resources[3], resources[4], resources[5], resources[6], resources[7], resources[8]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
@@ -431,7 +480,7 @@
       </div>
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[8], resources[9], resources[10]] as resourceKey}
+          {#each [resources[9], resources[10], resources[11], resources[12]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
