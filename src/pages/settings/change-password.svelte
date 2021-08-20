@@ -1,3 +1,5 @@
+<!--routify:options title="Ganti Password"-->
+
 <script>
   import * as z from "@deboxsoft/zod";
   import { goto, params } from "@roxi/routify";

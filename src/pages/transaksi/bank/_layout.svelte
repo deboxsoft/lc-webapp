@@ -1,4 +1,4 @@
-<!--routify:options title="Data Bank"-->
+<!--routify:options title="Manajemen Bank"-->
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import { url, goto } from "@roxi/routify";

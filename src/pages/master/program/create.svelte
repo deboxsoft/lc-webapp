@@ -1,4 +1,4 @@
-<!--routify:options title="program baru"-->
+<!--routify:options title="Posting Program"-->
 <script>
   import { goto } from "@roxi/routify";
   import ProgramForm from "./_components/ProgramForm.svelte";

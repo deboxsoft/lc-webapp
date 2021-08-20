@@ -1,4 +1,4 @@
-<!--routify:options title="Transaksi Baru"-->
+<!--routify:options title="Posting Transaksi"-->
 <script>
   import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";

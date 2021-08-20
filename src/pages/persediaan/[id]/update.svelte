@@ -1,3 +1,5 @@
+<!--routify:options title="Edit Data"-->
+
 <script>
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";

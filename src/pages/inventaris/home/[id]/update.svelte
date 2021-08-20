@@ -1,3 +1,5 @@
+<!--routify:options title="Edit Inventaris"-->
+
 <script>
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";

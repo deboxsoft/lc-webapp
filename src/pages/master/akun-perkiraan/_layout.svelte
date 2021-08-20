@@ -1,4 +1,4 @@
-<!--routify:options title="Akun Perkiraan"-->
+<!--routify:options title="Master Data"-->
 <script>
   import { url, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";

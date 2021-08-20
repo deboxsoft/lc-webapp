@@ -1,3 +1,4 @@
+<!--routify:options title="Manajemen User"-->
 <script>
   import { goto } from "@roxi/routify";
   import Table from "__@comps/Table.svelte";

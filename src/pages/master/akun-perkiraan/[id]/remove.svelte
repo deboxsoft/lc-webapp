@@ -1,3 +1,5 @@
+<!--routify:options title="Hapus Akun"-->
+
 <script>
   import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";

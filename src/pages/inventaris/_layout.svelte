@@ -1,4 +1,5 @@
 <!--routify:options title="Inventaris"-->
+
 <script>
   import { url, goto, isActive } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";

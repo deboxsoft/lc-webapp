@@ -1,4 +1,4 @@
-<!--routify:options title="update akun"-->
+<!--routify:options title="Edit Akun"-->
 <script>
   import { params, goto } from "@roxi/routify";
   import FormAccount from "../_components/FormAccount.svelte";

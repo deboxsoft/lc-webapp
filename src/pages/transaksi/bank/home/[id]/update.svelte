@@ -1,4 +1,4 @@
-<!--routify:options title="Update Bank"-->
+<!--routify:options title="Edit Data"-->
 <script>
   import {onMount} from "svelte";
   import { params, goto } from "@roxi/routify";

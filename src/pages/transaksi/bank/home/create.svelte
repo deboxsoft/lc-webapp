@@ -1,4 +1,4 @@
-<!--routify:options title="Create Bank"-->
+<!--routify:options title="Posting Data"-->
 <script>
   import { onMount} from "svelte";
   import { params, goto } from "@roxi/routify";

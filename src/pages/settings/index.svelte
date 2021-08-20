@@ -1,4 +1,4 @@
-<!--routify:options title="profil"-->
+<!--routify:options title="Edit Profile"-->
 <script>
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";

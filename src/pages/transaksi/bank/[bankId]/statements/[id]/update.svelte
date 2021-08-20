@@ -1,4 +1,4 @@
-<!--routify:options title="Update Bank"-->
+<!--routify:options title="Edit Rekonsiliasi"-->
 <script>
   import { params } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";

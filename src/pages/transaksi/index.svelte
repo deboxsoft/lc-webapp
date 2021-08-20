@@ -1,3 +1,4 @@
+<!--routify:options title="Laporan"-->
 <script>
   import { getAuthenticationContext } from "__@modules/users";
   import { redirect } from "@roxi/routify";

@@ -1,3 +1,5 @@
+<!--routify:options title="Aplikasi"-->
+
 <script>
   import { goto } from "@roxi/routify";
   import Form from "__@comps/forms/Form.svelte";

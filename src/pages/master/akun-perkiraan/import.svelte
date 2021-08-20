@@ -1,4 +1,4 @@
-<!--routify:options title="Import Statement"-->
+<!--routify:options title="Impor Akun"-->
 <script>
   import { onMount } from "svelte";
   import { writable } from "svelte/store";

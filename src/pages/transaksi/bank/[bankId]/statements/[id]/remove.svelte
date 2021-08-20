@@ -1,3 +1,4 @@
+<!--routify:options title="Hapus Rekonsiliasi"-->
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";

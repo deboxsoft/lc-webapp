@@ -1,3 +1,5 @@
+<!--routify:options title="Hapus User"-->
+
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";

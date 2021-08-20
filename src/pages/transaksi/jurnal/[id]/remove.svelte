@@ -1,3 +1,4 @@
+<!--routify:options title="Hapus Transaksi"-->
 <script>
   import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";

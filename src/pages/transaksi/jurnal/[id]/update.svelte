@@ -1,4 +1,4 @@
-<!--routify:options title="update Transaksi"-->
+<!--routify:options title="Edit Transaksi"-->
 <script>
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";

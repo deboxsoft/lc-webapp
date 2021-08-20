@@ -1,4 +1,3 @@
-<!--routify:options title="kategori inventoris"-->
 <script>
   import Table from "../_components/TableCategoryInventory.svelte";
 </script>

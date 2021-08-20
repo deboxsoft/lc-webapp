@@ -1,4 +1,4 @@
-<!--routify:options title="Bank"-->
+<!--routify:options title="Manajemen Bank"-->
 <script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";

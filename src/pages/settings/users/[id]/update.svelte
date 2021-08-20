@@ -1,3 +1,5 @@
+<!--routify:options title="Edit User"-->
+
 <script>
   import { goto, params } from "@roxi/routify";
   import { getUserContext } from "__@modules/users";

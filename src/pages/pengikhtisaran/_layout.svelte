@@ -1,4 +1,4 @@
-<!--routify:options title="Pengikhtisaran"-->
+<!--routify:options title="Laporan"-->
 <script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";

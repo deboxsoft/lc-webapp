@@ -1,4 +1,4 @@
-<!--routify:options title="Membuat kategori inventaris"-->
+<!--routify:options title="Buat Kategori Inventaris"-->
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import Form from "../_components/FormCategoryInventory.svelte";

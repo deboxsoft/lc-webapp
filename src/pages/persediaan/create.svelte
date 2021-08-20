@@ -1,4 +1,4 @@
-<!--routify:options title="membuat bdd"-->
+<!--routify:options title="Posting Data"-->
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import Form from "./_components/FormStock.svelte";

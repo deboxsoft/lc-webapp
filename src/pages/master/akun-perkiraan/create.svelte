@@ -1,4 +1,4 @@
-<!--routify:options title="create akun"-->
+<!--routify:options title="Buat Akun"-->
 <script>
   import { goto } from "@roxi/routify";
   import FormAccount from "./_components/FormAccount.svelte";

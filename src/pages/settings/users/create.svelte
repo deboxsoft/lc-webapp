@@ -1,3 +1,4 @@
+<!--routify:options title="Buat User"-->
 <script>
   import { goto } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";

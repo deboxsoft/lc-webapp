@@ -1,4 +1,4 @@
-<!--routify:options title="Rekonsiliasi detail"-->
+<!--routify:options title="Bank"-->
 <script>
   import { sortUtilsFunc } from "__@root/utils";
   import { url, params } from "@roxi/routify";
