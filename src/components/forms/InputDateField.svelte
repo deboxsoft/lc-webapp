@@ -1,4 +1,5 @@
 <script>
+  import dayjs from "dayjs";
   import { getFormContext } from "__@stores/form";
   import DatePicker from "@deboxsoft/svelte-datepicker/src/components/DatePicker.svelte";
   import { CalendarStyle } from "@deboxsoft/svelte-datepicker/src/calendar-style";
@@ -8,7 +9,7 @@
   const dispatcher = createEventDispatcher();
 
   export let disabled = false;
-  export let formattedValue = "";
+  export let format = "DD-MMMM-YYYY";
   export let options = {};
   export let startDateKey = "startDate";
   export let endDateKey = "endDate";
@@ -31,16 +32,19 @@
   export let mode = undefined;
   export let input = undefined;
 
-  let invalid = true;
+  let invalid = !disabled;
   let msgError;
-
   function applyHandler({ detail }) {
     if ($fields) {
-      if (name) {
-        $fields[name] = [detail.from, detail.to];
-      } else {
-        $fields[startDateKey] = detail.from;
-        $fields[endDateKey] = detail.to;
+      if (range) {
+        if (name) {
+          $fields[name] = [detail.from, detail.to];
+        } else {
+          $fields[startDateKey] = detail.from;
+          $fields[endDateKey] = detail.to;
+        }
+      } else if (name) {
+        $fields[name] = detail.date;
       }
     }
     dispatcher("apply", detail);
@@ -56,29 +60,34 @@
   }
 </script>
 
-<DatePicker
-  {...$$restProps}
-  class={className}
-  {range}
-  {allowEmpty}
-  placeholder="Tanggal"
-  format="DD-MMM-YY"
-  applyLabel="Pilih"
-  closeLabel="Tutup"
-  bind:selected
-  styling={new CalendarStyle({ buttonWidth: "100%", datepickerWidth: width })}
-  wrapperInputClass="form-group-feedback form-group-feedback-right"
-  {showClearButton}
-  on:range-selected={applyHandler}
-  on:date-selected={applyHandler}
-  end
->
-  {#if $submitted}
-    {#if invalid}
-      <p class="invalid-tooltip">{msgError}</p>
+{#if !disabled}
+  <DatePicker
+    {...$$restProps}
+    class={className}
+    {range}
+    {allowEmpty}
+    placeholder="Tanggal"
+    format="DD-MMM-YY"
+    applyLabel="Pilih"
+    closeLabel="Tutup"
+    bind:selected
+    styling={new CalendarStyle({ buttonWidth: "100%", datepickerWidth: width })}
+    wrapperInputClass="form-group-feedback form-group-feedback-right"
+    {showClearButton}
+    on:range-selected={applyHandler}
+    on:date-selected={applyHandler}
+    end
+    {disabled}
+  >
+    {#if $submitted}
+      {#if invalid}
+        <p class="invalid-tooltip">{msgError}</p>
+      {/if}
     {/if}
-  {/if}
-</DatePicker>
+  </DatePicker>
+{:else}
+  <input class="form-control" disabled value={dayjs().format(format)} />
+{/if}
 
 <style global>
   .datepicker button {
