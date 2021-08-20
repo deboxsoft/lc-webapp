@@ -5,8 +5,8 @@
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Dropdown from "../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../components/DropdownToggle.svelte";
   import { createAclContext } from "./_acl-context";
   import TableLabaRugi from "../../pengikhtisaran/laba-rugi/_components/TableLabaRugi.svelte";
   import { createReportContext } from "../../pengikhtisaran/_components/_export";

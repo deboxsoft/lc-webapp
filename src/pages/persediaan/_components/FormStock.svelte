@@ -1,19 +1,19 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
   import { writable } from "svelte/store";
-  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import AccountSelect from "../../../components/account/AccountSelect.svelte";
 
   import { goto } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
-  import { StockCreateInputSchema } from "@deboxsoft/accounting-api";
+  import Modal from "../../../components/Modal.svelte";
+  import { StockInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
 
-  import InputDate from "__@comps/forms/InputDateField.svelte";
-  import InputRp from "__@comps/forms/InputNumberField.svelte";
-  import Form from "__@comps/forms/Form.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
-  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import InputDate from "../../../components/forms/InputDateField.svelte";
+  import InputRp from "../../../components/forms/InputNumberField.svelte";
+  import Form from "../../../components/forms/Form.svelte";
+  import InputField from "../../../components/forms/InputField.svelte";
+  import ComboxField from "../../../components/forms/ComboxField.svelte";
 
   const { notify, loading } = getApplicationContext();
   const { stockStore } = stores.getStockTransferContext();

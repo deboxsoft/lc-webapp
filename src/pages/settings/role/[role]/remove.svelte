@@ -1,6 +1,6 @@
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
+  import Modal from "../../../../components/Modal.svelte";
   import { getAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";

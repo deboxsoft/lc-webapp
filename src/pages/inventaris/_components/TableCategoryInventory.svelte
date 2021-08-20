@@ -1,7 +1,6 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import Loader from "__@comps/loader/Loader.svelte";
-  import Table from "__@comps/tables/DataTable.svelte";
+  import Table from "../../../components/tables/DataTable.svelte";
   import RowCategoryInventory from "./RowCategoryInventory.svelte";
 
   const { categoryInventoryStore, findCategory } = stores.getInventoryContext();

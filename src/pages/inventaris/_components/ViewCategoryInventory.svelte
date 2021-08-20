@@ -1,7 +1,8 @@
 <script>
 
   import { stores } from "@deboxsoft/accounting-client";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
+  import { getGroupDepreciation } from "@deboxsoft/accounting-api";
+  import CellAccount from "../../../components/account/CellAccount.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let categoryInventory;

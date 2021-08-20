@@ -1,9 +1,9 @@
 <script>
-  import Table from "__@comps/Table.svelte";
+  import Table from "../../../components/Table.svelte";
   import { getUserContext } from "__@modules/users";
   import { url, goto } from "@roxi/routify";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Dropdown from "../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../components/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
 
   const { readUserGranted } = createAclContext();

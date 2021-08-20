@@ -2,7 +2,7 @@
 
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
+  import Modal from "../../../../components/Modal.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";

@@ -3,12 +3,12 @@
 <script>
   import * as z from "@deboxsoft/zod";
   import { goto, params } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
-  import Form from "__@comps/forms/Form.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
+  import Modal from "../../components/Modal.svelte";
+  import Form from "../../components/forms/Form.svelte";
+  import InputField from "../../components/forms/InputField.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import Alert from "__@comps/Alert.svelte";
+  import Alert from "../../components/Alert.svelte";
   import { onMount } from "svelte";
 
   let openDialog;

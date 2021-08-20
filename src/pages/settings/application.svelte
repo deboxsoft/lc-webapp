@@ -2,8 +2,8 @@
 
 <script>
   import { goto } from "@roxi/routify";
-  import Form from "__@comps/forms/Form.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
+  import Form from "../../components/forms/Form.svelte";
+  import InputField from "../../components/forms/InputField.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import { writable } from "svelte/store";

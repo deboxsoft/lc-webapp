@@ -1,5 +1,5 @@
 <script>
-  import InlineCheckBox from "__@comps/InlineCheckBox.svelte";
+  import InlineCheckBox from "../../../components/InlineCheckBox.svelte";
   import {createEventDispatcher} from "svelte"
 
   const dispatch = createEventDispatcher();

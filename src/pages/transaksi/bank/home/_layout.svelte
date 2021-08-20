@@ -4,8 +4,8 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Table from "./_components/TableBank.svelte";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Dropdown from "../../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../../components/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
   import { createReportContext } from "./_export";
 

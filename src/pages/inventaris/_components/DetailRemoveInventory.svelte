@@ -1,6 +1,6 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import CellRp from "__@comps/CellRp.svelte";
+  import CellRp from "../../../components/CellRp.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let inventory;

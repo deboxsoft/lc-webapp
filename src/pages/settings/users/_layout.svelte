@@ -1,11 +1,11 @@
 <!--routify:options title="Manajemen User"-->
 <script>
   import { goto } from "@roxi/routify";
-  import Table from "__@comps/Table.svelte";
+  import Table from "../../../components/Table.svelte";
   import { getUserContext } from "__@modules/users";
   import MenuUserList from "./_MenuUserList.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Loader from "../../../components/loader/Loader.svelte";
   import GroupName from "../group/_groupName.svelte";
   import { createAclContext } from "../_acl-context";
 

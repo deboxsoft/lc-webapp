@@ -7,12 +7,12 @@
   import { writable } from "svelte/store";
 
   // components
-  import Modal from "__@comps/Modal.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
-  import Form from "__@comps/forms/Form.svelte";
-  // import InputNumberField from "__@comps/forms/InputNumberField.svelte";
-  import AccountSelect from "__@comps/account/AccountSelect.svelte";
-  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import Modal from "../../../../../components/Modal.svelte";
+  import InputField from "../../../../../components/forms/InputField.svelte";
+  import Form from "../../../../../components/forms/Form.svelte";
+  // import InputNumberField from "../../../../../components/forms/InputNumberField.svelte";
+  import AccountSelect from "../../../../../components/account/AccountSelect.svelte";
+  import ComboxField from "../../../../../components/forms/ComboxField.svelte";
 
   const { notify, loading } = getApplicationContext();
   const dispatch = createEventDispatcher();

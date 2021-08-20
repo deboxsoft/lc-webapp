@@ -1,8 +1,7 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import Table from "__@comps/tables/DataTable.svelte";
-
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Table from "../../../../../components/tables/DataTable.svelte";
+  import Loader from "../../../../../components/loader/Loader.svelte";
   import RowBank from "./RowBank.svelte";
 
   const { bankStore, find } = stores.getBankContext();

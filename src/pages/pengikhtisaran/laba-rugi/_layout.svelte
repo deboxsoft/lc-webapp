@@ -6,9 +6,9 @@
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import TableLabaRugi from "./_components/TableLabaRugi.svelte";
-  import DatePickr from "__@comps/forms/InputDateField.svelte";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import DatePickr from "../../../components/forms/InputDateField.svelte";
+  import Dropdown from "../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../components/DropdownToggle.svelte";
   import { createAclContext } from "./_acl-context";
   import { createReportContext } from "../_components/_export";
   import { parsingRevenueReport } from "../_components/_utils";

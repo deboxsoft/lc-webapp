@@ -1,6 +1,6 @@
 <script>
   import { get } from "svelte/store";
-  import Table from "__@comps/Table.svelte";
+  import Table from "../../../../components/Table.svelte";
   import { stores } from "@deboxsoft/accounting-client";
 
   /**

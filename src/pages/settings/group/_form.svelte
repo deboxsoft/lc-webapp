@@ -1,10 +1,10 @@
 <script lang="ts">
   import * as z from "@deboxsoft/zod";
-  import Form from "__@comps/forms/Form.svelte";
-  import ComboxField from "__@comps/forms/ComboxField.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
+  import Form from "../../../components/forms/Form.svelte";
+  import ComboxField from "../../../components/forms/ComboxField.svelte";
+  import InputField from "../../../components/forms/InputField.svelte";
   import { getAccessControlContext } from "__@modules/users";
-  import AccountListBox from "__@comps/account/AccountListBox.svelte";
+  import AccountListBox from "../../../components/account/AccountListBox.svelte";
   // import InputCheckSwitchery from "../../../components/forms/InputCheckSwitchery.svelte";
 
   const { grants } = getAccessControlContext();

@@ -1,6 +1,6 @@
 <script>
   import { goto } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
+  import Modal from "../../../components/Modal.svelte";
   import RoleForm from "./_form.svelte";
   import { getAclContext } from "../_acl-context";
   import { onMount } from "svelte";

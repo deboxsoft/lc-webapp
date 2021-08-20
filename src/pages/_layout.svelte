@@ -13,10 +13,10 @@
   import { createBreadcrumbStore } from "__@stores/breadcrumb";
   import { getUIContext } from "__@stores/ui";
   import { getMenus } from "__@root/stores/menus";
-  import TopLoader from "__@comps/loader/TopLoader.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import TopLoader from "../components/loader/TopLoader.svelte";
+  import Loader from "../components/loader/Loader.svelte";
   import { createApplicationContext } from "__@modules/app";
-  import Brand from "__@comps/Brand.svelte";
+  import Brand from "../components/Brand.svelte";
 
   // context and store
   const { authenticationContext, accountingContext, loading, companyContext, configPromise } =

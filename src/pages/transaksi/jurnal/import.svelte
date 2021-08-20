@@ -3,13 +3,13 @@
   import { onMount } from "svelte";
   import { writable, get } from "svelte/store";
   import { goto, params } from "@roxi/routify";
-  import FormImport from "__@comps/forms/FormImport.svelte";
-  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import FormImport from "../../../components/forms/FormImport.svelte";
+  import AccountSelect from "../../../components/account/AccountSelect.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import TablePreview from "./_tables/TablePreview.svelte";
   import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
-  import CellRp from "__@comps/CellRp.svelte";
+  import CellRp from "../../../components/CellRp.svelte";
   import { getAuthenticationContext } from "../../../modules/users";
   import { filteringAccountCredit, filteringAccountDebit } from "../../../utils";
 

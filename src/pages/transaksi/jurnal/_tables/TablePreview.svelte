@@ -1,8 +1,8 @@
 <script>
   import dayjs from "dayjs";
-  import Table from "__@comps/Table.svelte";
-  import CellRp from "__@comps/CellRp.svelte";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
+  import Table from "../../../../components/Table.svelte";
+  import CellRp from "../../../../components/CellRp.svelte";
+  import CellAccount from "../../../../components/account/CellAccount.svelte";
   import { writable } from "svelte/store";
 
   /**

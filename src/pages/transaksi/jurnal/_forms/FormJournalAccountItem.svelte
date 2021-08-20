@@ -3,9 +3,9 @@
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { getFormContext } from "__@stores/form";
   import { stores } from "@deboxsoft/accounting-client";
-  import TrashIcon from "__@comps/icons/Trash.svelte";
-  import AutoComplete from "__@comps/AutoComplete.svelte";
-  import InputRp from "__@comps/forms/InputNumberField.svelte";
+  import TrashIcon from "../../../../components/icons/Trash.svelte";
+  import AutoComplete from "../../../../components/AutoComplete.svelte";
+  import InputRp from "../../../../components/forms/InputNumberField.svelte";
   import { generateId } from "@deboxsoft/module-client";
   import { filteringAccountCredit } from "../../../../utils";
 

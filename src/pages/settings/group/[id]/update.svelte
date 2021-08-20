@@ -2,8 +2,8 @@
   import { goto, params } from "@roxi/routify";
   import { getUserContext } from "__@modules/users";
   import GroupForm from "../_form.svelte";
-  import Modal from "__@comps/Modal.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Modal from "../../../../components/Modal.svelte";
+  import Loader from "../../../../components/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
   import { onMount } from "svelte";

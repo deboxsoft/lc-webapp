@@ -1,5 +1,5 @@
 <script>
-  import CellRp from "__@comps/CellRp.svelte";
+  import CellRp from "../../../../../../components/CellRp.svelte";
 
   export let bank;
   export let account;

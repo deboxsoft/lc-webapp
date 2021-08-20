@@ -1,7 +1,7 @@
 <script>
   import IconArrowRight from "@deboxsoft/svelte-icons/ico/icoArrowRight3.svelte";
   import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
-  import CellRp from "__@comps/CellRp.svelte";
+  import CellRp from "../../../components/CellRp.svelte";
   import { writable } from "svelte/store";
 
   export let account;

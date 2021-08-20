@@ -2,10 +2,10 @@
   import dayjs from "dayjs";
   // import { writable } from "svelte/store";
   import { stores } from "@deboxsoft/accounting-client";
-  import Table from "__@comps/Table.svelte";
-  import AccountCell from "__@comps/account/CellAccount.svelte";
-  import CellRp from "__@comps/CellRp.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Table from "../../../../../../components/Table.svelte";
+  import AccountCell from "../../../../../../components/account/CellAccount.svelte";
+  import CellRp from "../../../../../../components/CellRp.svelte";
+  import Loader from "../../../../../../components/loader/Loader.svelte";
 
   const { bank } = stores.getBankStatementContext();
   const { getAccount, getAccountLeaf } = stores.getAccountContext();

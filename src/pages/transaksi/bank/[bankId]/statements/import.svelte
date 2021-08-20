@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
-  import FormImport from "__@comps/forms/FormImport.svelte";
+  import FormImport from "../../../../../components/forms/FormImport.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import TablePreview from "./_components/TableStatementBank.svelte";

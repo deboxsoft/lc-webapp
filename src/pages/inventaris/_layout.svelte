@@ -7,7 +7,7 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Loader from "../../components/loader/Loader.svelte";
 
   const { readGranted } = createAclContext();
   const applicationContext = getApplicationContext();

@@ -1,8 +1,10 @@
 <script>
   import { url } from "@roxi/routify";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import AccountCell from "__@comps/account/CellAccount.svelte";
+  import Dropdown from "../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../components/DropdownToggle.svelte";
+  import AccountCell from "../../../components/account/CellAccount.svelte";
+  import { getGroupDepreciation } from "@deboxsoft/accounting-api";
+  import { stores } from "@deboxsoft/accounting-client";
 
   export let categoryInventory;
   let dropdownContext;

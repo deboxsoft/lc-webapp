@@ -9,8 +9,8 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Dropdown from "../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../components/DropdownToggle.svelte";
   import FalCashRegister from "@deboxsoft/svelte-icons/fal/FalCashRegister.svelte";
   import FalMoneyBill from "@deboxsoft/svelte-icons/fal/FalMoneyBill.svelte";
   import { getAuthenticationContext } from "../../../modules/users";

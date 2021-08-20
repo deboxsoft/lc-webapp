@@ -1,7 +1,7 @@
 <script>
   import { goto } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Modal from "../../../components/Modal.svelte";
+  import Loader from "../../../components/loader/Loader.svelte";
   import GroupForm from "./_form.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";

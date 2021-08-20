@@ -1,10 +1,10 @@
 <script>
   import { goto } from "@roxi/routify";
   import dayjs from "dayjs";
-  import CellRp from "__@comps/CellRp.svelte";
+  import CellRp from "../../../../components/CellRp.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import Table from "__@comps/Table.svelte";
-  import Button from "__@comps/Button.svelte";
+  import Table from "../../../../components/Table.svelte";
+  import Button from "../../../../components/Button.svelte";
   import { getApplicationContext } from "__@modules/app";
 
   const { loading } = getApplicationContext();

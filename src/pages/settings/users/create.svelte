@@ -1,7 +1,7 @@
 <!--routify:options title="Buat User"-->
 <script>
   import { goto } from "@roxi/routify";
-  import Modal from "__@comps/Modal.svelte";
+  import Modal from "../../../components/Modal.svelte";
   import UserForm from "./_form.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";

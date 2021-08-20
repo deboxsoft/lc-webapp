@@ -1,5 +1,5 @@
 <script>
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Loader from "../../../../components/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import { createFoldStore } from "__@stores/fold";

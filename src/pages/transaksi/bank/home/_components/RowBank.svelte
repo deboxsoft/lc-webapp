@@ -1,10 +1,10 @@
 <script>
   import { url } from "@roxi/routify";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import CellRp from "__@comps/CellRp.svelte";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
-  import BalanceAccount from "__@comps/account/BalanceAccount.svelte";
+  import Dropdown from "../../../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../../../components/DropdownToggle.svelte";
+  import CellRp from "../../../../../components/CellRp.svelte";
+  import CellAccount from "../../../../../components/account/CellAccount.svelte";
+  import BalanceAccount from "../../../../../components/account/BalanceAccount.svelte";
   import { getAclContext } from "../../_acl-context";
 
   const { updateGranted, removeGranted } = getAclContext();

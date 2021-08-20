@@ -1,8 +1,8 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import Loader from "__@comps/loader/Loader.svelte";
-  import Table from "__@comps/tables/DataTable.svelte";
-  import RowListInventory from "./RowListBdd.svelte";
+  import Loader from "../../../components/loader/Loader.svelte";
+  import Table from "../../../components/tables/DataTable.svelte";
+  import RowListBdd from "./RowListBdd.svelte";
 
   const { findPage, inventoryStore, getCategoryInventory } = stores.getInventoryContext();
   let state = "find-start";

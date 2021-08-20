@@ -1,8 +1,8 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import Loader from "__@comps/loader/Loader.svelte";
-  import Table from "__@comps/tables/DataTable.svelte";
-  import RowCategoryInventory from "./RowCategoryAmortization.svelte";
+  import Loader from "../../../components/loader/Loader.svelte";
+  import Table from "../../../components/tables/DataTable.svelte";
+  import RowCategoryAmortization from "./RowCategoryAmortization.svelte";
 
   const { amortizationStore, findCategory } = stores.getBddContext();
   let state = "find-start";

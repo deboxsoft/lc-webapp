@@ -2,7 +2,8 @@
   import { format, parse } from "date-fns";
   import { get } from "svelte/store";
   import { stores } from "@deboxsoft/accounting-client";
-  import CellRp from "__@comps/CellRp.svelte";
+  import CellRp from "../../../components/CellRp.svelte";
+  import CellAccount from "../../../components/account/CellAccount.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let inventory;

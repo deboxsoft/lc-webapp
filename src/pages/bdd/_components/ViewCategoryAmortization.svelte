@@ -1,7 +1,5 @@
 <script>
-
-  import { stores } from "@deboxsoft/accounting-client";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
+  import CellAccount from "../../../components/account/CellAccount.svelte";
 
   const { getAmortization } = stores.getBddContext();
   export let categoryAmortization;

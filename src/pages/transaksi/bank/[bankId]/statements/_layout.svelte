@@ -6,13 +6,13 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Dropdown from "../../../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../../../components/DropdownToggle.svelte";
   import { createReportContext } from "./_export";
 
   import TableStatementBank from "./_components/TableStatementBank.svelte";
   import BankInfo from "./_components/BankInfo.svelte";
-  // import DatePickr from "__@comps/DatePickr.svelte";
+  // import DatePickr from "../../components/DatePickr.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Rekonsiliasi Detail" });

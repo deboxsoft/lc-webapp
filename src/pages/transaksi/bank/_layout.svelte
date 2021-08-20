@@ -3,7 +3,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import Loader from "__@comps/loader/Loader.svelte"
+  import Loader from "../../../components/loader/Loader.svelte"
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
 

@@ -8,10 +8,10 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
   import TableTrialBalance from "../_components/TableTrialBalance.svelte";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import DatePickr from "__@comps/forms/InputDateField.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
+  import Dropdown from "../../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../../components/DropdownToggle.svelte";
+  import DatePickr from "../../../../components/forms/InputDateField.svelte";
+  import Loader from "../../../../components/loader/Loader.svelte";
   import { createReportContext } from "./_export";
 
   // context

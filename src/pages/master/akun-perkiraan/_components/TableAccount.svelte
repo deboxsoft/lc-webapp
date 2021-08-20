@@ -1,9 +1,9 @@
 <script>
   import { get } from "svelte/store";
-  import Table from "__@comps/Table.svelte";
+  import Table from "../../../../components/Table.svelte";
   import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import AccountCell from "__@comps/account/CellAccount.svelte";
+  import AccountCell from "../../../../components/account/CellAccount.svelte";
   import MenuListAccount from "./MenuListAccount.svelte";
 
   const { getAccountType } = stores.getAccountContext();

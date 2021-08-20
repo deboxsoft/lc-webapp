@@ -3,10 +3,10 @@
   import { url } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Dropdown from "../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../components/DropdownToggle.svelte";
   import TableAccountBalance from "./_components/TableAccountBalance.svelte";
-  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import ComboxField from "../../../components/forms/ComboxField.svelte";
   import { createReportContext } from "./_export";
   import { getApplicationContext } from "__@modules/app";
 

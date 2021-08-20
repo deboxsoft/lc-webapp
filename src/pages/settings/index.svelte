@@ -1,7 +1,7 @@
 <!--routify:options title="Edit Profile"-->
 <script>
-  import Form from "__@comps/forms/Form.svelte";
-  import InputField from "__@comps/forms/InputField.svelte";
+  import Form from "../../components/forms/Form.svelte";
+  import InputField from "../../components/forms/InputField.svelte";
   import AvatarUpload from "./_AvatarUpload.svelte";
   import { getUserContext, getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
