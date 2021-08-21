@@ -23,7 +23,7 @@
     $goto("/access-denied");
   }
 
-  setBreadcrumbContext({ path: $url("./"), title: "akun-perkiraan" });
+  setBreadcrumbContext({ path: $url("./"), title: "master  /  akun-perkiraan" });
   let accounts = [];
   let filter = undefined;
   let openFilterDialog;
