@@ -76,3 +76,93 @@ export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
     });
   });
 }
+
+export function filteringAccountStock(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(103).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
+
+export function filteringAccountBdd(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(104).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
+
+export function filteringAccountExpenseBdd(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(105100).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
+
+export function filteringAccountAccumulationBdd(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(105200).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
+
+export function filteringAccountInventory(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(111|113).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
+
+export function filteringAccountDepreciationInventory(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(112).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
