@@ -32,3 +32,48 @@ export function filteringAccountCredit(accountStore: Readable<Account[]>) {
     });
   });
 }
+
+export function filteringAccountCash(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(101).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
+
+export function filteringAccountExpense(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(5).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
+
+export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
+  const { authenticationStore } = getAuthenticationContext();
+  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  return derived(accountStore, (_) => {
+    return _.filter((_) => {
+      if (/^(4).*/g.test(_.id)) {
+        if (!accountsInclude || accountsInclude.includes(_.id)) {
+          return true;
+        }
+      }
+      return false;
+    });
+  });
+}
