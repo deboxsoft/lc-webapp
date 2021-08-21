@@ -1,20 +1,15 @@
 <!--routify:options title="Hapus Data"-->
-
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
-  import { onMount } from "svelte";
 
-  let openDialog;
-  onMount(() => {
-    openDialog();
-  });
+  let openDialog, stock, name;
 
   const { removeGranted } = getAclContext();
-  const { remove, getBdd } = stores.getBddContext();
+  const { remove, stockStore, getStock } = stores.getStockTransferContext();
   const { loading, notify } = getApplicationContext();
 
   if (!removeGranted) {
@@ -27,27 +22,36 @@
       await remove($params.id);
       $loading = false;
       $goto("../");
-      notify(`berhasil menghapus barang '${$bdd.name}'`);
+      notify(`berhasil menghapus barang '${name}'`);
     } catch (e) {
       if (e.message) {
-        notify(e.message, "error")
+        notify(e.message, "error");
       }
       $loading = false;
     }
   }
 
-  $: bdd = getBdd($params.id);
+  $: {
+    if ($stockStore && openDialog) {
+      stock = getStock($params.id);
+      if (stock) {
+        name = stock.name;
+        openDialog();
+      }
+    }
+  }
 
   function closeHandler() {
     $goto("../");
   }
 </script>
 
-{#if $bdd}
-  <Modal bind:openDialog title="Hapus bdd" onClose={closeHandler}>
-    <svelte:fragment slot="footer">
-      <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
-      <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>
-    </svelte:fragment>
-  </Modal>
-{/if}
+<Modal bind:openDialog title="Hapus Barang" onClose={closeHandler}>
+  <div class="alert alert-warning alert-styled-left">
+    Apa anda yakin akan menghapus barang "{name}"?
+  </div>
+  <svelte:fragment slot="footer">
+    <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
+    <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>
+  </svelte:fragment>
+</Modal>

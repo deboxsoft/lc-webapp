@@ -1,32 +1,24 @@
 <script>
   import CellRp from "../../../components/CellRp.svelte";
 
-  export let inventory;
+  export let stock;
 </script>
 
 <dl class="row">
-  <dt class="col-sm-3">Nama</dt>
+  <dt class="col-sm-3">Nama Barang</dt>
   <p class="col-sm-9">
-    : {inventory.name || "-"}
-  </p>
-  <dt class="col-sm-3">Tanggal Pembelian</dt>
-  <p class="col-sm-9">
-    : { format(parse(inventory.purchaseDate, "T", new Date()))}
-  </p>
-  <dt class="col-sm-3">Depresiasi Awal</dt>
-  <p class="col-sm-9">
-    : {inventory.earlyDepreciation || "-"}
-  </p>
-  <dt class="col-sm-3">Harga Barang</dt>
-  <p class="col-sm-9">
-    : <CellRp value={inventory.priceItem} />
+    : {stock.name || "-"}
   </p>
   <dt class="col-sm-3">Jumlah Barang</dt>
   <p class="col-sm-9">
-    : {inventory.quantity || "-"}
+    : {stock.quantity || "-"}
+  </p>
+  <dt class="col-sm-3">Harga Satuan Barang</dt>
+  <p class="col-sm-9 d-inline-flex align-items-center">
+    : <span style="width: 150px"><CellRp class="ml-1" value={stock.price} /></span>
   </p>
   <dt class="col-sm-3">Harga Total Barang</dt>
-  <p class="col-sm-9">
-    : <CellRp value={inventory.quantity * inventory.priceItem} />
+  <p class="col-sm-9 d-inline-flex align-items-center">
+    : <span style="width: 150px"><CellRp class="ml-1" value={stock.quantity * stock.price} /></span>
   </p>
 </dl>

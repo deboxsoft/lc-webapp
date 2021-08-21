@@ -14,11 +14,9 @@
 <Table>
   <tr slot="header">
     <th>Nama Barang</th>
-    <th style="width: 50px">Tanggal Pembelian</th>
-    <th>Kategori</th>
-    <th>Harga Satuan</th>
-    <th>Jumlah</th>
-    <th>Harga Total</th>
+    <th style="width: 50px">Jumlah</th>
+    <th style="width: 175px">Harga Satuan</th>
+    <th style="width: 175px">Total</th>
     <th style="width: 30px;" />
   </tr>
   {#if state === "find-start"}

@@ -1,28 +1,24 @@
 <!--routify:options title="Posting Data"-->
 <script>
+  import { StockInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
-  import Form from "./_components/FormStock.svelte";
+  import FormStock from "./_components/FormStock.svelte";
   import { getApplicationContext } from "__@modules/app";
+  import { getAuthenticationContext } from "../../modules/users";
 
   const { notify, loading } = getApplicationContext();
+  const { getUserId } = getAuthenticationContext();
   const { create } = stores.getStockTransferContext();
 
-  let stock = {};
+  let stock = {
+    quantity: 1,
+    userId: getUserId()
+  };
 
   async function onSubmit(values) {
-    try {
-      $loading = true;
-      await create(values);
-      $loading = false;
-      notify(`Berhasil membuat data persediaan ${values.name}`, "success");
-    } catch (e) {
-      if (e.message) {
-        notify(e.message, "error");
-      }
-      console.error(e);
-      $loading = false;
-    }
+    await create(values);
+    notify(`Berhasil membuat data persediaan ${values.name}`, "success");
   }
 </script>
 
-<Form {stock} title="Membuat Data Persediaan" {onSubmit} />
+<FormStock schema={StockInputSchema} {stock} title="Membuat Data Persediaan" {onSubmit} />

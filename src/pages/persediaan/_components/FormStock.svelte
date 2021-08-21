@@ -5,66 +5,85 @@
 
   import { goto } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
-  import { StockInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
 
   import InputDate from "../../../components/forms/InputDateField.svelte";
-  import InputRp from "../../../components/forms/InputNumberField.svelte";
   import Form from "../../../components/forms/Form.svelte";
   import InputField from "../../../components/forms/InputField.svelte";
-  import ComboxField from "../../../components/forms/ComboxField.svelte";
+  import InputNumberField from "../../../components/forms/InputNumberField.svelte";
+  import { filteringAccountCredit, filteringAccountDebit, filteringAccountCash, filteringAccountExpense } from "../../../utils";
 
   const { notify, loading } = getApplicationContext();
   const { stockStore } = stores.getStockTransferContext();
+  const { getAccountLeaf } = stores.getAccountContext();
   const dispatch = createEventDispatcher();
 
   // props
   export let stock;
-  export const isUpdate = false;
   export let onSubmit;
+  export let schema;
   export let title;
+  /** @type {"IN" | "OUT" | undefined} */
+  export let transform = undefined;
   export let to = "./";
 
   // state
-  let state = "prepare";
   let openDialog;
   let fields;
   let idReadOnly = true;
-  let fieldsErrors = writable([]);
+  let isValid = writable(false);
+  let fieldsErrors;
+  let submitting = false;
   let submitted = writable(false);
 
   onMount(() => {
     openDialog();
-  })
+  });
+
+  function getAccount(accountType) {
+    const accountStore = getAccountLeaf();
+    switch (accountType) {
+      case "debit": {
+        return filteringAccountDebit(accountStore);
+      }
+      case "cash": {
+        return filteringAccountCash(accountStore)
+      }
+      case "expense": {
+        return filteringAccountExpense(accountStore)
+      }
+    }
+  }
 
   async function submitHandler() {
     try {
-      state = "submitting"
       $loading = true;
+      submitting = true;
       await onSubmit($fields);
-      $loading = false;
-      state = "success"
       $goto(to);
     } catch (error) {
-      state = "failed";
+      console.error(error);
       notify(`${error.errors[0].message}`, "error");
+    } finally {
+      submitting = false;
       $loading = false;
     }
   }
 
+  $: console.log($fieldsErrors, $isValid);
+
   function closeHandler() {
-    state = "close"
     $goto(to);
   }
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form schema={StockCreateInputSchema} values={stock} bind:fields bind:submitted>
+  <Form checkValidateFirst {schema} values={{ ...stock }} bind:fields bind:fieldsErrors {isValid} on:submit>
     <div class="row">
       <div class="form-group col-12 col-md-6">
         <label for="name">Nama</label>
-        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" disabled={transform} />
       </div>
       <div class="form-group col-12 col-md-6">
         <label for="date">Tanggal</label>
@@ -75,69 +94,105 @@
           placeholder="Tanggal"
           value={new Date()}
           range={false}
+          disabled
         />
       </div>
     </div>
+    {#if !transform}
+      <div class="row">
+        <div class="form-group col-12 col-md-6">
+          <label for="debitAccount">Akun Barang</label>
+          <AccountSelect
+            id="debitAccount"
+            name="debitAccount"
+            placeholder="Akun Barang"
+            allowEmpty
+            accountStore={getAccount("debit")}
+          />
+        </div>
+        <div class="form-group col-12 col-md-6">
+          <label for="creditAccount">Akun Pembayaran</label>
+          <AccountSelect
+            id="creditAccount"
+            name="creditAccount"
+            placeholder="Akun Pembayaran"
+            allowEmpty
+            accountStore={getAccount("cash")}
+          />
+        </div>
+      </div>
+    {/if}
+    {#if transform === "IN"}
+      <div class="row">
+        <div class="form-group col-12">
+          <label for="creditAccount">Akun Pembayaran</label>
+          <AccountSelect
+            id="creditAccount"
+            name="creditAccount"
+            placeholder="Akun Pembayaran"
+            allowEmpty
+            accountStore={getAccount("cash")}
+          />
+        </div>
+      </div>
+      {:else if (transform === "OUT")}
+      <div class="row">
+        <div class="form-group col-12">
+          <label for="debitAccount">Akun Biaya</label>
+          <AccountSelect
+            id="debitAccount"
+            name="debitAccount"
+            placeholder="Akun Biaya"
+            allowEmpty
+            accountStore={getAccount("expense")}
+          />
+        </div>
+      </div>
+    {/if}
     <div class="row">
-      <div class="form-group col-12 col-md-6">
-        <label for="dateStart">Tanggal Mulai</label>
-        <InputDate
-          id="dateStart"
-          name="dateStart"
-          class="form-control"
-          placeholder="Tanggal Mulai"
-          value={new Date()}
-          range={false}
-        />
-      </div>
-      <div class="form-group col-12 col-md-6">
-        <label for="dateEnd">Tanggal Akhir</label>
-        <InputDate
-          id="dateEnd"
-          name="dateEnd"
-          class="form-control"
-          placeholder="Tanggal Akhir"
-          value={new Date()}
-          range={false}
-        />
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-12">
-        <label for="categoryId">Kategori Amortisasi</label>
-        <ComboxField
-          id="amortizationId"
-          name="amortizationId"
-          class="form-control"
-          items={$stockStore}
-          valueId="id"
-          labelId="name"
-          placeholder="Kategori Amortisasi"
-        />
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-12">
-        <label for="creditAccount">Akun Kredit</label>
-        <AccountSelect id="creditAccount" name="creditAccount" placeholder="Akun Aset" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-12 col-md-6">
-        <label for="quantity">Jumlah</label>
-        <InputField id="quantity" name="quantity" class="form-control" type="number" placeholder="Jumlah" />
-      </div>
-      <div class="form-group col-12 col-md-6">
-        <label for="priceItem">Harga</label>
-        <InputRp id="priceItem" name="priceItem" class="form-control" placeholder="Harga" />
-      </div>
+      {#if !transform || transform === "IN"}
+        <div class="form-group col-12 col-md-6">
+          <label for="quantity">Jumlah</label>
+          <InputNumberField id="quantity" name="quantity" class="form-control" format="number" placeholder="Jumlah" />
+        </div>
+        <div class="form-group col-12 col-md-6">
+          <label for="price">Harga</label>
+          <InputNumberField id="price" name="price" class="form-control" placeholder="Harga" />
+        </div>
+      {:else}
+        <div class="form-group col-12">
+          <label for="quantity">Jumlah</label>
+          <InputNumberField
+            id="quantity"
+            name="quantity"
+            class="form-control"
+            format="number"
+            placeholder="Jumlah"
+            validate={(_) => {
+              if (!_ || _ === 0) {
+                $fieldsErrors = { ...$fieldsErrors, quantity: ["Jumlah barang harus diisi dan tidak boleh 0"] };
+              } else if (_ > stock.quantity) {
+                $fieldsErrors = {
+                  ...$fieldsErrors,
+                  quantity: ["Permintaan barang melebihi dari barang yang disediakan"]
+                };
+              } else {
+                fieldsErrors.update((_) => {
+                  delete _.quantity;
+                  return _;
+                });
+              }
+            }}
+          />
+        </div>
+      {/if}
     </div>
   </Form>
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Tutup
     </button>
-    <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
       <i class="icon-floppy-disk mr-2" />
       Simpan
     </button>
