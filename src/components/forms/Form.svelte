@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher, tick, onMount } from "svelte";
+  import { createEventDispatcher, onMount, tick } from "svelte";
   import { writable } from "svelte/store";
   import { ZodError } from "@deboxsoft/zod";
   import { createFormContext } from "__@stores/form";
@@ -18,7 +18,11 @@
   export let feedbackValidateDisable = false;
   export let isValid = writable(false);
 
-  const { submitted: _submitted, fieldsErrors: _fieldsErrors, fields: _fields } = createFormContext({
+  const {
+    submitted: _submitted,
+    fieldsErrors: _fieldsErrors,
+    fields: _fields
+  } = createFormContext({
     schema,
     values,
     validateField,
@@ -33,35 +37,37 @@
   $: fields = _fields;
 
   onMount(async () => {
-    await tick()
+    await tick();
     if (checkValidateFirst) {
       try {
-        const _values = validate()
+        const _values = validate();
       } catch (e) {}
     }
-  })
+  });
 
-  export function submitHandler() {
+  export let submitHandler = () => {
     try {
       !feedbackValidateDisable && ($submitted = true);
       const _values = validate();
       dispatch("submit", _values);
       return _values;
-    }catch (e) {
+    } catch (e) {
+      console.error(e);
       if (e instanceof ZodError) {
-        notify(`kesalahan validasi`, "error");
+        throw e.errors[0];
       }
       throw e;
     }
-  }
+  };
 
   function validate() {
+    let _value = {};
     try {
       if (schema) {
-        return schema
+        _value = schema
           .transform((input) => {
             if (typeof transform === "function") {
-              return transform(input)
+              return transform(input);
             }
             if (ignoreAttribs) {
               if (Array.isArray(ignoreAttribs)) {
@@ -77,10 +83,12 @@
             return input;
           })
           .parse($fields);
+        $isValid = true;
       } else if (transform) {
-        return transform($fields)
+        _value = transform($fields);
+        $isValid = true;
       }
-      return {};
+      return _value;
     } catch (e) {
       if (e instanceof ZodError) {
         $fieldsErrors = e.flatten().fieldErrors;

@@ -24,14 +24,39 @@ export interface Options {
 }
 
 const key = Symbol("form");
-
+const createFieldsErrorStore = (isValid: Writable<boolean>) => {
+  const { set, subscribe, update } = writable({});
+  return {
+    subscribe,
+    set: (v) => {
+      // set valid or invalid
+      if (Object.keys(v).length === 0) {
+        isValid.set(true);
+      } else {
+        isValid.set(false);
+      }
+      set(v);
+    },
+    update: (cb) => {
+      update((v) => {
+        const _errors = cb(v);
+        if (Object.keys(v).length === 0) {
+          isValid.set(true);
+        } else {
+          isValid.set(false);
+        }
+        return _errors;
+      });
+    }
+  };
+};
 export const createFormContext = ({
   schema,
   values,
   validateField,
   fields = writable<Record<string, any>>(values),
-  isValid = writable(false),
-  fieldsErrors = writable({}),
+  isValid = writable<boolean>(false),
+  fieldsErrors = createFieldsErrorStore(isValid),
   submittedEnable = false
 }: Options) => {
   let submitted = writable(submittedEnable);

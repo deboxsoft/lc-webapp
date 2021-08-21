@@ -1,6 +1,6 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import AutoCompleteField from "__@comps/forms/AutoCompleteField.svelte";
+  import AutoCompleteField from "../forms/AutoCompleteField.svelte";
   import { createEventDispatcher } from "svelte";
 
   const accountContext = stores.getAccountContext();
@@ -40,7 +40,7 @@
   items={$accountStore || []}
   pristineValue={accountId}
   on:change={changeHandler}
-  labelFunction={(account) => account && `${account.id} - ${account.name}`}
+  labelFunction={(account) => account && account.name}
   valueFieldName="id"
-  keywordsFunction={(account) => account && `${account.id} ${account.name}`}
+  keywordsFunction={(account) => account && account.name}
 />
