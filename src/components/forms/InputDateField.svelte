@@ -18,6 +18,12 @@
   export let className = $$props.class || "form-control";
   export let width = "100%";
   export let showClearButton = false;
+  export let value = undefined;
+  if (value) {
+    if ($fields && name) {
+      $fields[name] = value;
+    }
+  }
   export let selected = $fields
     ? name
       ? $fields[name]

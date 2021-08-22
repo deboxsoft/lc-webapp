@@ -636,7 +636,7 @@
       border-bottom-width: 3px;
       border-left-width: 3px;
       right: 1.125em;
-      z-index: 4;
+      z-index: 1;
     }
     &.-show-clear:not(.-hide-arrow)::after {
       right: 2.3em;
@@ -711,7 +711,7 @@
       -webkit-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
       transform: translateY(-50%);
-      z-index: 4;
+      z-index: 1;
     }
     &:not(.-show-clear) .autocomplete-clear-button {
       display: none;

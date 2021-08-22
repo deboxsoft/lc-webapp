@@ -15,7 +15,7 @@
   export let transform = undefined;
   export let submittedEnable = false;
   export let checkValidateFirst = false;
-  export let feedbackValidateDisable = false;
+  export let feedbackValidateDisable = checkValidateFirst;
   export let isValid = writable(false);
 
   const {

@@ -12,7 +12,7 @@
   export let fields = context?.fields;
   export let fieldsErrors = context?.fieldsError;
   export let name;
-  export let validate = context?.validateField && name ? context.validateField(name) : () => {}
+  export let validate = context?.validateField && name ? context.validateField(name) : () => {};
   export let prependDisable = false;
   export let textPosition = "right";
   export let disabled = false;
@@ -82,7 +82,7 @@
     return () => {
       let result = autoNumeric.getNumericString();
       if (resultType === "number") {
-        result = parseFloat(result);
+        result = result ? parseFloat(result) : undefined;
       }
       if (fields && name) {
         $fields[name] = result;
