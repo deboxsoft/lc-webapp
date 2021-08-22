@@ -1,34 +1,34 @@
 <!--routify:options title="Manajemen Bank"-->
 <script>
   import { url, goto } from "@roxi/routify";
+  import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import Table from "./_components/TableBank.svelte";
+  import BankTable from "./_components/BankTable.svelte";
   import Dropdown from "../../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../../components/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
   import { createReportContext } from "./_export";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
+  const { bankStore } = stores.getBankContext();
   const { readGranted, createGranted } = createAclContext();
   const reportContext = createReportContext();
-  let bankList;
   if (!readGranted) {
     $goto("/access-denied");
   }
 
-  setBreadcrumbContext({ path: $url("./"), title: "bank" });
   const createExportMenuHandler = (close) => ({
     pdf: () => {
-      reportContext.pdf(bankList);
+      reportContext.pdf($bankStore);
       close();
     },
     csv: () => {
-      reportContext.csv(bankList);
+      reportContext.csv($bankStore);
       close();
     },
     print: () => {
-      reportContext.print(bankList);
+      reportContext.print($bankStore);
       close();
     }
   });
@@ -79,7 +79,7 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <Table bind:bankList />
+      <BankTable {bankStore} />
     </div>
   </div>
 </PageLayout>

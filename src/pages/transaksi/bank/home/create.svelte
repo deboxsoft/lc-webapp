@@ -1,9 +1,9 @@
 <!--routify:options title="Posting Data"-->
 <script>
-  import { onMount} from "svelte";
-  import { params, goto } from "@roxi/routify";
+  import { goto } from "@roxi/routify";
+  import { BankInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
-  import FormBank from "./_components/FormBank.svelte";
+  import BankForm from "./_components/BankForm.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
 
@@ -11,32 +11,26 @@
   if (!createGranted) {
     $goto("/access-denied");
   }
-  const { notify, loading } = getApplicationContext();
-  const { currentDateStore } = stores.getPreferenceAccountingContext();
+  const { notify } = getApplicationContext();
+  const { getCurrentDate } = stores.getPreferenceAccountingContext();
   const { create } = stores.getBankContext();
 
-  $loading = true;
-  let openDialog;
-  onMount(() => {
-    openDialog();
-    $loading = false;
-  });
-  let bank = {
-    date: $currentDateStore
-  };
+  let bank;
+  (async () => {
+    const date = await getCurrentDate();
+    bank = {
+      date
+    };
+  })();
 
   async function onSubmit(values) {
-    try {
-      $loading = true;
-      await create(values);
-      $loading = false;
-      notify(`Berhasil membuat data bank ${values.name}`, "success");
-      $goto("./")
-    } catch (e) {
-      notify(e.message, "error");
-      $loading = false;
-    }
+    await create(values);
+    notify(`Berhasil membuat data bank ${values.name}`, "success");
   }
+
+  $: console.log(bank);
 </script>
 
-<FormBank bind:openDialog {bank} title="Membuat Data Bank" {onSubmit} to={$params.to} />
+{#if bank}
+  <BankForm {bank} schema={BankInputSchema} title="Membuat Data Bank" {onSubmit} />
+{/if}

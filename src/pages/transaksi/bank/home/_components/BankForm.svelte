@@ -2,33 +2,47 @@
   import { ZodError } from "@deboxsoft/zod";
   import { goto } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
-  import { BankInputSchema } from "@deboxsoft/accounting-api";
-  import { createEventDispatcher } from "svelte";
+  import { onMount } from "svelte";
   import { writable } from "svelte/store";
 
   // components
   import Modal from "../../../../../components/Modal.svelte";
   import InputField from "../../../../../components/forms/InputField.svelte";
   import Form from "../../../../../components/forms/Form.svelte";
-  // import InputNumberField from "../../../../../components/forms/InputNumberField.svelte";
   import AccountSelect from "../../../../../components/account/AccountSelect.svelte";
   import ComboxField from "../../../../../components/forms/ComboxField.svelte";
+  import { filteringAccountCash } from "../../../../../utils";
 
   const { notify, loading } = getApplicationContext();
-  const dispatch = createEventDispatcher();
 
   // props
   export let bank;
+  export let isUpdate = false;
   export let onSubmit;
   export let title;
   export let to = "./";
-  export let openDialog;
+  export let schema;
 
   // state
-  let fields;
-  let idReadOnly = true;
-  let fieldsErrors = writable([]);
-  let submitted = writable(false);
+  let openDialog,
+    fields,
+    isValid = writable(false),
+    fieldsErrors,
+    submitting = false;
+
+  onMount(() => {
+    openDialog();
+  });
+
+  function getAccount(accountType) {
+    const accountStore = getAccountLeaf();
+    switch (accountType) {
+      case "cash": {
+        return filteringAccountCash(accountStore);
+      }
+    }
+  }
+
   const bankList = [
     "Bank Central Asia (BCA)",
     "Bank Mandiri",
@@ -152,29 +166,31 @@
   ];
 
   async function submitHandler() {
-    $loading = true;
     try {
-      BankInputSchema.parse($fields);
+      $loading = true;
+      submitting = true;
       await onSubmit($fields);
-      $loading = false;
       $goto(to);
     } catch (error) {
+      console.error(error);
       if (error instanceof ZodError) {
         $fieldsErrors = error.flatten().fieldErrors;
         // remap field
         let fieldName;
         if ($fieldsErrors.name) {
-          fieldName = "nama"
+          fieldName = "nama";
         } else if ($fieldsErrors.nameAccountBank) {
-          fieldName = "nama rekening"
+          fieldName = "nama rekening";
         } else if ($fieldsErrors.noAccountBank) {
-          fieldName = "no rekening"
+          fieldName = "no rekening";
         } else if ($fieldsErrors.accountId) {
-          fieldName = "akun rekening"
+          fieldName = "akun rekening";
         }
         notify(`${fieldName} ${error.errors[0].message}`, "error");
       }
+    } finally {
       $loading = false;
+      submitting = false;
     }
   }
 
@@ -184,7 +200,7 @@
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form schema={BankInputSchema} values={bank} bind:fields>
+  <Form checkValidateFirst {schema} values={bank} bind:fields bind:fieldsErrors bind:isValid>
     <div class="card">
       <div class="card-body">
         <div class="row">
@@ -221,16 +237,10 @@
         </div>
         <div class="row">
           <div class="form-group col-12">
-            <label for="account">Akun Perkiraan</label>
-            <AccountSelect id="account" name="accountId"  allowEmpty />
+            <label for="account">Akun Bank</label>
+            <AccountSelect id="account" name="accountId" allowEmpty />
           </div>
         </div>
-<!--        <div class="row">-->
-<!--          <div class="form-group col-md-12">-->
-<!--            <label for="balance">Saldo Terakhir</label>-->
-<!--            <InputNumberField id="balance" name="balance" class="form-control" signed={false} />-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
     </div>
   </Form>
@@ -238,7 +248,7 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Cancel
     </button>
-    <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
       <i class="icon-floppy-disk mr-2" />
       Save
     </button>

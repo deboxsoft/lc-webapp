@@ -8,20 +8,22 @@
   import { getApplicationContext } from "__@modules/app";
 
   const { readGranted } = createAclContext();
+  const applicationContext = getApplicationContext();
+  const { find } = stores.createBankContext(applicationContext);
+
   if (!readGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  setBreadcrumbContext({ path: $url("./"), title: "Data bank" });
-  const applicationContext = getApplicationContext();
-  const { find } = stores.createBankContext(applicationContext);
-  let loading = true;
+  setBreadcrumbContext({ path: $url("./"), title: "Manajemen Bank" });
+
+  let submitting = true;
   find().then((result) => {
-    loading = false;
+    submitting = false;
   });
 </script>
 
-{#if loading}
+{#if submitting}
   <Loader />
 {:else}
   <slot />
