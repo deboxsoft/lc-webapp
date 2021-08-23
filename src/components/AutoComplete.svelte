@@ -563,7 +563,7 @@
     on:click={onInputClick}
     on:keypress={onKeyPress}
   />
-  {#if showClear}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>
+  {#if showClear && !disabled}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>
   {:else}
     <div class="form-control-feedback">
       <i class="icon-search4 mr-2 text-muted" />
