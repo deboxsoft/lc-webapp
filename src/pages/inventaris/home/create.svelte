@@ -1,30 +1,33 @@
-<!--routify:options title="membuat inventaris"-->
+<!--routify:options title="Posting Inventaris"-->
 <script>
+  import { InventoryInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
-  import Form from "../_components/FormInventory.svelte";
+  import InventoryForm from "../_components/InventoryForm.svelte";
   import { getApplicationContext } from "__@modules/app";
+  import { getAuthenticationContext } from "../../../modules/users";
 
-  const { notify, loading } = getApplicationContext();
+  const { authenticationStore } = getAuthenticationContext();
+  const { notify } = getApplicationContext();
   const { create } = stores.getInventoryContext();
+  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let inventory = {
-    quantity: 1
-  };
+  let inventory;
+
+  (async () => {
+    const now = await getCurrentDate();
+    inventory = {
+      date: now,
+      quantity: 1,
+      userId: $authenticationStore?.profile?.session?.userId
+    };
+  })();
 
   async function onSubmit(values) {
-    try {
-      $loading = true;
-      await create(values);
-      $loading = false;
-      notify(`Berhasil membuat data inventaris ${values.name}`, "success");
-    } catch (e) {
-      if (e.message) {
-        notify(e.message, "error");
-      }
-      console.error(e);
-      $loading = false;
-    }
+    await create(values);
+    notify(`Berhasil membuat data inventaris ${values.name}`, "success");
   }
 </script>
 
-<Form {inventory} title="Membuat Data Inventaris" {onSubmit} />
+{#if inventory}
+  <InventoryForm {inventory} schema={InventoryInputSchema} title="Posting Inventaris" {onSubmit} />
+{/if}

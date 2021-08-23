@@ -1,13 +1,13 @@
-<!--routify:options title="Detail Kategori Inventaris"-->
+<!--routify:options title="Rekap Depresiasi Kategori Inventaris"-->
 
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../components/Modal.svelte";
+  import DepreciationTable from "../../_components/DepreciationTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import CategoryInventoryView from "../../_components/CategoryInventoryView.svelte";
+  import Modal from "../../../../components/Modal.svelte";
+  import CategoryDepreciationTable from "../../_components/CategoryDepreciationTable.svelte";
 
   const { getCategoryInventory, categoryInventoryStore } = stores.getInventoryContext();
-
   let openDialog, categoryInventory;
 
   $: {
@@ -18,17 +18,14 @@
       }
     }
   }
-
   function closeHandler() {
     $goto("../");
   }
 </script>
 
-<Modal title="Kategori Inventaris" bind:openDialog onClose={closeHandler}>
-  <CategoryInventoryView {categoryInventory} />
+<Modal bind:openDialog title="Rekap Akumulasi Depresiasi Kategori Inventaris" onClose={closeHandler}>
+  <CategoryDepreciationTable {categoryInventory} />
   <svelte:fragment slot="footer">
-    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
-      Close
-    </button>
+    <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
   </svelte:fragment>
 </Modal>

@@ -1,9 +1,10 @@
 <!--routify:options title="Edit Kategori Inventaris"-->
 
 <script>
+  import { CategoryInventoryUpdateInputSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import FormCategoryInventory from "../../_components/FormCategoryInventory.svelte";
+  import CategoryInventoryForm from "../../_components/CategoryInventoryForm.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
 
@@ -11,27 +12,32 @@
   if (!updateGranted) {
     $goto("/access-denied");
   }
-  const { updateCategory, getCategoryInventory } = stores.getInventoryContext();
-  const { loading, notify } = getApplicationContext();
+  const { updateCategory, getCategoryInventory, categoryInventoryStore } = stores.getInventoryContext();
+  const { notify } = getApplicationContext();
+
+  let categoryInventory, loaded = false;
 
   $: to = $params.to || "../";
-  $: categoryInventory = getCategoryInventory($params.category);
-
-  async function onSubmit({ id, ...values }) {
-    try {
-      $loading = true;
-      await update($categoryInventory.id, values);
-      notify(`Berhasil mengupdate data kategori inventaris`, "success");
-      $loading = false;
-    } catch (e) {
-      if (e.message) {
-        notify(e.message, "error");
-      }
-      console.error(e);
-      $loading = false;
+  $: {
+    if (!loaded && $categoryInventoryStore) {
+      categoryInventory = getCategoryInventory($params.id);
+      loaded = true;
     }
   }
+
+  async function onSubmit({ id, ...values }) {
+    await updateCategory(categoryInventory.id, values);
+    notify(`Berhasil mengupdate data kategori inventaris`, "success");
+  }
 </script>
-{#if $categoryInventory}
-  <FormCategoryInventory bank={$categoryInventory} isUpdate {onSubmit} title="Update Kategori Inventaris" {to} />
+
+{#if categoryInventory}
+  <CategoryInventoryForm
+    {categoryInventory}
+    schema={CategoryInventoryUpdateInputSchema}
+    isUpdate
+    {onSubmit}
+    title="Update Kategori Inventaris"
+    {to}
+  />
 {/if}

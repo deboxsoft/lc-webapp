@@ -6,20 +6,19 @@
   import { getGroupDepreciation } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
 
+  const { getCategoryInventory } = stores.getInventoryContext();
   export let categoryInventory;
   let dropdownContext;
 </script>
 
 <tr>
   <td>{categoryInventory.name || ""}</td>
-  <td>{categoryInventory.estimatedLife || ""}</td>
+  <td>{getGroupDepreciation(categoryInventory.groupDepreciationId)?.label || ""}</td>
   <td>
-    <AccountCell id={categoryInventory.assetAccount} />
-  </td><td>
     <AccountCell id={categoryInventory.accumulatedDepreciationAccount} />
   </td>
   <td>
-    <AccountCell id={categoryInventory.depreciationAccount} />
+    <AccountCell id={categoryInventory.expenseDepreciationAccount} />
   </td>
   <td style="cursor: pointer; padding: 0">
     <Dropdown
@@ -32,15 +31,18 @@
       <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">
         <i class="icon-menu9" />
       </DropdownToggle>
-      <svelte:fragment slot="menu">
-        <a href={$url("./:id/view", { id: categoryInventory.id })} class="dropdown-item"
-          ><i class="icon-eye" />Detail Kategori Inventaris</a
+      <svelte:fragment slot="menu" let:closeHandler>
+        <a href={$url("./:id/depreciation", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
+        ><i class="icon-clipboard3" />Rekap Depresiasi</a
         >
-        <a href={$url("./:id/update", { id: categoryInventory.id })} class="dropdown-item"
-          ><i class="icon-trash-alt" />Update Kategori Inventaris</a
+        <a href={$url("./:id/view", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-eye" />Detail</a
         >
-        <a href={$url("./:id/remove", { id: categoryInventory.id })} class="dropdown-item"
-          ><i class="icon-pencil" />Hapus Kategori Inventaris</a
+        <a href={$url("./:id/update", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-trash-alt" />Edit</a
+        >
+        <a href={$url("./:id/remove", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-pencil" />Hapus</a
         >
       </svelte:fragment>
     </Dropdown>

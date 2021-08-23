@@ -1,14 +1,10 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { writable } from "svelte/store";
-  import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   import { goto } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
-  import { InventoryInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-
   import InputDate from "../../../components/forms/InputDateField.svelte";
   import InputRp from "../../../components/forms/InputNumberField.svelte";
   import InputField from "../../../components/forms/InputField.svelte";
@@ -16,67 +12,81 @@
   import Form from "../../../components/forms/Form.svelte";
   import AccountSelect from "../../../components/account/AccountSelect.svelte";
   import { getAuthenticationContext } from "../../../modules/users";
+  import { filteringAccountCash, filteringAccountInventory } from "../../../utils";
 
   const { notify, loading } = getApplicationContext();
-  const { categoryInventoryStore } = stores.getInventoryContext();
+  const { authenticationStore } = getAuthenticationContext();
+  const { categoryInventoryStore, getCategoryInventory } = stores.getInventoryContext();
+  const { getAccountLeaf } = stores.getAccountContext();
   const dispatch = createEventDispatcher();
 
   // props
   export let inventory;
-  export const isUpdate = false;
+  export let isUpdate = false;
   export let onSubmit;
   export let title;
   export let to = "./";
+  export let schema;
 
   // state
-  let state = "prepare";
-  let openDialog;
-  let fields;
-  let idReadOnly = true;
-  let fieldsErrors = writable([]);
-  let submitted = writable(false);
+  let openDialog,
+    fields,
+    isValid,
+    fieldsErrors,
+    submitting = false;
 
   onMount(() => {
     openDialog();
-  })
+  });
+
+  function getAccount(accountType) {
+    const accountStore = getAccountLeaf();
+    switch (accountType) {
+      case "inventory": {
+        return filteringAccountInventory(accountStore);
+      }
+      case "cash": {
+        return filteringAccountCash(accountStore);
+      }
+    }
+  }
 
   async function submitHandler() {
     try {
-      state = "submitting"
       $loading = true;
-      await onSubmit($fields);
-      $loading = false;
-      state = "success"
+      submitting = true;
+      await onSubmit(schema.parse($fields));
       $goto(to);
     } catch (error) {
-      state = "failed";
-      notify(`${error.errors[0].message}`, "error");
+      console.error(error);
+      notify(`${error.path[0]} ${error.message}`, "error");
+    } finally {
+      submitting = false;
       $loading = false;
     }
   }
 
   function closeHandler() {
-    state = "close"
     $goto(to);
   }
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form schema={InventoryInputSchema}  values={inventory} bind:fields bind:submitted>
+  <Form checkValidateFirst {schema} values={{ ...inventory }} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
       <div class="form-group col-12 col-md-6">
         <label for="name">Nama</label>
         <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
       </div>
       <div class="form-group col-12 col-md-6">
-        <label for="purchaseDate">Tanggal Pembelian</label>
+        <label for="date">Tanggal</label>
         <InputDate
-          id="purchaseDate"
-          name="purchaseDate"
+          id="date"
+          name="date"
           class="form-control"
-          placeholder="Tanggal Pembelian"
-          value={new Date()},
+          placeholder="Tanggal"
           range=""
+          disabled
         />
       </div>
     </div>
@@ -91,23 +101,53 @@
           valueId="id"
           labelId="name"
           placeholder="Kategori"
+          disabled={isUpdate}
         />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="creditAccount">Akun Kredit</label>
-        <AccountSelect id="creditAccount" name="creditAccount" placeholder="Akun Kredit" />
+        <label for="debitAccount">Akun Inventaris</label>
+        <AccountSelect
+          id="debitAccount"
+          name="debitAccount"
+          accountStore={getAccount("inventory")}
+          accountId={inventory?.debitAccount}
+          placeholder="Akun Inventaris"
+          disabled={isUpdate}
+          allowEmpty
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-12">
+        <label for="creditAccount">Akun Pembayaran</label>
+        <AccountSelect
+          id="creditAccount"
+          name="creditAccount"
+          accountStore={getAccount("cash")}
+          accountId={inventory?.creditAccount}
+          placeholder="Akun Pembayaran"
+          disabled={isUpdate}
+          allowEmpty
+        />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12 col-md-6">
         <label for="quantity">Jumlah</label>
-        <InputField id="quantity" name="quantity" class="form-control" type="number" placeholder="Jumlah" />
+        <InputField
+          id="quantity"
+          name="quantity"
+          class="form-control"
+          type="number"
+          placeholder="Jumlah"
+          disabled={isUpdate}
+        />
       </div>
       <div class="form-group col-12 col-md-6">
         <label for="priceItem">Harga</label>
-        <InputRp id="priceItem" name="priceItem" class="form-control" placeholder="Harga" />
+        <InputRp id="priceItem" name="priceItem" class="form-control" placeholder="Harga" disabled={isUpdate} />
       </div>
     </div>
   </Form>
@@ -115,7 +155,7 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Tutup
     </button>
-    <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
       <i class="icon-floppy-disk mr-2" />
       Simpan
     </button>

@@ -1,25 +1,21 @@
 <!--routify:options title="Buat Kategori Inventaris"-->
 <script>
+  import { CategoryInventoryInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
-  import Form from "../_components/FormCategoryInventory.svelte";
+  import CategoryInventoryForm from "../_components/CategoryInventoryForm.svelte";
   import { getApplicationContext } from "__@modules/app";
 
-  const { notify, loading } = getApplicationContext();
+  const { notify } = getApplicationContext();
   const { createCategory } = stores.getInventoryContext();
 
-  let categoryInventory = {};
+  let categoryInventory = {
+    groupDepreciationId: "1"
+  };
 
   async function onSubmit(values) {
-    try {
-      $loading = true;
-      await createCategory(values);
-      $loading = false;
-      notify(`Berhasil membuat kategori inventaris ${values.name}`, "success");
-    } catch (e) {
-      notify(e.message, "error");
-      $loading = false;
-    }
+    await createCategory(values);
+    notify(`Berhasil membuat kategori inventaris ${values.name}`, "success");
   }
 </script>
 
-<Form {categoryInventory} title="Membuat Data Kategori Inventaris" {onSubmit} />
+<CategoryInventoryForm {categoryInventory} schema={CategoryInventoryInputSchema} title="Membuat Data Kategori Inventaris" {onSubmit} />

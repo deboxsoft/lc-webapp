@@ -4,58 +4,82 @@
   import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
-  import { InventoryInputSchema } from "@deboxsoft/accounting-api";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import Form from "../../../components/forms/Form.svelte";
   import InputField from "../../../components/forms/InputField.svelte";
   import ComboxField from "../../../components/forms/ComboxField.svelte";
   import AccountSelect from "../../../components/account/AccountSelect.svelte";
+  import { filteringAccountAccumulationDepreciation, filteringAccountExpense } from "../../../utils";
 
   const { notify, loading } = getApplicationContext();
   const { categoryInventoryStore } = stores.getInventoryContext();
+  const { getAccountLeaf } = stores.getAccountContext();
   const dispatch = createEventDispatcher();
+  const accounts = getAccountLeaf();
 
   const depreciationMethods = [{ id: "STRAIGHT_LINE", label: "Garis Lurus" }];
 
   // props
   export let categoryInventory;
-  export const isUpdate = false;
+  export let isUpdate = false;
   export let onSubmit;
   export let title;
   export let to = "./";
+  export let schema;
 
   // state
-  let state = "prepare";
-  let openDialog;
-  let fields;
-  let idReadOnly = true;
-  let fieldsErrors = writable([]);
-  let submitted = writable(false);
+  let openDialog,
+    fields,
+    isValid = writable(false),
+    fieldsErrors,
+    submitting = false;
 
   onMount(() => {
     openDialog();
   });
 
+  function getAccount(accountType) {
+    const accountStore = getAccountLeaf();
+    switch (accountType) {
+      case "expense": {
+        return filteringAccountExpense(accountStore);
+      }
+      case "accumulationDepreciation": {
+        return filteringAccountAccumulationDepreciation(accountStore);
+      }
+    }
+  }
+
   async function submitHandler() {
     try {
       $loading = true;
-      await onSubmit($fields);
-      $loading = false;
+      submitting = true;
+      await onSubmit(schema.parse($fields));
       $goto(to);
     } catch (error) {
-      notify(`${error.errors[0].message}`, "error");
+      console.error(error);
+      notify(`${error.path[0]} ${error.message}`, "error");
+    } finally {
+      submitting = false;
       $loading = false;
     }
   }
 
-  function cancelHandler() {
+  function closeHandler() {
     $goto(to);
   }
 </script>
 
-<Modal bind:openDialog {title} onClose={cancelHandler}>
-  <Form schema={InventoryInputSchema} values={categoryInventory} bind:fields bind:submitted>
+<Modal bind:openDialog {title} onClose={closeHandler}>
+  <Form
+    checkValidateFirst
+    {schema}
+    values={{ ...categoryInventory }}
+    bind:fields
+    bind:fieldsErrors
+    bind:isValid
+  >
     <div class="row">
       <div class="form-group col-12">
         <label for="name">Nama</label>
@@ -71,47 +95,44 @@
           class="form-control"
           items={groupDepreciation}
           placeholder="Kelompok Depresiasi"
+          disabled={isUpdate}
         />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="assetAccount">Akun Aset Inventaris</label>
-        <AccountSelect id="assetAccount" name="assetAccount" placeholder="Akun Aset" />
+        <label for="expenseDepreciationAccount">Biaya Penyusutan Inventaris</label>
+        <AccountSelect
+          id="expenseDepreciationAccount"
+          name="expenseDepreciationAccount"
+          accountStore={getAccount("expense")}
+          accountId={categoryInventory?.expenseDepreciationAccount}
+          placeholder="Biaya Penyususan Inventaris"
+          allowEmpty
+          disabled={isUpdate}
+        />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="accumulatedDepreciationAccount">Akun Akumulasi Depresiasi</label>
+        <label for="accumulatedDepreciationAccount">Akumulasi Penyusutan Inventaris</label>
         <AccountSelect
           id="accumulatedDepreciationAccount"
           name="accumulatedDepreciationAccount"
-          placeholder="Akun Aset"
+          accountStore={getAccount("accumulationDepreciation")}
+          accountId={categoryInventory?.accumulatedDepreciationAccount}
+          placeholder="Akumulasi Penyusutan Inventaris"
+          allowEmpty
+          disabled={isUpdate}
         />
       </div>
     </div>
-    <div class="row">
-      <div class="form-group col-12">
-        <label for="expenseDepreciationAccount">Akun Biaya Depresiasi</label>
-        <AccountSelect id="expenseDepreciationAccount" name="expenseDepreciationAccount" placeholder="Akun Aset" />
-      </div>
-    </div>
-    <!--    <div class="row">-->
-    <!--      <div class="form-group col-12 col-md-6">-->
-    <!--        <label for="quantity">Rasio Depresiasi</label>-->
-    <!--        <InputField id="quantity" name="quantity" class="form-control" type="number" placeholder="Rasio Depresiasi" />-->
-    <!--      </div>-->
-    <!--      <div class="form-group col-12 col-md-6">-->
-    <!--        <label for="priceItem">Nilai Residu</label>-->
-    <!--        <InputRp id="priceItem" name="priceItem" class="form-control" placeholder="Nilai Residu" />-->
-    <!--      </div>-->
-    <!--    </div>-->
   </Form>
   <svelte:fragment slot="footer">
-    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={cancelHandler}>
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Cancel
     </button>
-    <button type="button" class="btn btn-primary ml-1" disabled={$loading} on:click={submitHandler}>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
       <i class="icon-floppy-disk mr-2" />
       Save
     </button>
