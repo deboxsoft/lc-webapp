@@ -1,4 +1,4 @@
-<!--routify:options title="Rekap Depresiasi Inventaris"-->
+<!--routify:options title="Rekap Akumulasi Penyusutan Aktiva Tetap"-->
 
 <script>
   import { goto, params } from "@roxi/routify";
@@ -23,7 +23,7 @@
   }
 
 </script>
-<Modal bind:openDialog title={`Rekap Akumulasi Depresiasi ${inventory?.name}`} onClose={closeHandler}>
+<Modal bind:openDialog title={`Rekap Akumulasi Penyusutan ${inventory?.name}`} onClose={closeHandler}>
     <DepreciationTable {inventory} />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>

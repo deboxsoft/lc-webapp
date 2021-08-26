@@ -101,13 +101,13 @@
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="expenseDepreciationAccount">Biaya Penyusutan Inventaris</label>
+        <label for="expenseDepreciationAccount">Biaya Penyusutan Aktiva Tetap</label>
         <AccountSelect
           id="expenseDepreciationAccount"
           name="expenseDepreciationAccount"
           accountStore={getAccount("expense")}
           accountId={categoryInventory?.expenseDepreciationAccount}
-          placeholder="Biaya Penyususan Inventaris"
+          placeholder="Biaya Penyususan Aktiva Tetap"
           allowEmpty
           disabled={isUpdate}
         />
@@ -115,13 +115,13 @@
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="accumulatedDepreciationAccount">Akumulasi Penyusutan Inventaris</label>
+        <label for="accumulatedDepreciationAccount">Akumulasi Penyusutan Aktiva Tetap</label>
         <AccountSelect
           id="accumulatedDepreciationAccount"
           name="accumulatedDepreciationAccount"
           accountStore={getAccount("accumulationDepreciation")}
           accountId={categoryInventory?.accumulatedDepreciationAccount}
-          placeholder="Akumulasi Penyusutan Inventaris"
+          placeholder="Akumulasi Penyusutan Aktiva Tetap"
           allowEmpty
           disabled={isUpdate}
         />

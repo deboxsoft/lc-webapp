@@ -107,13 +107,13 @@
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="debitAccount">Akun Inventaris</label>
+        <label for="debitAccount">Akun Aktiva Tetap</label>
         <AccountSelect
           id="debitAccount"
           name="debitAccount"
           accountStore={getAccount("inventory")}
           accountId={inventory?.debitAccount}
-          placeholder="Akun Inventaris"
+          placeholder="Akun Aktiva Tetap"
           disabled={isUpdate}
           allowEmpty
         />

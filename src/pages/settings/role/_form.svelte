@@ -211,7 +211,7 @@
       ]
     },
     inventory: {
-      label: "inventaris",
+      label: "aktiva-tetap",
       selected: false,
       indeterminate: false,
       actions: [

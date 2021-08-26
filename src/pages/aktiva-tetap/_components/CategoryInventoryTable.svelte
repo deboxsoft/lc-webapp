@@ -10,8 +10,8 @@
     <tr slot="header">
       <th>Nama</th>
       <th style="width: 200px">Kelompok Depresiasi</th>
-      <th style="width: 200px">Akumulasi Penyusutan Inventaris</th>
-      <th style="width: 200px">Biaya Penyusutan Inventaris</th>
+      <th style="width: 200px">Akumulasi Penyusutan Aktiva Tetap</th>
+      <th style="width: 200px">Biaya Penyusutan Aktiva Tetap</th>
       <th style="width: 30px;" />
     </tr>
     {#each $categoryInventoryStore as categoryInventory}

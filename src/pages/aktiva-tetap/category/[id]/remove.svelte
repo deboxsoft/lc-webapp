@@ -1,4 +1,4 @@
-<!--routify:options title="Hapus Kategori Inventaris"-->
+<!--routify:options title="Hapus Kategori Aktiva Tetap"-->
 
 <script>
   import { goto, params } from "@roxi/routify";
@@ -32,7 +32,7 @@
       const name = categoryInventory.name;
       if ($inventoryStore.some((_) => _.categoryId === categoryInventory.id)) {
         throw new Error(
-          `tidak dapat menghapus kategori '${name}' karena masih terdapat data inventaris pada kategori ini`
+          `tidak dapat menghapus kategori '${name}' karena masih terdapat data aktiva tetap pada kategori ini`
         );
       }
       await removeCategory($params.id);
@@ -53,7 +53,7 @@
   }
 </script>
 
-<Modal title="Hapus Kategori Inventaris" bind:openDialog onClose={closeHandler}>
+<Modal title="Hapus Kategori Aktiva Tetap" bind:openDialog onClose={closeHandler}>
   <div class="alert alert-warning alert-styled-left">
     Apa anda yakin akan menghapus kategori "{categoryInventory.name}"?
   </div>

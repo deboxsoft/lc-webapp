@@ -1,4 +1,4 @@
-<!--routify:options title="Hapus Inventaris"-->
+<!--routify:options title="Hapus Aktiva Tetap"-->
 <script>
   import { InventoryRemoveInputSchema } from "@deboxsoft/accounting-api";
   import { goto, params } from "@roxi/routify";
@@ -60,7 +60,7 @@
   }
 </script>
 
-<Modal bind:openDialog bind:closeDialog title="Hapus Inventaris" onClose={closeHandler}>
+<Modal bind:openDialog bind:closeDialog title="Hapus Aktiva Tetap" onClose={closeHandler}>
   <InventoryRemove inventory={{...inventory}} schema={InventoryRemoveInputSchema} />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>

@@ -1,4 +1,4 @@
-<!--routify:options title="Edit Kategori Inventaris"-->
+<!--routify:options title="Edit Kategori Aktiva Tetap"-->
 
 <script>
   import { CategoryInventoryUpdateInputSchema } from "@deboxsoft/accounting-api";
@@ -27,7 +27,7 @@
 
   async function onSubmit({ id, ...values }) {
     await updateCategory(categoryInventory.id, values);
-    notify(`Berhasil mengupdate data kategori inventaris`, "success");
+    notify(`Berhasil mengupdate data kategori aktiva tetap`, "success");
   }
 </script>
 
@@ -37,7 +37,7 @@
     schema={CategoryInventoryUpdateInputSchema}
     isUpdate
     {onSubmit}
-    title="Update Kategori Inventaris"
+    title="Update Kategori Aktiva Tetap"
     {to}
   />
 {/if}

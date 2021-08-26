@@ -1,4 +1,4 @@
-<!--routify:options title="Edit Inventaris"-->
+<!--routify:options title="Edit Aktiva Tetap"-->
 <script>
   import { InventoryUpdateInputSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
@@ -19,10 +19,10 @@
 
   async function onSubmit({ id, ...values }) {
     await update(inventory.id, values);
-    notify(`Berhasil mengupdate data inventaris`, "success");
+    notify(`Berhasil mengupdate data aktiva tetap`, "success");
   }
 </script>
 
 {#if inventory}
-  <InventoryForm {inventory} schema={InventoryUpdateInputSchema} isUpdate {onSubmit} title="Update Inventaris" {to} />
+  <InventoryForm {inventory} schema={InventoryUpdateInputSchema} isUpdate {onSubmit} title="Update Aktiva Tetap" {to} />
 {/if}

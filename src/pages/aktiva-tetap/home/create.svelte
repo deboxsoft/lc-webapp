@@ -1,4 +1,4 @@
-<!--routify:options title="Posting Inventaris"-->
+<!--routify:options title="Posting Aktiva Tetap"-->
 <script>
   import { InventoryInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
@@ -24,10 +24,10 @@
 
   async function onSubmit(values) {
     await create(values);
-    notify(`Berhasil membuat data inventaris ${values.name}`, "success");
+    notify(`Berhasil membuat data aktiva tetap ${values.name}`, "success");
   }
 </script>
 
 {#if inventory}
-  <InventoryForm {inventory} schema={InventoryInputSchema} title="Posting Inventaris" {onSubmit} />
+  <InventoryForm {inventory} schema={InventoryInputSchema} title="Posting Aktiva Tetap" {onSubmit} />
 {/if}

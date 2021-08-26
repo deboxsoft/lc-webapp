@@ -99,8 +99,8 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       show: stockShow
     },
     {
-      label: "Inventaris",
-      url: "/inventaris",
+      label: "Aktiva Tetap",
+      url: "/aktiva-tetap",
       icon: InventoryIcon,
       show: inventoryShow
     },

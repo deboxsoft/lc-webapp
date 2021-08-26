@@ -1,4 +1,4 @@
-<!--routify:options title="Detail Inventaris"-->
+<!--routify:options title="Detail Aktiva Tetap"-->
 
 <script>
   import { goto, params } from "@roxi/routify";
@@ -25,7 +25,7 @@
   }
 </script>
 
-<Modal title="Inventaris" bind:openDialog onClose={closeHandler}>
+<Modal title="Aktiva Tetap" bind:openDialog onClose={closeHandler}>
   <InventoryView {inventory} />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

@@ -40,13 +40,13 @@
         ><i class="icon-clipboard3" />Rekap Depresiasi</a
         >
         <a href={$url("./:id/view", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-eye" />Lihat Inventaris</a
+          ><i class="icon-eye" />Lihat Aktiva Tetap</a
         >
         <a href={$url("./:id/update", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-trash-alt" />Edit Inventaris</a
+          ><i class="icon-trash-alt" />Edit Aktiva Tetap</a
         >
         <a href={$url("./:id/remove", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-pencil" />Hapus Inventaris</a
+          ><i class="icon-pencil" />Hapus Aktiva Tetap</a
         >
       </svelte:fragment>
     </Dropdown>
