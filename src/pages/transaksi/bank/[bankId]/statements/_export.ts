@@ -14,9 +14,9 @@ export const createReportContext = () => {
       { text: dayjs(bankStatement.date).format("DD-MM-YYYY"), style: "cell-date" },
       { text: account, style: "cell" },
       { text: bankStatement.description, style: "cell" },
-      { text: convertToRp(bankStatement.in), style: "cell-rp" },
-      { text: convertToRp(bankStatement.out), style: "cell-rp" },
-      { text: convertToRp(bankStatement.balance), style: "cell-rp" }
+      { text: convertToRp(bankStatement.in), style: "cell-number" },
+      { text: convertToRp(bankStatement.out), style: "cell-number" },
+      { text: convertToRp(bankStatement.balance), style: "cell-number" }
       // { text: bank.balance, style: "cell" }
     ];
   };

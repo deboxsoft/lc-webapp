@@ -22,7 +22,7 @@ export const createReportContext = () => {
       const defParent = [
         nameCell(account.name, { isCsv, params: { ...paramsParent, margin: [options.paddingParent, 0, 0, 0] } }),
         emptyCell({ isCsv, params: paramsParent }),
-        balanceCell(balance, { isCsv, params: paramsParent })
+        balanceCell(balance, { isCsv, params: paramsParent, type: "rp" })
       ];
       const defChild = [];
       if (account.children) {
@@ -31,7 +31,7 @@ export const createReportContext = () => {
           const balance = metadata.isBalanceFixed ? child.balanceFixed : child.balance;
           defChild.push([
             nameCell(child.name, { isCsv, params: { ...paramsChildren, margin: [options.paddingChild, 0, 0, 0] } }),
-            balanceCell(balance, { isCsv, params: paramsChildren }),
+            balanceCell(balance, { isCsv, params: paramsChildren, type: "rp" }),
             emptyCell({ isCsv, params: paramsChildren })
           ]);
         }

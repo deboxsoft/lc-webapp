@@ -21,7 +21,7 @@ export const pdfStyles = {
   "cell-date": {
     alignment: "center"
   },
-  "cell-rp": {
+  "cell-number": {
     alignment: "right"
   }
 };

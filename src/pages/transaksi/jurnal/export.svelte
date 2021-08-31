@@ -43,16 +43,16 @@
               [
                 { text: debitAccount.id, style: "cell", border: [false, false, false, false] },
                 { text: debitAccount.name, style: "cell", border: [false, false, false, false] },
-                { text: convertToRp(transaction.amount), style: "cell-rp", border: [false, false, false, false] },
-                { text: "-", style: "cell-rp", border: [false, false, false, false] }
+                { text: convertToRp(transaction.amount), style: "cell-number", border: [false, false, false, false] },
+                { text: "-", style: "cell-number", border: [false, false, false, false] }
               ],
               ...transaction.creditAccounts.map((_) => {
                 const creditAccount = get(getAccount(_.id));
                 return [
                   { text: creditAccount.id, style: "cell", border: [false, false, false, false] },
                   { text: creditAccount.name, style: "cell", border: [false, false, false, false] },
-                  { text: "-", style: "cell-rp", border: [false, false, false, false] },
-                  { text: convertToRp(_.amount), style: "cell-rp", border: [false, false, false, false] }
+                  { text: "-", style: "cell-number", border: [false, false, false, false] },
+                  { text: convertToRp(_.amount), style: "cell-number", border: [false, false, false, false] }
                 ];
               })
             ]

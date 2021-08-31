@@ -1,13 +1,17 @@
 <script>
   import InventoryTable from "../_components/InventoryTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import Button from "../../../components/Button.svelte";
   import { getApplicationContext } from "../../../modules/app";
   import { Container } from "@deboxsoft/module-core";
+  import { url } from "@roxi/routify";
 
   const inventoryContext = Container.get("inventory");
   inventoryContext.sync = fetchData;
   const applicationContext = getApplicationContext();
+  const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
+  setBreadcrumbContext({ path: $url("./"), title: "dashboard" });
   const { loading } = applicationContext;
   const { findPage, inventoryStore, inventoryPageInfo } = stores.getInventoryContext();
 

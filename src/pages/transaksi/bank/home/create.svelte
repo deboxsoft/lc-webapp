@@ -28,7 +28,6 @@
     notify(`Berhasil membuat data bank ${values.name}`, "success");
   }
 
-  $: console.log(bank);
 </script>
 
 {#if bank}

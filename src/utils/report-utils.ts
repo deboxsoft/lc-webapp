@@ -1,17 +1,24 @@
+import dayjs from "dayjs";
 import { convertToRp } from "./converter-num-rp";
-
-export const numericCell = (amount, { isCsv, params = {} }) => {
+type Options = {
+  isCsv?: boolean;
+  params?: Record<string, any>;
+  type?: "number" | "rp";
+};
+export const numericCell = (amount, { isCsv, params = {}, type = "number" }: Options) => {
   return isCsv
     ? amount
-      ? parseFloat(amount).toFixed(2)
+      ? type === "rp"
+        ? parseFloat(amount).toFixed(2)
+        : parseInt(amount)
       : undefined
     : {
-        text: convertToRp(amount),
-        style: "cell-rp",
+        text: amount ? (type === "rp" ? convertToRp(amount) : amount) : "",
+        style: "cell-number",
         ...params
       };
 };
-export const textCell = (text, { isCsv, params = {} }) =>
+export const textCell = (text = "", { isCsv, params = {} }) =>
   isCsv
     ? text
     : {
@@ -27,3 +34,16 @@ export const emptyCell = ({ isCsv, params = {} }) =>
         style: "cell",
         ...params
       };
+
+export const dateCell = (date, { isCsv, params = {} }) => {
+  const dateText = date ? dayjs(date).format("DD-MM-YYYY") : "";
+  return isCsv
+    ? date
+      ? dateText
+      : undefined
+    : {
+        text: dateText,
+        style: "cell",
+        ...params
+      };
+};

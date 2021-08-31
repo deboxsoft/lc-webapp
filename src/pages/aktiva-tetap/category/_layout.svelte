@@ -2,12 +2,16 @@
   import CategoryInventoryTable from "../_components/CategoryInventoryTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { Container } from "@deboxsoft/module-core";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { getApplicationContext } from "../../../modules/app";
+  import { url } from "@roxi/routify";
 
   const applicationContext = getApplicationContext();
   const inventoryContext = Container.get("inventory");
   inventoryContext.sync = fetchData;
   const { loading } = applicationContext;
+  const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
+  setBreadcrumbContext({ path: $url("./"), title: "kategori" });
   const { findCategory, categoryInventoryStore } = stores.getInventoryContext();
 
   let submitting = false,
@@ -23,7 +27,6 @@
       submitting = false;
     });
   }
-  console.log("layout");
 </script>
 
 <div class="card d-flex flex-1 flex-column">

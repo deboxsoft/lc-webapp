@@ -68,7 +68,6 @@
     } catch (e) {
       state = "authenticated-error";
       $loading = false;
-      console.log($loading);
       console.error(e);
     }
   }

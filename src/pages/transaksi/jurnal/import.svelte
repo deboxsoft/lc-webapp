@@ -59,7 +59,6 @@
   });
 
   function getAccountsCash(e) {
-    console.log(type, "type");
     if (type === "CASHIER") {
       return filteringAccountDebit(accountStore);
     } else if (type === "PAYMENT") {

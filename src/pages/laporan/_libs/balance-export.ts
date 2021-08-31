@@ -22,7 +22,7 @@ export const createReportContext = () => {
       const defParent = [
         nameCell(account.name, { isCsv, params: { ...paramsParent, margin: [options.paddingParent, 0, 0, 0] } }),
         emptyCell({ isCsv, params: paramsParent }),
-        balanceCell(account.balanceFixed, { isCsv, params: paramsParent }),
+        balanceCell(account.balance, { isCsv, params: paramsParent, type: "rp" }),
         emptyCell({ isCsv, params: paramsParent })
       ];
       const defChild = [];
@@ -31,7 +31,7 @@ export const createReportContext = () => {
         for (const child of account.children) {
           defChild.push([
             nameCell(child.name, { isCsv, params: { ...paramsChildren, margin: [options.paddingChild, 0, 0, 0] } }),
-            balanceCell(child.balanceFixed, { isCsv, params: paramsChildren }),
+            balanceCell(child.balance, { isCsv, params: paramsChildren, type: "rp" }),
             emptyCell({ isCsv, params: paramsChildren }),
             emptyCell({ isCsv, params: paramsChildren })
           ]);
@@ -50,7 +50,7 @@ export const createReportContext = () => {
     nameCell(label, { isCsv, params }),
     emptyCell({ isCsv, params }),
     emptyCell({ isCsv, params }),
-    balanceCell(balance, { isCsv, params })
+    balanceCell(balance, { isCsv, params, type: "rp" })
   ];
 
   const processingData = (list: any[], isCsv = false) => {

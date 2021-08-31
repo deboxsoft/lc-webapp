@@ -36,7 +36,7 @@
     }
   }
 
-  const createExportMenuHandler = (close) => {
+  function createExportMenuHandler(close) {
     const title = "NERACA";
     const getItemListReport = () => {
       const { balanceSheetReport, statementIncomeBalance, assetsBalance, liabilitiesBalance } = report;
@@ -76,7 +76,7 @@
         close();
       }
     };
-  };
+  }
 
   async function generateReportHandler() {
     const data = await balanceSheetReport();

@@ -10,6 +10,7 @@
 
   const { readGranted } = createAclContext();
   const applicationContext = getApplicationContext();
+  const reportContext = createReportContext();
   const { loading } = applicationContext;
   stores.createInventoryContext(applicationContext);
   if (!readGranted) {
