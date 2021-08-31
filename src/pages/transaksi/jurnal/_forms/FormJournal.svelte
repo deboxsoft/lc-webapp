@@ -129,7 +129,7 @@
               Cancel
             </button>
             <button type="submit" class="btn btn-primary ml-1" disabled={!$isValid || loading}>
-              <SaveIcon class="mr-2" disable={loading} />
+              <SaveIcon class="mr-2" />
               Save
             </button>
           </div>

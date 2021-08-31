@@ -38,7 +38,6 @@
   let submitFilter;
   let transactions = [];
 
-  $: console.log(createCashierGranted, "kasir");
   init();
   $: {
     $transactionStore, filtering();
@@ -78,7 +77,7 @@
   }
 
   async function filterHandler() {
-    const _filter = Object.assign(filter, submitFilter());
+    const _filter = Object.assign(filter, submitFilter && submitFilter());
     textFilter = undefined;
     $loading = true;
     await findPage({
@@ -90,6 +89,10 @@
       $loading = false;
       closeFilterDialog();
     });
+  }
+
+  function syncHandler() {
+    filterHandler();
   }
 </script>
 
@@ -107,6 +110,10 @@
         Posting
       </a>
     {/if}
+    <a href="#/" target="_self" on:click={syncHandler} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Sinkronisasi
+    </a>
     {#if createPaymentGranted || createCashierGranted}
       <Dropdown class="breadcrumb-elements-item dropdown p-0">
         <DropdownToggle class="breadcrumb-elements-item" caret nav>
