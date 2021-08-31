@@ -80,7 +80,12 @@
   }
 
   function applyDateHandler({ detail }) {
-    generateReportHandler(detail.date);
+    date = detail.date;
+    generateReportHandler(date);
+  }
+
+  function fetchData() {
+    generateReportHandler(date)
   }
 </script>
 
@@ -89,6 +94,10 @@
     <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">
       <DatePickr id="date" name="date" selected={date} on:apply={applyDateHandler} range={false} />
     </div>
+    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Sinkronisasi
+    </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />

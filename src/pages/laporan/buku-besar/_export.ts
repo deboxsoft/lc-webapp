@@ -15,7 +15,7 @@ export type Metadata = Record<string, string>;
 export const createReportContext = () => {
   const processingAccounts = (accounts: Account[], isCsv = false, metadata: Metadata) => {
     const _parseAccount = (account: Account) => {
-      const balance = metadata.isBalanceFixed ? account.balanceFixed : account.balance;
+      const balance = account.balance;
       const paramsParent = {
         fillColor: options.backgroundColorParent
       };
@@ -28,7 +28,7 @@ export const createReportContext = () => {
       if (account.children) {
         const paramsChildren = {};
         for (const child of account.children) {
-          const balance = metadata.isBalanceFixed ? child.balanceFixed : child.balance;
+          const balance = child.balance;
           defChild.push([
             nameCell(child.name, { isCsv, params: { ...paramsChildren, margin: [options.paddingChild, 0, 0, 0] } }),
             balanceCell(balance, { isCsv, params: paramsChildren, type: "rp" }),

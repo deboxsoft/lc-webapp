@@ -20,7 +20,7 @@
   }
   const { setBreadcrumbContext } = getBreadcrumbStore();
   const { balanceSheetReport } = stores.getBalanceContext();
-  const { accountStore } = stores.getAccountContext();
+  const { accountStore, load } = stores.getAccountContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   setBreadcrumbContext({ path: $url("./"), title: "neraca" });
 
@@ -82,10 +82,21 @@
     const data = await balanceSheetReport();
     report = parsingBalanceSheetReport(data);
   }
+
+  function fetchData() {
+    $loading = true;
+    load().then(() => {
+      $loading = false
+    });
+  }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
+    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Sinkronisasi
+    </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />

@@ -9,7 +9,9 @@
   import DropdownToggle from "../../../../components/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
   import { createReportContext } from "./_export";
+  import { getApplicationContext } from "../../../../modules/app";
 
+  const { loading } = getApplicationContext();
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   const { bankStore } = stores.getBankContext();
   const { readGranted, createGranted } = createAclContext();
@@ -32,6 +34,13 @@
       close();
     }
   });
+
+  function fetchData() {
+    $loading = true
+    find().then((result) => {
+      $loading = false;
+    });
+  }
 </script>
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
@@ -41,6 +50,10 @@
         Tambah
       </a>
     {/if}
+    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Sinkronisasi
+    </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />
