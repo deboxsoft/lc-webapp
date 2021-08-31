@@ -1,29 +1,28 @@
 <script>
-  import Loader from "../../../../components/loader/Loader.svelte";
+  import Loader from "../../../components/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { stores } from "@deboxsoft/accounting-client";
   import { createFoldStore } from "__@stores/fold";
-  import RowAccountBalance from "./RowAccountBalance.svelte";
-  import {calculateBalance} from "../_utils";
-  import { derived } from "svelte/store";
+  import LedgerRow from "./LedgerRow.svelte";
+  import {calculateBalance} from "./helper";
+  import { derived, writable } from "svelte/store";
+
+  export let accounts = writable(undefined);
+  export let key;
 
   const { loading } = getApplicationContext();
-  const { getAccountsTree } = stores.getAccountContext();
-  const foldStore = createFoldStore({ key: "neraca", initial: {} });
+  const foldStore = createFoldStore({ key, initial: {} });
   const isExpand = (key) => derived(foldStore, (_) => _[key] || false);
   const toggleExpand = (key) => () => {
     $foldStore = {...$foldStore, ...{[key]: !$foldStore[key]}}
   }
-  export let accounts;
-  export let isBalanceFixed = false;
   $: {
-    accounts = getAccountsTree();
-    // calculate balance
-    calculateBalance($accounts);
+    if ($accounts) {
+      calculateBalance($accounts);
+    }
   }
 </script>
 
-{#if $loading}
+{#if !$accounts}
   <Loader />
 {:else}
   <table class="table text-nowrap table-hover">
@@ -36,7 +35,7 @@
     </thead>
     <tbody>
       {#each $accounts as account}
-        <RowAccountBalance {isExpand} toggle={toggleExpand} {isBalanceFixed} {account} />
+        <LedgerRow {isExpand} toggle={toggleExpand} {account} />
       {/each}
     </tbody>
   </table>

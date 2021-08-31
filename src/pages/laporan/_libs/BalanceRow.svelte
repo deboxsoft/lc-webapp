@@ -5,7 +5,6 @@
   import { writable } from "svelte/store";
 
   export let account;
-  export let isBalanceFixed = false;
   export let toggle;
   export let isExpand = () => writable(false);
   $: expanded = isExpand(account.id);
@@ -31,7 +30,7 @@
   <td class="d-table-cell d-md-none">&nbsp;</td>
   <td class="d-none d-md-table-cell">&nbsp;</td>
   <td class="text-right balance">
-    <CellRp value={isBalanceFixed ? account.balanceFixed : account.balance} />
+    <CellRp value={account.balance} />
   </td>
   <td class="d-none d-xl-table-cell">&nbsp;</td>
 </tr>
@@ -48,7 +47,7 @@
       <td class="d-table-cell d-xl-none">&nbsp;</td>
       <td class="d-table-cell d-md-none">&nbsp;</td>
       <td class="text-right balance">
-        <CellRp value={isBalanceFixed ? child.balanceFixed : child.balance} />
+        <CellRp value={child.balance} />
       </td>
       <td class="d-none d-md-table-cell">&nbsp;</td>
       <td class="d-none d-xl-table-cell">&nbsp;</td>

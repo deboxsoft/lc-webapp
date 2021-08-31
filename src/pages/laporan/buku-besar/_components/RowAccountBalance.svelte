@@ -5,12 +5,11 @@
   import CellRp from "../../../../components/CellRp.svelte";
 
   export let account;
-  export let isBalanceFixed;
   export let toggle;
   export let isExpand = () => writable(false);
   $: expanded = isExpand(account.id);
 
-  function createTrialBalanceHandler(accountId) {
+  function createDetailBalanceHandler(accountId) {
     return () => {
       $goto("./:id", { id: accountId });
     };
@@ -35,12 +34,12 @@
   </td>
   <td />
   <td class="text-right balance">
-    <CellRp value={isBalanceFixed ? account.balanceFixed : account.balance} />
+    <CellRp value={account.balance} />
   </td>
 </tr>
 {#if account.children && $expanded}
   {#each account.children as child}
-    <tr class="child" style="cursor: pointer" on:click={createTrialBalanceHandler(child.id)}>
+    <tr class="child" style="cursor: pointer" on:click={createDetailBalanceHandler(child.id)}>
       <td style="width: 10px" />
       <td>{child.name}
         <div class="text-muted font-size-sm">
@@ -48,7 +47,7 @@
         </div>
       </td>
       <td class="text-right balance">
-        <CellRp value={isBalanceFixed ? child.balanceFixed : child.balance} />
+        <CellRp value={child.balance} />
       </td>
       <td />
     </tr>

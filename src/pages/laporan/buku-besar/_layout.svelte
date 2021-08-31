@@ -2,9 +2,9 @@
 
 <script>
   import { goto } from "@roxi/routify";
-  import { createAclContext } from "./_acl-context";
+  import { createAclContext } from "../_acl-context";
 
-  const { readGranted } = createAclContext();
+  const { readGranted } = createAclContext("ledger");
   if (!readGranted) {
     $goto("/access-denied");
   }

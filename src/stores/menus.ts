@@ -38,7 +38,7 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       url: "/transaksi",
       type: "module",
       icon: TransactionIcon,
-      show: transactionShow || transactionOwnShow || ledgerShow || bankShow,
+      show: transactionShow || transactionOwnShow || bankShow,
       children: [
         {
           label: "Jurnal",
@@ -54,40 +54,6 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
           label: "Kasir",
           url: "/transaksi/kasir",
           show: cashierShow
-        },
-        {
-          label: "Buku Besar",
-          url: "/transaksi/buku-besar",
-          show: ledgerShow
-        },
-        {
-          label: "Laba Rugi Perkiraan",
-          url: "/transaksi/laba-rugi",
-          show: statementIncomeShow
-        },
-        {
-          label: "Neraca Perkiraan",
-          url: "/transaksi/neraca",
-          show: balanceSheetShow
-        }
-      ]
-    },
-    {
-      label: "Pengikhtisaran",
-      url: "/pengikhtisaran",
-      type: "module",
-      icon: LayerGroupIcon,
-      show: balanceSheetShow || statementIncomeShow,
-      children: [
-        {
-          label: "Laporan Laba Rugi",
-          url: "/pengikhtisaran/laba-rugi",
-          show: statementIncomeShow
-        },
-        {
-          label: "Neraca",
-          url: "/pengikhtisaran/neraca",
-          show: balanceSheetShow
         }
       ]
     },
@@ -110,6 +76,45 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       type: "module",
       icon: MoneyCheckAltIcon,
       show: bddShow
+    },
+    {
+      label: "Laporan",
+      url: "/laporan",
+      type: "module",
+      icon: LayerGroupIcon,
+      show: balanceSheetShow || statementIncomeShow || ledgerShow,
+      children: [
+        {
+          label: "Trial Balance",
+          url: "/laporan/trial-balance",
+          show: ledgerShow
+        },
+        {
+          label: "Laba Rugi Perkiraan",
+          url: "/laporan/laba-rugi-perkiraan",
+          show: statementIncomeShow
+        },
+        {
+          label: "Neraca Perkiraan",
+          url: "/laporan/neraca-perkiraan",
+          show: balanceSheetShow
+        },
+        {
+          label: "Buku Besar",
+          url: "/laporan/buku-besar",
+          show: ledgerShow
+        },
+        {
+          label: "Laba Rugi",
+          url: "/laporan/laba-rugi",
+          show: statementIncomeShow
+        },
+        {
+          label: "Neraca",
+          url: "/laporan/neraca",
+          show: balanceSheetShow
+        }
+      ]
     },
     {
       label: "Master Data",

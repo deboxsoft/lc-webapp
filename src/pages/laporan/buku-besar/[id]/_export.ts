@@ -1,4 +1,4 @@
-import type { Account, GeneralLedger } from "@deboxsoft/accounting-api";
+import type { GeneralLedger } from "@deboxsoft/accounting-api";
 import dayjs from "dayjs";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
 import { downloadCsv, emptyCell, numericCell, textCell } from "__@root/utils";

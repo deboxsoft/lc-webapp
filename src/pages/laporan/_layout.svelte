@@ -16,7 +16,7 @@
   }
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  setBreadcrumbContext({ path: $url("./"), title: "pengikhtisaran" });
+  setBreadcrumbContext({ path: $url("./"), title: "laporan" });
   stores.createBalanceContext(applicationContext);
 </script>
 

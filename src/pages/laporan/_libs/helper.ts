@@ -1,3 +1,5 @@
+import type { Account } from "@deboxsoft/accounting-api";
+
 export const parsingRevenueReport = (data) => {
   const statementIncomeReport = data.statementIncomeReport;
   const revenueBalance = statementIncomeReport.revenue.balance + statementIncomeReport.revenueOther.balance;
@@ -31,4 +33,15 @@ export const parsingBalanceSheetReport = (data) => {
     statementIncomeBalance,
     liabilitiesBalance
   };
+};
+
+export const calculateBalance = (accounts: Account[]) => {
+  for (const account of accounts) {
+    if (account.children) {
+      account.balance = 0;
+      for (const child of account.children) {
+        account.balance += child.balance || 0;
+      }
+    }
+  }
 };

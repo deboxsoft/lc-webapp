@@ -7,7 +7,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import TableTrialBalance from "../_components/TableTrialBalance.svelte";
+  import TableDetailAccount from "../_components/TableDetailAccount.svelte";
   import Dropdown from "../../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../../components/DropdownToggle.svelte";
   import DatePickr from "../../../../components/forms/InputDateField.svelte";
@@ -141,7 +141,7 @@
             <p class="col-sm-9 mb-0">: {($account && $account.id) || ""}</p>
           </dl>
         </div>
-        <TableTrialBalance {account} {filter} />
+        <TableDetailAccount {account} {filter} />
       {/if}
     </div>
   </div>

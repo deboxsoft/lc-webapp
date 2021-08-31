@@ -8,9 +8,9 @@
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
   import { createAclContext } from "./_acl-context";
-  import TableNeraca from "../../pengikhtisaran/neraca/_components/TableNeraca.svelte";
-  import { createReportContext } from "../../pengikhtisaran/_components/_export";
-  import { parsingBalanceSheetReport } from "../../pengikhtisaran/_components/_utils";
+  import TableNeraca from "../neraca/_components/TableNeraca.svelte";
+  import { createReportContext } from "../_components/_export";
+  import { parsingBalanceSheetReport } from "../_components/_utils";
 
   const { readGranted } = createAclContext();
   const { loading } = getApplicationContext();

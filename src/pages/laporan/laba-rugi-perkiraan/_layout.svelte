@@ -8,9 +8,9 @@
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
   import { createAclContext } from "./_acl-context";
-  import TableLabaRugi from "../../pengikhtisaran/laba-rugi/_components/TableLabaRugi.svelte";
-  import { createReportContext } from "../../pengikhtisaran/_components/_export";
-  import { parsingRevenueReport } from "../../pengikhtisaran/_components/_utils";
+  import TableLabaRugi from "../laba-rugi/_components/TableLabaRugi.svelte";
+  import { createReportContext } from "../_components/_export";
+  import { parsingRevenueReport } from "../_components/_utils";
 
   const { readGranted } = createAclContext();
   const { loading } = getApplicationContext();
