@@ -1,30 +1,32 @@
+<!--routify:options title="Detail Bdd"-->
+
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import DetailCategoryInventory from "../../_components/ViewBdd.svelte";
-  import { onMount } from "svelte";
+  import BddView from "../_components/BddView.svelte";
 
-  const { getBdd } = stores.getBddContext();
+  const { getBdd, bddStore } = stores.getBddContext();
 
   export let to = "../";
-  let openDialog;
+  let openDialog, bdd;
 
-  onMount(() => {
-    openDialog();
-  });
-
-  $: bdd = getBdd($params.id);
+  $: {
+    if ($bddStore && openDialog) {
+      bdd = getBdd($params.id);
+      if (bdd) {
+        openDialog();
+      }
+    }
+  }
 
   function closeHandler() {
     $goto(to, {});
   }
 </script>
 
-<Modal title="Inventaris" bind:openDialog onClose={closeHandler}>
-  {#if $bdd}
-    <DetailCategoryInventory categoryInventory={$bdd} />
-  {/if}
+<Modal title="Bdd" bind:openDialog onClose={closeHandler}>
+  <BddView {bdd} />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Close

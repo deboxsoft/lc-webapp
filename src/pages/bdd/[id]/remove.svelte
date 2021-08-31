@@ -1,23 +1,30 @@
+<!--routify:options title="Hapus Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
-  import DetailRemoveBdd from "../../_components/DetailRemoveBdd.svelte"
-  import { onMount } from "svelte";
+  import { getAclContext } from "../_acl-context";
+  import BddRemoveForm from "../_components/BddRemoveForm.svelte";
 
-  let openDialog;
-  onMount(() => {
-    openDialog();
-  });
+  let openDialog, bdd, desc;
 
   const { removeGranted } = getAclContext();
-  const { remove, getBdd } = stores.getBddContext();
+  const { remove, getBdd, bddStore } = stores.getBddContext();
   const { loading, notify } = getApplicationContext();
 
   if (!removeGranted) {
     $goto("/access-denied");
+  }
+
+  $: {
+    if ($bddStore && openDialog) {
+      bdd = getBdd($params.id);
+      if (bdd) {
+        desc = bdd.description
+        openDialog();
+      }
+    }
   }
 
   async function removeHandler() {
@@ -26,28 +33,26 @@
       await remove($params.id);
       $loading = false;
       $goto("../");
-      notify(`berhasil menghapus barang '${$bdd.name}'`);
+      notify(`berhasil menghapus data bdd ${desc? `'${desc}'`:``}.`, "success");
     } catch (e) {
       if (e.message) {
-        notify(e.message, "error")
+        notify(e.message, "error");
       }
       $loading = false;
     }
   }
-
-  $: bdd = getBdd($params.id);
 
   function closeHandler() {
     $goto("../");
   }
 </script>
 
-{#if $bdd}
-  <Modal bind:openDialog title="Hapus bdd" onClose={closeHandler}>
-    <DetailRemoveBdd />
-    <svelte:fragment slot="footer">
-      <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
-      <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>
-    </svelte:fragment>
-  </Modal>
-{/if}
+<Modal bind:openDialog title="Hapus bdd" onClose={closeHandler}>
+  <div class="alert alert-warning alert-styled-left">
+    Apa anda yakin akan menghapus data bdd {desc ? `'${desc}'` : ''}?
+  </div>
+  <svelte:fragment slot="footer">
+    <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>
+    <button class="btn bg-warning" on:click={removeHandler}>Hapus</button>
+  </svelte:fragment>
+</Modal>
