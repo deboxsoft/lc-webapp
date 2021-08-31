@@ -8,7 +8,6 @@
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Alert from "__@comps/Alert.svelte";
-  import { getMenus } from "__@root/stores/menus";
 
   const authenticationContext = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();

@@ -1,28 +1,36 @@
-<script lang="ts">
+<script>
   import * as z from "@deboxsoft/zod";
+  import { stores } from "@deboxsoft/accounting-client";
+  import { goto } from "@roxi/routify";
+  import AccountSelect from "../../../components/account/AccountSelect.svelte";
   import Form from "../../../components/forms/Form.svelte";
   import ComboxField from "../../../components/forms/ComboxField.svelte";
   import InputField from "../../../components/forms/InputField.svelte";
   import { getAccessControlContext } from "__@modules/users";
   import AccountListBox from "../../../components/account/AccountListBox.svelte";
-  // import InputCheckSwitchery from "../../../components/forms/InputCheckSwitchery.svelte";
+  import InputCheckSwitchery from "../../../components/forms/InputCheckSwitchery.svelte";
+  import { getApplicationContext } from "../../../modules/app";
 
   const { grants } = getAccessControlContext();
+  const { notify, loading } = getApplicationContext();
+  const { getAccountLeaf } = stores.getAccountContext();
+  const accountStore = getAccountLeaf();
+
   $: roles = Object.keys($grants);
   export const schema = z.object({
     name: z.string().nonempty("nama wajib diisi"),
     role: z.string().nonempty("role wajib diisi"),
     mainPage: z.string().nullish(),
     sideMenuHidden: z.boolean().nullish(),
-    debitAccounts: z.array(z.string()).nullish(),
-    creditAccounts: z.array(z.string()).nullish()
+    isCashier: z.boolean().nullish(),
+    includeAccounts: z.array(z.string()).nullish()
   });
-  const transform = ({ debitAccounts, creditAccounts, mainPage, sideMenuHidden, ..._ }) => {
+  const transform = ({ isCashier, includeAccounts, mainPage, sideMenuHidden, ..._ }) => {
     return {
       ..._,
       metadata: {
-        debitAccounts,
-        creditAccounts,
+        isCashier,
+        includeAccounts,
         mainPage,
         sideMenuHidden
       }
@@ -76,12 +84,36 @@
     }
   ];
 
-  export let fields;
   export let groupUser = {};
-  export let isNew = false;
-  export let submitHandler;
+  export let isUpdate = false;
+  export let onSubmit;
+  export let to = "./";
+  export let isValid;
+  export let submitting;
+
+  let fields, fieldsErrors = writable;
+
 
   $: values = transformValues(groupUser);
+
+  async function submitHandler() {
+    try {
+      $loading = true;
+      submitting = true;
+      await onSubmit(values);
+      closeHandler();
+    } catch (e) {
+      console.error(e);
+      notify(`${e.path[0]} ${e.message}`, "error");
+    } finally {
+      submitting = false;
+      $loading = false;
+    }
+  }
+
+  function closeHandler() {
+    $goto(to);
+  }
 
   function transformValues({ metadata = "{}", ..._ }) {
     return {
@@ -89,45 +121,67 @@
       ...JSON.parse(metadata)
     };
   }
+
+  function keyHandler(e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitHandler();
+    }
+  }
 </script>
 
 <div class="card">
   <div class="card-body">
-    <Form bind:fields {values} {schema} {transform} bind:submitHandler>
+    <Form checkValidateFirst bind:fields {values} {schema} {transform} bind:fieldsErrors bind:isValid>
       <div class="row">
-        <div class="form-group col-12">
+        <div class="form-group col-12 col-md-6">
           <label for="name">Nama</label>
-          <InputField id="name" name="name" type="text" class="form-control" placeholder="Name" />
+          <InputField
+            id="name"
+            name="name"
+            type="text"
+            class="form-control"
+            placeholder="Name"
+            on:keypress={keyHandler}
+          />
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-12">
+        <div class="form-group col-12 col-md-6">
           <label for="role">Role</label>
           <ComboxField id="role" items={roles} name="role" />
         </div>
       </div>
-
       <div class="row">
         <div class="form-group col-12">
-          <AccountListBox name="debitAccounts" id="debitAccounts" label="Custom Akun Debit" />
+          <InputCheckSwitchery id="isCashier" name="isCashier">
+            Sebagai Kasir
+          </InputCheckSwitchery>
         </div>
       </div>
-      <div class="row">
-        <div class="form-group col-12">
-          <AccountListBox name="creditAccounts" id="debitAccounts" label="Custom Akun Kredit" />
+      {#if $fields?.isCashier}
+        <div class="row">
+          <div class="form-group col-12">
+            <label for="parentId">Kasir Akun</label>
+            <AccountSelect
+              id="cashierAccount"
+              name="cashierAccount"
+              {accountStore}
+              allowEmpty
+              on:keypress={keyHandler}
+            />
+          </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="form-group col-12">
+            <AccountListBox name="includeAccounts" id="includeAccounts" label="Custom Akun" />
+          </div>
+        </div>
+      {/if}
       <div class="row">
         <div class="form-group col-12">
           <label for="mainPage">Halaman Utama</label>
           <ComboxField id="mainPage" valueId="href" items={pageList} name="mainPage" />
         </div>
       </div>
-<!--      <div class="row">-->
-<!--        <div class="form-group col-12">-->
-<!--          <InputCheckSwitchery name="sideMenuHidden" label="Sembunyikan Menu Kiri" />-->
-<!--        </div>-->
-<!--      </div>-->
     </Form>
   </div>
 </div>

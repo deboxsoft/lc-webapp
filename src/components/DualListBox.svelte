@@ -33,7 +33,7 @@
     }
     return new RegExp(escapeStringRegexp(filterInput), "i").test(option.label)
   };
-  export let preserveSelectOrder = false;
+  export let preserveSelectOrder = true;
   export let onChange = () => {};
   export let showHeaderLabels = false;
   export let showNoOptionsText = false;
@@ -125,7 +125,9 @@
   function actionClickHandler({ direction, isMoveAll }) {
     const directionIsRight = direction === "right";
     const sourceListBox = directionIsRight ? availableRef : selectedRef;
+    console.log(sourceListBox);
     const marked = getMarkedOptions(sourceListBox);
+    console.log(marked);
 
     let selected;
 

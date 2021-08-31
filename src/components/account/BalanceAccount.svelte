@@ -11,7 +11,7 @@
   let _value;
   $: {
     _store = getAccount(id);
-    _value = isBalanceSheet ? $_store.balanceSheet : $_store.balance;
+    _value = $_store.balance;
     if (typeof value === "function") {
       value = value(_value);
     } else {

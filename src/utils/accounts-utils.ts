@@ -4,7 +4,7 @@ import { getAuthenticationContext } from "__@modules/users";
 
 export function filteringAccountDebit(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsIdDebit = get(authenticationStore).metadata?.debitAccounts;
+  let accountsIdDebit = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^[^4].*/g.test(_.id)) {
@@ -19,7 +19,7 @@ export function filteringAccountDebit(accountStore: Readable<Account[]>) {
 
 export function filteringAccountCredit(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsIdCredit = get(authenticationStore).metadata?.creditAccounts;
+  let accountsIdCredit = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^[^5].*/g.test(_.id)) {
@@ -34,11 +34,11 @@ export function filteringAccountCredit(accountStore: Readable<Account[]>) {
 
 export function filteringAccountCash(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(101).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -49,11 +49,11 @@ export function filteringAccountCash(accountStore: Readable<Account[]>) {
 
 export function filteringAccountExpense(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(5).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -64,11 +64,11 @@ export function filteringAccountExpense(accountStore: Readable<Account[]>) {
 
 export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(4).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -79,11 +79,11 @@ export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
 
 export function filteringAccountStock(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(103).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -94,11 +94,11 @@ export function filteringAccountStock(accountStore: Readable<Account[]>) {
 
 export function filteringAccountBdd(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(104).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -109,11 +109,11 @@ export function filteringAccountBdd(accountStore: Readable<Account[]>) {
 
 export function filteringAccountExpenseBdd(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(105100).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -124,11 +124,11 @@ export function filteringAccountExpenseBdd(accountStore: Readable<Account[]>) {
 
 export function filteringAccountAccumulationBdd(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
-      if (/^(105200).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+      if (/^(10502).*/g.test(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -139,11 +139,11 @@ export function filteringAccountAccumulationBdd(accountStore: Readable<Account[]
 
 export function filteringAccountInventory(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(111|113).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }
@@ -152,13 +152,13 @@ export function filteringAccountInventory(accountStore: Readable<Account[]>) {
   });
 }
 
-export function filteringAccountDepreciationInventory(accountStore: Readable<Account[]>) {
+export function filteringAccountAccumulationDepreciation(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
-  let accountsInclude = get(authenticationStore).metadata?.accountsInclude;
+  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (/^(112).*/g.test(_.id)) {
-        if (!accountsInclude || accountsInclude.includes(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
           return true;
         }
       }

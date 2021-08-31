@@ -11,7 +11,6 @@
   let openDialog;
   onMount(() => {
     openDialog();
-    state = "mounted";
   });
   const { createUserGranted } = getAclContext();
   if (!createUserGranted) {
@@ -20,37 +19,18 @@
   const { createGroup } = getUserContext();
   const { notify, loading } = getApplicationContext();
 
-  let fields;
-  let schema;
-  let state = "load";
-  let submitHandler;
-  $: url = "./";
+  let isValid, submitting, to = "./";
 
-  async function saveHandler() {
-    try {
-      $loading = true;
-      state = "save-proses";
-      const inputs = submitHandler();
-      await createGroup(inputs);
-      notify("Berhasil membuat group user", "success");
-      $loading = false;
-      state = "save-complete";
-      $goto(url);
-    } catch (e) {
-      state = "save-failed";
-      $loading = false;
-    }
-  }
-
-  function closeHandler() {
-    $goto(url);
+  async function onSubmit(inputs) {
+    await createGroup(inputs);
+    notify("Berhasil membuat group user", "success");
   }
 </script>
 
 <Modal class="modal-lg" bind:openDialog title="Membuat Group User" onClose={closeHandler}>
-  <GroupForm bind:fields bind:schema bind:submitHandler />
+  <GroupForm bind:submitting {to} {onSubmit} />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
-    <button class="btn bg-primary" on:click={saveHandler} disabled={state === "save-proses"}>Simpan</button>
+    <button class="btn bg-primary" on:click={saveHandler} disabled={!$isValid || submitting}>Simpan</button>
   </svelte:fragment>
 </Modal>
