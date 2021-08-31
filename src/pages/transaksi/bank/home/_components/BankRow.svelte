@@ -71,17 +71,17 @@
       <DropdownToggle bind:toggle class="list-icons-item d-flex flex-1 align-items-center" tag="div">
         <i class="icon-menu9" />
       </DropdownToggle>
-      <svelte:fragment slot="menu">
-        <a href={$url("../:bankId/statements", { bankId: bank.id })} class="dropdown-item"
+      <svelte:fragment slot="menu" let:closeHandler>
+        <a href={$url("../:bankId/statements", { bankId: bank.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-file-excel" />Rekonsiliasi</a
         >
         {#if updateGranted}
-          <a href={$url("../home/:id/update", { id: bank.id })} class="dropdown-item"
+          <a href={$url("../home/:id/update", { id: bank.id })} class="dropdown-item" on:mouseup={closeHandler}
             ><i class="icon-pencil" />Ubah Bank</a
           >
         {/if}
         {#if removeGranted}
-          <a href={$url("../home/:id/remove", { id: bank.id })} class="dropdown-item"
+          <a href={$url("../home/:id/remove", { id: bank.id })} class="dropdown-item" on:mouseup={closeHandler}
             ><i class="icon-trash-alt" />Hapus Bank</a
           >
         {/if}
