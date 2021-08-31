@@ -85,9 +85,9 @@
       pristineValue={input.id}
       bind:value={input.id}
       on:change={accountSelectedHandler}
-      labelFunction={(account) => account && `${account.id} - ${account.name}`}
+      labelFunction={(account) => account && `${account.name}`}
       valueFieldName="id"
-      keywordsFunction={(account) => account && `${account.id} ${account.name}`} />
+      keywordsFunction={(account) => account && `${account.name}`} />
   </td>
   <td class="fit">
     <InputRp

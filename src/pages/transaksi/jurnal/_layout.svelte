@@ -24,10 +24,7 @@
   const applicationContext = getApplicationContext();
   const accountContext = stores.getAccountContext();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { load, findPage, transactionStore } = stores.createTransactionContext({
-    accountContext,
-    ...applicationContext
-  });
+  const { load, findPage, transactionStore } = stores.getTransactionContext();
   const { loading } = applicationContext;
 
   let filter = {};
@@ -40,7 +37,9 @@
 
   init();
   $: {
-    $transactionStore, filtering();
+    if ($transactionStore) {
+      filtering();
+    }
   }
 
   function filtering() {

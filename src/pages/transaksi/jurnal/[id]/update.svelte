@@ -22,6 +22,7 @@
       } else {
         open = true;
         transaction = { ...$_transaction, date: new Date($_transaction.date) };
+        delete transaction.status;
       }
     }
   }
