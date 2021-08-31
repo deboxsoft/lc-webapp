@@ -3,7 +3,7 @@
   import { StockOutInputSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import FormStock from "../_components/FormStock.svelte";
+  import StockForm from "../_components/StockForm.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
   import { getAuthenticationContext } from "../../../modules/users";
@@ -26,7 +26,7 @@
 </script>
 
 {#if stock}
-  <FormStock
+  <StockForm
     schema={StockOutInputSchema}
     stock={{ quantity: stock.quantity, userId: getUserId(), name: stock.name }}
     transform="OUT"

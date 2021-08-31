@@ -3,7 +3,7 @@
   import { goto, params } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import ViewStock from "../_components/ViewStock.svelte";
+  import StockView from "../_components/StockView.svelte";
 
   const { getStock, stockStore } = stores.getStockTransferContext();
 
@@ -24,11 +24,11 @@
   }
 </script>
 
-  <Modal title="Detail Persediaan Barang" bind:openDialog onClose={closeHandler}>
-    <ViewStock {stock} />
-    <svelte:fragment slot="footer">
-      <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
-        Close
-      </button>
-    </svelte:fragment>
-  </Modal>
+<Modal title="Detail Persediaan Barang" bind:openDialog onClose={closeHandler}>
+  <StockView {stock} />
+  <svelte:fragment slot="footer">
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
+      Close
+    </button>
+  </svelte:fragment>
+</Modal>

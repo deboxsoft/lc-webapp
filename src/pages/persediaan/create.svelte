@@ -2,7 +2,7 @@
 <script>
   import { StockInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
-  import FormStock from "./_components/FormStock.svelte";
+  import StockForm from "./_components/StockForm.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "../../modules/users";
 
@@ -21,4 +21,6 @@
   }
 </script>
 
-<FormStock schema={StockInputSchema} {stock} title="Membuat Data Persediaan" {onSubmit} />
+{#if stock}
+  <StockForm schema={StockInputSchema} {stock} title="Membuat Data Persediaan" {onSubmit} />
+{/if}

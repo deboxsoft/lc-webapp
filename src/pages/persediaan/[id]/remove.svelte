@@ -16,6 +16,16 @@
     $goto("/access-denied");
   }
 
+  $: {
+    if ($stockStore && openDialog) {
+      stock = getStock($params.id);
+      if (stock) {
+        name = stock.name;
+        openDialog();
+      }
+    }
+  }
+
   async function removeHandler() {
     $loading = true;
     try {
@@ -28,16 +38,6 @@
         notify(e.message, "error");
       }
       $loading = false;
-    }
-  }
-
-  $: {
-    if ($stockStore && openDialog) {
-      stock = getStock($params.id);
-      if (stock) {
-        name = stock.name;
-        openDialog();
-      }
     }
   }
 

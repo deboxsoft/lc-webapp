@@ -12,7 +12,11 @@
   import Form from "../../../components/forms/Form.svelte";
   import InputField from "../../../components/forms/InputField.svelte";
   import InputNumberField from "../../../components/forms/InputNumberField.svelte";
-  import { filteringAccountCredit, filteringAccountDebit, filteringAccountCash, filteringAccountExpense } from "../../../utils";
+  import {
+    filteringAccountCash,
+    filteringAccountExpense,
+    filteringAccountStock
+  } from "../../../utils";
 
   const { notify, loading } = getApplicationContext();
   const { stockStore } = stores.getStockTransferContext();
@@ -29,13 +33,11 @@
   export let to = "./";
 
   // state
-  let openDialog;
-  let fields;
-  let idReadOnly = true;
-  let isValid = writable(false);
-  let fieldsErrors;
-  let submitting = false;
-  let submitted = writable(false);
+  let openDialog,
+    fields,
+    fieldsErrors,
+    submitting = false,
+    isValid = writable(false);
 
   onMount(() => {
     openDialog();
@@ -44,14 +46,14 @@
   function getAccount(accountType) {
     const accountStore = getAccountLeaf();
     switch (accountType) {
-      case "debit": {
-        return filteringAccountDebit(accountStore);
+      case "stock": {
+        return filteringAccountStock(accountStore);
       }
       case "cash": {
-        return filteringAccountCash(accountStore)
+        return filteringAccountCash(accountStore);
       }
       case "expense": {
-        return filteringAccountExpense(accountStore)
+        return filteringAccountExpense(accountStore);
       }
     }
   }
@@ -71,15 +73,13 @@
     }
   }
 
-  $: console.log($fieldsErrors, $isValid);
-
   function closeHandler() {
     $goto(to);
   }
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form checkValidateFirst {schema} values={{ ...stock }} bind:fields bind:fieldsErrors {isValid} on:submit>
+  <Form checkValidateFirst {schema} values={stock} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
       <div class="form-group col-12 col-md-6">
         <label for="name">Nama</label>
@@ -107,7 +107,7 @@
             name="debitAccount"
             placeholder="Akun Barang"
             allowEmpty
-            accountStore={getAccount("debit")}
+            accountStore={getAccount("stock")}
           />
         </div>
         <div class="form-group col-12 col-md-6">
@@ -135,7 +135,7 @@
           />
         </div>
       </div>
-      {:else if (transform === "OUT")}
+    {:else if transform === "OUT"}
       <div class="row">
         <div class="form-group col-12">
           <label for="debitAccount">Akun Biaya</label>
