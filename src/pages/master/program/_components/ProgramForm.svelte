@@ -11,62 +11,48 @@
   import Modal from "../../../../components/Modal.svelte";
   import InputField from "../../../../components/forms/InputField.svelte";
   import Form from "../../../../components/forms/Form.svelte";
-  import InputNumberField from "../../../../components/forms/InputNumberField.svelte";
 
   // context
-  const { notify } = getApplicationContext();
-  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  const { notify, loading } = getApplicationContext();
   const { programStore, getProgram } = getProgramContext();
 
-  // filtering account type
-  export let program = {}
-  export let programList = {};
+  // props
+  export let program;
   export let isUpdate = false;
   export let onSubmit;
   export let title;
-  export let to = "../";
-  let openDialog;
-  let loading = false;
-  let idReadOnly = true;
-  let fieldsErrors = writable([]);
-  let submitted = writable(false);
-  let tabSelect = 1;
-  let codeState = "";
-  let fields = writable({});
-  let _autoCode = false;
-  let _tmpId = "";
-  let _tmpIdAsParent = "";
-  let _parentIdTmp = "";
-  let _typeTmp;
+  export let schema;
+  export let to = "./";
 
+  let openDialog,
+    fields,
+    fieldsErrors,
+    submitting = false,
+    isValid = writable(false);
 
   onMount(() => {
     openDialog();
   });
 
-
-  async function submitHandler(e) {
-    loading = true;
+  async function submitHandler() {
     try {
+      $loading = true;
+      submitting = true;
       await onSubmit($fields);
-      loading = false;
+      $loading = false;
       closeHandler();
     } catch (error) {
-      if (error instanceof ZodError) {
-        $fieldsErrors = error.flatten().fieldErrors;
-        notify(
-          `${pathsError[error.errors[0].path[0]] || error.errors[0].path[0]}: ${error.errors[0].message}`,
-          "error"
-        );
-      }
-      loading = false;
+      console.error(error);
+      notify(`${error.path[0]} ${error.message}`, "error");
+    } finally {
+      $loading = false;
+      submitting = false;
     }
   }
 
   function closeHandler() {
     $goto(to);
   }
-
 
   function keyHandler(e) {
     if (e.key === "Enter") {
@@ -76,35 +62,42 @@
   }
 </script>
 
-<Modal {title} onClose={closeHandler} bind:openDialog>
-  <Form
-    {submitted}
-    {fieldsErrors}
-    bind:fields
-    ignoreAttribs={[]}
-    schema={ProgramInputSchema}
-    values={program}
-  >
+<Modal bind:openDialog {title} onClose={closeHandler}>
+  <Form checkValidateFirst {schema} values={program} bind:fields bind:fieldsErrors bind:isValid>
     <div class="card">
       <div class="card-body">
         <div class="row">
           <div class="form-group col-12">
             <label for="name">Nama</label>
-            <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" on:keypress={keyHandler} />
+            <InputField
+              id="name"
+              name="name"
+              type="text"
+              class="form-control"
+              placeholder="Nama"
+              on:keypress={keyHandler}
+            />
           </div>
         </div>
         <div class="row">
           <div class="form-group col-12">
             <label for="discount">Diskon</label>
-            <InputField id="discount" name="discount" type="text" class="form-control" placeholder="Diskon" on:keypress={keyHandler} />
+            <InputField
+              id="discount"
+              name="discount"
+              type="text"
+              class="form-control"
+              placeholder="Diskon"
+              on:keypress={keyHandler}
+            />
           </div>
         </div>
-        <div class="row">
-          <div class="form-group col-12">
-            <label for="amount">Nominal</label>
-            <InputNumberField id="amount" class="form-control" name="amount" signed />
-          </div>
-        </div>
+        <!--        <div class="row">-->
+        <!--          <div class="form-group col-12">-->
+        <!--            <label for="amount">Nominal</label>-->
+        <!--            <InputNumberField id="amount" class="form-control" name="amount" signed />-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
     </div>
   </Form>

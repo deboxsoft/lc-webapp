@@ -6,14 +6,19 @@
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "../../modules/users";
 
-  const { notify, loading } = getApplicationContext();
+  const { notify } = getApplicationContext();
   const { getUserId } = getAuthenticationContext();
   const { create } = stores.getStockTransferContext();
+  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let stock = {
-    quantity: 1,
-    userId: getUserId()
-  };
+  let stock;
+  (async () => {
+    const now = await getCurrentDate();
+    stock = {
+      quantity: 1,
+      userId: getUserId()
+    };
+  })();
 
   async function onSubmit(values) {
     await create(values);

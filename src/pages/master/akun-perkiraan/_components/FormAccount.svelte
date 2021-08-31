@@ -37,7 +37,6 @@
   let idReadOnly = true;
   let fieldsErrors = writable([]);
   let submitted = writable(false);
-  let tabSelect = 1;
   let codeState = "";
   let accountState = writable({});
   let isParent;

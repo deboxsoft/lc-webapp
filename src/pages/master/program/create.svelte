@@ -1,5 +1,6 @@
 <!--routify:options title="Posting Program"-->
 <script>
+  import { ProgramInputSchema } from "@deboxsoft/lc-cashier-api";
   import { goto } from "@roxi/routify";
   import ProgramForm from "./_components/ProgramForm.svelte";
   import { getProgramContext } from "@deboxsoft/lc-cashier-client";
@@ -10,20 +11,14 @@
   if (!createGranted) {
     $goto("/access-denied");
   }
-  const { notify, loading } = getApplicationContext();
+  const { notify } = getApplicationContext();
   const { create } = getProgramContext();
 
+  const program = {};
   async function onSubmit(values) {
-    try {
-      $loading = true;
-      await create(values);
-      notify(`data berhasil disimpan`, "success");
-      $loading = false;
-    } catch (e) {
-      notify(e.message, "error");
-      $loading = false;
-    }
+    await create(values);
+    notify(`data berhasil disimpan`, "success");
   }
 </script>
 
-<ProgramForm account={{}} {onSubmit} title="Membuat Program baru" to="./" />
+<ProgramForm schema={ProgramInputSchema} {program} title="Membuat Program baru" {onSubmit} />

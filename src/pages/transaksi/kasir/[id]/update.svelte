@@ -1,0 +1,45 @@
+<!--routify:options title="Edit Data"-->
+<script>
+  import { CashierUpdateInputSchema } from "@deboxsoft/lc-cashier-api";
+  import { params, goto } from "@roxi/routify";
+  import { getCashierContext } from "@deboxsoft/lc-cashier-client";
+  import { getApplicationContext } from "__@modules/app";
+  import CashierForm from "../_components/CashierForm.svelte";
+  import { getAclContext } from "../_acl-context";
+
+  // context
+  const { notify } = getApplicationContext();
+  const { update, cashierStore, getCashier } = getCashierContext();
+  const { accountStore } = stores.getAccountContext();
+  const { updateGranted } = getAclContext();
+
+  $: to = $params.to || "../";
+  let cashier,
+    loaded = false;
+  $: {
+    if ($params.id && $cashierStore) {
+      cashier = getCashier($params.id)
+      if (!cashier || !updateGranted(cashier.userId)) {
+        $goto("/access-denied");
+      } else {
+        loaded = true;
+      }
+    }
+  }
+
+  async function onSubmit(input) {
+    await update(cashier.id, input);
+    notify(`transaksi pembayaran berhasil diedit`, "success");
+  }
+</script>
+
+{#if loaded}
+  <CashierForm
+    schema={CashierUpdateInputSchema}
+    isUpdate
+    title="Edit Kasir"
+    {cashier}
+    on:submit={submitHandler}
+    {to}
+  />
+{/if}

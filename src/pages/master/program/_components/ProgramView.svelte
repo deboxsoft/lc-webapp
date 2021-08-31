@@ -11,8 +11,8 @@
     <p class="col-sm-9">
       : {program.discount || "-"}
     </p>
-    <dt class="col-sm-3">Biaya</dt>
-    <p class="col-sm-9">
-      : {program.amount || "-"}
-    </p>
+<!--    <dt class="col-sm-3">Biaya</dt>-->
+<!--    <p class="col-sm-9">-->
+<!--      : {program.amount || "-"}-->
+<!--    </p>-->
   </dl>

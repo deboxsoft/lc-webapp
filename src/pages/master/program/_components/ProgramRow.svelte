@@ -5,13 +5,21 @@
   import { getAclContext } from "../_acl-context";
 
   const { updateGranted, removeGranted } = getAclContext();
-
-  export let id;
+  export let program;
+  let dropdownContext;
 </script>
 
-<div class="list-icons">
-  <Dropdown>
-    <DropdownToggle class="list-icons-item align-items-center" tag="div">
+<tr>
+  <td>{program.name || ""}</td>
+  <td>{program.discount || ""}</td>
+  <Dropdown
+    class="h-100 d-flex justify-content-center"
+    bind:context={dropdownContext}
+    menuProps={{
+        offset: [0, -15]
+      }}
+  >
+    <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">
       <i class="icon-menu9" />
     </DropdownToggle>
     <svelte:fragment slot="menu" let:closeHandler>
@@ -30,4 +38,4 @@
       {/if}
     </svelte:fragment>
   </Dropdown>
-</div>
+</tr>

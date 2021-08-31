@@ -29,11 +29,12 @@
   async function removeHandler() {
     $loading = true;
     try {
-      await remove($params.id);
+      await remove(stock.id);
       $loading = false;
-      $goto("../");
+      closeHandler();
       notify(`berhasil menghapus barang '${name}'`);
     } catch (e) {
+      console.error(e);
       if (e.message) {
         notify(e.message, "error");
       }

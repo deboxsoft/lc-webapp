@@ -6,10 +6,8 @@
   import StockView from "../_components/StockView.svelte";
 
   const { getStock, stockStore } = stores.getStockTransferContext();
-
-  export let to = "../";
+  let closeUrl = $params.closeUrl || "../";
   let openDialog, stock;
-
   $: {
     if ($stockStore && openDialog) {
       stock = getStock($params.id);
@@ -20,7 +18,7 @@
   }
 
   function closeHandler() {
-    $goto(to, {});
+    $goto(closeUrl, {});
   }
 </script>
 

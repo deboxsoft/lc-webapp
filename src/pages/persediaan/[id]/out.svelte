@@ -16,7 +16,7 @@
   const { getUserId } = getAuthenticationContext();
   const { loading, notify } = getApplicationContext();
 
-  $: to = $params.to || "../";
+  $: backUrl = $params.backUrl || "../";
   $: stock = $stockStore && getStock($params.id);
 
   async function onSubmit({ id, name, ...values }) {
@@ -32,6 +32,6 @@
     transform="OUT"
     {onSubmit}
     title="Form Barang Keluar"
-    {to}
+    {backUrl}
   />
 {/if}

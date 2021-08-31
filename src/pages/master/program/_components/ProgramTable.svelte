@@ -1,10 +1,9 @@
 <script>
   import { goto } from "@roxi/routify";
-  import ProgramMenuList from "./ProgramMenuList.svelte";
-  import Table from "../../../../components/Table.svelte";
-  import CellRp from "../../../../components/CellRp.svelte";
+  import Table from "../../../../components/tables/DataTable.svelte";
+  import ProgramRow from "./ProgramRow.svelte";
 
-  export let programList = [];
+  export let programStore;
 
   function createUpdateHandler(id) {
     return () => {
@@ -19,32 +18,15 @@
   }
 </script>
 
-<Table items={programList} let:item={program}>
-  <div class="dbx-thead" slot="header">
-    <div class="dbx-cell">Nama</div>
-    <div class="dbx-cell">Diskon</div>
-    <div class="dbx-cell amount">Nominal</div>
-    <div class="dbx-cell -menu-list" />
-  </div>
-  <div class="dbx-tr">
-    <div class="dbx-cell">{program.name || "-"}</div>
-    <div class="dbx-cell discount">{program.discount || "-"}
-    </div>
-    <div class="dbx-cell amount">
-      <CellRp value={program.amount} />
-    </div>
-    <div class="dbx-cell -menu-list">
-      <ProgramMenuList id={program.id} />
-    </div>
-  </div>
+<Table>
+  <tr slot="header">
+    <th>Nama</th>
+    <th style="width: 150px">Diskon</th>
+    <!--    <div class="dbx-cell amount">Nominal</div>-->
+    <th style="width: 30px" />
+  </tr>
+  {#each $programStore as program}
+    <ProgramRow {program} />
+  {/each}
 </Table>
-
-<style lang="scss">
-
-  .discount {
-    flex: 0 0 150px;
-  }
-  .amount {
-    flex: 0 0 200px;
-  }
-</style>
+<slot />
