@@ -20,3 +20,4 @@
     <BddRow {bdd} />
   {/each}
 </Table>
+<slot />
