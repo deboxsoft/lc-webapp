@@ -59,7 +59,6 @@
   function closeHandler() {
     $goto(to);
   }
-
   function createCreditAccount() {
     return { index: generateId({ prefix: "account-input", size: 3 }) };
   }
@@ -86,7 +85,7 @@
   }
 </script>
 
-<Modal bind:openDialog {title} onClose={closeHandler} class="modal-full">
+<Modal bind:openDialog {title} onClose={closeHandler} class="modal-lg">
   <Form checkValidateFirst {schema} values={cashier} bind:fields bind:fieldsErrors bind:isValid>
     <div class="card">
       <div class="card-body">
@@ -140,10 +139,9 @@
         <table class="table">
           <thead>
             <tr>
-              <th class="text-center" style="width: 20px">#</th>
               <th>Pembayaran</th>
               <th class="text-center" style="width: 275px">Nominal</th>
-              <th class="text-center" style="width: 20px">#</th>
+              <th class="text-center" style="width: 40px"></th>
             </tr>
           </thead>
           <tbody>

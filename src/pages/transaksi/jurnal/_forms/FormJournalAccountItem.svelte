@@ -74,7 +74,6 @@
 </script>
 
 <tr>
-  <td />
   <td>
 <!--    <AccountCombox id="{id}-autocomplete" class="form-control" fieldDisable placeholder="pilih akun" allowEmpty on:change={accountSelectedHandler} />-->
     <AutoComplete
@@ -99,7 +98,7 @@
       formContextDisable
       signed />
   </td>
-  <td>
+  <td style="padding: unset">
     <button
       type="button"
       on:click={removeHandler}

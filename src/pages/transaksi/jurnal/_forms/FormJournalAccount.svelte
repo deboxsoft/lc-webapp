@@ -71,10 +71,9 @@
     <table class="table">
       <thead>
         <tr>
-          <th class="text-center" style="width: 20px">#</th>
           <th>Akun Kredit</th>
           <th class="text-center" style="width: 275px">Jumlah</th>
-          <th class="text-center" style="width: 20px">#</th>
+          <th class="text-center" style="width: 40px"></th>
         </tr>
       </thead>
       <tbody>

@@ -52,7 +52,7 @@
   }
 </script>
 
-<Modal {title} class="modal-full" bind:openDialog onClose={cancelHandler} initialFocusElement={focusRef}>
+<Modal {title} class="modal-lg" bind:openDialog onClose={cancelHandler} initialFocusElement={focusRef}>
   <div class="d-flex flex-column flex-1">
     <Form
       checkValidateFirst
