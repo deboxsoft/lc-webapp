@@ -64,7 +64,7 @@
   <svelte:fragment slot="breadcrumb-items-right">
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
-      Sinkronisasi
+      Refresh
     </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>

@@ -111,7 +111,7 @@
     {/if}
     <a href="#/" target="_self" on:click={syncHandler} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
-      Sinkronisasi
+      Refresh
     </a>
     {#if createPaymentGranted || createCashierGranted}
       <Dropdown class="breadcrumb-elements-item dropdown p-0">

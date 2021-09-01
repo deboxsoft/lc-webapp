@@ -99,7 +99,7 @@
       <li class="nav-item">
         <a href="#" target="_self" on:click={sync} class="navbar-nav-link">
           <i class="icon-sync mr-1" />
-          Sinkronisasi
+          Refresh
         </a>
       </li>
       {#if $isActive("./home")}

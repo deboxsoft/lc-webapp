@@ -95,7 +95,7 @@
       </DropdownToggle>
       <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
         <i class="icon-sync mr-1" />
-        Sinkronisasi
+        Refresh
       </a>
       <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
         <a
