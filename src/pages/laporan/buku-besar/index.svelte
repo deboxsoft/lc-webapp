@@ -4,25 +4,30 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
+  import { getApplicationContext } from "__@modules/app";
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import TableAccountBalance from "./_components/TableAccountBalance.svelte";
-  import { createReportContext } from "./_export";
-  import { getApplicationContext } from "__@modules/app";
+  import Loader from "../../../components/loader/Loader.svelte";
+  import { createReportContext } from "../_libs/ledger_export";
+  import LedgerTable from "../_libs/LedgerTable.svelte";
 
   const reportContext = createReportContext();
   const { loading } = getApplicationContext();
-  const { balanceSheetReport } = stores.getBalanceContext();
+  const { loadBalanceFix } = stores.getBalanceContext();
+  const { getAccountsTree } = stores.getAccountContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Buku Besar" });
 
-  let accounts;
+  let accounts = getAccountsTree();
+  let balance;
+  fetchData();
 
   const createExportMenuHandler = (close) => ({
     pdf: () => {
       $loading = true;
       reportContext.pdf(
         $accounts,
+        $balance,
         (p) => {
           if (p === 1) {
             $loading = false;
@@ -34,13 +39,13 @@
     },
     csv: () => {
       $loading = true;
-      reportContext.csv($accounts, {});
+      reportContext.csv($accounts, $balance, {});
       $loading = false;
       close();
     },
     print: () => {
       $loading = true;
-      reportContext.print($accounts, {});
+      reportContext.print($accounts, $balance, {});
       $loading = false;
       close();
     }
@@ -48,9 +53,10 @@
 
   function fetchData() {
     $loading = true;
-    balanceSheetReport().then(() => {
+    loadBalanceFix().then((_) => {
+      balance = _;
       $loading = false;
-    })
+    });
   }
 </script>
 
@@ -98,7 +104,11 @@
   </svelte:fragment>
   <div class="card d-flex flex-1">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableAccountBalance bind:accounts />
+      {#if $accounts && $balance}
+        <LedgerTable {accounts} {balance} />
+      {:else}
+        <Loader />
+      {/if}
     </div>
   </div>
 </PageLayout>

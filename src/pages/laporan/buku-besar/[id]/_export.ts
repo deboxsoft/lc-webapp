@@ -43,8 +43,8 @@ export const createReportContext = () => {
 };
 
 function createPdfDef(dataDef = [], { startDate, endDate }: Metadata) {
-  const from = dayjs(startDate).format(options.formatDate);
-  const to = dayjs(endDate).format(options.formatDate);
+  const from = dayjs(startDate).format(options.formatDate).toUpperCase();
+  const to = dayjs(endDate).format(options.formatDate).toUpperCase();
   const headerDef = [
     {
       text: "TANGGAL",

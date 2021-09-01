@@ -7,37 +7,37 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import { createAclContext } from "./_acl-context";
-  import TableNeraca from "../neraca/_components/TableNeraca.svelte";
-  import { createReportContext } from "../_components/_export";
-  import { parsingBalanceSheetReport } from "../_components/_utils";
+  import { createAclContext } from "../_acl-context";
+  import TableNeraca from "../_libs/BalanceSheetTable.svelte";
+  import { createReportContext } from "../_libs/balance-export";
+  import { parsingBalanceSheetReport } from "../_libs/helper";
+  import Loader from "../../../components/loader/Loader.svelte";
 
-  const { readGranted } = createAclContext();
+  const { readGranted } = createAclContext("balanceSheet");
+  const applicationContext = getApplicationContext();
   const { loading } = getApplicationContext();
   const reportContext = createReportContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { balanceSheetReport } = stores.getBalanceContext();
-  const { accountStore, load } = stores.getAccountContext();
+  const { balanceReport } = stores.createBalanceReportContext(applicationContext);
+  const { accountStore } = stores.getAccountContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  setBreadcrumbContext({ path: $url("./"), title: "neraca" });
+  setBreadcrumbContext({ path: $url("./"), title: "Neraca Perkiraan" });
 
-  let openFilterDialog;
-  let date = new Date();
-  let report;
+  let openFilterDialog, report;
   $loading = true;
   $: {
     if ($preferenceStore && $accountStore) {
-      generateReportHandler().then((_) => {
+      fetchData().then((_) => {
         $loading = false;
       });
     }
   }
 
   function createExportMenuHandler(close) {
-    const title = "NERACA";
+    const title = "NERACA PERKIRAAN";
     const getItemListReport = () => {
       const { balanceSheetReport, statementIncomeBalance, assetsBalance, liabilitiesBalance } = report;
       return [
@@ -78,15 +78,11 @@
     };
   }
 
-  async function generateReportHandler() {
-    const data = await balanceSheetReport();
-    report = parsingBalanceSheetReport(data);
-  }
-
   function fetchData() {
     $loading = true;
-    load().then(() => {
-      $loading = false
+    return balanceReport().then((data) => {
+      report = parsingBalanceSheetReport(data);
+      $loading = false;
     });
   }
 </script>
@@ -135,7 +131,11 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableNeraca key="neraca-perkiraan" bind:report />
+      {#if $loading}
+        <Loader />
+      {:else}
+        <TableNeraca key="neraca-perkiraan" bind:report />
+      {/if}
     </div>
   </div>
 </PageLayout>

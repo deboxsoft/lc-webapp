@@ -1,7 +1,7 @@
 import type { Account } from "@deboxsoft/accounting-api";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
 import { downloadCsv, emptyCell, numericCell as balanceCell, textCell as nameCell } from "__@root/utils";
-import { calculateBalance } from "./_utils";
+import { calculateBalance } from "./helper";
 const options = {
   formatDate: "DD MMMM YYYY",
   paddingChild: 0,
@@ -45,21 +45,21 @@ export const createReportContext = () => {
     }, []);
   };
   return {
-    pdf: (accounts, progressCB, metadata: Metadata = {}) => {
-      calculateBalance(accounts);
+    pdf: (accounts, balance, progressCB, metadata: Metadata = {}) => {
+      calculateBalance(accounts, balance);
       const now = new Date();
       const doc = createPdfDef(processingAccounts(accounts, false, metadata), metadata);
       return pdfMake(doc).download(metadata.filename || `buku-besar-${now.getTime()}.pdf`, null, {
         progressCallback: progressCB
       });
     },
-    csv: (accounts, metadata: Metadata = {}) => {
-      calculateBalance(accounts);
+    csv: (accounts, balance, metadata: Metadata = {}) => {
+      calculateBalance(accounts, balance);
       const now = new Date();
       downloadCsv(processingAccounts(accounts, true, metadata), `buku-besar-${now.getTime()}.csv`);
     },
-    print: (accounts, metadata: Metadata = {}) => {
-      calculateBalance(accounts);
+    print: (accounts, balance, metadata: Metadata = {}) => {
+      calculateBalance(accounts, balance);
       const doc = createPdfDef(processingAccounts(accounts, false, metadata), metadata);
       return pdfMake(doc).print();
     }

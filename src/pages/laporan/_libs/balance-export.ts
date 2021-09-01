@@ -91,7 +91,7 @@ export const createReportContext = () => {
 };
 
 function createPdfDef(dataDef = [], { title, date = new Date() }: Metadata) {
-  const perDate = dayjs(date).format(options.formatDate);
+  const perDate = dayjs(date).format(options.formatDate).toUpperCase();
   const headerDef = [
     {
       text: "AKUN PERKIRAAN",

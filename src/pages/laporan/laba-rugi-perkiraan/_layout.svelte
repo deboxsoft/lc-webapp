@@ -2,40 +2,42 @@
 <script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getApplicationContext } from "__@modules/app";
+  import { getApplicationContext } from "../../../modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import { createAclContext } from "./_acl-context";
-  import TableLabaRugi from "../laba-rugi/_components/TableLabaRugi.svelte";
-  import { createReportContext } from "../_components/_export";
-  import { parsingRevenueReport } from "../_components/_utils";
+  import { createAclContext } from "../_acl-context";
+  import TableLabaRugi from "../_libs/RevenueTable.svelte";
+  import { createReportContext } from "../_libs/balance-export";
+  import { parsingRevenueReport } from "../_libs/helper";
 
-  const { readGranted } = createAclContext();
-  const { loading } = getApplicationContext();
+  const { readGranted } = createAclContext("statementIncome");
+  const applicationContext = getApplicationContext();
+  const { loading } = applicationContext;
   const reportContext = createReportContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
-  const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { balanceSheetReport } = stores.getBalanceContext();
-  const { accountStore, load } = stores.getAccountContext();
+  const { setBreadcrumbContext } = getBreadcrumbStore();
+  const { balanceReport } = stores.createBalanceReportContext(applicationContext);
+  const { getAccountsTree } = stores.getAccountContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  setBreadcrumbContext({ path: $url("./"), title: "neraca" });
+  const accountStore = getAccountsTree();
+  setBreadcrumbContext({ path: $url("./"), title: "Laba-Rugi Perkiraan" });
 
-  let openFilterDialog;
+  let openFilterDialog, report;
   $loading = true;
-  let report;
   $: {
     if ($preferenceStore && $accountStore) {
-      generateReportHandler().then((_) => {
+      fetchData().then(() => {
         $loading = false;
       });
     }
   }
-  const createExportMenuHandler = (close) => {
-    const title = "LABA-RUGI";
+
+  function createExportMenuHandler(close) {
+    const title = "LABA-RUGI PERKIRAAN";
     const getItemListReport = () => {
       const { statementIncomeReport, revenueBalance, expenseBalance, statementIncomeBalance } = report;
       return [
@@ -73,22 +75,15 @@
         close();
       }
     };
-  };
-
-  export async function generateReportHandler() {
-    $loading = true;
-    const data = await balanceSheetReport();
-    report = parsingRevenueReport(data);
-    $loading = false;
   }
 
   function fetchData() {
     $loading = true;
-    load().then(() => {
+    return balanceReport().then((data) => {
+      report = parsingRevenueReport(data);
       $loading = false;
-    })
+    });
   }
-
 </script>
 
 <PageLayout breadcrumb={[]}>

@@ -4,39 +4,30 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
+  import { getApplicationContext } from "__@modules/app";
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
+  import Loader from "../../../components/loader/Loader.svelte";
   import LedgerTable from "../_libs/LedgerTable.svelte";
-  import ComboxField from "../../../components/forms/ComboxField.svelte";
-  import { createReportContext } from "../buku-besar/_export";
-  import { getApplicationContext } from "__@modules/app";
+  import { createReportContext } from "../_libs/ledger_export";
 
   const reportContext = createReportContext();
   const { loading } = getApplicationContext();
-  const { load } = stores.getAccountContext()
+  const { loadBalance } = stores.getBalanceContext();
+  const { getAccountsTree } = stores.getAccountContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  setBreadcrumbContext({ path: $url("./"), title: "Buku Besar" });
+  setBreadcrumbContext({ path: $url("./"), title: "Trial Balance" });
 
-  let isBalanceFixed = false;
-  let cbValue;
-  let accounts;
-  const itemsComboBox = [
-    {
-      id: "0",
-      label: "Saldo Perkiraan"
-    },
-    {
-      id: "1",
-      label: "Saldo Fixed"
-    }
-  ];
-
+  let accounts = getAccountsTree();
+  let balance;
+  fetchData();
 
   const createExportMenuHandler = (close) => ({
     pdf: () => {
       $loading = true;
       reportContext.pdf(
         $accounts,
+        $balance,
         (p) => {
           if (p === 1) {
             $loading = false;
@@ -48,13 +39,13 @@
     },
     csv: () => {
       $loading = true;
-      reportContext.csv($accounts, {});
+      reportContext.csv($accounts, $balance, {});
       $loading = false;
       close();
     },
     print: () => {
       $loading = true;
-      reportContext.print($accounts, {});
+      reportContext.print($accounts, $balance, {});
       $loading = false;
       close();
     }
@@ -62,17 +53,15 @@
 
   function fetchData() {
     $loading = true;
-    load().then(() => {
+    loadBalance().then((_) => {
+      balance = _;
       $loading = false;
-    })
+    });
   }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    <div class="breadcrumb-elements-item p-0 my-auto">
-      <ComboxField name="balanceType" items={itemsComboBox} bind:value={cbValue} on:change={cbHandler} />
-    </div>
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Sinkronisasi
@@ -115,7 +104,11 @@
   </svelte:fragment>
   <div class="card d-flex flex-1">
     <div class="card-body d-flex flex-1 flex-column">
-      <LedgerTable {accounts} />
+      {#if $accounts && $balance}
+        <LedgerTable {accounts} {balance} />
+      {:else}
+        <Loader />
+      {/if}
     </div>
   </div>
 </PageLayout>

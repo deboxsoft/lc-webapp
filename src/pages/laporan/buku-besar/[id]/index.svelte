@@ -2,46 +2,61 @@
 <script>
   import { params } from "@roxi/routify";
   import dayjs from "dayjs";
-  import { writable } from "svelte/store";
-  import {tick} from "svelte";
+  import { tick } from "svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import TableDetailAccount from "../_components/TableDetailAccount.svelte";
   import Dropdown from "../../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../../components/DropdownToggle.svelte";
   import DatePickr from "../../../../components/forms/InputDateField.svelte";
   import Loader from "../../../../components/loader/Loader.svelte";
+  import LedgerAccountTable from "../../_libs/LedgerAccountTable.svelte";
   import { createReportContext } from "./_export";
+  import Button from "../../../../components/Button.svelte";
 
   // context
   const reportContext = createReportContext();
-  const { loading, ...appContext } = getApplicationContext();
-  const { findPageGeneralLedger, generalLedgerStore } = stores.createGeneralLedgerContext(appContext);
+  const applicationContext = getApplicationContext();
+  const { loading } = applicationContext;
+  const { findPageGeneralLedger, generalLedgerStore, generalLedgerPageInfo } =
+    stores.createGeneralLedgerContext(applicationContext);
   const { accountStore, getAccount } = stores.getAccountContext();
   const { currentDateStore } = stores.getPreferenceAccountingContext();
 
   // state
+  let submitting = false;
   let endDate = new Date();
   let startDate = dayjs(endDate).startOf("month").toDate();
-  let account = writable({});
   $: filter = {
     startDate,
     endDate
-  }
+  };
 
   $: account = getAccount($params.id);
 
   $: {
     if ($account) {
-      fetchGeneralLedger();
+      fetchData();
     }
   }
 
-  async function fetchGeneralLedger() {
+  $: console.log($generalLedgerStore);
+
+  async function fetchData(options = {}) {
     $loading = true;
-    await findPageGeneralLedger($account.id, { filter }, {});
+    submitting = true;
+    await findPageGeneralLedger(
+      $account.id,
+      {
+        filter,
+        pageCursor: {
+          next: options.more && $generalLedgerPageInfo?.next
+        }
+      },
+      options
+    );
     $loading = false;
+    submitting = false;
   }
 
   function dateChangeHandler({ detail }) {
@@ -52,8 +67,12 @@
       .toDate();
     endDate = dayjs(_tmp).isBefore(now) ? _tmp : now;
     tick().then(() => {
-      fetchGeneralLedger();
-    })
+      fetchData();
+    });
+  }
+
+  function infiniteHandler() {
+    fetchData({ more: true });
   }
 
   const createExportMenuHandler = (close) => ({
@@ -85,7 +104,7 @@
   });
 </script>
 
-<PageLayout showBackButton breadcrumb={[{ path: "./", title: "buku-besar" }, { title: "trial balance" }]}>
+<PageLayout showBackButton breadcrumb={[{ path: "./", title: "buku besar" }, { title: "rekap per akun" }]}>
   <svelte:fragment slot="breadcrumb-items-right">
     <div class="breadcrumb-elements-item p-0 my-auto" style="width: 180px">
       <DatePickr id="date" name="date" on:apply={dateChangeHandler} />
@@ -141,7 +160,15 @@
             <p class="col-sm-9 mb-0">: {($account && $account.id) || ""}</p>
           </dl>
         </div>
-        <TableDetailAccount {account} {filter} />
+        <LedgerAccountTable {generalLedgerStore}>
+          {#if $generalLedgerPageInfo.hasNext}
+            <div class="" style="height: 50px">
+              <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
+              ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+              </Button>
+            </div>
+          {/if}
+        </LedgerAccountTable>
       {/if}
     </div>
   </div>

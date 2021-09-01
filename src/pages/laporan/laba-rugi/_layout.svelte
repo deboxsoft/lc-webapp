@@ -2,35 +2,41 @@
 <script>
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getApplicationContext } from "__@modules/app";
+  import { getApplicationContext } from "../../../modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import TableLabaRugi from "./_components/TableLabaRugi.svelte";
-  import DatePickr from "../../../components/forms/InputDateField.svelte";
+  import InputDate from "../../../components/forms/InputDateField.svelte";
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import { createAclContext } from "./_acl-context";
-  import { createReportContext } from "../_components/_export";
-  import { parsingRevenueReport } from "../_components/_utils";
+  import { createAclContext } from "../_acl-context";
+  import TableLabaRugi from "../_libs/RevenueTable.svelte";
+  import { createReportContext } from "../_libs/balance-export";
+  import { parsingRevenueReport } from "../_libs/helper";
+  import Loader from "../../../components/loader/Loader.svelte";
 
-  const { readGranted } = createAclContext();
-  const { loading } = getApplicationContext();
+  const { readGranted } = createAclContext("statementIncome");
+  const applicationContext = getApplicationContext();
+  const { loading } = applicationContext;
   const reportContext = createReportContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { balanceSheetReportPerDate } = stores.getBalanceContext();
-  setBreadcrumbContext({ path: $url("./"), title: "neraca" });
+  const { balanceFixReport } = stores.createBalanceReportContext(applicationContext);
+  const { getAccountsTree } = stores.getAccountContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  const accountStore = getAccountsTree();
+  setBreadcrumbContext({ path: $url("./"), title: "Laba-Rugi" });
 
-  let openFilterDialog;
-  let date = new Date();
+  let openFilterDialog, report;
   $loading = true;
-  let report;
-  generateReportHandler(date).then((_) => {
-    $loading = false;
-    return _;
-  });
+  $: {
+    if ($preferenceStore && $accountStore) {
+      fetchData().then(() => {
+        $loading = false;
+      });
+    }
+  }
   const createExportMenuHandler = (close) => {
     const title = "LABA-RUGI";
     const getItemListReport = () => {
@@ -72,27 +78,24 @@
     };
   };
 
-  export async function generateReportHandler(date) {
-    $loading = true;
-    const data = await balanceSheetReportPerDate(date);
-    report = parsingRevenueReport(data);
-    $loading = false;
-  }
-
   function applyDateHandler({ detail }) {
-    date = detail.date;
-    generateReportHandler(date);
+    const date = detail.date;
+    fetchData(date);
   }
 
-  function fetchData() {
-    generateReportHandler(date)
+  function fetchData(date) {
+    $loading = true;
+    return balanceFixReport(date).then((data) => {
+      report = parsingRevenueReport(data);
+      $loading = false;
+    });
   }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">
-      <DatePickr id="date" name="date" selected={date} on:apply={applyDateHandler} range={false} />
+      <InputDate id="date" name="date" on:apply={applyDateHandler} range={false} />
     </div>
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
@@ -136,7 +139,11 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableLabaRugi bind:report />
+      {#if $loading}
+        <Loader />
+      {:else}
+        <TableLabaRugi bind:report />
+      {/if}
     </div>
   </div>
 </PageLayout>
