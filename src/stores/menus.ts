@@ -14,6 +14,7 @@ export type MenuItem = {
   children?: MenuItem[];
   icon?: typeof SvelteComponentDev | string;
   show: boolean;
+  component?: typeof SvelteComponentDev;
 };
 
 export type MenuList = MenuItem[];
