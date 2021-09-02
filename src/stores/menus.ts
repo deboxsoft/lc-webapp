@@ -6,6 +6,8 @@ import WarehouseIcon from "__@comps/icons/Warehouse.svelte";
 import MoneyCheckAltIcon from "__@comps/icons/MoneyCheckAlt.svelte";
 import LayerGroupIcon from "__@comps/icons/LayerGroup.svelte";
 import FileSpreadSheet from "__@comps/icons/FileSpreadsheet.svelte";
+import ContractBddMenu from "../pages/bdd/_menus/ContractSidebarMenuItem.svelte";
+import { get } from "svelte/store";
 
 export type MenuItem = {
   label?: string;
@@ -20,6 +22,7 @@ export type MenuItem = {
 export type MenuList = MenuItem[];
 
 export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
+  const profile = get(auth.authenticationStore);
   const accountShow = auth.getQuery("account").read().granted;
   const programShow = auth.getQuery("program").read().granted;
   const transactionShow = auth.getQuery("transaction").read().granted;
@@ -32,7 +35,8 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const inventoryShow = auth.getQuery("inventory").read().granted;
   const bddShow = auth.getQuery("bdd").read().granted;
   const stockShow = auth.getQuery("stock").read().granted;
-
+  const userShow = auth.getQuery("user").read().granted;
+  const settingShow = auth.getQuery("setting").read().granted;
   return [
     {
       label: "Pencatatan Transaksi",
@@ -63,20 +67,68 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       url: "/persediaan",
       type: "module",
       icon: WarehouseIcon,
-      show: stockShow
+      show: stockShow,
+      children: [
+        {
+          label: "Barang",
+          url: "/persediaan/home",
+          show: stockShow
+        },
+        {
+          label: "Kartu Stok",
+          url: "/persediaan/kartu-stok",
+          show: stockShow
+        },
+        {
+          label: "Kategori Barang",
+          url: "/persediaan/kategori",
+          show: stockShow
+        },
+        {
+          label: "Supplier Barang",
+          url: "/persediaan/supplier",
+          show: stockShow
+        }
+      ]
     },
     {
       label: "Aktiva Tetap",
       url: "/aktiva-tetap",
+      type: "module",
       icon: InventoryIcon,
-      show: inventoryShow
+      show: inventoryShow,
+      children: [
+        {
+          label: "Daftar Aktiva Tetap",
+          url: "/aktiva-tetap/home",
+          show: inventoryShow
+        },
+        {
+          label: "Daftar Kategori",
+          url: "/aktiva-tetap/kategori",
+          show: inventoryShow
+        }
+      ]
     },
     {
       label: "BDD",
       url: "/bdd",
       type: "module",
       icon: MoneyCheckAltIcon,
-      show: bddShow
+      show: bddShow,
+      children: [
+        {
+          label: "Daftar BDD",
+          url: "/bdd/home",
+          show: bddShow
+        },
+        {
+          label: "Sisa Kontrak",
+          url: "/bdd/warning",
+          show: bddShow,
+          component: ContractBddMenu
+        }
+      ]
     },
     {
       label: "Laporan",
@@ -137,10 +189,66 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       ]
     },
     {
-      label: "Pengaturan",
+      label: "Manajemen Pengguna",
+      url: "/users",
+      icon: "icon-user",
+      type: "module",
+      show: userShow,
+      children: [
+        {
+          label: "Data Pengguna",
+          url: "/users/home",
+          show: userShow
+        },
+        {
+          label: "Grup Pengguna",
+          url: "/users/group",
+          show: userShow
+        },
+        {
+          label: "Akses Pengguna",
+          url: "/users/role",
+          show: userShow
+        }
+      ]
+    },
+    {
+      label: "Pengaturan Aplikasi",
       url: "/settings",
+      type: "module",
       icon: "icon-cog3",
-      show: true
+      show: settingShow,
+      children: [
+        {
+          label: "Info Perusahaan",
+          url: "/settings/umum",
+          show: settingShow
+        },
+        {
+          label: "Akuntansi",
+          url: "/settings/accounting",
+          show: settingShow
+        }
+      ]
+    },
+    {
+      label: "Pengaturan Profil",
+      url: "/profile",
+      type: "module",
+      icon: "icon-profile",
+      show: profile.authenticated,
+      children: [
+        {
+          label: "Info Profil",
+          url: "/profile/info",
+          show: profile.authenticated
+        },
+        {
+          label: "Ganti Password",
+          url: "/profile/password",
+          show: profile.authenticated
+        }
+      ]
     }
   ];
 };
