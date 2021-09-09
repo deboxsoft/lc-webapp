@@ -36,12 +36,13 @@
   });
 
   function fetchData() {
-    $loading = true
+    $loading = true;
     find().then((result) => {
       $loading = false;
     });
   }
 </script>
+
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
@@ -92,7 +93,9 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <BankTable {bankStore} />
+      {#if $bankStore}
+        <BankTable {bankStore} />
+      {/if}
     </div>
   </div>
 </PageLayout>

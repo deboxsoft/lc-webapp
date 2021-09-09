@@ -8,6 +8,7 @@
   import { getApplicationContext } from "__@modules/app";
   import CashierTable from "./_components/CashierTable.svelte";
   import Button from "../../../components/Button.svelte";
+  import Loader from "../../../components/loader/Loader.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const applicationContext = getApplicationContext();
@@ -71,15 +72,19 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <CashierTable {cashierStore}>
-        {#if $cashierPageInfo.hasNext}
-          <div class="" style="height: 50px">
-            <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
-              ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
-            </Button>
-          </div>
-        {/if}
-      </CashierTable>
+      {#if $cashierStore}
+        <CashierTable {cashierStore}>
+          {#if $cashierPageInfo.hasNext}
+            <div class="" style="height: 50px">
+              <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
+                ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+              </Button>
+            </div>
+          {/if}
+        </CashierTable>
+      {:else}
+        <Loader />
+      {/if}
     </div>
   </div>
   <slot />

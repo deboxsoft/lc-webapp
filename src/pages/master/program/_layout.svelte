@@ -19,7 +19,8 @@
     $goto("/access-denied");
   }
 
-  let submitting = false, filter = {};
+  let submitting = false,
+    filter = {};
   if (!$programStore) {
     fetchData();
   }
@@ -32,8 +33,8 @@
       $loading = false;
     });
   }
-
 </script>
+
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
@@ -46,7 +47,9 @@
 
   <div class="card d-flex flex-column flex-1">
     <div class="card-body flex-1 flex-column d-flex">
-      <ProgramTable {programStore} />
+      {#if $programStore}
+        <ProgramTable {programStore} />
+      {/if}
     </div>
   </div>
   <slot />
