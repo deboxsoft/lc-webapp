@@ -11,28 +11,28 @@
   };
   export let items = [];
   export let name = undefined;
-  export const select = $fields && $fields[name] || undefined;
   export let allowEmpty = false;
-  export let labelId = "label"
-  export let valueId = "id"
-  export let value = undefined;
-  export let placeHolder = "";
+  export let labelId = "label";
+  export let valueId = "id";
+  export let value = $fields[name];
+  export let placeHolder = undefined;
   export let className = $$props.class || "";
 
-  $fields[name] = value || select;
+  let selectedIndex, isStartup;
   const dispatch = createEventDispatcher();
 
   $: {
-    if (items.length > 0 && !$fields[name] && !allowEmpty) {
-      $fields[name] = items[0][valueId] || items[0]
+    if (items.length > 0 && !$fields[name] && !allowEmpty && !placeHolder) {
+      $fields[name] = items[0][valueId] || items[0];
     }
   }
 
-  function createChangeHandler(e) {
+  function createChangeHandler() {
     const _validate = validateField(name);
     return (e) => {
+      selectedIndex = e.target.selectedIndex;
       _validate && _validate();
-      value = $fields[name];
+      $fields[name] = e.target.selected;
       dispatch("change", e.detail);
     };
   }
@@ -41,13 +41,24 @@
 <select
   {...$$restProps}
   class="form-control form-control-uniform {className}"
-  bind:value={$fields[name]}
+  class:empty={!!placeHolder && ((!selectedIndex && !$fields[name]) || selectedIndex === 0)}
+  bind:value
   on:change={createChangeHandler()}
 >
-  {#if allowEmpty}
-    <option label={placeHolder} />
+  {#if placeHolder}
+    {#if allowEmpty && selectedIndex > 0}
+      <option />
+    {:else}
+      <option selected disabled>{placeHolder}</option>
+    {/if}
   {/if}
   {#each items as item}
     <option value={item[valueId] || item}>{item[labelId] || item}</option>
   {/each}
 </select>
+
+<style lang="scss">
+  .empty {
+    color: gray;
+  }
+</style>

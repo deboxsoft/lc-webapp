@@ -4,6 +4,7 @@
   import { getApplicationContext } from "__@modules/app";
   import Backdrop from "./utils/Backdrop.svelte";
   import Portal from "./utils/Portal.svelte";
+  import Loader from "./loader/Loader.svelte";
 
   const { uiControl } = getApplicationContext();
   const dispatch = createEventDispatcher();
@@ -21,16 +22,17 @@
   export let initialFocusElement = undefined;
   export let returnFocusElement = undefined;
   export let ariaModalLegacy = false;
+  export let loading = false;
   export const openDialog = () => {
-      _open = true;
+    _open = true;
   };
 
   export const closeDialog = () => {
-    onClose && onClose()
+    onClose && onClose();
     _open = false;
-  }
+  };
 
-  let _open = false
+  let _open = false;
 
   $: classes = clsx("modal-dialog modal-dialog-centered", className);
 
@@ -57,9 +59,13 @@
             </div>
           {/if}
           <div class="modal-body">
-            <slot />
+            {#if !loading}
+              <slot />
+            {:else}
+              <Loader />
+            {/if}
           </div>
-          {#if $$slots["footer"]}
+          {#if $$slots["footer"] && !loading}
             <div class={clsx("modal-footer", theme && `bg-${theme}`)}>
               <slot name="footer" />
             </div>
