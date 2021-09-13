@@ -64,14 +64,14 @@
   }
 
   $: {
-    fields && name && autoNumeric && value !== $fields[name] && autoNumeric.set($fields[name] || "");
+    fields && name && autoNumeric && !Number.isNaN(value) && value !== $fields[name] && autoNumeric.set($fields[name]);
   }
 
   $: classes = clsx(className, "form-control", textPosition === "right" && "text-right");
 
   onMount(() => {
     autoNumeric = new AutoNumeric(inputEl, { ...defaultOptions, ...options });
-    value && autoNumeric.set(value);
+    !Number.isNaN(value) && autoNumeric.set(value);
   });
 
   onDestroy(() => {
