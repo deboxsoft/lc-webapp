@@ -1,7 +1,7 @@
 <script>
   import dayjs from "dayjs";
   import Table from "../../../../components/Table.svelte";
-  import CellRp from "../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../components/CellNumber.svelte";
   import CellAccount from "../../../../components/account/CellAccount.svelte";
   import { writable } from "svelte/store";
 
@@ -76,7 +76,7 @@
       <div class="dbx-cell account">
         <CellAccount id={item.accountId} />
       </div>
-      <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellRp value={item.amount} /></div>
+      <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellNumber value={item.amount} /></div>
     </div>
   {/each}
 </Table>

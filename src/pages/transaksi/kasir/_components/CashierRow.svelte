@@ -2,7 +2,7 @@
   import { url } from "@roxi/routify";
   import Dropdown from "../../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../../components/DropdownToggle.svelte";
-  import CellRp from "../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../components/CellNumber.svelte";
   import dayjs from "dayjs";
 
   export let cashier;
@@ -14,7 +14,7 @@
   <td>{cashier.name || ""}</td>
   <td>{dayjs(cashier.date).format("DD-MM-YY")}</td>
   <td>
-    <CellRp value={cashier.amount} />
+    <CellNumber value={cashier.amount} />
   </td>
   <td style="cursor: pointer;padding: 0">
     <Dropdown

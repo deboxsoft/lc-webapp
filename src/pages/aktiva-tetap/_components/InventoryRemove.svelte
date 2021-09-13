@@ -1,6 +1,6 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import Form from "../../../components/forms/Form.svelte";
   import AccountSelect from "../../../components/account/AccountSelect.svelte";
   import { filteringAccountCredit, filteringAccountDebit } from "../../../utils";
@@ -37,7 +37,7 @@
     </p>
     <dt class="col-sm-5">Total Akumulasi Depresiasi</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<CellRp value={totalDepreciation} />
+      : &nbsp<CellNumber value={totalDepreciation} />
     </p>
   </dl>
   <div class="row">

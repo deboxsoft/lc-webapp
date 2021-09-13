@@ -3,7 +3,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import dayjs from "dayjs";
 
   const { getCategoryInventory } = stores.getInventoryContext();
@@ -19,10 +19,10 @@
   <td>{getCategoryInventory(inventory.categoryId)?.name || ""}</td>
   <td>{inventory.quantity}</td>
   <td>
-    <CellRp value={inventory.priceItem} />
+    <CellNumber value={inventory.priceItem} />
   </td>
   <td>
-    <CellRp value={inventory.priceItem * inventory.quantity} />
+    <CellNumber value={inventory.priceItem * inventory.quantity} />
   </td>
   <td style="cursor: pointer;padding: 0">
     <Dropdown

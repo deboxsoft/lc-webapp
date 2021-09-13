@@ -2,7 +2,7 @@
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import CellRp from "../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../components/CellNumber.svelte";
   import CellAccount from "../../../../components/account/CellAccount.svelte";
   import MenuListTransaction from "./MenuListTransaction.svelte";
   import Table from "../../../../components/Table.svelte";
@@ -55,7 +55,7 @@
       </div>
       <div class="dbx-cell">{transaction.description || ""}</div>
       <div class="dbx-cell amount">
-        <CellRp value={transaction.amount} />
+        <CellNumber value={transaction.amount} />
       </div>
       <div class="dbx-cell d-none d-sm-flex status">
         <span

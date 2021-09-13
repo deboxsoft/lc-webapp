@@ -1,5 +1,5 @@
 <script>
-  import CellRp from "../../../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../../../components/CellNumber.svelte";
 
   export let bank;
   export let account;
@@ -25,11 +25,11 @@
     {#if !hiddenBalance}
       <dt class="col-sm-3 mb-0">Saldo Akun Perkiraan</dt>
       <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
-        : <div style="width: 150px"><CellRp class="ml-1" value={balanceAccount} /></div>
+        : <div style="width: 150px"><CellNumber class="ml-1" value={balanceAccount} /></div>
       </div>
       <dt class="col-sm-3 mb-0">Saldo Rekening Bank</dt>
       <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
-        : <div style="width: 150px"><CellRp class="ml-1" value={balanceBank} /></div>
+        : <div style="width: 150px"><CellNumber class="ml-1" value={balanceBank} /></div>
       </div>
     {/if}
   </dl>

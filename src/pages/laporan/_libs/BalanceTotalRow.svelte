@@ -1,5 +1,5 @@
 <script>
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
 
   export let label;
   export let balance;
@@ -10,6 +10,6 @@
   <td>&nbsp;</td>
   <td>&nbsp;</td>
   <td class="text-right" style="width: 200px">
-    <CellRp value={balance} />
+    <CellNumber value={balance} />
   </td>
 </tr>

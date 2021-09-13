@@ -1,18 +1,22 @@
 <script>
-  import { convertToRp } from "__@root/utils";
+  import { convertToNumber } from "../utils";
 
   export let value;
   export let spaceMinus= false;
+  export let format = "rp";
   export let className = $$props.class || "";
+  export let fixedNumber = format === "rp" ? 2 : 0;
 </script>
 
 <div {...$$restProps} class="cell-rp {className}" class:-minus={value < 0}>
   <!--{#if spaceMinus && (value < 0)}-->
   <!--  <div class="space-sign" />-->
   <!--{/if}-->
-  <div class="sign">Rp. </div>
+  {#if format === "rp"}
+    <div class="sign">Rp. </div>
+  {/if}
   <div class="space" />
-  <div class="value">{value ? convertToRp(parseFloat(value).toFixed(2)) : "-"}</div>
+  <div class="value">{value ? convertToNumber({ value: parseFloat(value), fractionDigits: fixedNumber }) : "-"}</div>
   {#if spaceMinus && value > 0}
     <div class="space-sign" />
   {/if}

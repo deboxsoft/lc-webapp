@@ -1,5 +1,5 @@
 <script>
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import dayjs from "dayjs";
 
   /** @type{import("@deboxsoft/accounting-api").Bdd} */
@@ -29,6 +29,6 @@
   </p>
   <dt class="col-sm-3">Jumlah</dt>
   <p class="col-sm-9 d-inline-flex align-items-center">
-    : <span style="width: 150px"><CellRp class="ml-1" value={bdd.amount} /></span>
+    : <span style="width: 150px"><CellNumber class="ml-1" value={bdd.amount} /></span>
   </p>
 </dl>

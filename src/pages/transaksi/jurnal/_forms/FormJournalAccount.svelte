@@ -5,7 +5,7 @@
   import ListPlusIcon from "../../../../components/icons/ListPlus.svelte";
   import CheckIcon from "../../../../components/icons/Check.svelte";
   import CloseIcon from "../../../../components/icons/Close.svelte";
-  import { convertToRp } from "__@root/utils";
+  import { convertToNumber } from "../../../../utils";
   import FormJournalAccountItem from "./FormJournalAccountItem.svelte";
 
   // context formJournal
@@ -73,7 +73,7 @@
         <tr>
           <th>Akun Kredit</th>
           <th class="text-center" style="width: 275px">Jumlah</th>
-          <th class="text-center" style="width: 40px"></th>
+          <th class="text-center" style="width: 40px" />
         </tr>
       </thead>
       <tbody>
@@ -109,15 +109,15 @@
     <div class="d-flex flex-column" style="width: 250px">
       <div class="d-flex">
         <span class="flex-grow-1">Total Debit: Rp.</span>
-        <span>{debit ? convertToRp(parseFloat(debit)) : "-"}</span>
+        <span>{debit ? convertToNumber({ value: parseFloat(debit) }) : "-"}</span>
       </div>
       <div class="d-flex">
         <span class="flex-grow-1">Total Kredit: Rp.</span>
-        <span>{credit ? convertToRp(parseFloat(credit)) : "-"}</span>
+        <span>{credit ? convertToNumber({ value: parseFloat(credit) }) : "-"}</span>
       </div>
       <div class="d-flex" style="border-top: solid 1px gray">
         <span class="flex-grow-1"> Selisih: Rp.</span>
-        <span>{diff ? convertToRp(diff) : "-"}</span>
+        <span>{diff ? convertToNumber({ value: diff }) : "-"}</span>
       </div>
     </div>
   </div>

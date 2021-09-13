@@ -1,5 +1,5 @@
 <script>
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   /** @type {import("@deboxsoft/accounting-api").Bdd} */
   export let bdd;
   let total = 0;
@@ -21,6 +21,6 @@
   </p>
   <dt class="col-sm-3">Total Akumulasi Biaya Amortisasi</dt>
   <p class="col-sm-9">
-    : <CellRp value={total} />
+    : <CellNumber value={total} />
   </p>
 </dl>

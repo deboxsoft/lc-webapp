@@ -1,7 +1,7 @@
 <script>
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
-  import CellRp from "../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../components/CellNumber.svelte";
   import CellAccount from "../../../../components/account/CellAccount.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
@@ -27,7 +27,7 @@
   </p>
   <dt class="col-sm-3">Harga Barang</dt>
   <p class="col-sm-9 d-inline-flex align-items-center">
-    : <span style="width: 150px"><CellRp class="ml-1" value={inventory.priceItem} /></span>
+    : <span style="width: 150px"><CellNumber class="ml-1" value={inventory.priceItem} /></span>
   </p>
   <dt class="col-sm-3">Jumlah Barang</dt>
   <p class="col-sm-9">
@@ -35,6 +35,6 @@
   </p>
   <dt class="col-sm-3">Harga Total Barang</dt>
   <p class="col-sm-9 d-inline-flex align-items-center">
-    : <span style="width: 150px"><CellRp class="ml-1" value={inventory.quantity * inventory.priceItem} /></span>
+    : <span style="width: 150px"><CellNumber class="ml-1" value={inventory.quantity * inventory.priceItem} /></span>
   </p>
 </dl>

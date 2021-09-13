@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { convertToRp } from "./converter-num-rp";
+import { convertToNumber } from "./formatter-num";
 type Options = {
   isCsv?: boolean;
   params?: Record<string, any>;
@@ -13,7 +13,7 @@ export const numericCell = (amount, { isCsv, params = {}, type = "number" }: Opt
         : parseInt(amount)
       : undefined
     : {
-        text: amount ? (type === "rp" ? convertToRp(amount) : amount) : "",
+        text: amount ? (type === "rp" ? convertToNumber({ value: parseFloat(amount) }) : amount) : "",
         style: "cell-number",
         ...params
       };

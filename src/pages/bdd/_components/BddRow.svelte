@@ -2,7 +2,7 @@
   import { url } from "@roxi/routify";
   import Dropdown from "../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import dayjs from "dayjs";
 
   export let bdd;
@@ -17,10 +17,10 @@
   <td>{bdd.description || ""}</td>
   <td>{bdd.taxRate || ""}</td>
   <td>
-    <CellRp value={bdd.amount} />
+    <CellNumber value={bdd.amount} />
   </td>
   <td>
-    <CellRp value={total} />
+    <CellNumber value={total} />
   </td>
   <td style="cursor: pointer;padding: 0">
     <Dropdown

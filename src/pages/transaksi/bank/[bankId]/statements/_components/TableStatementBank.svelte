@@ -4,7 +4,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import Table from "../../../../../../components/Table.svelte";
   import AccountCell from "../../../../../../components/account/CellAccount.svelte";
-  import CellRp from "../../../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../../../components/CellNumber.svelte";
   import Loader from "../../../../../../components/loader/Loader.svelte";
 
   const { bank } = stores.getBankStatementContext();
@@ -72,9 +72,9 @@
           {dayjs(bankStatement.date).format("DD-MMM-YYYY") || ""}
         </div>
         <div class="dbx-cell">{bankStatement.description || ""}</div>
-        <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellRp value={bankStatement.in} /></div>
-        <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellRp value={bankStatement.out} /></div>
-        <div class="dbx-cell text-right amount"><CellRp value={bankStatement.balance} /></div>
+        <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellNumber value={bankStatement.in} /></div>
+        <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellNumber value={bankStatement.out} /></div>
+        <div class="dbx-cell text-right amount"><CellNumber value={bankStatement.balance} /></div>
         <div class="dbx-cell account d-inline-flex align-items-center">
           <div>
             <div>

@@ -1,7 +1,7 @@
 <script>
   import IconArrowRight from "@deboxsoft/svelte-icons/ico/icoArrowRight3.svelte";
   import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import { writable } from "svelte/store";
 
   export let account;
@@ -30,7 +30,7 @@
   <td class="d-table-cell d-md-none">&nbsp;</td>
   <td class="d-none d-md-table-cell">&nbsp;</td>
   <td class="text-right balance">
-    <CellRp value={account.balance} />
+    <CellNumber value={account.balance} />
   </td>
   <td class="d-none d-xl-table-cell">&nbsp;</td>
 </tr>
@@ -47,7 +47,7 @@
       <td class="d-table-cell d-xl-none">&nbsp;</td>
       <td class="d-table-cell d-md-none">&nbsp;</td>
       <td class="text-right balance">
-        <CellRp value={child.balance} />
+        <CellNumber value={child.balance} />
       </td>
       <td class="d-none d-md-table-cell">&nbsp;</td>
       <td class="d-none d-xl-table-cell">&nbsp;</td>

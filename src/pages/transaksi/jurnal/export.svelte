@@ -4,7 +4,7 @@
   import { stores, getTransactionService } from "@deboxsoft/accounting-client";
   import { get } from "svelte/store";
   import { pdfMake, pdfStyles } from "__@root/styles/pdf";
-  import { downloadCsv, convertToRp } from "__@root/utils";
+  import { downloadCsv, convertToNumber } from "../../../utils";
   import dayjs from "dayjs";
   import FormFilter from "./_forms/FormFilter.svelte";
   import { getApplicationContext } from "__@modules/app";
@@ -20,7 +20,7 @@
 
   onMount(() => {
     openDialog();
-  })
+  });
 
   function processingDataPdf(list = [], transaction) {
     const debitAccount = get(getAccount(transaction.accountId)) || {};
@@ -43,7 +43,11 @@
               [
                 { text: debitAccount.id, style: "cell", border: [false, false, false, false] },
                 { text: debitAccount.name, style: "cell", border: [false, false, false, false] },
-                { text: convertToRp(transaction.amount), style: "cell-number", border: [false, false, false, false] },
+                {
+                  text: convertToNumber({ value: transaction.amount }),
+                  style: "cell-number",
+                  border: [false, false, false, false]
+                },
                 { text: "-", style: "cell-number", border: [false, false, false, false] }
               ],
               ...transaction.creditAccounts.map((_) => {
@@ -52,7 +56,11 @@
                   { text: creditAccount.id, style: "cell", border: [false, false, false, false] },
                   { text: creditAccount.name, style: "cell", border: [false, false, false, false] },
                   { text: "-", style: "cell-number", border: [false, false, false, false] },
-                  { text: convertToRp(_.amount), style: "cell-number", border: [false, false, false, false] }
+                  {
+                    text: convertToNumber({ value: _.amount }),
+                    style: "cell-number",
+                    border: [false, false, false, false]
+                  }
                 ];
               })
             ]
@@ -156,12 +164,12 @@
           dayjs(transaction.date).format("DD-MM-YYYY"),
           transaction.description,
           accountDebit,
-          convertToRp(transaction.amount),
+          convertToNumber({ value: transaction.amount }),
           transaction.status,
           [
             transaction.creditAccounts.map((_) => {
               const { name: account = "-" } = get(getAccount(_.id)) || {};
-              return [account, convertToRp(_.amount)];
+              return [account, convertToNumber({ value: _.amount })];
             })
           ]
         ];

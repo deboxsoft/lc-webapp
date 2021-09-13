@@ -3,7 +3,7 @@ import { stores } from "@deboxsoft/accounting-client";
 import dayjs from "dayjs";
 import { get } from "svelte/store";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
-import { downloadCsv, convertToRp } from "__@root/utils";
+import { downloadCsv, convertToNumber } from "__@root/utils";
 
 export type Metadata = Record<string, string>;
 export const createReportContext = () => {
@@ -14,9 +14,9 @@ export const createReportContext = () => {
       { text: dayjs(bankStatement.date).format("DD-MM-YYYY"), style: "cell-date" },
       { text: account, style: "cell" },
       { text: bankStatement.description, style: "cell" },
-      { text: convertToRp(bankStatement.in), style: "cell-number" },
-      { text: convertToRp(bankStatement.out), style: "cell-number" },
-      { text: convertToRp(bankStatement.balance), style: "cell-number" }
+      { text: convertToNumber({ value: bankStatement.in }), style: "cell-number" },
+      { text: convertToNumber({ value: bankStatement.out }), style: "cell-number" },
+      { text: convertToNumber({ value: bankStatement.balance }), style: "cell-number" }
       // { text: bank.balance, style: "cell" }
     ];
   };

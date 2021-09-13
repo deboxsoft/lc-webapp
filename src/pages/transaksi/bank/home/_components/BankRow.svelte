@@ -2,7 +2,7 @@
   import { url } from "@roxi/routify";
   import Dropdown from "../../../../../components/Dropdown.svelte";
   import DropdownToggle from "../../../../../components/DropdownToggle.svelte";
-  import CellRp from "../../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../../components/CellNumber.svelte";
   import CellAccount from "../../../../../components/account/CellAccount.svelte";
   import BalanceAccount from "../../../../../components/account/BalanceAccount.svelte";
   import { getAclContext } from "../../_acl-context";
@@ -47,7 +47,7 @@
     </div>
   </td>
   <td>
-    <CellRp class="flex-1 align-items-center" value={bank.balance} />
+    <CellNumber class="flex-1 align-items-center" value={bank.balance} />
   </td>
 
   <td>

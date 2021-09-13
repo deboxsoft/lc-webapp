@@ -9,7 +9,7 @@
   import { getApplicationContext } from "__@modules/app";
   import TablePreview from "./_tables/TablePreview.svelte";
   import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import { getAuthenticationContext } from "../../../modules/users";
   import { filteringAccountCredit, filteringAccountDebit } from "../../../utils";
 
@@ -153,14 +153,14 @@
     <div class="row">
       <div class="col-md-2">Saldo</div>
       <div class="col-md-10 d-inline-flex align-items-center">
-        : <div style="width: 150px"><CellRp class="ml-1" value={$account && $account.balance} /></div>
+        : <div style="width: 150px"><CellNumber class="ml-1" value={$account && $account.balance} /></div>
       </div>
     </div>
     {#if isPreview}
       <div class="row">
         <div class="col-form-label col-md-2">Total {action === "cashier" ? "Pemasukan" : "Pengeluaran"}</div>
         <div class="col-md-10 d-inline-flex align-items-center">
-          : <div style="width: 150px"><CellRp class="ml-1" value={balance} /></div>
+          : <div style="width: 150px"><CellNumber class="ml-1" value={balance} /></div>
         </div>
       </div>
     {:else}

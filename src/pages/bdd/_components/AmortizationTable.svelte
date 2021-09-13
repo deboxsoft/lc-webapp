@@ -2,7 +2,7 @@
   import Table from "../../../components/tables/DataTable.svelte";
   import AmortizationRow from "./AmortizationRow.svelte";
   import dayjs from "dayjs";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
 
   /** @type {import("@deboxsoft/accounting-api").Bdd} **/
   export let bdd;
@@ -20,7 +20,7 @@
   <dl class="row mb-0">
     <dt class="col-sm-4 mb-0">Biaya Amortisasi</dt>
     <p class="col-sm-8 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellRp value={amortizationAmount} /></span>
+      : &nbsp<span style="width: 150px"><CellNumber value={amortizationAmount} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
@@ -30,13 +30,13 @@
   <dl class="row mb-0">
     <dt class="col-sm-4 mb-0">Total Akumulasi Amortisasi</dt>
     <p class="col-sm-8 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellRp value={totalAmortization} /></span>
+      : &nbsp<span style="width: 150px"><CellNumber value={totalAmortization} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-4 mb-0">Total Amortisasi</dt>
     <p class="col-sm-8 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellRp value={amount} /></span>
+      : &nbsp<span style="width: 150px"><CellNumber value={amount} /></span>
     </p>
   </dl>
 </div>

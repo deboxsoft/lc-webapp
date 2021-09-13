@@ -1,5 +1,5 @@
 <script>
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
 
   /** @type {import("@deboxsoft/accounting-api").Amortization}*/
   export let amortization;
@@ -7,7 +7,7 @@
 
 <tr>
   <td>{amortization.month}</td>
-  <td><CellRp value={amortization.amount} />
+  <td><CellNumber value={amortization.amount} />
   </td>
   <td style="cursor: pointer; padding: 0">
   </td>

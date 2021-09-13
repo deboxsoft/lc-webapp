@@ -1,6 +1,6 @@
 <script>
   import dayjs from "dayjs";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import Table from "../../../components/tables/DataTable.svelte";
 
   export let generalLedgerStore;
@@ -27,13 +27,13 @@
         {generalLedger.description || ""}
       </td>
       <td>
-        <CellRp value={generalLedger.amount > 0 ? generalLedger.amount : undefined} />
+        <CellNumber value={generalLedger.amount > 0 ? generalLedger.amount : undefined} />
       </td>
       <td>
-        <CellRp value={generalLedger.amount < 0 ? -1 * generalLedger.amount : undefined} />
+        <CellNumber value={generalLedger.amount < 0 ? -1 * generalLedger.amount : undefined} />
       </td>
       <td>
-        <CellRp value={generalLedger.balance} />
+        <CellNumber value={generalLedger.balance} />
       </td>
     </tr>
   {/each}

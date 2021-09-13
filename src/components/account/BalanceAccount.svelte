@@ -1,5 +1,5 @@
 <script>
-  import CellRp from "__@comps/CellRp.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
   import { writable } from "svelte/store";
   import { stores } from "@deboxsoft/accounting-client";
 
@@ -21,5 +21,5 @@
 </script>
 
 {#if $_store}
-  <CellRp {value} {...$$restProps} />
+  <CellNumber {value} {...$$restProps} />
 {/if}

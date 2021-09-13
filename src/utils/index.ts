@@ -1,5 +1,5 @@
 export * from "./accounts-utils";
-export * from "./converter-num-rp";
+export * from "./formatter-num";
 export * from "./converter-csv";
 export * from "./sort-utils";
 export * from "./popper";

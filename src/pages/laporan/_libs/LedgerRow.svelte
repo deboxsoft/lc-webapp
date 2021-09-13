@@ -2,7 +2,7 @@
   import { goto } from "@roxi/routify";
   import IconArrowRight from "@deboxsoft/svelte-icons/ico/icoArrowRight3.svelte";
   import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
 
   export let account;
   export let toggle;
@@ -37,7 +37,7 @@
   </td>
   <td />
   <td class="text-right balance">
-    <CellRp value={account.balance} />
+    <CellNumber value={account.balance} />
   </td>
 </tr>
 {#if account.children && $expanded}
@@ -50,7 +50,7 @@
         </div>
       </td>
       <td class="text-right balance">
-        <CellRp value={child.balance} />
+        <CellNumber value={child.balance} />
       </td>
       <td />
     </tr>

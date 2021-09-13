@@ -2,7 +2,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import Loader from "../../../components/loader/Loader.svelte";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
   import RowBalance from "./BalanceRow.svelte";
   import RowTotalBalance from "./BalanceTotalRow.svelte";
   import { createFoldStore } from "__@stores/fold";
@@ -69,7 +69,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="text-right balance">
-          <CellRp value={statementIncomeBalance} />
+          <CellNumber value={statementIncomeBalance} />
         </td>
       </tr>
 
@@ -78,7 +78,7 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td class="text-right balance">
-          <CellRp value={assetsBalance - liabilitiesBalance} />
+          <CellNumber value={assetsBalance - liabilitiesBalance} />
         </td>
       </tr>
     </tbody>

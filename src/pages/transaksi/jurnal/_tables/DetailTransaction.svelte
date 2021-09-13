@@ -6,7 +6,7 @@
   import { stores as usersStore } from "@deboxsoft/users-client";
   import Modal from "../../../../components/Modal.svelte";
   import Loader from "../../../../components/loader/Loader.svelte";
-  import CellRp from "../../../../components/CellRp.svelte";
+  import CellNumber from "../../../../components/CellNumber.svelte";
   import CellAccount from "../../../../components/account/CellAccount.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
@@ -120,7 +120,7 @@
         <tr>
           <td>{transaction.accountId || "-"}</td>
           <td><CellAccount id={transaction.accountId} /></td>
-          <td><CellRp value={transaction.amount} /></td>
+          <td><CellNumber value={transaction.amount} /></td>
           <td class="text-right">-</td>
         </tr>
         {#each transaction.creditAccounts as accountAmount, index (accountAmount.index)}
@@ -128,7 +128,7 @@
             <td>{accountAmount.id || "-"}</td>
             <td><CellAccount id={accountAmount.id} /></td>
             <td class="text-right">-</td>
-            <td><CellRp value={accountAmount.amount} /></td>
+            <td><CellNumber value={accountAmount.amount} /></td>
           </tr>
         {/each}
       </tbody>

@@ -1,8 +1,8 @@
 <script>
   import { url } from "@roxi/routify";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import CellRp from "../../../components/CellRp.svelte";
+  import Dropdown from "../../../../../components/Dropdown.svelte";
+  import DropdownToggle from "../../../../../components/DropdownToggle.svelte";
+  import CellNumber from "../../../../../components/CellNumber.svelte";
   export let stock;
   let dropdownContext;
 </script>
@@ -11,10 +11,7 @@
   <td>{stock.name || ""}</td>
   <td>{stock.quantity}</td>
   <td>
-    <CellRp value={stock.price} />
-  </td>
-  <td>
-    <CellRp value={stock.price * stock.quantity} />
+    <CellNumber value={stock.price} />
   </td>
   <td style="cursor: pointer;padding: 0">
     <Dropdown

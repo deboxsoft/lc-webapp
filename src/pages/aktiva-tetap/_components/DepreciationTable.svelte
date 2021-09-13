@@ -4,7 +4,7 @@
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { getGroupDepreciation, calculateDepreciation } from "@deboxsoft/accounting-api";
-  import CellRp from "../../../components/CellRp.svelte";
+  import CellNumber from "../../../components/CellNumber.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let back = "../";
@@ -33,13 +33,13 @@
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Biaya Depresiasi</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellRp value={depreciationAmount} /></span>
+      : &nbsp<span style="width: 150px"><CellNumber value={depreciationAmount} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Nilai Residu</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellRp value={inventory.quantity} /></span>
+      : &nbsp<span style="width: 150px"><CellNumber value={inventory.quantity} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
@@ -49,7 +49,7 @@
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Total Akumulasi Depresiasi</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellRp value={totalDepreciation} /></span>
+      : &nbsp<span style="width: 150px"><CellNumber value={totalDepreciation} /></span>
     </p>
   </dl>
 </div>
