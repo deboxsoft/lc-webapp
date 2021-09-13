@@ -30,9 +30,9 @@
   function createChangeHandler() {
     const _validate = validateField(name);
     return (e) => {
+      $fields[name] = e.target.value;
       selectedIndex = e.target.selectedIndex;
       _validate && _validate();
-      $fields[name] = e.target.selected;
       dispatch("change", e.detail);
     };
   }
