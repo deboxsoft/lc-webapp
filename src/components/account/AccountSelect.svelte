@@ -43,4 +43,8 @@
   labelFunction={(account) => account && account.name}
   valueFieldName="id"
   keywordsFunction={(account) => account && account.name}
-/>
+>
+  <svelte:fragment slot="item" let:item let:label>
+    {item.id} - {@html label}
+  </svelte:fragment>
+</AutoCompleteField>

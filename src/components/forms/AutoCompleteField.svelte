@@ -14,7 +14,12 @@
   export let labelFunction = undefined;
   export let keywordsFunction = undefined;
   export let allowEmpty  = false;
+  export let create = false;
   export let inputClassName = "";
+  export let hiddenResultText = "data tidak ditampilkan";
+  export let createText = "Data tidak ditemukan, menambah data baru?";
+  export let loadingText = "Memuat data...";
+  export let noResultsText = "Data tidak ditemukan";
   export let disabled = false;
   const { class: className } = $$props;
 
@@ -60,6 +65,11 @@
 
 <AutoComplete
   {...$$restProps}
+  {create}
+  {hiddenResultText}
+  {createText}
+  {loadingText}
+  {noResultsText}
   {disabled}
   {allowEmpty}
   {pristineValue}
@@ -70,6 +80,7 @@
   inputClassName={_inputClassName}
   on:change={createChangeHandler()}
   {items} >
+  <slot name="item" slot="item" let:item {item} let:label {label} />
   {#if $submitted}
     {#if invalid}
       <p class="invalid-tooltip">{msgError}</p>

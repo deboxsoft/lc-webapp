@@ -1,10 +1,23 @@
 <script>
-  import { createEventDispatcher, tick } from "svelte";
+  import { tick } from "svelte";
   import { createPopper } from "@popperjs/core/lib/popper-lite";
   import flip from "@popperjs/core/lib/modifiers/flip";
   import preventOverflow from "@popperjs/core/lib/modifiers/preventOverflow";
+  //***** <custom> ***/
+  // apply a id to the input control
+  export let allowEmpty = false;
+  export let autoScrollEnable = false;
+  export let id = undefined;
+  export let pristineValue = undefined;
+  export let hiddenResultText = "results not shown";
+  //***** </custom>
   // the list of items  the user can select from
   export let items = [];
+  /**
+   * function to use to get all items (alternative to providing items)
+   * @type {false | Function}
+   */
+  export let searchFunction = false;
   // field of each item that's used for the labels in the list
   export let placement = "bottom-start";
   export let labelFieldName = undefined;
@@ -29,7 +42,11 @@
     if (item === undefined || item === null) {
       return item;
     }
-    return valueFieldName ? item[valueFieldName] : item;
+    if (!multiple || forceSingle) {
+      return valueFieldName ? item[valueFieldName] : item;
+    } else {
+      return item.map((i) => (valueFieldName ? i[valueFieldName] : i));
+    }
   };
   export let keywordsCleanFunction = function (keywords) {
     return keywords;
@@ -37,17 +54,179 @@
   export let textCleanFunction = function (userEnteredText) {
     return userEnteredText;
   };
-  export let searchFunction = false;
-  export let beforeChange = () => true;
+  // events
+  export let beforeChange = function (oldSelectedItem, newSelectedItem) {
+    return true;
+  };
+  export let onChange = function (newSelectedItem) {};
+  export let onFocus = function () {};
+  export let onBlur = function () {};
+  export let onCreate = function (text) {
+    if (debug) {
+      console.log("onCreate: " + text);
+    }
+    return undefined;
+  };
   export let selectFirstIfEmpty = false;
-  export let pristineValue = undefined;
   export let minCharactersToSearch = 1;
-  export let maxItemsToShowInList = 0;
+  export let maxItemsToShowInList = 10;
+  export let multiple = false;
+  export let create = false;
+  // ignores the accents when matching items
+  export let ignoreAccents = true;
+  // all the input keywords should be matched in the item keywords
+  export let matchAllKeywords = true;
+  // sorts the items by the number of matchink keywords
+  export let sortByMatchedKeywords = false;
+  /**
+   * allow users to use a custom item filter function
+   * @type {undefined | Function}
+   */
+  export let itemFilterFunction = undefined;
+  /**
+   * allow users to use a custom item sort function
+   * @type {undefined | Function}
+   */
+  export let itemSortFunction = undefined;
+  // do not allow re-selection after initial selection
+  export let lock = false;
+  // delay to wait after a keypress to search for new items
+  export let delay = 0;
+  // true to perform local filtering of items, even if searchFunction is provided
+  export let localFiltering = true;
+  // UI properties
+  // option to hide the dropdown arrow
+  export let hideArrow = true;
+  // option to show clear selection button
+  export let showClear = false;
+  // option to show loading indicator when the async function is executed
+  export let showLoadingIndicator = false;
+  // text displayed when no items match the input text
   export let noResultsText = "No results found";
-
+  // text displayed when async data is being loaded
+  export let loadingText = "Loading results...";
+  // text displayed when async data is being loaded
+  export let createText = "Not found, add anyway?";
+  // the text displayed when no option is selected
+  export let placeholder = undefined;
+  // apply a className to the control
+  export let className = undefined;
+  // HTML input UI properties
+  // apply a className to the input control
+  export let inputClassName = undefined;
+  // apply a id to the input control
+  export let inputId = id;
+  // generate an HTML input with this name
+  export let name = undefined;
+  // generate a <select> tag that holds the value
+  export let selectName = undefined;
+  // apply a id to the <select>
+  export let selectId = undefined;
+  // add the title to the HTML input
+  export let title = undefined;
+  // enable the html5 autocompletion to the HTML input
+  export let html5autocomplete = undefined;
+  // make the input readonly
+  export let readonly = undefined;
+  // apply a className to the dropdown div
+  export let dropdownClassName = undefined;
+  // adds the disabled tag to the HTML input
+  export let disabled = false;
+  export let debug = false;
+  // --- Public State ----
+  // selected item state
+  export let selectedItem = undefined;
+  export let value = undefined;
+  export let highlightedItem = undefined;
+  // --- Internal State ----
   const uniqueId = "autocomplete-" + Math.floor(Math.random() * 1000);
-  const dispatch = createEventDispatcher();
+  // HTML elements
+  let input, list;
+  // UI state
+  //******** custom *******
+  let dropdownElement, popperInstance;
+  // **********close custom ************
+  let clearable = false;
+  let opened = false;
+  let loading = false;
+  let highlightIndex = -1;
+  export let text;
+  let filteredTextLength = 0;
+  // view model
+  let filteredListItems;
+  $: console.log(filteredListItems);
+  let listItems = [];
+  // requests/responses counters
+  let lastRequestId = 0;
+  let lastResponseId = 0;
+  // other state
+  let inputDelayTimeout;
 
+  function onSelectedItemChanged(_selectedItem) {
+    value = valueFunction(_selectedItem);
+    text = safeLabelFunction(_selectedItem);
+    filteredListItems = listItems;
+    // custom
+    showClear = allowEmpty && !!_selectedItem;
+    onChange(_selectedItem);
+  }
+  $: {
+    onSelectedItemChanged(selectedItem);
+    clearable = showClear || ((lock || multiple) && selectedItem);
+    console.log(clearable);
+  }
+  $: highlightedItem =
+    filteredListItems && highlightIndex && highlightIndex >= 0 && highlightIndex < filteredListItems.length
+      ? filteredListItems[highlightIndex].item
+      : null;
+  $: showList = opened && ((items && items.length > 0) || filteredTextLength > 0);
+  $: console.log(showClear, selectedItem) , "selected item";
+  $: {
+    if (text) {
+      search();
+    }
+  }
+  $: {
+    if (items) {
+      prepareListItems();
+    }
+  }
+
+  // --- Functions ---
+  // ********* custom *******
+  function autoScrollComponent(node, { condition, dropdown }) {
+    const autoScroll = () => {
+      if (condition() === false) return;
+      const scrollFunction =
+        "scrollIntoViewIfNeeded" in Element.prototype
+          ? Element.prototype.scrollIntoViewIfNeeded
+          : Element.prototype.scrollIntoView;
+      const dropdownNode = dropdown();
+      if (dropdownNode != null) scrollFunction.call(dropdownNode);
+      scrollFunction.call(node);
+    };
+    // autoScrollEnable && autoScroll();
+    return {
+      update: async () => {
+        await tick();
+        autoScrollEnable && autoScroll();
+      }
+    };
+  }
+  async function _createPopper() {
+    await tick();
+    const popperInstance = createPopper(input, dropdownElement, {
+      placement,
+      modifiers: [preventOverflow, flip]
+    });
+  }
+  function destroyPopper() {
+    if (popperInstance) {
+      popperInstance.destroy();
+      popperInstance = undefined;
+    }
+  }
+  // ********* /custom/ *******
   function safeStringFunction(theFunction, argument) {
     if (typeof theFunction !== "function") {
       console.error("Not a function: " + theFunction + ", argument: " + argument);
@@ -74,95 +253,40 @@
     const keywords = safeStringFunction(keywordsFunction, item);
     let result = safeStringFunction(keywordsCleanFunction, keywords);
     result = result.toLowerCase().trim();
+    if (ignoreAccents) {
+      result = removeAccents(result);
+    }
     if (debug) {
       console.log("Extracted keywords: '" + result + "' from item: " + JSON.stringify(item));
     }
     return result;
   }
-  // apply a className to the control
-  let { class: className } = $$props;
-  // the text displayed when no option is selected
-  export let placeholder = undefined;
-  // apply a className to the input control
-  export let inputClassName = undefined;
-  // apply a id to the input control
-  export let id = undefined;
-  // generate an HTML input with this name, containing the current value
-  export let name = undefined;
-  // apply a className to the dropdown div
-  export let dropdownClassName = undefined;
-  // option to hide the dropdown arrow
-  export let hideArrow = true;
-  // option to show clear selection button
-  export let showClear = false;
-  // adds the disabled tag to the HTML input
-  export let disabled = false;
-  // add the title to the HTML input
-  export let title = undefined;
-  export let debug = false;
-  // selected item state
-  export let selectedItem = undefined;
-  export let value = undefined;
-  export let allowEmpty = false;
-  export let autoScrollEnable = false;
-  let text;
-  let filteredTextLength = 0;
-
-  function onSelectedItemChanged(_selectedItem) {
-    value = valueFunction(_selectedItem);
-    text = safeLabelFunction(_selectedItem);
-    showClear = allowEmpty && !!_selectedItem;
-    dispatch("change", value);
-  }
-  $: onSelectedItemChanged(selectedItem);
-  // HTML elements
-  let input;
-  let list;
-  let showList;
-  let dropdownElement;
-  // UI state
-  let popperInstance;
-  let opened = false;
-  let highlightIndex = -1;
-  $: showList = opened && ((items && items.length > 0) || filteredTextLength > 0);
-  // view model
-  let filteredListItems;
-  let listItems = [];
-
-  function prepareListItems(_items) {
-    let tStart;
+  function prepareListItems() {
+    let timerId;
     if (debug) {
-      tStart = performance.now();
-      console.log("prepare items to search");
-      console.log("items: " + JSON.stringify(_items));
+      timerId = `Autocomplete prepare list ${inputId ? `(id: ${inputId})` : ""}`;
+      console.time(timerId);
+      console.log("Prepare items to search");
+      console.log("items: " + JSON.stringify(items));
     }
-    if (!Array.isArray(_items)) {
-      console.warn("Autocomplete items / search function did not return array but", _items);
-      _items = [];
+    if (!Array.isArray(items)) {
+      console.warn("Autocomplete items / search function did not return array but", items);
+      items = [];
     }
-    const length = _items ? _items.length : 0;
+    const length = items ? items.length : 0;
     listItems = new Array(length);
     if (length > 0) {
-      _items.forEach((item, i) => {
+      items.forEach((item, i) => {
         const listItem = getListItem(item);
         if (listItem === undefined) {
           console.log("Undefined item for: ", item);
         }
         listItems[i] = listItem;
-        const __value = pristineValue;
-        const _item = listItem.item;
-        if (__value && valueFieldName && _item[valueFieldName] === __value) {
-          selectedItem = _item;
-          onSelectedItemChanged(selectedItem);
-        } else if (_item === __value) {
-          selectedItem = _item;
-          onSelectedItemChanged(selectedItem);
-        }
       });
     }
     if (debug) {
-      const tEnd = performance.now();
-      console.log(listItems.length + " items to search prepared in " + (tEnd - tStart) + " milliseconds");
+      console.log(listItems.length + " items to search");
+      console.timeEnd(timerId);
     }
   }
   function getListItem(item) {
@@ -175,7 +299,6 @@
       item: item
     };
   }
-  $: prepareListItems(items);
   function prepareUserEnteredText(userEnteredText) {
     if (userEnteredText === undefined || userEnteredText === null) {
       return "";
@@ -194,72 +317,194 @@
     }
     return textFilteredLowerCase;
   }
-  async function search(_text) {
-    let tStart;
-    if (debug) {
-      tStart = performance.now();
-      console.log("Searching user entered text: '" + _text + "'");
+  function numberOfMatches(listItem, searchWords) {
+    if (!listItem) {
+      return 0;
     }
-    const textFiltered = prepareUserEnteredText(_text);
+    const itemKeywords = listItem.keywords;
+    let matches = 0;
+    searchWords.forEach((searchWord) => {
+      if (itemKeywords.includes(searchWord)) {
+        matches++;
+      }
+    });
+    return matches;
+  }
+  async function search() {
+    let timerId;
+    if (debug) {
+      timerId = `Autocomplete search ${inputId ? `(id: ${inputId})` : ""})`;
+      console.time(timerId);
+      console.log("Searching user entered text: '" + text + "'");
+    }
+    const textFiltered = prepareUserEnteredText(text);
     if (textFiltered === "") {
-      filteredListItems = listItems;
+      if (searchFunction) {
+        // we will need to rerun the search
+        items = [];
+        if (debug) {
+          console.log("User entered text is empty clear list of items");
+        }
+      } else {
+        filteredListItems = listItems;
+        if (debug) {
+          console.log("User entered text is empty set the list of items to all items");
+        }
+      }
       closeIfMinCharsToSearchReached();
       if (debug) {
-        console.log("User entered text is empty set the list of items to all items");
+        console.timeEnd(timerId);
       }
       return;
     }
-    if (searchFunction) {
-      items = await searchFunction(textFiltered);
-      prepareListItems(items);
+    if (!searchFunction) {
+      processListItems(textFiltered);
     }
-    const searchWords = textFiltered.split(" ");
-    let tempfilteredListItems = listItems.filter((listItem) => {
-      if (!listItem) {
-        return false;
-      }
-      const itemKeywords = listItem.keywords;
-      let matches = 0;
-      searchWords.forEach((searchWord) => {
-        if (itemKeywords.includes(searchWord)) {
-          matches++;
+    // external search which provides items
+    else {
+      lastRequestId = lastRequestId + 1;
+      const currentRequestId = lastRequestId;
+      loading = true;
+      // searchFunction is a generator
+      if (searchFunction.constructor.name === "AsyncGeneratorFunction") {
+        for await (const chunk of searchFunction(textFiltered)) {
+          // a chunk of an old response: throw it away
+          if (currentRequestId < lastResponseId) {
+            return false;
+          }
+          // a chunk for a new response: reset the item list
+          if (currentRequestId > lastResponseId) {
+            items = [];
+          }
+          lastResponseId = currentRequestId;
+          items = [...items, ...chunk];
+          processListItems(textFiltered);
         }
-      });
-      return matches >= searchWords.length;
-    });
-    const hlfilter = highlightFilter(textFiltered, ["label"]);
-    filteredListItems = tempfilteredListItems.map(hlfilter);
-    closeIfMinCharsToSearchReached();
+        // there was nothing in the chunk
+        if (lastResponseId < currentRequestId) {
+          lastResponseId = currentRequestId;
+          items = [];
+          processListItems(textFiltered);
+        }
+      }
+      // searchFunction is a regular function
+      else {
+        let result = await searchFunction(textFiltered);
+        // If a response to a newer request has been received
+        // while responses to this request were being loaded,
+        // then we can just throw away this outdated results.
+        if (currentRequestId < lastResponseId) {
+          return false;
+        }
+        lastResponseId = currentRequestId;
+        items = result;
+        processListItems(textFiltered);
+      }
+      loading = false;
+    }
     if (debug) {
-      const tEnd = performance.now();
-      console.log(`Search took ${tEnd - tStart} milliseconds, found ${filteredListItems.length} items`);
+      console.timeEnd(timerId);
+      console.log("Search found " + filteredListItems.length + " items");
     }
   }
-  $: search(text);
+  function defaultItemFilterFunction(listItem, searchWords) {
+    const matches = numberOfMatches(listItem, searchWords);
+    if (matchAllKeywords) {
+      return matches >= searchWords.length;
+    } else {
+      return matches > 0;
+    }
+  }
+  function defaultItemSortFunction(obj1, obj2, searchWords) {
+    return numberOfMatches(obj2, searchWords) - numberOfMatches(obj1, searchWords);
+  }
+  function processListItems(textFiltered) {
+    // cleans, filters, orders, and highlights the list items
+    prepareListItems();
+    const textFilteredWithoutAccents = ignoreAccents ? removeAccents(textFiltered) : textFiltered;
+    const searchWords = textFilteredWithoutAccents.split(/\s+/g);
+    // local search
+    let tempfilteredListItems;
+    if (localFiltering) {
+      if (itemFilterFunction) {
+        tempfilteredListItems = listItems.filter((item) => itemFilterFunction(item.item, searchWords));
+      } else {
+        tempfilteredListItems = listItems.filter((item) => defaultItemFilterFunction(item, searchWords));
+      }
+      if (itemSortFunction) {
+        tempfilteredListItems = tempfilteredListItems.sort((item1, item2) =>
+          itemSortFunction(item1.item, item2.item, searchWords)
+        );
+      } else {
+        if (sortByMatchedKeywords) {
+          tempfilteredListItems = tempfilteredListItems.sort((item1, item2) =>
+            defaultItemSortFunction(item1, item2, searchWords)
+          );
+        }
+      }
+    } else {
+      tempfilteredListItems = listItems;
+    }
+    const hlfilter = highlightFilter(searchWords, "label");
+    filteredListItems = tempfilteredListItems.map(hlfilter);
+    closeIfMinCharsToSearchReached();
+    return true;
+  }
   function selectListItem(listItem) {
     if (debug) {
-      console.log("selectListItem");
+      console.log("selectListItem", listItem);
+    }
+    if ("undefined" === typeof listItem && create) {
+      // allow undefined items if create is enabled
+      const createdItem = onCreate(text);
+      if ("undefined" !== typeof createdItem) {
+        prepareListItems();
+        filteredListItems = listItems;
+        const index = findItemIndex(createdItem, filteredListItems);
+        if (index >= 0) {
+          highlightIndex = index;
+          listItem = filteredListItems[highlightIndex];
+        }
+      }
     }
     if ("undefined" === typeof listItem) {
       if (debug) {
-        // @ts-ignore
-        console.log(`listItem ${i} is undefined. Can not select.`);
+        console.log(`listItem is undefined. Can not select.`);
       }
       return false;
     }
     const newSelectedItem = listItem.item;
     if (beforeChange(selectedItem, newSelectedItem)) {
-      selectedItem = newSelectedItem;
+      // simple selection
+      if (!multiple) {
+        selectedItem = undefined; // triggers change even if the the same item is selected
+        selectedItem = newSelectedItem;
+      }
+      // first selection of multiple ones
+      else if (!selectedItem) {
+        selectedItem = [newSelectedItem];
+      }
+      // selecting something already selected => unselect it
+      else if (selectedItem.includes(newSelectedItem)) {
+        selectedItem = selectedItem.filter((i) => i !== newSelectedItem);
+      }
+      // adds the element to the selection
+      else {
+        selectedItem = [...selectedItem, newSelectedItem];
+      }
     }
     return true;
   }
   function selectItem() {
     if (debug) {
-      console.log("selectItem");
+      console.log("selectItem", highlightIndex);
     }
     const listItem = filteredListItems[highlightIndex];
     if (selectListItem(listItem)) {
       close();
+      if (multiple) {
+        input.focus();
+      }
     }
   }
   function up() {
@@ -267,7 +512,9 @@
       console.log("up");
     }
     open();
-    if (highlightIndex > 0) highlightIndex--;
+    if (highlightIndex > 0) {
+      highlightIndex--;
+    }
     highlight();
   }
   function down() {
@@ -275,14 +522,16 @@
       console.log("down");
     }
     open();
-    if (highlightIndex < filteredListItems.length - 1) highlightIndex++;
+    if (highlightIndex < filteredListItems.length - 1) {
+      highlightIndex++;
+    }
     highlight();
   }
   function highlight() {
     if (debug) {
       console.log("highlight");
     }
-    const query = ".-selected";
+    const query = ".selected";
     if (debug) {
       console.log("Seaching DOM element: " + query + " in " + list);
     }
@@ -310,6 +559,9 @@
     }
     if (selectListItem(listItem)) {
       close();
+      if (multiple) {
+        input.focus();
+      }
     }
   }
   function onDocumentClick(e) {
@@ -324,9 +576,8 @@
       highlight();
     } else {
       if (debug) {
-        console.log("onDocumentClick outside", selectedItem);
+        console.log("onDocumentClick outside");
       }
-      text = safeLabelFunction(selectedItem);
       close();
     }
   }
@@ -341,7 +592,8 @@
       ShiftTab: opened ? up.bind(this) : null,
       ArrowDown: down.bind(this),
       ArrowUp: up.bind(this),
-      Escape: onEsc.bind(this)
+      Escape: onEsc.bind(this),
+      Backspace: multiple && selectedItem && selectedItem.length && !text ? onBackspace.bind(this) : null
     };
     const fn = fnmap[key];
     if (typeof fn === "function") {
@@ -353,19 +605,40 @@
     if (debug) {
       console.log("onKeyPress");
     }
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && opened) {
       e.preventDefault();
-      selectItem();
+      onEnter();
     }
+  }
+  function onEnter() {
+    selectItem();
   }
   function onInput(e) {
     if (debug) {
       console.log("onInput");
     }
     text = e.target.value;
-    search(text);
-    highlightIndex = 0;
-    open();
+    if (inputDelayTimeout) {
+      clearTimeout(inputDelayTimeout);
+    }
+    if (delay) {
+      inputDelayTimeout = setTimeout(processInput, delay);
+    } else {
+      processInput();
+    }
+  }
+  function unselectItem(tag) {
+    if (debug) {
+      console.log("unselectItem", tag);
+    }
+    selectedItem = selectedItem.filter((i) => i !== tag);
+    input.focus();
+  }
+  function processInput() {
+    if (search()) {
+      highlightIndex = 0;
+      open();
+    }
   }
   function onInputClick() {
     if (debug) {
@@ -384,65 +657,80 @@
       close();
     }
   }
-  function onFocus() {
+  function onBackspace(e) {
+    if (debug) {
+      console.log("onBackspace");
+    }
+    unselectItem(selectedItem[selectedItem.length - 1]);
+  }
+  function onFocusInternal() {
     if (debug) {
       console.log("onFocus");
     }
+    onFocus();
     resetListToAllItemsAndOpen();
+  }
+  function onBlurInternal() {
+    if (debug) {
+      console.log("onBlur");
+    }
+    onBlur();
   }
   function resetListToAllItemsAndOpen() {
     if (debug) {
       console.log("resetListToAllItemsAndOpen");
     }
-    filteredListItems = listItems;
+    if (!text) {
+      filteredListItems = listItems;
+    }
+      // When an async component is initialized, the item list
+    // must be loaded when the input is focused.
+    else if (!listItems.length && selectedItem && searchFunction) {
+      search();
+    }
     open();
     // find selected item
     if (selectedItem) {
       if (debug) {
         console.log("Searching currently selected item: " + JSON.stringify(selectedItem));
       }
-      for (let i = 0; i < listItems.length; i++) {
-        const listItem = listItems[i];
-        if ("undefined" === typeof listItem) {
-          if (debug) {
-            console.log(`listItem ${i} is undefined. Skipping.`);
-          }
-          continue;
-        }
-        if (debug) {
-          console.log("Item " + i + ": " + JSON.stringify(listItem));
-        }
-        if (selectedItem === listItem.item) {
-          highlightIndex = i;
-          if (debug) {
-            console.log("Found selected item: " + i + ": " + JSON.stringify(listItem));
-          }
-          filteredListItems = [listItems[i]];
-          // highlight();
-          break;
-        }
+      const index = findItemIndex(selectedItem, filteredListItems);
+      if (index >= 0) {
+        highlightIndex = index;
+        highlight();
       }
     }
   }
-
-  async function _createPopper() {
-    await tick();
-    const popperInstance = createPopper(input, dropdownElement, {
-      placement,
-      modifiers: [
-        preventOverflow,
-        flip
-      ]
-    });
-  }
-
-  function destroyPopper() {
-    if (popperInstance) {
-      popperInstance.destroy();
-      popperInstance = undefined;
+  function findItemIndex(item, items) {
+    if (debug) {
+      console.log("Finding index for item", item);
     }
+    let index = -1;
+    for (let i = 0; i < items.length; i++) {
+      const listItem = items[i];
+      if ("undefined" === typeof listItem) {
+        if (debug) {
+          console.log(`listItem ${i} is undefined. Skipping.`);
+        }
+        continue;
+      }
+      if (debug) {
+        console.log("Item " + i + ": " + JSON.stringify(listItem));
+      }
+      if (item === listItem.item) {
+        index = i;
+        break;
+      }
+    }
+    if (debug) {
+      if (index >= 0) {
+        console.log("Found index for item: " + index);
+      } else {
+        console.warn("Not found index for item: " + item);
+      }
+    }
+    return index;
   }
-
   function open() {
     if (debug) {
       console.log("open");
@@ -459,11 +747,12 @@
       console.log("close");
     }
     opened = false;
+    // destroyPopper();
+    loading = false;
     if (!text && selectFirstIfEmpty) {
-      // highlightFilter = 0;
+      highlightIndex = 0;
       selectItem();
     }
-    // destroyPopper();
   }
   function isMinCharsToSearchReached() {
     return minCharactersToSearch > 1 && filteredTextLength < minCharactersToSearch;
@@ -484,53 +773,65 @@
       close();
     });
   }
-  function onBlur() {
-    if (debug) {
-      console.log("onBlur");
-    }
-    if (text === "") {
-      // text = safeLabelFunction(selectedItem)
-    }
-    close();
-  }
-  // 'item number one'.replace(/(it)(.*)(nu)(.*)(one)/ig, '<b>$1</b>$2 <b>$3</b>$4 <b>$5</b>')
-  function highlightFilter(q, fields) {
-    const qs = "(" + q.trim().replace(/\s/g, ")(.*)(") + ")";
-    const reg = new RegExp(qs, "ig");
-    let n = 1;
-    const len = qs.split(")(").length + 1;
-    let repl = "";
-    for (; n < len; n++) repl += n % 2 ? `<b>$${n}</b>` : `$${n}`;
-    return (i) => {
-      const newI = Object.assign({ highlighted: {} }, i);
-      if (fields) {
-        fields.forEach((f) => {
-          if (!newI[f]) return;
-          newI.highlighted[f] = newI[f].replace(reg, repl);
-        });
+  export function highlightFilter(keywords, field) {
+    return (item) => {
+      let label = item[field];
+      const newItem = Object.assign({ highlighted: undefined }, item);
+      newItem.highlighted = label;
+      const labelLowercase = label.toLowerCase();
+      const labelLowercaseNoAc = ignoreAccents ? removeAccents(labelLowercase) : labelLowercase;
+      if (keywords && keywords.length) {
+        const positions = [];
+        for (let i = 0; i < keywords.length; i++) {
+          let keyword = keywords[i];
+          if (ignoreAccents) {
+            keyword = removeAccents(keyword);
+          }
+          const keywordLen = keyword.length;
+          let pos1 = 0;
+          do {
+            pos1 = labelLowercaseNoAc.indexOf(keyword, pos1);
+            if (pos1 >= 0) {
+              let pos2 = pos1 + keywordLen;
+              positions.push([pos1, pos2]);
+              pos1 = pos2;
+            }
+          } while (pos1 !== -1);
+        }
+        if (positions.length > 0) {
+          const keywordPatterns = new Set();
+          for (let i = 0; i < positions.length; i++) {
+            const pair = positions[i];
+            const pos1 = pair[0];
+            const pos2 = pair[1];
+            const keywordPattern = labelLowercase.substring(pos1, pos2);
+            keywordPatterns.add(keywordPattern);
+          }
+          for (let keywordPattern of keywordPatterns) {
+            // FIXME pst: workarond for wrong replacement <b> tags
+            if (keywordPattern === "b") {
+              continue;
+            }
+            const reg = new RegExp("(" + keywordPattern + ")", "ig");
+            newItem.highlighted = newItem.highlighted.replace(reg, "<b>$1</b>");
+          }
+        }
       }
-      return newI;
+      return newItem;
     };
   }
-
-  function autoScrollComponent(node, { condition, dropdown }) {
-    const autoScroll = () => {
-      if (condition() === false) return;
-      const scrollFunction =
-        "scrollIntoViewIfNeeded" in Element.prototype
-          ? Element.prototype.scrollIntoViewIfNeeded
-          : Element.prototype.scrollIntoView;
-      const dropdownNode = dropdown();
-      if (dropdownNode != null) scrollFunction.call(dropdownNode);
-      scrollFunction.call(node);
-    };
-    // autoScrollEnable && autoScroll();
-    return {
-      update: async () => {
-        await tick();
-        autoScrollEnable && autoScroll();
-      }
-    };
+  function removeAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+  function isConfirmed(listItem) {
+    if (!selectedItem) {
+      return false;
+    }
+    if (multiple) {
+      return selectedItem.includes(listItem);
+    } else {
+      return listItem === selectedItem;
+    }
   }
 </script>
 
@@ -541,37 +842,67 @@
     dropdown: () => dropdownElement
   }}
   class="{className ? className : ''}
-  {hideArrow ? '-hide-arrow is-multiple' : ''}
-  {showClear
-    ? '-show-clear'
-    : ''} dbx-autocomplete select is-fullwidth {uniqueId} form-group-feedback form-group-feedback-right"
+  dbx-autocomplete select -is-fullwidth {uniqueId} form-group-feedback form-group-feedback-right"
+  class:-is-multiple={multiple}
+  class:-hide-arrow={hideArrow || !items.length}
+  class:-show-clear={clearable}
+  class:-is-loading={showLoadingIndicator && loading}
 >
-  <input
-    type="text"
-    class="{inputClassName ? inputClassName : ''} input autocomplete-input"
-    autocomplete="off"
-    {id}
-    {placeholder}
-    {name}
-    {disabled}
-    {title}
-    bind:this={input}
-    bind:value={text}
-    on:input={onInput}
-    on:focus={onFocus}
-    on:keydown={onKeyDown}
-    on:click={onInputClick}
-    on:keypress={onKeyPress}
-  />
-  {#if showClear && !disabled}<span on:click={clear} class="autocomplete-clear-button">&#10006;</span>
-  {:else}
-    <div class="form-control-feedback">
-      <i class="icon-search4 mr-2 text-muted" />
-    </div>
-  {/if}
+  <select name={selectName} id={selectId} {multiple}>
+    {#if !multiple && value}
+      <option {value} selected>{text}</option>
+    {:else if multiple && selectedItem}
+      {#each selectedItem as i}
+        <option value={valueFunction(i, true)} selected>
+          {safeLabelFunction(i)}
+        </option>
+      {/each}
+    {/if}
+  </select>
+  <div class="input-container">
+    {#if multiple && selectedItem}
+      {#each selectedItem as tagItem}
+        <slot name="tag" label={safeLabelFunction(tagItem)} item={tagItem} {unselectItem}>
+          <div class="tags has-addons">
+            <span class="tag">{safeLabelFunction(tagItem)}</span>
+            <span class="tag is-delete" on:click|preventDefault={unselectItem(tagItem)} />
+          </div>
+        </slot>
+      {/each}
+    {/if}
+    <input
+      type="text"
+      class="{inputClassName ? inputClassName : ''} input autocomplete-input"
+      id={inputId ? inputId : ""}
+      autocomplete={html5autocomplete ? "on" : "off"}
+      {placeholder}
+      {name}
+      {disabled}
+      {title}
+      readonly={readonly || (lock && selectedItem)}
+      bind:this={input}
+      bind:value={text}
+      on:input={onInput}
+      on:focus={onFocusInternal}
+      on:blur={onBlurInternal}
+      on:keydown={onKeyDown}
+      on:click={onInputClick}
+      on:keypress={onKeyPress}
+    />
+    {#if clearable && !disabled}
+      <span on:click={clear} class="autocomplete-clear-button">&#10006;</span>
+    {/if}
+    {#if hideArrow}
+      <slot name="feedback">
+        <div class="form-control-feedback">
+          <i class="icon-search4 mr-2 text-muted" />
+        </div>
+      </slot>
+    {/if}
+  </div>
   <div
     class="{dropdownClassName ? dropdownClassName : ''} autocomplete-list {showList ? '' : '-hidden'}
-    is-fullwidth"
+    -is-fullwidth"
     bind:this={list}
   >
     {#if filteredListItems && filteredListItems.length > 0}
@@ -581,13 +912,23 @@
             <div
               bind:this={dropdownElement}
               class="autocomplete-list-item {i === highlightIndex ? '-selected' : ''}"
+              class:-confirmed={isConfirmed(listItem.item)}
               on:click={() => onListItemClick(listItem)}
+              on:pointerenter={() => {
+                highlightIndex = i;
+              }}
             >
-              {#if listItem.highlighted}
-                {@html listItem.highlighted.label}
-              {:else}
-                {@html listItem.label}
-              {/if}
+              <slot
+                name="item"
+                item={listItem.item}
+                label={listItem.highlighted ? listItem.highlighted : listItem.label}
+              >
+                {#if listItem.highlighted}
+                  {@html listItem.highlighted}
+                {:else}
+                  {@html listItem.label}
+                {/if}
+              </slot>
             </div>
           {/if}
         {/if}
@@ -595,10 +936,17 @@
 
       {#if maxItemsToShowInList > 0 && filteredListItems.length > maxItemsToShowInList}
         <div class="autocomplete-list-item-no-results">
-          ...{filteredListItems.length - maxItemsToShowInList}
-          results not shown
+          ...{filteredListItems.length - maxItemsToShowInList} {hiddenResultText}
         </div>
       {/if}
+    {:else if loading && loadingText}
+      <div class="autocomplete-list-item-loading">
+        <slot name="loading" {loadingText}>{loadingText}</slot>
+      </div>
+    {:else if create}
+      <div class="autocomplete-list-item-create" on:click={selectItem}>
+        <slot name="create" {createText}>{createText}</slot>
+      </div>
     {:else if noResultsText}
       <div class="autocomplete-list-item-no-results">{noResultsText}</div>
     {/if}
@@ -646,16 +994,10 @@
       box-sizing: border-box;
     }
 
-    .autocomplete-input {
-      font: inherit;
-      width: 100%;
-      padding: 5px 11px;
-    }
-
     &:not(.-hide-arrow) .autocomplete-input {
       padding-right: 2em;
     }
-    &.show-clear:not(.-hide-arrow) .autocomplete-input {
+    &.-show-clear:not(.-hide-arrow) .autocomplete-input {
       padding-right: 3.2em;
     }
     &.-hide-arrow.-show-clear .autocomplete-input {
@@ -672,7 +1014,6 @@
       border: 1px solid #999;
       max-height: calc(15 * (1rem + 10px) + 15px);
       user-select: none;
-      white-space: pre-wrap;
     }
 
     .autocomplete-list:empty {
@@ -715,6 +1056,42 @@
     }
     &:not(.-show-clear) .autocomplete-clear-button {
       display: none;
+    }
+    & > select {
+      display: none;
+    }
+    &.-is-multiple .input-container {
+      height: auto;
+      box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+      border-radius: 4px;
+      border: 1px solid #b5b5b5;
+      padding-left: 0.4em;
+      padding-right: 0.4em;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      background-color: #fff;
+    }
+    &.-is-multiple .tag {
+      display: flex;
+      margin-top: 0.5em;
+      margin-bottom: 0.3em;
+    }
+    &.-is-multiple .tag.-is-delete {
+      cursor: pointer;
+    }
+    &.-is-multiple .tags {
+      margin-right: 0.3em;
+      margin-bottom: 0;
+    }
+    &.-is-multiple .autocomplete-input {
+      display: flex;
+      width: 100%;
+      flex: 1 1 50px;
+      min-width: 3em;
+      border: none;
+      box-shadow: none;
+      background: none;
     }
   }
 </style>
