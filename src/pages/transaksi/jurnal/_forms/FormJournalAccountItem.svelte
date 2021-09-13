@@ -11,7 +11,7 @@
 
   // import AccountCombox from "../../../../components/account/AccountCombox.svelte";
 
-  export let id = generateId("journal-account-item");
+  export let id = generateId({prefix: "journal-account-item" });
   export let input;
   export const creditDisable = false;
   export let index;
