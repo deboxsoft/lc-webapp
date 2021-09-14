@@ -3,7 +3,6 @@
   import { createPopper } from "@popperjs/core/lib/popper-lite";
   import flip from "@popperjs/core/lib/modifiers/flip";
   import preventOverflow from "@popperjs/core/lib/modifiers/preventOverflow";
-  import { debounce } from "@deboxsoft/module-core";
   export let items = [];
   export let valueFieldName = "id";
   //***** <custom> ***/
@@ -167,17 +166,13 @@
   let lastResponseId = 0;
   // other state
   let inputDelayTimeout;
-  let tmpSelectedItem;
 
   function onSelectedItemChanged(_selectedItem) {
     value = valueFunction(_selectedItem);
     text = safeLabelFunction(_selectedItem);
     filteredListItems = listItems;
     showClear = !!_selectedItem;
-    if (_selectedItem !== tmpSelectedItem) {
-      onChange({ selectedItem: _selectedItem, value });
-      tmpSelectedItem = _selectedItem;
-    }
+    onChange({ selectedItem: _selectedItem, value });
   }
   $: {
     onSelectedItemChanged(selectedItem);
@@ -580,7 +575,12 @@
       if (debug) {
         console.log("onDocumentClick outside");
       }
-      close();
+      // ************ custom ************
+      if (opened) {
+        text = safeLabelFunction(selectedItem);
+        close();
+      }
+      // *************//custom//***********
     }
   }
   function onKeyDown(e) {
@@ -677,11 +677,11 @@
       console.log("onBlur");
     }
     // ************ custom ***************
-    if (allowEmpty && (!text || text === "")) {
-      onSelectedItemChanged(undefined);
-    } else {
-      onSelectedItemChanged(selectedItem);
-    }
+    // if (allowEmpty && (!text || text === "")) {
+    //   onSelectedItemChanged(undefined);
+    // } else {
+    //   onSelectedItemChanged(selectedItem);
+    // }
     // ************** // custom *************
     onBlur();
   }
@@ -856,7 +856,6 @@
   class:-hide-arrow={hideArrow || !items.length}
   class:-show-clear={clearable}
   class:-is-loading={showLoadingIndicator && loading}
-  on:blur
 >
   <select name={selectName} id={selectId} {multiple}>
     {#if !multiple && value}
