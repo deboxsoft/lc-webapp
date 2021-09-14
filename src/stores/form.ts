@@ -14,12 +14,12 @@ export interface Context {
 }
 
 export interface Options {
-  schema: ZodObject<ZodRawShape>;
+  schema?: ZodObject<ZodRawShape>;
   fields?: Writable<Record<string, any>>;
-  fieldsErrors: Writable<Record<string, string[]>>;
+  fieldsErrors?: Writable<Record<string, any>>;
   submittedEnable?: boolean;
   values?: any;
-  isValid: Writable<boolean>;
+  isValid?: Writable<boolean>;
   validateField?: (args?: any) => (value?: unknown) => void;
 }
 
@@ -52,7 +52,7 @@ const createFieldsErrorStore = (isValid: Writable<boolean>) => {
 };
 export const createFormContext = ({
   schema,
-  values,
+  values = {},
   validateField,
   fields = writable<Record<string, any>>(values),
   isValid = writable<boolean>(false),
@@ -69,19 +69,33 @@ export const createFormContext = ({
   });
 
   function validateFieldDefault(fieldName: string) {
-    return (value: unknown) => {
+    return (value?: unknown) => {
+      if (value) {
+        $fields[fieldName] = value;
+      }
       if (schema) {
-        const parsed = schema.pick({ [fieldName]: true }).safeParse({ [fieldName]: $fields[fieldName] });
-        // @ts-ignore
-        const { error } = parsed;
-        fieldsErrors.update(($fieldsErrors) => {
-          if (error) {
-            $fieldsErrors[fieldName] = error.errors[0].message;
-          } else if ($fieldsErrors[fieldName]) {
-            delete $fieldsErrors[fieldName];
-          }
-          return $fieldsErrors;
-        });
+        const _fieldSchema = schema.shape[fieldName];
+        if (_fieldSchema) {
+          const parsed = _fieldSchema.safeParse($fields[fieldName]);
+          // @ts-ignore
+          const { error } = parsed;
+          fieldsErrors.update(($fieldsErrors) => {
+            if (error) {
+              const _errors = error.errors;
+              if (Array.isArray(_errors)) {
+                $fieldsErrors[fieldName] = _errors.map((_, i) => ({
+                  path: _.path,
+                  message: _.message
+                }));
+              } else {
+                $fieldsErrors[fieldName] = error.errors[0].message;
+              }
+            } else if ($fieldsErrors[fieldName]) {
+              delete $fieldsErrors[fieldName];
+            }
+            return $fieldsErrors;
+          });
+        }
       }
     };
   }
