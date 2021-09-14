@@ -3,14 +3,15 @@
   import AutoNumeric from "autonumeric";
   import { getFormContext } from "__@stores/form";
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
+  import { writable } from "svelte/store";
 
   export let formContextDisable = false;
   const context = (!formContextDisable && getFormContext()) || {};
-  const dispatcher = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
   export let options = {};
-  export let fields = context?.fields;
-  export let fieldsErrors = context?.fieldsError;
+  export let fields = context?.fields || writable({});
+  export let fieldsErrors = context?.fieldsErrors || writable({});
   export let name;
   export let validate = context?.validateField && name ? context.validateField(name) : () => {};
   export let prependDisable = false;
@@ -19,7 +20,7 @@
   export let format = "currency";
   export let resultType = "number";
   export let pristineValue = undefined;
-  export let value = undefined;
+  export let value = pristineValue;
   export let maximumValue = "10000000000000";
   export let minimumValue = "-10000000000000";
 
@@ -42,8 +43,10 @@
   let autoNumeric;
   let inputEl;
 
-  if (fields && name && !pristineValue) {
-    pristineValue = $fields[name];
+  $: {
+    if ($fields && name && $fields[name] && !value) {
+      value = $fields[name];
+    }
   }
 
   $: {
@@ -89,7 +92,7 @@
       }
       value = result;
       validate(result);
-      dispatcher("input", result);
+      dispatch("input", result);
     };
   }
 </script>
