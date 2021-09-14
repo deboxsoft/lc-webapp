@@ -8,6 +8,7 @@
 </script>
 
 <table class="dbx-data-table table {className}">
+  <slot name="scope" />
   {#if $$slots["header"]}
     <thead>
       <slot name="header" />
