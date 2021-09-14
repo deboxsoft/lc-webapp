@@ -1,10 +1,10 @@
 <script>
   import { clsx } from "@deboxsoft/module-client";
   import { getFormContext } from "__@stores/form";
-  import AutoComplete from "__@comps/AutoComplete.svelte";
+  import AutoComplete from "../AutoComplete.svelte";
   import { createEventDispatcher } from "svelte";
 
-  const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
+  const formContext = getFormContext() || {};
   const dispatcher = createEventDispatcher();
 
   export let name;
@@ -21,6 +21,10 @@
   export let loadingText = "Memuat data...";
   export let noResultsText = "Data tidak ditemukan";
   export let disabled = false;
+  export let fields = formContext.fields;
+  export let validate = (name && formContext.validateField && formContext.validateField(name));
+  export let fieldsErrors = formContext.fieldsErrors;
+  export let submitted = formContext.submitted;
   const { class: className } = $$props;
 
   let invalid = true;
@@ -52,13 +56,12 @@
   }
 
   function createChangeHandler() {
-    const _validate = validateField && validateField(name);
-    return (e) => {
+    return ({ value }) => {
       if ($fields && name) {
-        $fields[name] = e.detail;
+        $fields[name] = value;
       }
-      _validate && _validate();
-      dispatcher("change", e.detail);
+      validate && validate(value);
+      dispatcher("change", value);
     };
   }
 </script>
@@ -78,9 +81,11 @@
   {labelFunction}
   {keywordsFunction}
   inputClassName={_inputClassName}
-  on:change={createChangeHandler()}
+  onChange={createChangeHandler()}
   {items} >
-  <slot name="item" slot="item" let:item {item} let:label {label} />
+  <slot name="item" slot="item" let:item {item} let:label {label}>
+    {@html label}
+  </slot>
   {#if $submitted}
     {#if invalid}
       <p class="invalid-tooltip">{msgError}</p>

@@ -3,6 +3,9 @@
   import { createPopper } from "@popperjs/core/lib/popper-lite";
   import flip from "@popperjs/core/lib/modifiers/flip";
   import preventOverflow from "@popperjs/core/lib/modifiers/preventOverflow";
+  import { debounce } from "@deboxsoft/module-core";
+  export let items = [];
+  export let valueFieldName = "id";
   //***** <custom> ***/
   // apply a id to the input control
   export let allowEmpty = false;
@@ -10,9 +13,14 @@
   export let id = undefined;
   export let pristineValue = undefined;
   export let hiddenResultText = "results not shown";
+  const getSelectedItem = () => {
+    if (pristineValue) {
+      const i = items.findIndex(_ => _[valueFieldName] === pristineValue);
+      return items[i];
+    }
+  }
   //***** </custom>
   // the list of items  the user can select from
-  export let items = [];
   /**
    * function to use to get all items (alternative to providing items)
    * @type {false | Function}
@@ -22,7 +30,6 @@
   export let placement = "bottom-start";
   export let labelFieldName = undefined;
   export let keywordsFieldName = labelFieldName;
-  export let valueFieldName = "id";
   export let labelFunction = function (item) {
     item = Array.isArray(item) && item.length > 0 ? item[1] : item;
     if (item === undefined || item === null) {
@@ -98,7 +105,7 @@
   // option to hide the dropdown arrow
   export let hideArrow = true;
   // option to show clear selection button
-  export let showClear = false;
+  export let showClear = allowEmpty;
   // option to show loading indicator when the async function is executed
   export let showLoadingIndicator = false;
   // text displayed when no items match the input text
@@ -135,7 +142,7 @@
   export let debug = false;
   // --- Public State ----
   // selected item state
-  export let selectedItem = undefined;
+  export let selectedItem = getSelectedItem();
   export let value = undefined;
   export let highlightedItem = undefined;
   // --- Internal State ----
@@ -154,38 +161,33 @@
   let filteredTextLength = 0;
   // view model
   let filteredListItems;
-  $: console.log(filteredListItems);
   let listItems = [];
   // requests/responses counters
   let lastRequestId = 0;
   let lastResponseId = 0;
   // other state
   let inputDelayTimeout;
+  let tmpSelectedItem;
 
   function onSelectedItemChanged(_selectedItem) {
     value = valueFunction(_selectedItem);
     text = safeLabelFunction(_selectedItem);
     filteredListItems = listItems;
-    // custom
-    showClear = allowEmpty && !!_selectedItem;
-    onChange(_selectedItem);
+    showClear = !!_selectedItem;
+    if (_selectedItem !== tmpSelectedItem) {
+      onChange({ selectedItem: _selectedItem, value });
+      tmpSelectedItem = _selectedItem;
+    }
   }
   $: {
     onSelectedItemChanged(selectedItem);
     clearable = showClear || ((lock || multiple) && selectedItem);
-    console.log(clearable);
   }
   $: highlightedItem =
     filteredListItems && highlightIndex && highlightIndex >= 0 && highlightIndex < filteredListItems.length
       ? filteredListItems[highlightIndex].item
       : null;
   $: showList = opened && ((items && items.length > 0) || filteredTextLength > 0);
-  $: console.log(showClear, selectedItem) , "selected item";
-  $: {
-    if (text) {
-      search();
-    }
-  }
   $: {
     if (items) {
       prepareListItems();
@@ -674,6 +676,13 @@
     if (debug) {
       console.log("onBlur");
     }
+    // ************ custom ***************
+    if (allowEmpty && (!text || text === "")) {
+      onSelectedItemChanged(undefined);
+    } else {
+      onSelectedItemChanged(selectedItem);
+    }
+    // ************** // custom *************
     onBlur();
   }
   function resetListToAllItemsAndOpen() {
@@ -683,7 +692,7 @@
     if (!text) {
       filteredListItems = listItems;
     }
-      // When an async component is initialized, the item list
+    // When an async component is initialized, the item list
     // must be loaded when the input is focused.
     else if (!listItems.length && selectedItem && searchFunction) {
       search();
@@ -847,6 +856,7 @@
   class:-hide-arrow={hideArrow || !items.length}
   class:-show-clear={clearable}
   class:-is-loading={showLoadingIndicator && loading}
+  on:blur
 >
   <select name={selectName} id={selectId} {multiple}>
     {#if !multiple && value}
@@ -936,7 +946,8 @@
 
       {#if maxItemsToShowInList > 0 && filteredListItems.length > maxItemsToShowInList}
         <div class="autocomplete-list-item-no-results">
-          ...{filteredListItems.length - maxItemsToShowInList} {hiddenResultText}
+          ...{filteredListItems.length - maxItemsToShowInList}
+          {hiddenResultText}
         </div>
       {/if}
     {:else if loading && loadingText}
