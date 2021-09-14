@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
+  import { generateId } from "@deboxsoft/module-client";
   import { stores } from "@deboxsoft/accounting-client";
   import { debounce } from "@deboxsoft/module-core";
   import AccountSelect from "../../../../components/account/AccountSelect.svelte";
@@ -22,9 +23,9 @@
   const { authenticationStore } = getAuthenticationContext();
   const dispatch = createEventDispatcher();
   // props
-  export let values = {};
+  export let values;
   export let loading = false;
-  export const title = "";
+  export let title = "";
 
   let isValid = writable(false);
   let fieldsErrors;
@@ -35,6 +36,11 @@
     openDialog();
   });
 
+  export function createCreditAccount() {
+    return {
+      index: generateId({prefix: "account-credit", size: 3})
+    }
+  }
   function getAccountDebit() {
     const accountStore = getAccountLeaf();
     return filteringAccountDebit(accountStore);
@@ -52,15 +58,15 @@
   }
 </script>
 
-<Modal {title} class="modal-lg" bind:openDialog onClose={cancelHandler} initialFocusElement={focusRef}>
+<Modal {title} class="modal-lg" bind:openDialog onClose={cancelHandler} initialFocusElement={focusRef} loading={!values}>
   <div class="d-flex flex-column flex-1">
     <Form
       checkValidateFirst
       schema={TransactionInputSchema}
       bind:fieldsErrors
       bind:fields
-      {isValid}
-      bind:values
+      bind:isValid
+      {values}
       on:submit
     >
       <div class="card">
@@ -135,7 +141,9 @@
           </div>
         </div>
       </div>
-      <FormJournalAccount />
+      {#if ($fields)}
+        <FormJournalAccount {createCreditAccount} />
+      {/if}
     </Form>
   </div>
 </Modal>

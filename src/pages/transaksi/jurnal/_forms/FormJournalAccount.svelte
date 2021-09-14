@@ -1,7 +1,6 @@
 <script>
-  import { getFormContext, createFormContext } from "__@stores/form";
+  import { getFormContext} from "../../../../stores/form";
   import { writable } from "svelte/store";
-  import { generateId } from "@deboxsoft/module-client";
   import ListPlusIcon from "../../../../components/icons/ListPlus.svelte";
   import CheckIcon from "../../../../components/icons/Check.svelte";
   import CloseIcon from "../../../../components/icons/Close.svelte";
@@ -9,32 +8,44 @@
   import FormJournalAccountItem from "./FormJournalAccountItem.svelte";
 
   // context formJournal
-  const { schema, fields, fieldsErrors, isValid, validateField } = getFormContext();
-  const accountsValidate = validateField("creditAccounts");
-  const journalAccountSchema = schema.pick({ creditAccounts: true });
-  createFormContext({ schema: journalAccountSchema });
+  const { fields, fieldsErrors, isValid, validateField } = getFormContext();
+  const creditAccountsValidate = validateField("creditAccounts");
 
-  const createJournalAccount = () => ({ index: generateId({ prefix: "account-input", size: 3 }) });
-
+  export let createCreditAccount;
   export const total = 0;
 
   let debit;
   let diff = NaN;
-  let journalAccountsStore = writable($fields.creditAccounts.map((_) => ({ ..._, ...createJournalAccount() })));
+  let creditAccounts = writable(($fields.creditAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
   let credit;
 
-  // validation form journal
-  // hack hapus FieldsError.account
-  delete $fieldsErrors["creditAccounts"];
   $: {
+    if ($creditAccounts) {
+      validate();
+    }
+  }
+
+  $: {
+    if ($fields?.amount) {
+      calculate();
+    }
+  }
+
+  function validate() {
+    creditAccountsValidate($creditAccounts);
+    validateField("creditAccounts");
+    calculate();
+  }
+
+  function calculate() {
     let _credit = 0;
-    $journalAccountsStore.forEach((_) => {
-      _credit = parseFloat(_.amount || 0) + _credit;
+    $creditAccounts.forEach((_) => {
+      _credit = parseFloat(_.amount || "0") + _credit;
     });
     $fields.total = _credit;
     credit = _credit;
     debit = $fields.amount;
-    diff = ($fields.amount || 0) - _credit;
+    diff = ($fields.amount || 0) - credit;
     if ($fields.total === 0 || $fields.total !== $fields.amount) {
       $fieldsErrors = { ...$fieldsErrors, noBalance: "debit and credit not balance" };
     } else {
@@ -44,25 +55,28 @@
     isValid.set(Object.keys($fieldsErrors).length === 0);
   }
 
+  function accountsValidate() {
+    if ($fieldsErrors?.creditAccounts && Object.keys($fieldsErrors.creditAccounts).length === 0) {
+      delete $fieldsErrors.creditAccounts;
+    }
+  }
+
   function addJournalAccountHandler() {
-    $journalAccountsStore = [...$journalAccountsStore, createJournalAccount()];
-    $fields.creditAccounts = $journalAccountsStore;
-    accountsValidate($journalAccountsStore);
+    $creditAccounts = [...$creditAccounts, createCreditAccount()];
   }
 
   function updateJournalAccountHandler(input) {
-    const i = $journalAccountsStore.findIndex((_) => _.index === input.index);
-    $journalAccountsStore[i] = input;
-    $fields.creditAccounts = $journalAccountsStore;
-    accountsValidate($journalAccountsStore);
+    const _creditAccounts = $creditAccounts;
+    const i = _creditAccounts.findIndex((_) => _.index === input.index);
+    _creditAccounts[i] = input;
+    $creditAccounts = _creditAccounts;
   }
 
   function removeJournalAccountHandler(index) {
-    let inputs = $journalAccountsStore;
-    inputs = inputs.filter((_) => _.index !== index);
-    $journalAccountsStore = inputs;
-    $fields.creditAccounts = $journalAccountsStore;
-    accountsValidate($journalAccountsStore);
+    /** @type{Array} **/
+    let _creditAccounts = $creditAccounts;
+    _creditAccounts = _creditAccounts.splice(index, 1);
+    $creditAccounts = _creditAccounts;
   }
 </script>
 
@@ -77,10 +91,10 @@
         </tr>
       </thead>
       <tbody>
-        {#each $journalAccountsStore as journalAccountInput, index (journalAccountInput.index)}
+        {#each $creditAccounts as journalAccountInput, index (journalAccountInput.index)}
           <FormJournalAccountItem
             {index}
-            input={journalAccountInput}
+            values={journalAccountInput}
             onRemoveJournalAccount={removeJournalAccountHandler}
             onUpdateJournalAccount={updateJournalAccountHandler}
           />

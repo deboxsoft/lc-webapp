@@ -1,102 +1,75 @@
 <script>
   import { debounce } from "@deboxsoft/module-core";
-  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
-  import { getFormContext } from "__@stores/form";
+  import { createFormContext } from "../../../../stores/form";
   import { stores } from "@deboxsoft/accounting-client";
   import TrashIcon from "../../../../components/icons/Trash.svelte";
-  import AutoComplete from "../../../../components/AutoComplete.svelte";
   import InputRp from "../../../../components/forms/InputNumberField.svelte";
   import { generateId } from "@deboxsoft/module-client";
   import { filteringAccountCredit } from "../../../../utils";
+  import AccountSelect from "../../../../components/account/AccountSelect.svelte";
 
-  // import AccountCombox from "../../../../components/account/AccountCombox.svelte";
-
-  export let id = generateId({prefix: "journal-account-item" });
-  export let input;
+  export let id = generateId({ prefix: "journal-account-item" });
+  export let values;
   export const creditDisable = false;
   export let index;
   export let fieldName = "creditAccounts";
   export const minusCurrencyEnable = true;
-  export let onRemoveJournalAccount = () => {
-  };
-  export let onUpdateJournalAccount = () => {
-  };
+  export let onRemoveJournalAccount = () => {};
+  export let onUpdateJournalAccount = () => {};
   export const isValid = false;
 
   const { getAccountLeaf, getAccount } = stores.getAccountContext();
   const accountStore = getAccountCredit();
 
-  const { fields, fieldsErrors } = getFormContext();
+  const { fields } = createFormContext({ values });
 
-
-  function getAccountCredit () {
+  function getAccountCredit() {
     const accountStore = getAccountLeaf();
     return filteringAccountCredit(accountStore);
   }
-  // createFormContext({ schema: JournalAccountSchema, values: input, validateField });
 
-  function validateField(_fieldName) {
-    return (value) => {
-      const parsed = TransactionInputSchema.pick({ [_fieldName]: true }).safeParse({ [_fieldName]: $fields[fieldName][index][_fieldName] });
-      // @ts-ignore
-      const { success, error } = parsed;
-      const key = `${fieldName}.${index}.${_fieldName}`;
-      if (error) {
-        $fieldsErrors[key] = error.errors[0].message;
-      } else if ($fieldsErrors[key]) {
-        delete $fieldsErrors[key];
-      }
+  function createAccountSelectedHandler() {
+    return ({ detail }) => {
+      updateHandler();
     };
-  }
-
-  function accountSelectedHandler(e) {
-    input.id = e.detail;
-    updateHandler();
-    validateField("id");
   }
 
   function createUpdateAmountHandler() {
     return debounce((e) => {
-      input.amount = e.detail;
-      validateField("amount");
       updateHandler();
     });
   }
 
   function updateHandler() {
-    onUpdateJournalAccount(input);
+    onUpdateJournalAccount($fields);
   }
 
   function removeHandler() {
-    const { index } = input;
     onRemoveJournalAccount(index);
   }
 </script>
 
 <tr>
   <td>
-<!--    <AccountCombox id="{id}-autocomplete" class="form-control" fieldDisable placeholder="pilih akun" allowEmpty on:change={accountSelectedHandler} />-->
-    <AutoComplete
+    <AccountSelect
       id="{id}-autocomplete"
+      name="id"
       inputClassName="form-control"
       placeholder="Pilih Akun"
-      items={$accountStore || []}
-      pristineValue={input.id}
-      bind:value={input.id}
-      on:change={accountSelectedHandler}
-      labelFunction={(account) => account && `${account.name}`}
-      valueFieldName="id"
-      keywordsFunction={(account) => account && `${account.name}`} />
+      accountStore={getAccountCredit()}
+      allowEmpty
+      on:change={createAccountSelectedHandler()}
+    />
   </td>
   <td class="fit">
     <InputRp
       id="{id}-amount"
       class="form-control"
       name="amount"
-      value={input.amount}
       on:input={createUpdateAmountHandler()}
       formContextDisable
-      signed />
+      signed
+    />
   </td>
   <td style="padding: unset">
     <button
@@ -104,7 +77,8 @@
       on:click={removeHandler}
       class="btn btn-outline btn-icon alpha-danger text-danger"
       class:disabled={index < 1}
-      disabled={index < 1}>
+      disabled={index < 1}
+    >
       <TrashIcon />
     </button>
   </td>
