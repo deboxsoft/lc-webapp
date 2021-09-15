@@ -39,7 +39,7 @@
 
   function calculate() {
     let _credit = 0;
-    $creditAccounts.forEach((_) => {
+    $fields.creditAccounts.forEach((_) => {
       _credit = parseFloat(_.amount || "0") + _credit;
     });
     $fields.total = _credit;

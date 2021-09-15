@@ -22,6 +22,7 @@
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   const applicationContext = getApplicationContext();
+  stores.createBalanceContext(applicationContext);
   const accountContext = stores.getAccountContext();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
   const { load, findPage, transactionStore } = stores.getTransactionContext();

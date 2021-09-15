@@ -1,9 +1,8 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { generateId } from "@deboxsoft/module-client";
   import { stores } from "@deboxsoft/accounting-client";
-  import { debounce } from "@deboxsoft/module-core";
   import AccountSelect from "../../../../components/account/AccountSelect.svelte";
   import Form from "../../../../components/forms/Form.svelte";
   import InputDate from "../../../../components/forms/InputDateField.svelte";
@@ -13,7 +12,6 @@
   import Modal from "../../../../components/Modal.svelte";
 
   import { createEventDispatcher } from "svelte";
-  import { writable } from "svelte/store";
   import FormJournalAccount from "./FormJournalAccount.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { filteringAccountDebit } from "../../../../utils";
@@ -27,10 +25,7 @@
   export let loading = false;
   export let title = "";
 
-  let isValid = writable(false);
-  let fieldsErrors;
-  let fields, openDialog;
-  let focusRef;
+  let isValid, fieldsErrors, fields, openDialog, focusRef, buttonSaveDisable;
 
   onMount(() => {
     openDialog();
@@ -38,18 +33,17 @@
 
   export function createCreditAccount() {
     return {
-      index: generateId({prefix: "account-credit", size: 3})
-    }
+      index: generateId({ prefix: "account-credit", size: 3 })
+    };
   }
   function getAccountDebit() {
     const accountStore = getAccountLeaf();
     return filteringAccountDebit(accountStore);
   }
 
-  // handler
-  function createUpdateAmountHandler() {
-    return debounce((e) => {
-      // debit = e.detail;
+  $: {
+    tick().then(() => {
+      buttonSaveDisable = !$isValid || loading;
     });
   }
 
@@ -57,8 +51,15 @@
     dispatch("cancel", values);
   }
 </script>
-
-<Modal {title} class="modal-lg" bind:openDialog onClose={cancelHandler} initialFocusElement={focusRef} loading={!values}>
+<Modal
+  {title}
+  class="modal-lg"
+  bind:openDialog
+  onClose={cancelHandler}
+  initialFocusElement={focusRef}
+  loading={!values}
+>
+  <button on:click={() => {getAccountDebit()}} />
   <div class="d-flex flex-column flex-1">
     <Form
       checkValidateFirst
@@ -79,7 +80,7 @@
                 name="date"
                 class="form-control"
                 placeholder="Tanggal"
-                selected= {new Date()}
+                selected={new Date()}
                 disabled={values.status === "UNAPPROVED"}
               />
             </div>
@@ -120,7 +121,7 @@
             </div>
             <div class="form-group col-md-6">
               <label for="amount">Jumlah</label>
-              <InputRp id="amount" class="form-control" name="amount" signed on:input={createUpdateAmountHandler()} />
+              <InputRp id="amount" class="form-control" name="amount" signed />
             </div>
           </div>
         </div>
@@ -134,14 +135,14 @@
             >
               Cancel
             </button>
-            <button type="submit" class="btn btn-primary ml-1" disabled={!$isValid || loading}>
+            <button type="submit" class="btn btn-primary ml-1" disabled={buttonSaveDisable}>
               <SaveIcon class="mr-2" />
               Save
             </button>
           </div>
         </div>
       </div>
-      {#if ($fields)}
+      {#if $fields}
         <FormJournalAccount {createCreditAccount} />
       {/if}
     </Form>

@@ -14,7 +14,7 @@
   import { filteringAccountCredit, filteringAccountDebit } from "../../../utils";
 
   const { loading, notify } = getApplicationContext();
-  const { getAccount, accountStore } = stores.getAccountContext();
+  const { getAccount, getAccountLeaf } = stores.getAccountContext();
   const { authenticationStore, getProfile } = getAuthenticationContext();
   const { import: importTransaction, transactionTypeStore } = stores.getTransactionContext();
 
@@ -58,7 +58,8 @@
     $loading = false;
   });
 
-  function getAccountsCash(e) {
+  function getAccountsCash() {
+    const accountStore = getAccountLeaf();
     if (type === "CASHIER") {
       return filteringAccountDebit(accountStore);
     } else if (type === "PAYMENT") {
@@ -67,7 +68,7 @@
     return accountStore;
   }
 
-  $: accountsCash = getAccountsCash(accountStore);
+  $: accountsCash = getAccountsCash();
 
   async function submitHandler() {
     // filter

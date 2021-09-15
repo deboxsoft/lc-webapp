@@ -2,25 +2,29 @@
 <script>
   import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import { getAuthenticationContext } from "__@modules/users";
-  import { getApplicationContext } from "__@modules/app";
+  import { getAuthenticationContext } from "../../../modules/users";
+  import { getApplicationContext } from "../../../modules/app";
   import { getAclContext } from "./_acl-context";
   import FormJournal from "./_forms/FormJournal.svelte";
+  import { accountUtils } from "../../../utils";
 
   // context
+  const applicationContext = getApplicationContext();
   const { create, getTransaction } = stores.getTransactionContext();
   const { createGranted } = getAclContext();
-  const { accountStore } = stores.getAccountContext();
+  const { accountStore, getAccount } = stores.getAccountContext();
   const { getCurrentDate } = stores.getPreferenceAccountingContext();
   const { authenticationStore } = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
+
+  const { checkCashBalance } = accountUtils();
 
   if (!createGranted) {
     $goto("/access-denied");
   }
 
   // form
-  let openDialog, createCreditAccount, transaction, startUp = true;
+  let openDialog, createCreditAccount, transaction, startUp = true, submitting = false;
 
   $: {
     if (startUp && $authenticationStore && !transaction && createCreditAccount) {
@@ -43,14 +47,20 @@
   // handler
   async function submitHandler({ detail: values }) {
     $loading = true;
+    submitting = true;
     try {
+      for (const creditAccount of values.creditAccounts) {
+        await checkCashBalance(creditAccount.id, creditAccount.amount);
+      }
       await create(values);
       notify("transaksi berhasil disimpan", "success");
-      $loading = false;
       cancelHandler();
     } catch (e) {
-      $loading = false;
+      console.error(e);
       notify(e.message, "error");
+    } finally {
+      $loading = false;
+      submitting = false;
     }
   }
 
@@ -59,4 +69,4 @@
   }
 </script>
 
-<FormJournal title="Transaksi Baru" values={transaction} loading={$loading} on:submit={submitHandler} on:cancel={cancelHandler} bind:createCreditAccount />
+<FormJournal title="Transaksi Baru" values={transaction} loading={submitting} on:submit={submitHandler} on:cancel={cancelHandler} bind:createCreditAccount />
