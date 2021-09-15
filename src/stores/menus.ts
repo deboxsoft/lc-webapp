@@ -76,12 +76,12 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
         },
         {
           label: "Kartu Stok",
-          url: "/persediaan/kartu-stok",
+          url: "/persediaan/stock-card",
           show: stockShow
         },
         {
           label: "Kategori Barang",
-          url: "/persediaan/kategori",
+          url: "/persediaan/category",
           show: stockShow
         },
         {
@@ -221,7 +221,7 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       children: [
         {
           label: "Info Perusahaan",
-          url: "/settings/umum",
+          url: "/settings/info",
           show: settingShow
         },
         {
