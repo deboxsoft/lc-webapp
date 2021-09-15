@@ -1,6 +1,6 @@
 <!--routify:options title="Posting Data"-->
 <script>
-  import { CashierInputSchema } from "@deboxsoft/lc-cashier-api";
+  import { CashierCreateSchema } from "@deboxsoft/lc-cashier-api";
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import CashierForm from "./_components/CashierForm.svelte";
   import { getApplicationContext } from "__@modules/app";
@@ -28,5 +28,5 @@
 </script>
 
 {#if cashier}
-  <CashierForm schema={CashierInputSchema} {cashier} title="Posting Pembayaran" {onSubmit} />
+  <CashierForm schema={CashierCreateSchema} {cashier} title="Posting Pembayaran" {onSubmit} />
 {/if}

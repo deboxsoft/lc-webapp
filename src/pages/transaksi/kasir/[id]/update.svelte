@@ -1,6 +1,6 @@
 <!--routify:options title="Edit Data"-->
 <script>
-  import { CashierUpdateInputSchema } from "@deboxsoft/lc-cashier-api";
+  import { CashierUpdateSchema } from "@deboxsoft/lc-cashier-api";
   import { params, goto } from "@roxi/routify";
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import { getApplicationContext } from "__@modules/app";
@@ -35,7 +35,7 @@
 
 {#if loaded}
   <CashierForm
-    schema={CashierUpdateInputSchema}
+    schema={CashierUpdateSchema}
     isUpdate
     title="Edit Kasir"
     {cashier}

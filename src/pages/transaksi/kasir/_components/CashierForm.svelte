@@ -45,8 +45,9 @@
     try {
       $loading = true;
       submitting = true;
-      await onSubmit($fields);
-      closeHandler()
+      const input = schema.parse($fields);
+      await onSubmit(input);
+      closeHandler();
     } catch (error) {
       console.error(error);
       notify(`${error.path[0]} ${error.message}`, "error");
@@ -141,7 +142,7 @@
             <tr>
               <th>Pembayaran</th>
               <th class="text-center" style="width: 275px">Nominal</th>
-              <th class="text-center" style="width: 40px"></th>
+              <th class="text-center" style="width: 40px" />
             </tr>
           </thead>
           <tbody>
