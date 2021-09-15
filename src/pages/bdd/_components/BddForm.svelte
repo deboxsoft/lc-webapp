@@ -14,9 +14,9 @@
   import InputNumberField from "../../../components/forms/InputNumberField.svelte";
   import {
     filteringAccountBdd,
-    filteringAccountAccumulationBdd,
-    filteringAccountExpense,
-    filteringAccountCash
+    filteringAccountCash,
+    filteringAccountAccumulationAmortization,
+    filteringAccountExpenseAmortization
   } from "../../../utils";
 
   const { getAccountLeaf } = stores.getAccountContext();
@@ -53,10 +53,10 @@
         return filteringAccountCash(accountStore);
       }
       case "expense": {
-        return filteringAccountExpense(accountStore);
+        return filteringAccountExpenseAmortization(accountStore);
       }
-      case "accumulationBdd": {
-        return filteringAccountAccumulationBdd(accountStore);
+      case "accumulation": {
+        return filteringAccountAccumulationAmortization(accountStore);
       }
     }
   }
@@ -154,7 +154,7 @@
         <div class="form-group col-6">
           <label for="amortizationAccount">Akun Akumulasi BDD</label>
           <AccountSelect
-            accountStore={getAccount("accumulationBdd")}
+            accountStore={getAccount("accumulation")}
             id="amortizationAccount"
             name="amortizationAccount"
             placeholder="Akun Akumulasi BDD"

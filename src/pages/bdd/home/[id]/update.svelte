@@ -3,9 +3,9 @@
   import { BddUpdateInputSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import BddForm from "../_components/BddForm.svelte";
-  import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../_acl-context";
+  import BddForm from "../../_components/BddForm.svelte";
+  import { getApplicationContext } from "../../../../modules/app";
+  import { getAclContext } from "../../_acl-context";
 
   const { updateGranted } = getAclContext();
   if (!updateGranted) {

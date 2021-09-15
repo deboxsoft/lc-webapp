@@ -2,8 +2,8 @@
 
 <script>
   import { params, goto } from "@roxi/routify";
-  import Modal from "../../../components/Modal.svelte";
-  import AmortizationTable from "../_components/AmortizationTable.svelte";
+  import Modal from "../../../../components/Modal.svelte";
+  import AmortizationTable from "../../_components/AmortizationTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
 
   const { getBdd, bddStore } = stores.getBddContext();

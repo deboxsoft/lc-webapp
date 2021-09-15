@@ -15,7 +15,7 @@
   <td>{dayjs(bdd.dateStart).format("DD-MM-YY") || ""}</td>
   <td>{dayjs(bdd.dateEnd).format("DD-MM-YY") || ""}</td>
   <td>{bdd.description || ""}</td>
-  <td>{bdd.taxRate || ""}</td>
+  <td style="text-align: center">{bdd.taxRate || ""}</td>
   <td>
     <CellNumber value={bdd.amount} />
   </td>
