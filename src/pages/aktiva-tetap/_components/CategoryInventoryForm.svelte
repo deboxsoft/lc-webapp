@@ -1,6 +1,6 @@
 <script>
   import { groupDepreciation } from "@deboxsoft/accounting-api";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
@@ -10,12 +10,14 @@
   import InputField from "../../../components/forms/InputField.svelte";
   import ComboxField from "../../../components/forms/ComboxField.svelte";
   import AccountSelect from "../../../components/account/AccountSelect.svelte";
-  import { filteringAccountAccumulationDepreciation, filteringAccountExpense } from "../../../utils";
+  import {
+    filteringAccountAccumulationDepreciation,
+    filteringAccountExpenseDepreciation
+  } from "../../../utils";
 
   const { notify, loading } = getApplicationContext();
   const { categoryInventoryStore } = stores.getInventoryContext();
   const { getAccountLeaf } = stores.getAccountContext();
-  const dispatch = createEventDispatcher();
   const accounts = getAccountLeaf();
 
   const depreciationMethods = [{ id: "STRAIGHT_LINE", label: "Garis Lurus" }];
@@ -43,9 +45,9 @@
     const accountStore = getAccountLeaf();
     switch (accountType) {
       case "expense": {
-        return filteringAccountExpense(accountStore);
+        return filteringAccountExpenseDepreciation(accountStore);
       }
-      case "accumulationDepreciation": {
+      case "accumulation": {
         return filteringAccountAccumulationDepreciation(accountStore);
       }
     }
@@ -119,7 +121,7 @@
         <AccountSelect
           id="accumulatedDepreciationAccount"
           name="accumulatedDepreciationAccount"
-          accountStore={getAccount("accumulationDepreciation")}
+          accountStore={getAccount("accumulation")}
           accountId={categoryInventory?.accumulatedDepreciationAccount}
           placeholder="Akumulasi Penyusutan Aktiva Tetap"
           allowEmpty

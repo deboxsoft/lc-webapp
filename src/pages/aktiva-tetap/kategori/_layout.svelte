@@ -1,14 +1,15 @@
+<!--routify:options title="Kategori"-->
 <script>
   import CategoryInventoryTable from "../_components/CategoryInventoryTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import { Container } from "@deboxsoft/module-core";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { getApplicationContext } from "../../../modules/app";
   import { url } from "@roxi/routify";
+  import PageLayout from "../../../layout/PageLayout.svelte";
+  import { getAclContext } from "../_acl-context";
 
+  const { createGranted } = getAclContext();
   const applicationContext = getApplicationContext();
-  const inventoryContext = Container.get("inventory");
-  inventoryContext.sync = fetchData;
   const { loading } = applicationContext;
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "kategori" });
@@ -29,9 +30,25 @@
   }
 </script>
 
-<div class="card d-flex flex-1 flex-column">
-  <div class="card-body d-flex flex-1 flex-column">
-    <CategoryInventoryTable {categoryInventoryStore} />
+<PageLayout breadcrumb={[]}>
+  <svelte:fragment slot="breadcrumb-items-right">
+    {#if createGranted}
+      <a href={$url("./create")} class="breadcrumb-elements-item">
+        <i class="icon-plus2" />
+        Tambah Kategori
+      </a>
+    {/if}
+    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Refresh
+    </a>
+  </svelte:fragment>
+  <div class="card d-flex flex-1 flex-column">
+    <div class="card-body d-flex flex-1 flex-column">
+      {#if $categoryInventoryStore}
+        <CategoryInventoryTable {categoryInventoryStore} />
+      {/if}
+    </div>
   </div>
-</div>
-<slot />
+  <slot />
+</PageLayout>
