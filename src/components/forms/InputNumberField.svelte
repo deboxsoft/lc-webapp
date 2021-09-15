@@ -1,19 +1,14 @@
 <script>
   import { clsx } from "@deboxsoft/module-client";
   import AutoNumeric from "autonumeric";
-  import { getFormContext } from "__@stores/form";
+  import { getFormContext } from "../../stores/form";
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
-  import { writable } from "svelte/store";
 
-  export let formContextDisable = false;
-  const context = (!formContextDisable && getFormContext()) || {};
+  const { fields, fieldsErrors, validateField, submitted } = getFormContext();
   const dispatch = createEventDispatcher();
 
   export let options = {};
-  export let fields = context?.fields || writable({});
-  export let fieldsErrors = context?.fieldsErrors || writable({});
   export let name;
-  export let validate = context?.validateField && name ? context.validateField(name) : () => {};
   export let prependDisable = false;
   export let textPosition = "right";
   export let disabled = false;
@@ -39,7 +34,6 @@
   let msgError;
   let invalid = false;
   let classes = "";
-  let submitted = context.submitted;
   let autoNumeric;
   let inputEl;
 
@@ -56,13 +50,11 @@
   }
 
   $: {
-    if (!formContextDisable) {
-      if (fieldsErrors && name && $fieldsErrors[name]) {
-        invalid = true;
-        msgError = $fieldsErrors[name];
-      } else {
-        invalid = false;
-      }
+    if (fieldsErrors && name && $fieldsErrors[name]) {
+      invalid = true;
+      msgError = $fieldsErrors[name];
+    } else {
+      invalid = false;
     }
   }
 
@@ -82,6 +74,7 @@
   });
 
   function createInputHandler() {
+    const validate = validateField(name);
     return () => {
       let result = autoNumeric.getNumericString();
       if (resultType === "number") {

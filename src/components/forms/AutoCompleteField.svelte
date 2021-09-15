@@ -4,7 +4,7 @@
   import AutoComplete from "../AutoComplete.svelte";
   import { createEventDispatcher } from "svelte";
 
-  const formContext = getFormContext() || {};
+  const { fields, validateField, fieldsErrors, submitted } = getFormContext() || {};
   const dispatcher = createEventDispatcher();
 
   export let name;
@@ -21,10 +21,6 @@
   export let loadingText = "Memuat data...";
   export let noResultsText = "Data tidak ditemukan";
   export let disabled = false;
-  export let fields = formContext.fields;
-  export let validate = (name && formContext.validateField && formContext.validateField(name));
-  export let fieldsErrors = formContext.fieldsErrors;
-  export let submitted = formContext.submitted;
   const { class: className } = $$props;
 
   let invalid = true;
@@ -56,6 +52,7 @@
   }
 
   function createChangeHandler() {
+    const validate = validateField(name);
     return ({ value }) => {
       if ($fields && name) {
         $fields[name] = value;
