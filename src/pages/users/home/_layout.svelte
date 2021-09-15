@@ -1,30 +1,41 @@
-<!--routify:options title="Manajemen User"-->
+<!--routify:options title="Manajemen Pengguna"-->
 <script>
-  import { goto } from "@roxi/routify";
+  import { goto, url } from "@roxi/routify";
   import Table from "../../../components/Table.svelte";
-  import { getUserContext } from "__@modules/users";
+  import { getUserContext } from "../../../modules/users";
   import MenuUserList from "./_MenuUserList.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "../../../components/loader/Loader.svelte";
   import GroupName from "../group/_groupName.svelte";
   import { createAclContext } from "../_acl-context";
+  import PageLayout from "../../../layout/PageLayout.svelte";
 
-  const { readUserGranted } = createAclContext();
+  const { readGranted, createGranted } = createAclContext();
   const { loading } = getApplicationContext();
-  const { userStore, groupStore } = getUserContext();
+  const { userStore, groupStore, find } = getUserContext();
 
-  if (!readUserGranted) {
+  if (!readGranted) {
     $goto("/access-denied");
   }
+
   function getGroup(id) {
     const i = $groupStore.findIndex((_) => _.id === id);
     return $groupStore[i];
   }
 </script>
 
-{#if $loading}
-  <Loader />
-{:else}
+<PageLayout breadcrumb={[]}>
+  <svelte:fragment slot="breadcrumb-items-right">
+    {#if createGranted}
+      <a href={$url("./create")} class="breadcrumb-elements-item">
+        <i class="icon-user-plus" />
+        Tambah User
+      </a>
+    {/if}
+    <a href="#/" target="_self" on:click={() => find()} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Refresh
+    </a>
+  </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
       <Table items={$userStore} let:item={user}>
@@ -49,8 +60,8 @@
       </Table>
     </div>
   </div>
-{/if}
-<slot />
+  <slot />
+</PageLayout>
 
 <style lang="scss">
   .username {

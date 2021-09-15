@@ -1,4 +1,4 @@
-<!--routify:options title="Buat User"-->
+<!--routify:options title="User Baru"-->
 <script>
   import { goto } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
@@ -12,8 +12,8 @@
   onMount(() => {
     openDialog()
   });
-  const { createUserGranted } = getAclContext();
-  if (!createUserGranted) {
+  const { createGranted } = getAclContext();
+  if (!createGranted) {
     $goto("/access-denied");
   }
   const { create } = getUserContext();

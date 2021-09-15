@@ -12,8 +12,8 @@
   onMount(() => {
     openDialog()
   });
-  const { removeUserGranted } = getAclContext();
-  if (!removeUserGranted) {
+  const { removeGranted } = getAclContext();
+  if (!removeGranted) {
     $goto("/access-denied");
   }
   const { remove, getUser } = getUserContext();

@@ -1,3 +1,4 @@
+<!--routify:options title="Data Baru"-->
 <script>
   import { goto } from "@roxi/routify";
   import Modal from "../../../components/Modal.svelte";
@@ -5,13 +6,13 @@
   import { getAclContext } from "../_acl-context";
   import { onMount } from "svelte";
 
-  const { createUserGranted } = getAclContext();
+  const { createGranted } = getAclContext();
   let openDialog;
 
   onMount(() => {
     openDialog()
   });
-  if (!createUserGranted) {
+  if (!createGranted) {
     $goto("/access-denied");
   }
   let saveHandler;

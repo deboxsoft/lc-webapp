@@ -1,3 +1,4 @@
+<!--routify:options title="Hapus Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "../../../../components/Modal.svelte";
@@ -11,8 +12,8 @@
   onMount(() => {
     openDialog();
   });
-  const { removeUserGranted } = getAclContext();
-  if (!removeUserGranted) {
+  const { removeGranted } = getAclContext();
+  if (!removeGranted) {
     $goto("/access-denied");
   }
   const { save, grants } = getAccessControlContext();

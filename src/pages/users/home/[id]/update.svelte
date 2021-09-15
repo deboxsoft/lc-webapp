@@ -20,8 +20,8 @@
     openDialog()
   });
 
-  const { updateUserGranted } = getAclContext();
-  if (!updateUserGranted) {
+  const { updateGranted } = getAclContext();
+  if (!updateGranted) {
     $goto("/access-denied");
   }
   const { getUser, update, userStore } = getUserContext();
