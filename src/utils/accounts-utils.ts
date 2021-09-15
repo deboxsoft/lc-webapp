@@ -1,7 +1,7 @@
-import { stores } from "@deboxsoft/accounting-client";
-import { derived, get, Readable } from "svelte/store";
 import type { Account, PreferenceAccounting } from "@deboxsoft/accounting-api";
+import { stores } from "@deboxsoft/accounting-client";
 import { getAuthenticationContext } from "__@modules/users";
+import { derived, get, Readable } from "svelte/store";
 
 const codeAccount: PreferenceAccounting["codeAccount"] = {
   stock: "1030100",
@@ -28,14 +28,6 @@ const codeAccountList = [
 
 function excludeCodeAccount(account: Account) {
   return !codeAccountList.includes(account.parentId);
-}
-
-export function isCash(accountId: string): boolean {
-  const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const code = config.codeAccount.cash;
-  const regex = new RegExp(`^(${code}).*`);
-  return regex.test(accountId);
 }
 
 export function isRevenue(accountId: string): boolean {
@@ -188,4 +180,27 @@ export function filteringAccountAccumulationDepreciation(accountStore: Readable<
   const config = get(preferenceStore);
   const parentId = config.codeAccount.accumulationDepreciation;
   return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+}
+
+export function accountUtils() {
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  const { getAccount } = stores.getAccountContext();
+  const { getBalance } = stores.getBalanceContext();
+  const config = get(preferenceStore);
+  const code = config.codeAccount.cash;
+  const regex = new RegExp(`^(${code}).*`);
+  const isCash = (accountId: string) => regex.test(accountId);
+  const checkCashBalance = async (accountId: string, amount: number) => {
+    if (isCash(accountId)) {
+      const balance = (await getBalance(accountId)) || 0;
+      if (balance < amount) {
+        const account = get(getAccount(accountId));
+        throw new Error(`Saldo kas '${account.name}' tidak mencukupi.`);
+      }
+    }
+  };
+  return {
+    isCash,
+    checkCashBalance
+  };
 }
