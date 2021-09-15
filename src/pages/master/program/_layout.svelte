@@ -43,6 +43,10 @@
         Tambah
       </a>
     {/if}
+    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Refresh
+    </a>
   </svelte:fragment>
 
   <div class="card d-flex flex-column flex-1">

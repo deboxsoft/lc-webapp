@@ -15,7 +15,7 @@
 
   const { readGranted, createGranted } = createAclContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { accountStore, getAccountType, getAccount } = stores.getAccountContext();
+  const { accountStore, getAccountType, getAccount, load } = stores.getAccountContext();
   const { loading } = getApplicationContext();
   const reportContext = createReportContext();
 
@@ -33,7 +33,7 @@
   let _buckets = []
 
   $: {
-    accounts = $accountStore.sort(sortUtilsFunc("id"));
+    accounts = $accountStore && $accountStore.sort(sortUtilsFunc("id"));
   }
 
   function filtering() {
@@ -122,6 +122,10 @@
     >
       <i class="icon-filter3 mr-1" />
       Filter
+    </a>
+    <a href="#/" target="_self" on:click={() => load()} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Refresh
     </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
