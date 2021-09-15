@@ -16,7 +16,15 @@ const codeAccount: PreferenceAccounting["codeAccount"] = {
   expense: "5"
 };
 
-const codeAccountList = Object.values(codeAccount);
+const codeAccountList = [
+  codeAccount.stock,
+  codeAccount.bdd,
+  codeAccount.expenseAmortization,
+  codeAccount.accumulationAmortization,
+  codeAccount.inventory,
+  codeAccount.expenseDepreciation,
+  codeAccount.accumulationDepreciation
+];
 
 function excludeCodeAccount(account: Account) {
   return !codeAccountList.includes(account.parentId);
@@ -26,7 +34,7 @@ export function isCash(accountId: string): boolean {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.cash;
-  const regex = new RegExp(`^(${code}).*`, "g");
+  const regex = new RegExp(`^(${code}).*`);
   return regex.test(accountId);
 }
 
@@ -34,7 +42,7 @@ export function isRevenue(accountId: string): boolean {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.revenue;
-  const regex = new RegExp(`^(${code}).*`, "g");
+  const regex = new RegExp(`^(${code}).*`);
   return regex.test(accountId);
 }
 
@@ -42,7 +50,7 @@ export function isExpense(accountId: string): boolean {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.expense;
-  const regex = new RegExp(`^(${code}).*`, "g");
+  const regex = new RegExp(`^(${code}).*`);
   return regex.test(accountId);
 }
 
@@ -51,7 +59,7 @@ export function filteringAccountDebit(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.revenue;
-  const regex = new RegExp(`^[^${code}].*`, "g");
+  const regex = new RegExp(`^[^${code}].*`);
   let accountsIdDebit = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
@@ -70,7 +78,7 @@ export function filteringAccountCredit(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.expense;
-  const regex = new RegExp(`^[^${code}].*`, "g");
+  const regex = new RegExp(`^[^${code}].*`);
   let accountsIdCredit = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
@@ -89,13 +97,13 @@ export function filteringAccountCash(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.cash;
-  const regex = new RegExp(`^(${code}).*`, "g");
+  const regex = new RegExp(`^(${code}).*`);
   let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (regex.test(_.id)) {
         if (!includeAccounts || includeAccounts.includes(_.id)) {
-          return excludeCodeAccount(_);
+          return _;
         }
       }
       return false;
@@ -107,7 +115,7 @@ export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.revenue;
-  const regex = new RegExp(`^(${code}).*`, "g");
+  const regex = new RegExp(`^(${code}).*`);
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (regex.test(_.id)) {
@@ -122,7 +130,7 @@ export function filteringAccountExpense(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
   const code = config.codeAccount.expense;
-  const regex = new RegExp(`^(${code}).*`, "g");
+  const regex = new RegExp(`^(${code}).*`);
   return derived(accountStore, (_) => {
     return _.filter((_) => {
       if (regex.test(_.id)) {
