@@ -1,10 +1,8 @@
 <script>
-  import { ZodError } from "@deboxsoft/zod";
   import { goto } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { getProgramContext } from "@deboxsoft/lc-cashier-client";
   import { onMount } from "svelte";
-  import { ProgramInputSchema } from "@deboxsoft/lc-cashier-api";
   import { writable } from "svelte/store";
 
   // components
@@ -38,7 +36,8 @@
     try {
       $loading = true;
       submitting = true;
-      await onSubmit($fields);
+      const input = schema.parse($fields);
+      await onSubmit(input);
       $loading = false;
       closeHandler();
     } catch (error) {
@@ -81,13 +80,13 @@
         </div>
         <div class="row">
           <div class="form-group col-12">
-            <label for="discount">Diskon</label>
+            <label for="period">Periode</label>
             <InputField
-              id="discount"
-              name="discount"
+              id="period"
+              name="period"
               type="text"
               class="form-control"
-              placeholder="Diskon"
+              placeholder="Periode"
               on:keypress={keyHandler}
             />
           </div>
@@ -105,7 +104,7 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Batal
     </button>
-    <button type="button" class="btn btn-primary ml-1" disabled={loading} on:click={submitHandler}>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
       <i class="icon-floppy-disk mr-2" />
       Simpan
     </button>

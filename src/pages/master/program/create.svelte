@@ -1,6 +1,6 @@
 <!--routify:options title="Posting Program"-->
 <script>
-  import { ProgramInputSchema } from "@deboxsoft/lc-cashier-api";
+  import { ProgramCreateSchema } from "@deboxsoft/lc-cashier-api";
   import { goto } from "@roxi/routify";
   import ProgramForm from "./_components/ProgramForm.svelte";
   import { getProgramContext } from "@deboxsoft/lc-cashier-client";
@@ -21,4 +21,4 @@
   }
 </script>
 
-<ProgramForm schema={ProgramInputSchema} {program} title="Membuat Program baru" {onSubmit} />
+<ProgramForm schema={ProgramCreateSchema} {program} title="Membuat Program baru" {onSubmit} />

@@ -1,6 +1,6 @@
 <!--routify:options title="Edit Program"-->
 <script>
-  import { ProgramInputSchema } from "@deboxsoft/lc-cashier-api";
+  import { ProgramUpdateSchema } from "@deboxsoft/lc-cashier-api";
   import { params, goto } from "@roxi/routify";
   import ProgramForm from "../_components/ProgramForm.svelte";
   import { getProgramContext } from "@deboxsoft/lc-cashier-client";
@@ -24,5 +24,5 @@
 </script>
 
 {#if program}
-  <ProgramForm {program} schema={ProgramInputSchema} {onSubmit} isUpdate title="Edit Program" {to} />
+  <ProgramForm {program} schema={ProgramUpdateSchema} {onSubmit} isUpdate title="Edit Program" {to} />
 {/if}

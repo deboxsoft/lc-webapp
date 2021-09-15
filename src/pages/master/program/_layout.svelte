@@ -21,8 +21,10 @@
 
   let submitting = false,
     filter = {};
-  if (!$programStore) {
-    fetchData();
+  $: {
+    if (!$programStore) {
+      fetchData();
+    }
   }
 
   function fetchData() {
@@ -33,6 +35,7 @@
       $loading = false;
     });
   }
+
 </script>
 
 <PageLayout breadcrumb={[]}>

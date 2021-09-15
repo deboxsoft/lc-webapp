@@ -6,12 +6,13 @@
 
   const { updateGranted, removeGranted } = getAclContext();
   export let program;
+  $: id = program.id;
   let dropdownContext;
 </script>
 
 <tr>
   <td>{program.name || ""}</td>
-  <td>{program.discount || ""}</td>
+  <td>{program.period || ""}</td>
   <Dropdown
     class="h-100 d-flex justify-content-center"
     bind:context={dropdownContext}

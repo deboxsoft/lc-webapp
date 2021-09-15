@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
   import Modal from "../../../../components/Modal.svelte";
   import { getProgramContext } from "@deboxsoft/lc-cashier-client";
@@ -13,19 +12,28 @@
     $goto("/access-denied");
   }
 
-  let openDialog;
+  let openDialog,
+    name,
+    program,
+    booting = true;
 
-  $: program = $programStore && getProgram($params.id);
+  $: {
+    if (booting && $programStore && openDialog) {
+      booting = false;
+      program = $programStore && getProgram($params.id);
+      if (program) {
+        name = program.name;
+        openDialog();
+      }
+    }
+  }
 
-  onMount(() => {
-    openDialog();
-  });
 
   async function removeHandler() {
     try {
       $loading = true;
-      const name = program.name;
-      await remove(programId);
+      name = program.name;
+      await remove(program.id);
       $goto("../");
       notify(`Program '${name}' berhasil dihapus`, "success");
       $loading = false;
