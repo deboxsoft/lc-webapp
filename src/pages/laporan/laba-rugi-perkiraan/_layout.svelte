@@ -88,15 +88,15 @@
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
+    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Refresh
+    </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />
         Ekspor
       </DropdownToggle>
-      <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
-        <i class="icon-sync mr-1" />
-        Refresh
-      </a>
       <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
         <a
           href="/#"
