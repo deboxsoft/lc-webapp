@@ -1,20 +1,13 @@
 <!--routify:options title="Ganti Password"-->
-
 <script>
   import * as z from "@deboxsoft/zod";
-  import { goto, params } from "@roxi/routify";
-  import Modal from "../../components/Modal.svelte";
   import Form from "../../components/forms/Form.svelte";
-  import InputField from "../../components/forms/InputField.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Alert from "../../components/Alert.svelte";
-  import { onMount } from "svelte";
+  import PageLayout from "../../layout/PageLayout.svelte";
+  import InputPasswordField from "../../components/forms/InputPasswordField.svelte";
 
-  let openDialog;
-  onMount(() => {
-    openDialog();
-  });
   const { notify, loading } = getApplicationContext();
   const { authenticationStore, changePassword } = getAuthenticationContext();
   const schema = z.object({
@@ -28,77 +21,77 @@
       })
   });
 
-  let fields;
-  let submitted;
-  let submitHandler;
-  let alertMessage;
-  let alertOpen;
-  $: url = $params.backUrl || "./";
-  $: profile = $authenticationStore.profile;
+  let fields,
+    profile,
+    submitting = false,
+    messageNotify,
+    alertMessage,
+    alertOpen,
+    alertType,
+    isStartup = true,
+    isValid,
+    fieldsErrors;
 
-  async function saveHandler() {
-    submitHandler();
-    try {
-      schema.parse($fields);
-      $loading = true;
-      await changePassword(profile.id, $fields.newPassword, $fields.password);
-      notify("Berhasil mengganti password", "success");
-      $loading = false;
-      $goto(url);
-    } catch (e) {
-      $submitted = false;
-      notify(e.message, "error");
-      alertMessage = e.message;
-      alertOpen = true;
-      $loading = false;
+  $: {
+    if (isStartup && $authenticationStore) {
+      isStartup = false;
+      profile = $authenticationStore.profile;
     }
   }
 
-  function closeHandler() {
-    $goto(url);
+  async function saveHandler() {
+    try {
+      const input = schema.parse($fields);
+      $loading = true;
+      await changePassword(profile.id, input.newPassword, input.password);
+      messageNotify = "data berhasil tersimpan";
+      notify(messageNotify, "success");
+      alertType = "success";
+    } catch (e) {
+      messageNotify = e.message;
+      notify(messageNotify, "error");
+      alertType = "danger";
+    } finally {
+      $fields = {};
+      alertOpen = true;
+      $loading = false;
+      submitting = false;
+    }
   }
 </script>
 
-<Modal class="modal-lg" bind:openDialog title="Ganti Password">
-  <Form bind:fields {schema} bind:submitted bind:submitHandler>
+<PageLayout breadcrumb={[]}>
+  <Form checkValidateFirst bind:fields {schema} bind:isValid>
     <div class="card">
       <div class="card-body">
-        <Alert bind:message={alertMessage} bind:open={alertOpen} />
+        <Alert message={messageNotify} open={alertOpen} type={alertType} />
         <div class="row">
           <div class="form-group col-12">
             <label for="password">Password</label>
-            <InputField id="password" type="password" name="password" class="form-control" autocomplete="password" />
+            <InputPasswordField id="password" class="form-control" name="password" autocomplete="password" />
           </div>
         </div>
         <div class="row">
           <div class="form-group col-12">
             <label for="newPassword">Password Baru</label>
-            <InputField
-              id="newPassword"
-              type="password"
-              name="newPassword"
-              class="form-control"
-              autocomplete="newPassword"
-            />
+            <InputPasswordField id="newPassword" class="form-control" name="newPassword" autocomplete="newPassword" />
           </div>
         </div>
         <div class="row">
           <div class="form-group col-12">
             <label for="confirmPassword">Konfirmasi Password</label>
-            <InputField
+            <InputPasswordField
               id="confirmPassword"
-              type="password"
-              name="confirmPassword"
               class="form-control"
+              name="confirmPassword"
               autocomplete="confirmPassword"
             />
           </div>
         </div>
       </div>
+      <div class="card-footer text-right">
+        <button class="btn bg-primary" on:click={saveHandler} disabled={submitting || !$isValid}>Ganti Password</button>
+      </div>
     </div>
   </Form>
-  <svelte:fragment slot="footer">
-    <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
-    <button class="btn bg-primary" on:click={saveHandler}>Ganti Password</button>
-  </svelte:fragment>
-</Modal>
+</PageLayout>
