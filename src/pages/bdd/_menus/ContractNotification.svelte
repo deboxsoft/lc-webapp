@@ -1,17 +1,22 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "../../../modules/app";
-  import { createAclContext } from "../_acl-context";
+  import { createAclContext } from "./_acl-context";
   import { writable } from "svelte/store";
+  import { getAuthenticationContext } from "../../../modules/users";
 
   const applicationContext = getApplicationContext();
   const { countWarningContract } = stores.createBddContext(applicationContext);
-  const { readGranted } = createAclContext();
-
+  const {getAccessControl} = getAuthenticationContext();
+  const aclContext = createAclContext();
   export let count = writable(0);
+
+  let readGranted;
 
   countWarningContract().then((_) => {
     $count = _;
+    const acl = getAccessControl();
+    readGranted = aclContext().readGranted;
   });
 </script>
 

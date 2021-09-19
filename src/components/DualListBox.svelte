@@ -125,9 +125,7 @@
   function actionClickHandler({ direction, isMoveAll }) {
     const directionIsRight = direction === "right";
     const sourceListBox = directionIsRight ? availableRef : selectedRef;
-    console.log(sourceListBox);
     const marked = getMarkedOptions(sourceListBox);
-    console.log(marked);
 
     let selected;
 

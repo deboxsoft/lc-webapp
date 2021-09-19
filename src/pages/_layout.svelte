@@ -59,7 +59,7 @@
       const grants = metadata && metadata.grants;
       if (grants) {
         acl.setGrants(grants);
-        buildMenus();
+        buildMenus(acl);
       } else {
         throw new Error("authenticated-error");
       }
@@ -72,9 +72,8 @@
     }
   }
 
-  function buildMenus() {
+  function buildMenus(acl) {
     state = "menus-load";
-    const acl = getAccessControl();
     const grants = acl.getGrants();
     const role = $authenticationStore.profile?.session?.role;
     if (role && grants && grants[role]) {

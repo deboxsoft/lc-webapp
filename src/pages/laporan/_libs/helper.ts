@@ -14,7 +14,6 @@ export const parsingRevenueReport = (data) => {
 };
 
 export const parsingBalanceSheetReport = (data) => {
-  console.log(data);
   const { revenueBalance, expenseBalance } = parsingRevenueReport(data);
   const balanceSheetReport = data.balanceSheetReport;
   const statementIncomeReport = data.statementIncomeReport;

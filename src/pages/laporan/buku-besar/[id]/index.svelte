@@ -40,8 +40,6 @@
     }
   }
 
-  $: console.log($generalLedgerStore);
-
   async function fetchData(options = {}) {
     $loading = true;
     submitting = true;
