@@ -1,7 +1,7 @@
 <script>
   import { url } from "@roxi/routify";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
 
   export let id;
   export let removeActDisable = false;

@@ -1,5 +1,5 @@
 <script>
-  import { getFormContext } from "../../stores/form";
+  import { getFormContext } from "__@stores/form";
   import { createEventDispatcher } from "svelte";
   import { writable } from "svelte/store";
 

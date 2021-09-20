@@ -6,8 +6,8 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import Dropdown from "../../../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../../../components/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createReportContext } from "./_export";
 
   import TableStatementBank from "./_components/TableStatementBank.svelte";

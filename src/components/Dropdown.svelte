@@ -12,7 +12,7 @@
 </script>
 <script>
   import { onDestroy } from 'svelte';
-  import { createPopperActions } from "../utils";
+  import { createPopperActions } from "__@root/utils";
   import DropdownMenu from "./DropdownMenu.svelte";
   import { clsx } from "@deboxsoft/module-client";
 

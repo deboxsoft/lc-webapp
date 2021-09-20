@@ -4,8 +4,8 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { getAuthenticationContext, createUserContext, createAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "../../components/loader/Loader.svelte";
-  import PageLayout from "../../layout/PageLayout.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
 
   /**
    *

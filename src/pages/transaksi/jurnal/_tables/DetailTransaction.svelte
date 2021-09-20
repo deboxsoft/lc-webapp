@@ -4,10 +4,10 @@
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { stores as usersStore } from "@deboxsoft/users-client";
-  import Modal from "../../../../components/Modal.svelte";
-  import Loader from "../../../../components/loader/Loader.svelte";
-  import CellNumber from "../../../../components/CellNumber.svelte";
-  import CellAccount from "../../../../components/account/CellAccount.svelte";
+  import Modal from "__@comps/Modal.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
+  import CellAccount from "__@comps/account/CellAccount.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
 

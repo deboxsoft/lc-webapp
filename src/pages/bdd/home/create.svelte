@@ -3,8 +3,8 @@
   import { BddInputSchema } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
   import BddForm from "../_components/BddForm.svelte";
-  import { getApplicationContext } from "../../../modules/app";
-  import { getAuthenticationContext } from "../../../modules/users";
+  import { getApplicationContext } from "__@modules/app";
+  import { getAuthenticationContext } from "__@modules/users";
   import dayjs from "dayjs";
 
   const { getUserId } = getAuthenticationContext();

@@ -1,8 +1,8 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import Modal from "../../../components/Modal.svelte";
-  import Form from "../../../components/forms/Form.svelte";
-  import InputDate from "../../../components/forms/InputDateField.svelte";
+  import Modal from "__@comps/Modal.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputDate from "__@comps/forms/InputDateField.svelte";
 
   export let filter = {};
   export let title = "Filter";

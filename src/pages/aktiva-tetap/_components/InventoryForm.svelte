@@ -2,17 +2,17 @@
   import { createEventDispatcher, onMount } from "svelte";
 
   import { goto } from "@roxi/routify";
-  import Modal from "../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import InputDate from "../../../components/forms/InputDateField.svelte";
-  import InputRp from "../../../components/forms/InputNumberField.svelte";
-  import InputField from "../../../components/forms/InputField.svelte";
-  import ComboxField from "../../../components/forms/ComboxField.svelte";
-  import Form from "../../../components/forms/Form.svelte";
-  import AccountSelect from "../../../components/account/AccountSelect.svelte";
-  import { getAuthenticationContext } from "../../../modules/users";
-  import { filteringAccountCash, filteringAccountInventory } from "../../../utils";
+  import InputDate from "__@comps/forms/InputDateField.svelte";
+  import InputRp from "__@comps/forms/InputNumberField.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import { getAuthenticationContext } from "__@modules/users";
+  import { filteringAccountCash, filteringAccountInventory } from "__@root/utils";
 
   const { notify, loading } = getApplicationContext();
   const { authenticationStore } = getAuthenticationContext();

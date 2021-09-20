@@ -2,7 +2,7 @@
 
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import CategoryInventoryView from "../../_components/CategoryInventoryView.svelte";
 

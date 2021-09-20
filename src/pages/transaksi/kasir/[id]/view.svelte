@@ -3,7 +3,7 @@
   import { goto, params } from "@roxi/routify";
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import CashierView from "../_components/CashierView.svelte";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
 
   const { getCashier, cashierStore } = getCashierContext();
   let closeUrl = $params.closeUrl || "../";

@@ -1,12 +1,12 @@
 <!--routify:options title="Ganti Password"-->
 <script>
   import * as z from "@deboxsoft/zod";
-  import Form from "../../components/forms/Form.svelte";
+  import Form from "__@comps/forms/Form.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import Alert from "../../components/Alert.svelte";
-  import PageLayout from "../../layout/PageLayout.svelte";
-  import InputPasswordField from "../../components/forms/InputPasswordField.svelte";
+  import Alert from "__@comps/Alert.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
+  import InputPasswordField from "__@comps/forms/InputPasswordField.svelte";
 
   const { notify, loading } = getApplicationContext();
   const { authenticationStore, changePassword } = getAuthenticationContext();

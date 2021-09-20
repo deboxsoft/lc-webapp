@@ -2,9 +2,9 @@
 <script>
   import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import Loader from "../../../../../components/loader/Loader.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
 

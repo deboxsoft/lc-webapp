@@ -3,21 +3,21 @@
   import { writable } from "svelte/store";
   import dayjs from "dayjs";
   import { goto } from "@roxi/routify";
-  import Modal from "../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
 
-  import InputField from "../../../components/forms/InputField.svelte";
-  import AccountSelect from "../../../components/account/AccountSelect.svelte";
-  import InputDateField from "../../../components/forms/InputDateField.svelte";
-  import Form from "../../../components/forms/Form.svelte";
-  import InputNumberField from "../../../components/forms/InputNumberField.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import InputDateField from "__@comps/forms/InputDateField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputNumberField from "__@comps/forms/InputNumberField.svelte";
   import {
     filteringAccountBdd,
     filteringAccountCash,
     filteringAccountAccumulationAmortization,
     filteringAccountExpenseAmortization
-  } from "../../../utils";
+  } from "__@root/utils";
 
   const { getAccountLeaf } = stores.getAccountContext();
 

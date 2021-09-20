@@ -1,5 +1,5 @@
 <script>
-  import Table from "../../../components/tables/DataTable.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
   import BddRow from "./BddRow.svelte";
 
   export let bddStore;

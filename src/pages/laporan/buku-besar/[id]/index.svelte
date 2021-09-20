@@ -6,13 +6,13 @@
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import Dropdown from "../../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../../components/DropdownToggle.svelte";
-  import DatePickr from "../../../../components/forms/InputDateField.svelte";
-  import Loader from "../../../../components/loader/Loader.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import DatePickr from "__@comps/forms/InputDateField.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
   import LedgerAccountTable from "../../_libs/LedgerAccountTable.svelte";
   import { createReportContext } from "./_export";
-  import Button from "../../../../components/Button.svelte";
+  import Button from "__@comps/Button.svelte";
 
   // context
   const reportContext = createReportContext();

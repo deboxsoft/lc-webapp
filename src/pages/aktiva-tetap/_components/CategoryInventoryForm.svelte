@@ -3,17 +3,17 @@
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
   import { goto } from "@roxi/routify";
-  import Modal from "../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import Form from "../../../components/forms/Form.svelte";
-  import InputField from "../../../components/forms/InputField.svelte";
-  import ComboxField from "../../../components/forms/ComboxField.svelte";
-  import AccountSelect from "../../../components/account/AccountSelect.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import {
     filteringAccountAccumulationDepreciation,
     filteringAccountExpenseDepreciation
-  } from "../../../utils";
+  } from "__@root/utils";
 
   const { notify, loading } = getApplicationContext();
   const { categoryInventoryStore } = stores.getInventoryContext();

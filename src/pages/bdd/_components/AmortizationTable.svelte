@@ -1,8 +1,8 @@
 <script>
-  import Table from "../../../components/tables/DataTable.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
   import AmortizationRow from "./AmortizationRow.svelte";
   import dayjs from "dayjs";
-  import CellNumber from "../../../components/CellNumber.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   /** @type {import("@deboxsoft/accounting-api").Bdd} **/
   export let bdd;

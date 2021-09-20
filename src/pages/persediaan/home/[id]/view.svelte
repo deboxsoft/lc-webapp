@@ -1,7 +1,7 @@
 <!--routify:options title="Detail Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import StockView from "../_components/StockView.svelte";
 

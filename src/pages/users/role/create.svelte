@@ -1,7 +1,7 @@
 <!--routify:options title="Data Baru"-->
 <script>
   import { goto } from "@roxi/routify";
-  import Modal from "../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import RoleForm from "./_form.svelte";
   import { getAclContext } from "../_acl-context";
   import { onMount } from "svelte";

@@ -1,9 +1,9 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import { getApplicationContext } from "../../../modules/app";
+  import { getApplicationContext } from "__@modules/app";
   import { createAclContext } from "./_acl-context";
   import { writable } from "svelte/store";
-  import { getAuthenticationContext } from "../../../modules/users";
+  import { getAuthenticationContext } from "__@modules/users";
 
   const applicationContext = getApplicationContext();
   const { countWarningContract } = stores.createBddContext(applicationContext);

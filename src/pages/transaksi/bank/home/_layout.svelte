@@ -5,11 +5,11 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import BankTable from "./_components/BankTable.svelte";
-  import Dropdown from "../../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../../components/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
   import { createReportContext } from "./_export";
-  import { getApplicationContext } from "../../../../modules/app";
+  import { getApplicationContext } from "__@modules/app";
 
   const { loading } = getApplicationContext();
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();

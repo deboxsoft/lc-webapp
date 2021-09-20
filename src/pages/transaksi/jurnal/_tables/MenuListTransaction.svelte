@@ -1,11 +1,11 @@
 <script>
   import { url } from "@roxi/routify";
-  import Dropdown from "../../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../../components/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
-  import { accountUtils } from "../../../../utils";
+  import { accountUtils } from "__@root/utils";
 
   const appContext = getApplicationContext();
   const { loading, notify } = appContext;

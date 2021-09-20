@@ -3,9 +3,9 @@
   import CategoryInventoryTable from "../_components/CategoryInventoryTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { getApplicationContext } from "../../../modules/app";
+  import { getApplicationContext } from "__@modules/app";
   import { url } from "@roxi/routify";
-  import PageLayout from "../../../layout/PageLayout.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getAclContext } from "../_acl-context";
 
   const { createGranted } = getAclContext();

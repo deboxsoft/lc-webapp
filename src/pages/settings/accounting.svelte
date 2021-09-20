@@ -2,15 +2,15 @@
 <script>
   import { transformPreferenceAccountingForm, transformPreferenceAccountingInput, PreferenceAccountingFormSchema } from "@deboxsoft/accounting-api";
   import { goto, url } from "@roxi/routify";
-  import Form from "../../components/forms/Form.svelte";
-  import InputField from "../../components/forms/InputField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import { createAclContext } from "./_acl-context";
-  import PageLayout from "../../layout/PageLayout.svelte";
-  import { getBreadcrumbStore } from "../../stores/breadcrumb";
-  import InputNumberField from "../../components/forms/InputNumberField.svelte";
-  import Alert from "../../components/Alert.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
+  import InputNumberField from "__@comps/forms/InputNumberField.svelte";
+  import Alert from "__@comps/Alert.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "akuntansi" });

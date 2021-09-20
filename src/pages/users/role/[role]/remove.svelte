@@ -1,7 +1,7 @@
 <!--routify:options title="Hapus Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { getAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";

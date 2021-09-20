@@ -1,7 +1,7 @@
 <script>
   import dayjs from "dayjs";
-  import CellNumber from "../../../components/CellNumber.svelte";
-  import Table from "../../../components/tables/DataTable.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
 
   export let generalLedgerStore;
 </script>

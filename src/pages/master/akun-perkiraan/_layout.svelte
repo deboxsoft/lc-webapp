@@ -5,8 +5,8 @@
   import { getApplicationContext } from "__@modules/app";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import TableAccount from "./_components/TableAccount.svelte";
   import FormFilter from "./_components/FormFilter.svelte";
   import { sortUtilsFunc } from "__@root/utils";

@@ -1,13 +1,13 @@
 <!--routify:options title="Akses Pengguna"-->
 <script>
-  import Table from "../../../components/Table.svelte";
+  import Table from "__@comps/Table.svelte";
   import { getAccessControlContext } from "__@modules/users";
   import { url, goto } from "@roxi/routify";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
-  import { getBreadcrumbStore } from "../../../stores/breadcrumb";
-  import PageLayout from "../../../layout/PageLayout.svelte";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const { load, grants } = getAccessControlContext();

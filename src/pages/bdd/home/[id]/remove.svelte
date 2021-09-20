@@ -1,9 +1,9 @@
 <!--routify:options title="Hapus Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import { getApplicationContext } from "../../../../modules/app";
+  import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
 
   let openDialog, bdd, desc;

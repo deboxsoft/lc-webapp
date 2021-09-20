@@ -1,5 +1,5 @@
 <script>
-  import CellAccount from "../../../components/account/CellAccount.svelte";
+  import CellAccount from "__@comps/account/CellAccount.svelte";
 
   export let categoryAmortization;
 </script>

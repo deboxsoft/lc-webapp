@@ -1,10 +1,10 @@
 <script>
-  import Table from "../../../components/tables/DataTable.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
   import DepreciationRow from "./DepreciationRow.svelte";
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { getGroupDepreciation, calculateDepreciation } from "@deboxsoft/accounting-api";
-  import CellNumber from "../../../components/CellNumber.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let back = "../";

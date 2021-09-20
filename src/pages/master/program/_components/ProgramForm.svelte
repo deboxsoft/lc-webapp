@@ -6,9 +6,9 @@
   import { writable } from "svelte/store";
 
   // components
-  import Modal from "../../../../components/Modal.svelte";
-  import InputField from "../../../../components/forms/InputField.svelte";
-  import Form from "../../../../components/forms/Form.svelte";
+  import Modal from "__@comps/Modal.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
 
   // context
   const { notify, loading } = getApplicationContext();

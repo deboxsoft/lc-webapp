@@ -8,7 +8,7 @@
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
   import { createReportContext } from "./_export";
-  import Table from "../../components/tables/DataTable.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const applicationContext = getApplicationContext();

@@ -1,9 +1,9 @@
 <!--routify:options title="Edit Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
-  import { getUserContext } from "../../../../modules/users";
+  import { getUserContext } from "__@modules/users";
   import GroupForm from "../_form.svelte";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../../_acl-context";
 

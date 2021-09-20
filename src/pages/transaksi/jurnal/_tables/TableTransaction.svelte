@@ -2,11 +2,11 @@
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import CellNumber from "../../../../components/CellNumber.svelte";
-  import CellAccount from "../../../../components/account/CellAccount.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
+  import CellAccount from "__@comps/account/CellAccount.svelte";
   import MenuListTransaction from "./MenuListTransaction.svelte";
-  import Table from "../../../../components/Table.svelte";
-  import Button from "../../../../components/Button.svelte";
+  import Table from "__@comps/Table.svelte";
+  import Button from "__@comps/Button.svelte";
 
   const { loading } = getApplicationContext();
   const { transactionPageInfo, findPage } = stores.getTransactionContext();

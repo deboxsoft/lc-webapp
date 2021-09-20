@@ -7,8 +7,8 @@
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
   import CashierTable from "./_components/CashierTable.svelte";
-  import Button from "../../../components/Button.svelte";
-  import Loader from "../../../components/loader/Loader.svelte";
+  import Button from "__@comps/Button.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const applicationContext = getApplicationContext();

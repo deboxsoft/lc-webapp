@@ -1,6 +1,6 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import Table from "../../../../../components/tables/DataTable.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
   import BankRow from "./BankRow.svelte";
 
   const { getAccount } = stores.getAccountContext();

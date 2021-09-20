@@ -2,7 +2,7 @@
 <script>
   import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";

@@ -1,13 +1,13 @@
 <!--routify:options title="Manajemen Pengguna"-->
 <script>
   import { goto, url } from "@roxi/routify";
-  import Table from "../../../components/Table.svelte";
-  import { getUserContext } from "../../../modules/users";
+  import Table from "__@comps/Table.svelte";
+  import { getUserContext } from "__@modules/users";
   import MenuUserList from "./_MenuUserList.svelte";
   import { getApplicationContext } from "__@modules/app";
   import GroupName from "../group/_groupName.svelte";
   import { createAclContext } from "../_acl-context";
-  import PageLayout from "../../../layout/PageLayout.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const { loading } = getApplicationContext();

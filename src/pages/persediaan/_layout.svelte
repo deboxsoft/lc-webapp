@@ -5,12 +5,8 @@
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import { createAclContext } from "../bdd/_acl-context";
-  import { getBreadcrumbStore } from "../../stores/breadcrumb";
-  import PageLayout from "../../layout/PageLayout.svelte";
-  import Button from "../../components/Button.svelte";
-  import Dropdown from "../../components/Dropdown.svelte";
-  import DropdownToggle from "../../components/DropdownToggle.svelte";
-  import { createReportContext } from "./_export";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
+  import Loader from "__@comps/loader/Loader.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const applicationContext = getApplicationContext();

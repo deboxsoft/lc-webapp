@@ -1,8 +1,8 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "../../../components/loader/Loader.svelte";
-  import CellNumber from "../../../components/CellNumber.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
   import RowBalance from "./BalanceRow.svelte";
   import RowTotalBalance from "./BalanceTotalRow.svelte";
   import { createFoldStore } from "__@root/stores/fold";

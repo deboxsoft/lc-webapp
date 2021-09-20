@@ -1,16 +1,16 @@
 <!--routify:options title="info"-->
 <script>
   import { UpdateGroupSchema } from "@deboxsoft/users-api";
-  import Form from "../../components/forms/Form.svelte";
-  import InputField from "../../components/forms/InputField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
   import AvatarUpload from "./_AvatarUpload.svelte";
-  import { getApplicationContext } from "../../modules/app";
-  import { getAuthenticationContext } from "../../modules/users";
+  import { getApplicationContext } from "__@modules/app";
+  import { getAuthenticationContext } from "__@modules/users";
   import { createUserService } from "@deboxsoft/users-client";
-  import PageLayout from "../../layout/PageLayout.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
   import { url } from "@roxi/routify";
-  import { getBreadcrumbStore } from "../../stores/breadcrumb";
-  import Alert from "../../components/Alert.svelte";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
+  import Alert from "__@comps/Alert.svelte";
   import { z } from "@deboxsoft/zod";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();

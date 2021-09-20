@@ -7,12 +7,10 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
 
-  import InputDate from "../../../../components/forms/InputDateField.svelte";
-  import InputField from "../../../../components/forms/InputField.svelte";
-  import ComboxField from "../../../../components/forms/ComboxField.svelte";
-  import Form from "../../../../components/forms/Form.svelte";
-  import { getAuthenticationContext } from "../../../../modules/users";
-  import FormJournalAccountItem from "../../jurnal/_forms/FormJournalAccountItem.svelte";
+  import InputDate from "__@comps/forms/InputDateField.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
   import { generateId } from "@deboxsoft/module-client";
   import Modal from "../../../../components/Modal.svelte";
 

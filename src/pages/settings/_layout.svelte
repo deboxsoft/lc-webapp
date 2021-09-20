@@ -5,7 +5,7 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getAuthenticationContext, createUserContext, createAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "../../components/loader/Loader.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
 
   /**
    *

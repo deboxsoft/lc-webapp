@@ -3,13 +3,13 @@
   import InventoryTable from "../_components/InventoryTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import Button from "../../../components/Button.svelte";
-  import { getApplicationContext } from "../../../modules/app";
+  import Button from "__@comps/Button.svelte";
+  import { getApplicationContext } from "__@modules/app";
   import { url } from "@roxi/routify";
-  import PageLayout from "../../../layout/PageLayout.svelte";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getAclContext } from "../_acl-context";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createReportContext } from "../_export";
 
   const reportContext = createReportContext();

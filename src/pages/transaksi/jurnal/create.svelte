@@ -2,11 +2,11 @@
 <script>
   import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import { getAuthenticationContext } from "../../../modules/users";
-  import { getApplicationContext } from "../../../modules/app";
+  import { getAuthenticationContext } from "__@modules/users";
+  import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "./_acl-context";
   import FormJournal from "./_forms/FormJournal.svelte";
-  import { accountUtils } from "../../../utils";
+  import { accountUtils } from "__@root/utils";
 
   // context
   const applicationContext = getApplicationContext();

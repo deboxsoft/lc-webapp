@@ -1,10 +1,10 @@
 <script>
-  import { getFormContext} from "../../../../stores/form";
+  import { getFormContext} from "__@stores/form";
   import { writable } from "svelte/store";
-  import ListPlusIcon from "../../../../components/icons/ListPlus.svelte";
-  import CheckIcon from "../../../../components/icons/Check.svelte";
-  import CloseIcon from "../../../../components/icons/Close.svelte";
-  import { convertToNumber } from "../../../../utils";
+  import ListPlusIcon from "__@comps/icons/ListPlus.svelte";
+  import CheckIcon from "__@comps/icons/Check.svelte";
+  import CloseIcon from "__@comps/icons/Close.svelte";
+  import { convertToNumber } from "__@root/utils";
   import FormJournalAccountItem from "./FormJournalAccountItem.svelte";
 
   // context formJournal

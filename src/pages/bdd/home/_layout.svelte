@@ -2,14 +2,14 @@
 <script>
   import { url, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import { getBreadcrumbStore } from "../../../stores/breadcrumb";
-  import PageLayout from "../../../layout/PageLayout.svelte";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
+  import PageLayout from "__@root/layout/PageLayout.svelte";
   import { createAclContext } from "../_acl-context";
-  import { getApplicationContext } from "../../../modules/app";
+  import { getApplicationContext } from "__@modules/app";
   import BddTable from "./../_components/BddTable.svelte";
-  import Button from "../../../components/Button.svelte";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
+  import Button from "__@comps/Button.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createReportContext } from "../_export";
 
   const { readGranted, createGranted } = createAclContext();

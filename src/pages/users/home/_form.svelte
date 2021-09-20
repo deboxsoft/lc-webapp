@@ -1,8 +1,8 @@
 <script>
   import { RegisterUserInputSchema, UpdateUserInputSchema } from "@deboxsoft/users-api";
-  import Form from "../../../components/forms/Form.svelte";
-  import InputField from "../../../components/forms/InputField.svelte";
-  import ComboxField from "../../../components/forms/ComboxField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import ComboxField from "__@comps/forms/ComboxField.svelte";
   import { getUserContext } from "__@modules/users";
 
   const { groupStore } = getUserContext();

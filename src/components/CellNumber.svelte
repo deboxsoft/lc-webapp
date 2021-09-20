@@ -1,5 +1,5 @@
 <script>
-  import { convertToNumber } from "../utils";
+  import { convertToNumber } from "__@root/utils";
 
   export let value;
   export let spaceMinus= false;

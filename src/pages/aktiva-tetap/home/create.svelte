@@ -4,7 +4,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import InventoryForm from "../_components/InventoryForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAuthenticationContext } from "../../../modules/users";
+  import { getAuthenticationContext } from "__@modules/users";
 
   const { authenticationStore } = getAuthenticationContext();
   const { notify } = getApplicationContext();

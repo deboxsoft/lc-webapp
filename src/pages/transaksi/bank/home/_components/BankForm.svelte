@@ -6,12 +6,12 @@
   import { writable } from "svelte/store";
 
   // components
-  import Modal from "../../../../../components/Modal.svelte";
-  import InputField from "../../../../../components/forms/InputField.svelte";
-  import Form from "../../../../../components/forms/Form.svelte";
-  import AccountSelect from "../../../../../components/account/AccountSelect.svelte";
-  import ComboxField from "../../../../../components/forms/ComboxField.svelte";
-  import { filteringAccountCash } from "../../../../../utils";
+  import Modal from "__@comps/Modal.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import { filteringAccountCash } from "__@root/utils";
 
   const { notify, loading } = getApplicationContext();
 

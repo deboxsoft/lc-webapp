@@ -9,13 +9,13 @@
   import { sortUtilsFunc } from "__@root/utils";
 
   // components
-  import Modal from "../../../../components/Modal.svelte";
-  import InputField from "../../../../components/forms/InputField.svelte";
-  import Form from "../../../../components/forms/Form.svelte";
-  import InputNumberField from "../../../../components/forms/InputNumberField.svelte";
-  import InputCheck from "../../../../components/forms/InputCheckSwitchery.svelte";
-  import AccountSelect from "../../../../components/account/AccountSelect.svelte";
-  import ComboBox from "../../../../components/forms/ComboxField.svelte";
+  import Modal from "__@comps/Modal.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputNumberField from "__@comps/forms/InputNumberField.svelte";
+  import InputCheck from "__@comps/forms/InputCheckSwitchery.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import ComboBox from "__@comps/forms/ComboxField.svelte";
 
   // context
   const { notify } = getApplicationContext();

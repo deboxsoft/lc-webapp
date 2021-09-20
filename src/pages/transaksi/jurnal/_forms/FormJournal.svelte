@@ -3,13 +3,13 @@
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { generateId } from "@deboxsoft/module-client";
   import { stores } from "@deboxsoft/accounting-client";
-  import AccountSelect from "../../../../components/account/AccountSelect.svelte";
-  import Form from "../../../../components/forms/Form.svelte";
-  import InputDate from "../../../../components/forms/InputDateField.svelte";
-  import InputField from "../../../../components/forms/InputField.svelte";
-  import InputRp from "../../../../components/forms/InputNumberField.svelte";
-  import SaveIcon from "../../../../components/icons/Save.svelte";
-  import Modal from "../../../../components/Modal.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import InputDate from "__@comps/forms/InputDateField.svelte";
+  import InputField from "__@comps/forms/InputField.svelte";
+  import InputRp from "__@comps/forms/InputNumberField.svelte";
+  import SaveIcon from "__@comps/icons/Save.svelte";
+  import Modal from "__@comps/Modal.svelte";
 
   import { createEventDispatcher } from "svelte";
   import FormJournalAccount from "./FormJournalAccount.svelte";

@@ -4,8 +4,9 @@
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import CashierForm from "./_components/CashierForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAuthenticationContext } from "../../../modules/users";
+  import { getAuthenticationContext } from "__@modules/users";
   import { stores } from "@deboxsoft/accounting-client";
+  import Modal from "__@comps/Modal.svelte";
 
   const { notify } = getApplicationContext();
   const { getUserId } = getAuthenticationContext();

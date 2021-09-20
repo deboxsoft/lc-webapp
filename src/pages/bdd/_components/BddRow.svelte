@@ -1,8 +1,8 @@
 <script>
   import { url } from "@roxi/routify";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import CellNumber from "../../../components/CellNumber.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
   import dayjs from "dayjs";
 
   export let bdd;

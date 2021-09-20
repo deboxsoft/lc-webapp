@@ -5,9 +5,9 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import Dropdown from "../../../components/Dropdown.svelte";
-  import DropdownToggle from "../../../components/DropdownToggle.svelte";
-  import Loader from "../../../components/loader/Loader.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
   import LedgerTable from "../_libs/LedgerTable.svelte";
   import { createReportContext } from "../_libs/ledger_export";
 

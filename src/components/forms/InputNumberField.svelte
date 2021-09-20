@@ -1,7 +1,7 @@
 <script>
   import { clsx } from "@deboxsoft/module-client";
   import AutoNumeric from "autonumeric";
-  import { getFormContext } from "../../stores/form";
+  import { getFormContext } from "__@stores/form";
   import { createEventDispatcher, onMount, onDestroy } from "svelte";
 
   const { fields, fieldsErrors, validateField, submitted } = getFormContext();

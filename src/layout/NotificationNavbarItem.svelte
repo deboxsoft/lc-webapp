@@ -1,6 +1,6 @@
 <script>
-  import DropdownToggle from "../components/DropdownToggle.svelte";
-  import Dropdown from "../components/Dropdown.svelte";
+  import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import Dropdown from "__@comps/Dropdown.svelte";
   import { writable } from "svelte/store";
   import ContractNotification from "../pages/bdd/_menus/ContractNotification.svelte";
 

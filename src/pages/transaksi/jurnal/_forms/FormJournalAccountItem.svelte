@@ -1,12 +1,12 @@
 <script>
   import { debounce } from "@deboxsoft/module-core";
-  import { createFormContext } from "../../../../stores/form";
+  import { createFormContext } from "__@stores/form";
   import { stores } from "@deboxsoft/accounting-client";
-  import TrashIcon from "../../../../components/icons/Trash.svelte";
-  import InputRp from "../../../../components/forms/InputNumberField.svelte";
+  import TrashIcon from "__@comps/icons/Trash.svelte";
+  import InputRp from "__@comps/forms/InputNumberField.svelte";
   import { generateId } from "@deboxsoft/module-client";
-  import { filteringAccountCredit } from "../../../../utils";
-  import AccountSelect from "../../../../components/account/AccountSelect.svelte";
+  import { filteringAccountCredit } from "__@root/utils";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   export let id = generateId({ prefix: "journal-account-item" });
   export let values;

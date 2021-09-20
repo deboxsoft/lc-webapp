@@ -1,8 +1,8 @@
 <script>
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
-  import CellNumber from "../../../components/CellNumber.svelte";
-  import CellAccount from "../../../components/account/CellAccount.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
+  import CellAccount from "__@comps/account/CellAccount.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let inventory;

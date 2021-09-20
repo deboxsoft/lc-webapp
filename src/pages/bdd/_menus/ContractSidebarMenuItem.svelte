@@ -1,6 +1,6 @@
 <script>
   import { isActive, url } from "@roxi/routify";
-  import Icon from "../../../layout/Icon.svelte";
+  import Icon from "__@root/layout/Icon.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import { createAclContext } from "./_acl-context";

@@ -1,6 +1,6 @@
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import { getProgramContext } from "@deboxsoft/lc-cashier-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";

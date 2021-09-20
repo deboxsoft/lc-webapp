@@ -1,9 +1,9 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
-  import CellNumber from "../../../components/CellNumber.svelte";
-  import Form from "../../../components/forms/Form.svelte";
-  import AccountSelect from "../../../components/account/AccountSelect.svelte";
-  import { filteringAccountCredit, filteringAccountDebit } from "../../../utils";
+  import CellNumber from "__@comps/CellNumber.svelte";
+  import Form from "__@comps/forms/Form.svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import { filteringAccountCredit, filteringAccountDebit } from "__@root/utils";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   const { getAccountLeaf } = stores.getAccountContext();

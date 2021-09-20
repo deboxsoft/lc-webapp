@@ -5,7 +5,7 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "../../components/loader/Loader.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
 
   const { readGranted } = createAclContext();
   const applicationContext = getApplicationContext();

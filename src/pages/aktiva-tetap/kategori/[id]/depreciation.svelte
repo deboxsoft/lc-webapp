@@ -4,7 +4,7 @@
   import { goto, params } from "@roxi/routify";
   import DepreciationTable from "../../_components/DepreciationTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import CategoryDepreciationTable from "../../_components/CategoryDepreciationTable.svelte";
 
   const { getCategoryInventory, categoryInventoryStore } = stores.getInventoryContext();

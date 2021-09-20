@@ -1,5 +1,5 @@
 <script>
-  import CellNumber from "../../../../components/CellNumber.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   export let stock;
 </script>

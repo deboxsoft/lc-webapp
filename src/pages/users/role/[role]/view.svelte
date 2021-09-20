@@ -1,7 +1,7 @@
 <!--routify:options title="Info Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
-  import Modal from "../../../../components/Modal.svelte";
+  import Modal from "__@comps/Modal.svelte";
   import RoleForm from "../_form.svelte";
   import { onMount } from "svelte";
 
