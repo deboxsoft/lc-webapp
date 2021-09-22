@@ -32,10 +32,6 @@
       : undefined
     : undefined;
   export let range = !(selected instanceof Date);
-  /**
-   * @type {"month-select" | "menu" | undefined}
-   */
-  export let mode = undefined;
   export let input = undefined;
 
   let invalid = !disabled;

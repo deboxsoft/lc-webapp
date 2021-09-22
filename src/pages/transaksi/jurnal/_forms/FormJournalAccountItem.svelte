@@ -16,7 +16,6 @@
   export const minusCurrencyEnable = true;
   export let onRemoveJournalAccount = () => {};
   export let onUpdateJournalAccount = () => {};
-  export const isValid = false;
 
   const { getAccountLeaf, getAccount } = stores.getAccountContext();
   const accountStore = getAccountCredit();
@@ -29,7 +28,7 @@
   }
 
   function createAccountSelectedHandler() {
-    return ({ detail }) => {
+    return () => {
       updateHandler();
     };
   }

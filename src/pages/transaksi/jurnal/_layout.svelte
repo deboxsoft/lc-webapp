@@ -1,6 +1,6 @@
 <!--routify:options title="Transaksi Jurnal"-->
 <script>
-  import { tick } from "svelte";
+  import { tick, onMount } from "svelte";
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
@@ -25,7 +25,10 @@
   stores.createBalanceContext(applicationContext);
   const accountContext = stores.getAccountContext();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { load, findPage, transactionStore } = stores.getTransactionContext();
+  const { load, findPage, transactionStore, subscribe } = stores.getTransactionContext();
+  onMount(() => {
+    return subscribe();
+  })
   const { loading } = applicationContext;
 
   let filter = {};

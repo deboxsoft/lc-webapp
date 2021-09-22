@@ -1,5 +1,6 @@
 <!--routify:options title="Transaksi"-->
 <script>
+  import { onMount } from "svelte";
   import { url, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getAuthenticationContext } from "__@modules/users";
