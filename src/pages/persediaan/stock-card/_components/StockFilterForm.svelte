@@ -20,7 +20,6 @@
   }
   let fields = writable(filter);
 
-  $: console.log($fields);
   getYears()
   function getYears() {
     const yearNow = dayjs().year();
@@ -32,7 +31,6 @@
         label: year
       })
     }
-    console.log(items);
     return items;
   }
 
@@ -62,7 +60,6 @@
   ];
 
   function transformInput({ period, date, month, year }) {
-    console.log(date);
     let startDate, endDate;
     if (period === "daily") {
       startDate = dayjs(date).startOf("date").toDate();

@@ -33,7 +33,6 @@
   }
     // extract category
   function extractDataByCategory(dataList) {
-    console.log($categoryStore);
     return dataList.reduce((result, _) => {
       const _cat = result[_.categoryId];
       if (!_cat) {
