@@ -66,6 +66,9 @@ export const createBaseApplicationContext = () => {
   const loading = createLoadingStore();
   const config = writable({});
   const apisContext = createApisContext({
+    subscriptionClientOptions: {
+      reconnect: true
+    },
     graphqlUrl: process.env.DBX_ENV_GRAPHQL_URL,
     graphqlWsUrl: process.env.DBX_ENV_GRAPHQL_WS
   });
