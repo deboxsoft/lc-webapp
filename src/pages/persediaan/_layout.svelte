@@ -1,5 +1,6 @@
 <!--routify:options title="Persediaan"-->
 <script>
+  import { onMount } from "svelte";
   import { goto, url } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
