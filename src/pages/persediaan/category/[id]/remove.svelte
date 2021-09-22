@@ -1,4 +1,4 @@
-<!--routify:options title="Hapus Data Barang"-->
+<!--routify:options title="Hapus Kategori Barang"-->
 
 <script>
   import { goto, params } from "@roxi/routify";
@@ -8,20 +8,20 @@
   import { getAclContext } from "../../_acl-context";
 
   const { removeGranted } = getAclContext();
-  const { remove, getProduct, productStore } = stores.getProductContext();
+  const { remove, getCategoryProduct, categoryProductStore } = stores.getCategoryProductContext();
   const { loading, notify } = getApplicationContext();
-  let openDialog, product, name, isStartup = true;
+  let openDialog, categoryProduct, name, booting = true;
 
   if (!removeGranted) {
     $goto("/access-denied");
   }
 
   $: {
-    if (isStartup && $productStore && openDialog) {
-      isStartup = false;
-      product = getProduct($params.id);
-      if (product) {
-        name = product.name;
+    if (booting && $categoryProductStore && openDialog) {
+      booting = false;
+      categoryProduct = getCategoryProduct($params.id);
+      name = categoryProduct.name;
+      if (categoryProduct) {
         openDialog();
       }
     }
@@ -30,10 +30,11 @@
   async function removeHandler() {
     $loading = true;
     try {
+      // cek apakah kategori msh memiliki data inventory
       await remove($params.id);
       $loading = false;
       $goto("../");
-      notify(`berhasil menghapus data barang '${name}'`, "success");
+      notify(`berhasil menghapus data katagori '${name}'`, "success");
     } catch (e) {
       console.error(e);
       if (e.message) {
@@ -48,7 +49,7 @@
   }
 </script>
 
-<Modal title="Hapus Data Supplier" bind:openDialog onClose={closeHandler}>
+<Modal title="Hapus Kategori Barang" bind:openDialog onClose={closeHandler}>
   <div class="alert alert-warning alert-styled-left">
     Apa anda yakin akan menghapus kategori "{name}"?
   </div>

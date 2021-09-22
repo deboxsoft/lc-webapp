@@ -1,4 +1,4 @@
-<!--routify:options title="Hapus Data Barang"-->
+<!--routify:options title="Hapus Supplier"-->
 
 <script>
   import { goto, params } from "@roxi/routify";
@@ -8,20 +8,20 @@
   import { getAclContext } from "../../_acl-context";
 
   const { removeGranted } = getAclContext();
-  const { remove, getProduct, productStore } = stores.getProductContext();
+  const { remove, getSupplier, supplierStore } = stores.getSupplierContext();
   const { loading, notify } = getApplicationContext();
-  let openDialog, product, name, isStartup = true;
+  let openDialog, supplier, name, booting = true;
 
   if (!removeGranted) {
     $goto("/access-denied");
   }
 
   $: {
-    if (isStartup && $productStore && openDialog) {
-      isStartup = false;
-      product = getProduct($params.id);
-      if (product) {
-        name = product.name;
+    if (booting && $supplierStore && openDialog) {
+      booting = false;
+      supplier = getSupplier($params.id);
+      if (supplier) {
+        name = supplier.name;
         openDialog();
       }
     }
@@ -33,7 +33,7 @@
       await remove($params.id);
       $loading = false;
       $goto("../");
-      notify(`berhasil menghapus data barang '${name}'`, "success");
+      notify(`berhasil menghapus data supplier '${name}'`, "success");
     } catch (e) {
       console.error(e);
       if (e.message) {

@@ -3,9 +3,9 @@
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
-  import StockView from "../_components/StockView.svelte";
+  import StockView from "../_components/ProductView.svelte";
 
-  const { getStock, stockStore } = stores.getStockTransferContext();
+  const { getStock, stockStore } = stores.getStockContext();
   let closeUrl = $params.closeUrl || "../";
   let openDialog, stock;
   $: {

@@ -4,12 +4,14 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   export let stock;
-  let dropdownContext;
+  let dropdownContext, supplier, category;
 </script>
 
 <tr>
   <td>{stock.name || ""}</td>
-  <td>{stock.quantity}</td>
+  <td>{supplier || ""}</td>
+  <td>{category || ""}</td>
+  <td style="text-align: center">{stock.quantity}</td>
   <td>
     <CellNumber value={stock.price} />
   </td>
@@ -26,13 +28,10 @@
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
         <a href={$url("./:id/view", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-eye" />Lihat Persediaan</a
+          ><i class="icon-clipboard3" />Kartu Stok</a
         >
-        <a href={$url("./:id/in", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-enter" />Barang Masuk</a
-        >
-        <a href={$url("./:id/out", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}
-        ><i class="icon-exit" />Barang Keluar</a
+        <a href={$url("./:id/update", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}
+        ><i class="icon-pencil" />Edit Barang</a
         >
         <a href={$url("./:id/remove", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-trash" />Hapus Persediaan</a
