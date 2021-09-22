@@ -6,7 +6,7 @@
   import FormImport from "__@comps/forms/FormImport.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import TablePreview from "./_components/TableStatementBank.svelte";
+  import TablePreview from "./_components/BankStatementTable.svelte";
   import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
   import BankInfo from "./_components/BankInfo.svelte";
 
