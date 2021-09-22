@@ -9,6 +9,7 @@ export const registerAccountingContext = (applicationContext: ApplicationContext
     preferenceAccountingContext,
     ...applicationContext
   });
+  accountContext.subscribe();
   stores.createTransactionContext({ accountContext, ...applicationContext });
   return {
     load: () => {
