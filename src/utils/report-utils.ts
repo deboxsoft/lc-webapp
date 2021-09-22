@@ -4,16 +4,17 @@ type Options = {
   isCsv?: boolean;
   params?: Record<string, any>;
   type?: "number" | "rp";
+  defaultValue?: string;
 };
-export const numericCell = (amount, { isCsv, params = {}, type = "number" }: Options) => {
+export const numericCell = (amount, { isCsv, params = {}, type = "number", defaultValue = "0" }: Options) => {
   return isCsv
     ? amount
       ? type === "rp"
         ? parseFloat(amount).toFixed(2)
         : parseInt(amount)
-      : undefined
+      : defaultValue
     : {
-        text: amount ? (type === "rp" ? convertToNumber({ value: parseFloat(amount) }) : amount) : "",
+        text: amount ? (type === "rp" ? convertToNumber({ value: parseFloat(amount) }) : amount) : defaultValue,
         style: "cell-number",
         ...params
       };

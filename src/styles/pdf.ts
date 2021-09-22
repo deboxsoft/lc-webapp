@@ -10,10 +10,15 @@ const fonts = {
 };
 
 export const pdfStyles = {
-  title: {},
+  title: {
+    alignment: "center",
+    bold: true,
+    fontSize: 12
+  },
   header: {
     fontSize: 9,
-    bold: true
+    bold: true,
+    alignment: "center"
   },
   cell: {
     fontSize: 8
