@@ -7,16 +7,15 @@
   import { convertToNumber } from "__@root/utils";
   import FormJournalAccountItem from "./FormJournalAccountItem.svelte";
 
+  export let createCreditAccount;
   // context formJournal
   const { fields, fieldsErrors, isValid, validateField } = getFormContext();
   const creditAccountsValidate = validateField("creditAccounts");
-
-  export let createCreditAccount;
+  const creditAccounts = writable(($fields.creditAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
   export const total = 0;
 
   let debit;
   let diff = NaN;
-  let creditAccounts = writable(($fields.creditAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
   let credit;
 
   $: {
@@ -33,7 +32,6 @@
 
   function validate() {
     creditAccountsValidate($creditAccounts);
-    validateField("creditAccounts");
     calculate();
   }
 
@@ -53,12 +51,6 @@
       delete $fieldsErrors["total"];
     }
     isValid.set(Object.keys($fieldsErrors).length === 0);
-  }
-
-  function accountsValidate() {
-    if ($fieldsErrors?.creditAccounts && Object.keys($fieldsErrors.creditAccounts).length === 0) {
-      delete $fieldsErrors.creditAccounts;
-    }
   }
 
   function addJournalAccountHandler() {
@@ -86,8 +78,8 @@
       <thead>
         <tr>
           <th>Akun Kredit</th>
-          <th class="text-center" style="width: 275px">Jumlah</th>
-          <th class="text-center" style="width: 40px" />
+          <th class="text-center" width="275">Nominal</th>
+          <th class="text-center" width="40"/>
         </tr>
       </thead>
       <tbody>

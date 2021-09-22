@@ -14,15 +14,16 @@
   import { createEventDispatcher } from "svelte";
   import FormJournalAccount from "./FormJournalAccount.svelte";
   import { getAuthenticationContext } from "__@modules/users";
-  import { filteringAccountDebit } from "../../../../utils";
+  import { filteringAccountDebit } from "__@root/utils";
+  import { getApplicationContext } from "__@modules/app";
 
   const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
   const { getAccountLeaf } = stores.getAccountContext();
   const { authenticationStore } = getAuthenticationContext();
+  const { loading } = getApplicationContext();
   const dispatch = createEventDispatcher();
   // props
   export let values;
-  export let loading = false;
   export let title = "";
 
   let isValid, fieldsErrors, fields, openDialog, focusRef, buttonSaveDisable;
@@ -43,7 +44,7 @@
 
   $: {
     tick().then(() => {
-      buttonSaveDisable = !$isValid || loading;
+      buttonSaveDisable = !$isValid || $loading;
     });
   }
 
@@ -59,7 +60,6 @@
   initialFocusElement={focusRef}
   loading={!values}
 >
-  <button on:click={() => {getAccountDebit()}} />
   <div class="d-flex flex-column flex-1">
     <Form
       checkValidateFirst
