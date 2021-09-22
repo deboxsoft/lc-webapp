@@ -10,7 +10,7 @@
   const { removeGranted } = getAclContext();
   const { remove, getCategoryProduct, categoryProductStore } = stores.getCategoryProductContext();
   const { loading, notify } = getApplicationContext();
-  let openDialog, categoryProduct, name, booting = true;
+  let openDialog, categoryProduct, name, isStartup = true;
 
   if (!removeGranted) {
     $goto("/access-denied");
@@ -18,7 +18,8 @@
 
   $: {
     if (booting && $categoryProductStore && openDialog) {
-      booting = false;
+      console.log(isStartup, "start");
+      isStartup = false;
       categoryProduct = getCategoryProduct($params.id);
       name = categoryProduct.name;
       if (categoryProduct) {
@@ -33,8 +34,8 @@
       // cek apakah kategori msh memiliki data inventory
       await remove($params.id);
       $loading = false;
-      $goto("../");
       notify(`berhasil menghapus data katagori '${name}'`, "success");
+      $goto("../");
     } catch (e) {
       console.error(e);
       if (e.message) {
