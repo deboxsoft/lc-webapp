@@ -38,9 +38,9 @@
       await createGroup(input);
       closeHandler();
       notify(`Berhasil membuat group user '${input.name}'.`, "success");
-    } catch (error) {
-      console.error(error);
-      notify(`${error.errors[0].message}`, "error");
+    } catch (e) {
+      console.error(e);
+      notify(e.message, "error");
     } finally {
       submitting = false;
       $loading = false;

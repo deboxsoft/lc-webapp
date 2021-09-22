@@ -20,27 +20,35 @@
   const schemaForm = z.object({
     name: z.string().min(1, "nama wajib diisi"),
     role: z.string().min(1, "role wajib diisi"),
+    cashierAccount: z.string(),
     mainPage: z.string().nullish(),
     sideMenuHidden: z.boolean().nullish(),
     isCashier: z.boolean().nullish(),
     includeAccounts: z.array(z.string()).nullish()
   });
-  export const schema = schemaForm.transform(({ isCashier, includeAccounts, mainPage, sideMenuHidden, ..._ }) => {
-    return {
-      ..._,
-      metadata: {
-        isCashier,
-        includeAccounts,
-        mainPage,
-        sideMenuHidden
-      }
-    };
-  });
+  export const schema = schemaForm.transform(
+    ({ isCashier, includeAccounts, mainPage, sideMenuHidden, cashierAccount, ..._ }) => {
+      return {
+        ..._,
+        metadata: {
+          cashierAccount,
+          isCashier,
+          includeAccounts,
+          mainPage,
+          sideMenuHidden
+        }
+      };
+    }
+  );
 
   const pageList = [
     {
       label: "Dashboard",
       href: "/"
+    },
+    {
+      label: "Kasir",
+      href: "/transaksi/kasir"
     },
     {
       label: "Akun Transaksi",
@@ -94,6 +102,12 @@
 
   let fieldsErrors;
   $: values = transformValues(groupUser);
+
+  $: {
+    tick().then(() => {
+      $fields.mainPage = $fields.isCashier ? "/transaksi/kasir" : "/";
+    })
+  }
 
   async function submitHandler(_onSubmit = onSubmit) {
     try {
