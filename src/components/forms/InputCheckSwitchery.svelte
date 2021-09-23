@@ -73,6 +73,7 @@
   <label class="form-check-label" for={id} on:click={createToggleHandler()}>
     <input
       type="checkbox"
+      autocomplete="off"
       class="form-check-input-switchery-primary"
       {checked}
       data-fouc

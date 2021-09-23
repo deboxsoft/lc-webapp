@@ -35,6 +35,7 @@
 <input
   {...$$restProps}
   {id}
+  autocomplete="off"
   class={className}
   bind:this={ref}
   bind:value={$fields[name]}

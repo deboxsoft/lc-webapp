@@ -65,6 +65,7 @@
       {...$$restProps}
       {id}
       type="password"
+      autocomplete="off"
       class={className}
       bind:this={ref}
       bind:value={$fields[name]}
