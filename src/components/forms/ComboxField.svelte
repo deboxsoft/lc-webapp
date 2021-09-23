@@ -18,7 +18,7 @@
   export let placeHolder = undefined;
   export let className = $$props.class || "";
 
-  let selectedIndex, isStartup;
+  let selectedIndex;
   const dispatch = createEventDispatcher();
 
   $: {

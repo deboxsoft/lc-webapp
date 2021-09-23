@@ -21,11 +21,11 @@
     fields,
     groupUser = {},
     schema,
-    isStartup = true;
+    ready = false;
 
   $: {
-    if (isStartup && openDialog) {
-      isStartup = false;
+    if (!ready && openDialog) {
+      ready = true;
       openDialog();
     }
   }

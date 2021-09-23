@@ -13,10 +13,10 @@
 
   export let onProgress = () => {};
 
-  let submitFilter, openDialog, isStartup = false;
+  let submitFilter, openDialog, ready = true;
 
   $: {
-    if (isStartup && !$categoryStore) {
+    if (!ready && !$categoryStore) {
 
     }
   }

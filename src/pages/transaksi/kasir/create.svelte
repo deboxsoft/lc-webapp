@@ -13,9 +13,27 @@
   const { create } = getCashierContext();
   const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let cashier;
-  (async () => {
-    const now = await getCurrentDate();
+  let cashier,
+    openDialog,
+    fields,
+    submitting = false,
+    ready = false,
+    isValid;
+
+  $: {
+    if (openDialog && !ready) {
+      ready = true;
+      openDialog();
+    }
+  }
+
+  initial();
+  async function initial() {
+    const date = await getCurrentDate();
+    const userId = getUserId();
+    const group = await getGroup(userId);
+
+    const cashierAccount = group.metadata?.cashierAccount;
     cashier = {
       creditAccounts: [{}],
       userId: getUserId()

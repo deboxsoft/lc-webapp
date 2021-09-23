@@ -17,14 +17,14 @@
   let openDialog,
     schema,
     groupUser,
-    isStartup = true,
+    ready = false,
     isValid,
     submitting = false,
     fields;
 
   $: {
-    if (isStartup && openDialog && $groupStore) {
-      isStartup = false;
+    if (!ready && openDialog && $groupStore) {
+      ready = true;
       const i = $groupStore.findIndex((_) => _.id === $params.id);
       groupUser = $groupStore[i];
       if (groupUser) {

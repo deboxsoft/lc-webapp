@@ -25,7 +25,7 @@
     bank: getBank($params.bankId),
     ...applicationContext
   });
-  let submitting = false, errors = [], isStartup = true, bankStatementList, itemsSelected, filter = {};
+  let submitting = false, errors = [], ready = false, bankStatementList, itemsSelected, filter = {};
   $: account = getAccount($bank.accountId)
 
   $: {

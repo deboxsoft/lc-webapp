@@ -20,12 +20,12 @@
     openDialog,
     fields,
     submitting = false,
-    isStartup = true,
+    ready = false,
     isValid;
 
   $: {
-    if (isStartup && openDialog && $productStore) {
-      isStartup = false;
+    if (!ready && openDialog && $productStore) {
+      ready = true;
       product = getProduct($params.id);
       if (product) {
         openDialog();

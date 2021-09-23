@@ -32,12 +32,12 @@
     alertMessage,
     alertOpen,
     alertType,
-    isStartup = true,
+    ready = false,
     isValid,
     fieldsErrors;
   $: {
-    if (isStartup && $authenticationStore.profile) {
-      isStartup = false;
+    if (!ready && $authenticationStore.profile) {
+      ready = true;
       getProfileUser($authenticationStore.profile.session.userId).then((_) => {
         profile = _;
       });

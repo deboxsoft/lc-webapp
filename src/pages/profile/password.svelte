@@ -28,13 +28,13 @@
     alertMessage,
     alertOpen,
     alertType,
-    isStartup = true,
+    ready = false,
     isValid,
     fieldsErrors;
 
   $: {
-    if (isStartup && $authenticationStore) {
-      isStartup = false;
+    if (!ready && $authenticationStore) {
+      ready = true;
       profile = $authenticationStore.profile;
     }
   }

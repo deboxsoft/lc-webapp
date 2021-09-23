@@ -27,10 +27,10 @@
     submitting = false,
     stock,
     defaultProduct = {},
-    isStartup = true;
+    ready = false;
 
   $: {
-    if (openDialog && isStartup && stock) {
+    if (openDialog && !ready && stock) {
       openDialog();
     }
   }

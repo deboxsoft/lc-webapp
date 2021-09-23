@@ -10,15 +10,15 @@
   const { removeGranted } = getAclContext();
   const { remove, getProduct, productStore } = stores.getProductContext();
   const { loading, notify } = getApplicationContext();
-  let openDialog, product, name, isStartup = true;
+  let openDialog, product, name, ready = false;
 
   if (!removeGranted) {
     $goto("/access-denied");
   }
 
   $: {
-    if (isStartup && $productStore && openDialog) {
-      isStartup = false;
+    if (!ready && $productStore && openDialog) {
+      ready = true;
       product = getProduct($params.id);
       if (product) {
         name = product.name;

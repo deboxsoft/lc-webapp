@@ -16,11 +16,11 @@
   let openDialog,
     groupUser,
     name,
-    isStartup = true;
+    ready = false;
 
   $: {
-    if (isStartup && openDialog && $groupStore) {
-      isStartup = false;
+    if (!ready && openDialog && $groupStore) {
+      ready = true;
       const i = $groupStore.findIndex((_) => _.id === $params.id);
       groupUser = $groupStore[i];
       if (groupUser) {

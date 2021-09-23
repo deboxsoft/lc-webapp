@@ -26,13 +26,13 @@
   export let fieldsErrors;
   export let isValid;
 
-  let buttonSaveDisable, stockProducts = writable(undefined), isStartup = true;
+  let buttonSaveDisable, stockProducts = writable(undefined), ready = false;
 
   $: {
-    if ($fields && isStartup) {
+    if ($fields && !ready) {
       stockProducts = writable(($fields.products || []).map((_) => ({ ..._, ...createStockProduct() })));
       tick().then(() => {
-        isStartup = false;
+        ready = true;
       })
     }
   }
@@ -102,7 +102,7 @@
       </div>
     </div>
   </div>
-  {#if !isStartup}
+  {#if !!ready}
     <StockProductForm bind:stockProducts {mutation} />
   {/if}
 </Form>

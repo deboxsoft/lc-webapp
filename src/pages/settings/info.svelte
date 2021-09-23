@@ -30,13 +30,13 @@
     alertMessage,
     alertOpen,
     alertType,
-    isStartup = true,
+    ready = false,
     isValid,
     fieldsErrors;
 
   $: {
-    if (isStartup && $companyStore) {
-      isStartup = false;
+    if (!ready && $companyStore) {
+      ready = true;
       company = $companyStore;
     }
   }
