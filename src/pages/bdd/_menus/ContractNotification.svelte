@@ -21,7 +21,7 @@
 </script>
 
 {#if readGranted}
-    <a href="/bdd/warning" {...$$restProps}>
+    <a href="/bdd/warning" {...$$restProps} on:mouseup>
       <i class="icon-clipboard6" style="font-size: 1.25rem" />
         Kontrak BDD
       {#if $count > 0}

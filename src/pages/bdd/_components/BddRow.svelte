@@ -3,7 +3,7 @@
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
-  import dayjs from "dayjs";
+  import CellDate from "__@comps/CellDate.svelte";
 
   export let bdd;
   let dropdownContext;
@@ -11,11 +11,16 @@
 </script>
 
 <tr>
-  <td>{dayjs(bdd.date).format("DD-MM-YY") || ""}</td>
-  <td>{dayjs(bdd.dateStart).format("DD-MM-YY") || ""}</td>
-  <td>{dayjs(bdd.dateEnd).format("DD-MM-YY") || ""}</td>
+  <td align="center">
+    <a href={$url("./:id/view", { id: bdd.id })}>
+      {bdd.id}
+    </a>
+  </td>
+  <td align="center"><CellDate date={bdd.dateStart} /></td>
+  <td align="center"><CellDate date={bdd.dateEnd} /></td>
   <td>{bdd.description || ""}</td>
-  <td style="text-align: center">{bdd.taxRate || ""}</td>
+  <td>{bdd.category || ""}</td>
+  <td align="center">{bdd.taxRate || ""}</td>
   <td>
     <CellNumber value={bdd.amount} />
   </td>
@@ -35,16 +40,16 @@
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
         <a href={$url("./:id/amortization", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-        ><i class="icon-clipboard3" />Rekap Amortisasi</a
+        ><i class="icon-clipboard3" />Rekap depreciation</a
         >
         <a href={$url("./:id/view", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-eye" />Lihat Inventaris</a
+          ><i class="icon-eye" />Lihat BDD</a
         >
         <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-trash-alt" />Ubah Inventaris</a
+          ><i class="icon-trash-alt" />Ubah BDD</a
         >
         <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-pencil" />Hapus Inventaris</a
+          ><i class="icon-pencil" />Hapus BDD</a
         >
       </svelte:fragment>
     </Dropdown>

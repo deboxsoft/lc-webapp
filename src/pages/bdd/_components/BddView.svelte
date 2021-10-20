@@ -1,34 +1,39 @@
 <script>
   import CellNumber from "__@comps/CellNumber.svelte";
   import dayjs from "dayjs";
+  import TransactionList from "__@comps/transactions/TransactionList.svelte";
+  import CellDate from "__@comps/CellDate.svelte";
+  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
 
-  /** @type{import("@deboxsoft/accounting-api").Bdd} */
+  /** @type{import("@deboxsoft/accounting-api").BddDetail} */
   export let bdd;
+  const transaction = bdd.transaction;
 </script>
 
 <dl class="row">
-  <dt class="col-sm-3">Tanggal</dt>
-  <p class="col-sm-9">
-    : {dayjs(bdd.date).format("DD-MM-YY") || "-"}
+  <dt class="col-sm-3 mb-0">Tanggal</dt>
+  <p class="col-sm-9 mb-0">: <CellDate date={bdd.date} format="DD-MMMM-YYYY" /></p>
+  <dt class="col-sm-3 mb-0">Tanggal Awal</dt>
+  <p class="col-sm-9 mb-0">: <CellDate date={bdd.dateStart} format="DD-MMMM-YYYY" /></p>
+  <dt class="col-sm-3 mb-0">Tanggal Akhir</dt>
+  <p class="col-sm-9 mb-0">: <CellDate date={bdd.dateEnd} format="DD-MMMM-YYYY" /></p>
+  <dt class="col-sm-3 mb-0">No Transaksi</dt>
+  <p class="col-sm-9 mb-0">: {transaction?.id || "-"}</p>
+  <dt class="col-sm-3 mb-0">Status Transaksi</dt>
+  <p class="col-sm-9 mb-0">:
+    <TransactionStatus status={transaction?.status} />
   </p>
-  <dt class="col-sm-3">Tanggal Awal</dt>
-  <p class="col-sm-9">
-    : {dayjs(bdd.dateStart).format("DD-MM-YY") || "-"}
-  </p>
-  <dt class="col-sm-3">Tanggal Akhir</dt>
-  <p class="col-sm-9">
-    : {dayjs(bdd.dateEnd).format("DD-MM-YY") || "-"}
-  </p>
-  <dt class="col-sm-3">Keterangan</dt>
-  <p class="col-sm-9">
+  <dt class="col-sm-3 mb-0">Keterangan</dt>
+  <p class="col-sm-9 mb-0">
     : {bdd.description || "-"}
   </p>
-  <dt class="col-sm-3">Pajak (%)</dt>
-  <p class="col-sm-9">
+  <dt class="col-sm-3 mb-0">Pajak (%)</dt>
+  <p class="col-sm-9 mb-0">
     : {bdd.taxRate || "-"}
   </p>
-  <dt class="col-sm-3">Jumlah</dt>
-  <p class="col-sm-9 d-inline-flex align-items-center">
+  <dt class="col-sm-3 mb-0">Jumlah</dt>
+  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
     : <span style="width: 150px"><CellNumber class="ml-1" value={bdd.amount} /></span>
   </p>
 </dl>
+<TransactionList {transaction}  />

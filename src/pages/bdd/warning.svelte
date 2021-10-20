@@ -59,7 +59,7 @@
 <!--            <td>{item.no || ""}</td>-->
             <td>{item.description || ""}</td>
             <td> {item.dateEnd ? dayjs(item.dateEnd).format("DD-MMMM-YYYY") : ""}</td>
-            <td style="text-align: center">{item.remaining || ""}</td>
+            <td style="text-align: center">{item.remaining}</td>
           </tr>
         {/each}
       </Table>

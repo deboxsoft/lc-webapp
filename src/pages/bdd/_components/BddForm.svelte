@@ -65,11 +65,12 @@
     try {
       $loading = true;
       submitting = true;
-      await onSubmit($fields);
+      const input = schema.parse($fields);
+      await onSubmit(input);
       $goto(to);
     } catch (error) {
       console.error(error);
-      notify(`${error.path[0]} ${error.message}`, "error");
+      notify(`${error.message}`, "error");
     } finally {
       submitting = false;
       $loading = false;
@@ -89,7 +90,7 @@
         <InputDateField id="date" name="date" class="form-control" placeholder="Tanggal" range={false} disabled />
       </div>
     </div>
-    {#if !isUpdate || !bdd.logs}
+    {#if !isUpdate}
       <div class="row">
         <div class="form-group col-12 col-md-6">
           <label for="dateStart">Tanggal Mulai</label>
@@ -113,6 +114,7 @@
             startDate={dayjs()}
             endDate={dayjs().add(10, "year")}
             range={false}
+            yearEditable
           />
         </div>
       </div>
@@ -120,7 +122,7 @@
     {#if !isUpdate}
       <div class="row">
         <div class="form-group col-6">
-          <label for="debitAccount">Akun Amortisasi</label>
+          <label for="debitAccount">Akun BDD</label>
           <AccountSelect
             accountStore={getAccount("bdd")}
             id="debitAccount"
@@ -164,9 +166,13 @@
       </div>
     {/if}
     <div class="row">
-      <div class="form-group col-12">
-        <label for="name">Keterangan</label>
+      <div class="form-group col-8">
+        <label for="description">Keterangan</label>
         <InputField id="description" name="description" type="text" class="form-control" placeholder="Keterangan" />
+      </div>
+      <div class="form-group col-4">
+        <label for="category">Jenis</label>
+        <InputField id="category" name="category" type="text" class="form-control" placeholder="Jenis" />
       </div>
     </div>
     {#if !isUpdate}

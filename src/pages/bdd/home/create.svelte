@@ -25,7 +25,7 @@
 
   async function onSubmit(values) {
     await create(values);
-    notify(`Berhasil membuat data bdd ${values.name}`, "success");
+    notify(`Berhasil membuat data bdd ${values.description}`, "success");
   }
 </script>
 {#if bdd}
