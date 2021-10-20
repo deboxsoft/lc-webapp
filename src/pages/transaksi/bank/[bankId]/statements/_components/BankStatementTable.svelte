@@ -30,7 +30,7 @@
       <th width="150">Saldo</th>
       <th width="200">Akun Perkiraan</th>
     </tr>
-    {#each bankStatementList as bankStatement, index}
+    {#each bankStatementList as bankStatement, index (bankStatement.id)}
       <tr class="{errors.includes(index) && `error`}" class:preview>
         <td class="text-center date">
           <CellDate date={bankStatement.date} />

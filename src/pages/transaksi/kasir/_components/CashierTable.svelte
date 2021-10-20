@@ -14,7 +14,7 @@
     <th>Nominal</th>
     <th style="width: 30px;" />
   </tr>
-  {#each $cashierStore as cashier}
+  {#each $cashierStore as cashier (cashier.id)}
     <CashierRow {cashier} />
   {/each}
 </Table>

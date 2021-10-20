@@ -10,11 +10,11 @@
   // context
   const { notify } = getApplicationContext();
   const { update, cashierStore, getCashier } = getCashierContext();
-  const { accountStore } = stores.getAccountContext();
   const { updateGranted } = getAclContext();
 
   $: to = $params.to || "../";
   let cashier,
+    submitHandler,
     loaded = false;
   $: {
     if ($params.id && $cashierStore) {

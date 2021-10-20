@@ -12,10 +12,10 @@
    */
   /**
    * @type {{
-   *   date: string,
-   *   description: string,
-   *   amount: number
-   *   accountId: string
+   *   date: string;
+   *   description: string;
+   *   amount: number;
+   *   accountId: string;
    * }[]}
    */
   export let dataList = [];
@@ -66,7 +66,7 @@
     <div class="dbx-cell account">Account</div>
     <div class="dbx-cell d-sm-none d-md-flex amount">Jumlah</div>
   </div>
-  {#each dataList as item, index}
+  {#each dataList as item, index (item.id)}
     <div class="dbx-tr {errors.includes(index) && `error`}">
       <div class="dbx-cell text-center date">
         {dayjs(item.date).format("DD-MMM-YYYY") || ""}

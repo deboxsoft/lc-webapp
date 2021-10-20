@@ -10,6 +10,7 @@
   import CellAccount from "__@comps/account/CellAccount.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
+  import TransactionList from "__@comps/transactions/TransactionList.svelte";
 
   const { loading, notify } = getApplicationContext();
   const { getTransactionType, approve, reject } = stores.getTransactionContext();
@@ -82,20 +83,20 @@
 >
   {#if transaction && state === "finish"}
     <dl class="row">
-      <dt class="col-sm-3">No. Bukti/Kwitansi</dt>
-      <p class="col-sm-9">: {transaction.no || "-"}</p>
-      <dt class="col-sm-3">Tanggal</dt>
-      <p class="col-sm-9">: {dayjs(transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
-      <dt class="col-sm-3">Tanggal Transaksi</dt>
-      <p class="col-sm-9">: {dayjs(transaction.dateTransaction || transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
-      <dt class="col-sm-3">Deskripsi</dt>
-      <p class="col-sm-9">: {transaction.description || "-"}</p>
-      <dt class="col-sm-3">Jenis Transaksi</dt>
-      <p class="col-sm-9">: {(transactionType && transactionType.name) || "-"}</p>
-      <dt class="col-sm-3">Di Input Oleh</dt>
-      <p class="col-sm-9">: {(user && user.name) || "-"}</p>
-      <dt class="col-sm-3">Status</dt>
-      <p class="col-sm-9">
+      <dt class="col-sm-3 mb-0">No. Bukti/Kwitansi</dt>
+      <p class="col-sm-9 mb-0">: {transaction.no || "-"}</p>
+      <dt class="col-sm-3 mb-0">Tanggal</dt>
+      <p class="col-sm-9 mb-0">: {dayjs(transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
+      <dt class="col-sm-3 mb-0">Tanggal Transaksi</dt>
+      <p class="col-sm-9 mb-0">: {dayjs(transaction.dateTransaction || transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
+      <dt class="col-sm-3 mb-0">Deskripsi</dt>
+      <p class="col-sm-9 mb-0">: {transaction.description || "-"}</p>
+      <dt class="col-sm-3 mb-0">Jenis Transaksi</dt>
+      <p class="col-sm-9 mb-0">: {(transactionType && transactionType.name) || "-"}</p>
+      <dt class="col-sm-3 mb-0">Di Input Oleh</dt>
+      <p class="col-sm-9 mb-0">: {(user && user.name) || "-"}</p>
+      <dt class="col-sm-3 mb-0">Status</dt>
+      <p class="col-sm-9 mb-0">
         :
         <span
           class="badge"
@@ -107,32 +108,8 @@
       </p>
     </dl>
 
-    <table class="table">
-      <thead>
-        <tr>
-          <th style="width: 100px">Kode</th>
-          <th>Akun Perkiraan</th>
-          <th style="width: 150px">Jumlah Debit</th>
-          <th style="width: 150px">Jumlah Kredit</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{transaction.accountId || "-"}</td>
-          <td><CellAccount id={transaction.accountId} /></td>
-          <td><CellNumber value={transaction.amount} /></td>
-          <td class="text-right">-</td>
-        </tr>
-        {#each transaction.creditAccounts as accountAmount, index (accountAmount.index)}
-          <tr>
-            <td>{accountAmount.id || "-"}</td>
-            <td><CellAccount id={accountAmount.id} /></td>
-            <td class="text-right">-</td>
-            <td><CellNumber value={accountAmount.amount} /></td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
+    <TransactionList {transaction} />
+
   {:else}
     <Loader />
   {/if}

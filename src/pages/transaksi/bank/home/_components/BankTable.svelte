@@ -19,7 +19,7 @@
     <th>Selisih</th>
     <th />
   </tr>
-  {#each $bankStore as bank}
+  {#each $bankStore as bank (bank.id)}
     <BankRow class="dbx-tr" {bank} />
   {/each}
 </Table>

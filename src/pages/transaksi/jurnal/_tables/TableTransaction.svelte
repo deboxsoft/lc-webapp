@@ -1,4 +1,5 @@
 <script>
+  import { url } from "@roxi/routify";
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
@@ -7,6 +8,8 @@
   import MenuListTransaction from "./MenuListTransaction.svelte";
   import Table from "__@comps/Table.svelte";
   import Button from "__@comps/Button.svelte";
+  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
+  import CellDate from "__@comps/CellDate.svelte";
 
   const { loading } = getApplicationContext();
   const { transactionPageInfo, findPage } = stores.getTransactionContext();
@@ -44,11 +47,15 @@
     <div class="dbx-cell d-none d-sm-flex status">Status</div>
     <div class="dbx-cell -menu-list" />
   </div>
-  {#each transactions as transaction}
+  {#each transactions as transaction (transaction.id)}
     <div class="dbx-tr">
-      <div class="dbx-cell d-none d-md-flex no">{transaction.id || ""}</div>
+      <div class="dbx-cell d-none d-md-flex no">
+        <a href={$url("./:id/view", { id: transaction.id })}>
+          {transaction.id}
+        </a>
+      </div>
       <div class="dbx-cell date">
-        {dayjs(transaction.date).format("DD-MM-YY") || ""}
+        <CellDate date={transaction.date} />
       </div>
       <div class="dbx-cell d-none d-xl-flex account">
         <CellAccount id={transaction.accountId} />
@@ -58,13 +65,7 @@
         <CellNumber value={transaction.amount} />
       </div>
       <div class="dbx-cell d-none d-sm-flex status">
-        <span
-          class="badge"
-          class:badge-primary={transaction.status === "UNAPPROVED"}
-          class:badge-danger={transaction.status === "REJECTED"}
-          class:badge-light={transaction.status === "FIXED"}
-          class:badge-success={transaction.status === "APPROVED"}>{transaction.status}</span
-        >
+        <TransactionStatus status={transaction.status} />
       </div>
       <div class="dbx-cell -menu-list" style="width: 30px">
         <MenuListTransaction bind:transaction />

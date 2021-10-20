@@ -9,7 +9,6 @@
   import AccountListBox from "__@comps/account/AccountListBox.svelte";
   import InputCheckSwitchery from "__@comps/forms/InputCheckSwitchery.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { tick } from "svelte";
 
   const { grants } = getAccessControlContext();
   const { notify, loading } = getApplicationContext();
@@ -20,7 +19,7 @@
   const schemaForm = z.object({
     name: z.string().min(1, "nama wajib diisi"),
     role: z.string().min(1, "role wajib diisi"),
-    cashierAccount: z.string(),
+    cashierAccount: z.string().nullish(),
     mainPage: z.string().nullish(),
     sideMenuHidden: z.boolean().nullish(),
     isCashier: z.boolean().nullish(),
@@ -103,11 +102,7 @@
   let fieldsErrors;
   $: values = transformValues(groupUser);
 
-  $: {
-    tick().then(() => {
-      $fields.mainPage = $fields.isCashier ? "/transaksi/kasir" : "/";
-    })
-  }
+  $: console.log($fieldsErrors);
 
   async function submitHandler(_onSubmit = onSubmit) {
     try {
@@ -142,7 +137,7 @@
 
 <div class="card">
   <div class="card-body">
-    <Form checkValidateFirst bind:fields {values} schema={schemaForm} bind:fieldsErrors bind:isValid>
+    <Form checkValidateFirst  {values} schema={schemaForm} bind:fields bind:fieldsErrors bind:isValid>
       <div class="row">
         <div class="form-group col-12 col-md-6">
           <label for="name">Nama</label>
@@ -184,12 +179,12 @@
           </div>
         </div>
       {/if}
-      <div class="row">
-        <div class="form-group col-12">
-          <label for="mainPage">Halaman Utama</label>
-          <ComboxField id="mainPage" valueId="href" items={pageList} name="mainPage" />
-        </div>
-      </div>
+<!--      <div class="row">-->
+<!--        <div class="form-group col-12">-->
+<!--          <label for="mainPage">Halaman Utama</label>-->
+<!--          <ComboxField id="mainPage" valueId="href" items={pageList} name="mainPage" />-->
+<!--        </div>-->
+<!--      </div>-->
     </Form>
   </div>
 </div>
