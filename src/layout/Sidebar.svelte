@@ -15,7 +15,8 @@
 
   // handler
   setContext("sidebar", {
-    isFullscreen
+    isFullscreen,
+    expand
   });
 
   // reactive

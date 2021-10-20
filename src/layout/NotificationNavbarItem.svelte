@@ -4,12 +4,12 @@
   import { writable } from "svelte/store";
   import ContractNotification from "../pages/bdd/_menus/ContractNotification.svelte";
 
-  let count = writable(0), countContractBDD = writable(0);
+  let count = writable(0), countContractBDD = writable(0), closeHandler;
 
   $: $count = $countContractBDD
 </script>
 
-<Dropdown nav direction="end">
+<Dropdown bind:closeHandler nav direction="end">
   <DropdownToggle class="d-flex align-items-center navbar-nav-link" tag="div">
     <i class="icon-bell2" style="font-size: 1.25rem" />
     {#if $count !== 0}
@@ -17,7 +17,7 @@
     {/if}
   </DropdownToggle>
   <svelte:fragment slot="menu">
-    <ContractNotification bind:count={countContractBDD} class="dropdown-item" />
+    <ContractNotification bind:count={countContractBDD} class="dropdown-item" on:mouseup={closeHandler} />
   </svelte:fragment>
 </Dropdown>
 <style lang="scss" global>

@@ -8,7 +8,6 @@
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "__@modules/users";
   import Avatar from "__@comps/Avatar.svelte";
-  import Loader from "__@comps/loader/Loader.svelte";
 
   const { config } = getApplicationContext();
   const { authenticationStore } = getAuthenticationContext();
@@ -23,9 +22,6 @@
   }
 </script>
 
-<Avatar {label} src={srcImg} {...$$restProps}>
-  {#if $loading}
-    <Loader />
-  {/if}
+<Avatar {label} src={srcImg} {...$$restProps} loading={$loading}>
   <slot />
 </Avatar>

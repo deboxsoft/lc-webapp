@@ -5,8 +5,10 @@
   import AccordionItem from "__@root/layout/AccordionItem.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import AvatarProfile from "./AvatarProfile.svelte";
+  import { getUIContext } from "__@stores/ui";
 
   const { authenticationStore } = getAuthenticationContext();
+  const { store } = getUIContext();
   let scrollbar;
   let elRef;
   $: profile = $authenticationStore.profile;
@@ -27,7 +29,7 @@
       <div class="card-body">
         <div class="media">
           <div class="mr-3">
-            <AvatarProfile size="75px" class="mr-2" />
+            <AvatarProfile size={$store.minimizeSidebar ? "50px": "75px"} />
           </div>
           <div class="media-body">
             <div class="media-title font-weight-semibold">{profile.displayName}</div>
