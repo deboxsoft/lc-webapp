@@ -16,7 +16,7 @@
     <th width="175">Harga Satuan</th>
     <th width="30" />
   </tr>
-  {#each $productStore as product}
+  {#each $productStore as product (product.id)}
     <ProductRow {product} />
   {/each}
 </Table>

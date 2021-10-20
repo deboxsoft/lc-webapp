@@ -68,7 +68,7 @@
   }
 </script>
 
-<Modal class="modal-lg" bind:openDialog title="Form Barang Keluar" onClose={closeHandler} loading={!stock}>
+<Modal class="modal-md" bind:openDialog title="Form Barang Keluar" onClose={closeHandler} loading={!stock}>
   <StockForm
     {stock}
     {schema}

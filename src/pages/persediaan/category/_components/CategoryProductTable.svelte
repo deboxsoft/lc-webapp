@@ -12,7 +12,7 @@
       <th style="width: 200px">Akun Persediaan</th>
       <th style="width: 30px;" />
     </tr>
-    {#each $categoryProductStore as categoryProduct}
+    {#each $categoryProductStore as categoryProduct (categoryProduct.id)}
       <CategoryProductRow {categoryProduct} />
     {/each}
   </Table>

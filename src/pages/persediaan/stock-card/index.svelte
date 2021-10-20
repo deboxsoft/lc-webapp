@@ -1,1 +1,1 @@
-<!--routify:options title="Kartu Stok"-->
+<!--routify:options title="Mutasi Barang"-->

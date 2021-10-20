@@ -17,9 +17,8 @@
   }
 
   $: {
-    if (booting && $categoryProductStore && openDialog) {
-      console.log(isStartup, "start");
-      isStartup = false;
+    if (!ready && $categoryProductStore && openDialog) {
+      ready = true;
       categoryProduct = getCategoryProduct($params.id);
       name = categoryProduct.name;
       if (categoryProduct) {

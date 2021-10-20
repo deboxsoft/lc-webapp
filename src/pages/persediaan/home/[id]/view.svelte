@@ -6,7 +6,7 @@
   import StockView from "../_components/ProductView.svelte";
 
   const { getStock, stockStore } = stores.getStockContext();
-  let closeUrl = $params.closeUrl || "../";
+  const closeUrl = $params.closeUrl || "../";
   let openDialog, stock;
   $: {
     if ($stockStore && openDialog) {

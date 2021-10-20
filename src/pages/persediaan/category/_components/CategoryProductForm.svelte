@@ -8,7 +8,7 @@
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
-  import { filteringAccountStock } from "__@root/utils";
+  import { filteringAccountCash, filteringAccountExpense, filteringAccountStock } from "__@root/utils";
 
   const { notify, loading } = getApplicationContext();
   const { categoryProductStore } = stores.getCategoryProductContext();
@@ -35,9 +35,15 @@
     openDialog();
   });
 
-  function getAccount() {
-    const accountStore = getAccountLeaf();
-    return filteringAccountStock(accountStore);
+  function getAccount(accountType) {
+    switch (accountType) {
+      case "stock": {
+        return filteringAccountStock(accountStore);
+      }
+      case "expense": {
+        return filteringAccountExpense(accountStore);
+      }
+    }
   }
 
   async function submitHandler() {
@@ -81,12 +87,23 @@
         <AccountSelect
           id="accountId"
           name="accountId"
-          accountStore={getAccount()}
+          accountStore={getAccount("stock")}
           accountId={categoryProduct?.accountId}
           placeholder="AkunPersediaan"
           allowEmpty
         />
       </div>
+    </div>
+    <div class="form-group col-12 col-md-6">
+      <label for="expenseAccount">Akun Biaya Persediaan</label>
+      <AccountSelect
+        id="expenseAccount"
+        name="expenseAccount"
+        placeholder="Akun Biaya Persediaan"
+        allowEmpty
+        accountStore={getAccount("expense")}
+        accountId={categoryProduct?.expenseAccount}
+      />
     </div>
   </Form>
   <svelte:fragment slot="footer">

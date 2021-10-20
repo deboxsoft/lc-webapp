@@ -15,14 +15,14 @@
       <th colspan="2" style="text-align: center">Mutasi</th>
       <th width="70" style="text-align: center" rowspan="2">Sisa</th>
       <th width="175" style="text-align: center" rowspan="2">Harga Satuan</th>
-      <!--      <th width="30" />-->
+      <th width="30" rowspan="2"/>
     </tr>
     <tr>
-      <th width="70" style="text-align: center">Masuk</th>
-      <th width="70" style="text-align: center">Keluar</th>
+      <th width="70" align="center">Masuk</th>
+      <th width="70" align="center">Keluar</th>
     </tr>
   </svelte:fragment>
-  {#each $stockStore as stock}
+  {#each $stockStore as stock (stock.id)}
     <StockRow {stock} />
   {/each}
 </Table>

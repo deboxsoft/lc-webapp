@@ -1,1 +1,1 @@
-<!--routify:options title="Data Barang"-->
+<!--routify:options title="Daftar Barang"-->

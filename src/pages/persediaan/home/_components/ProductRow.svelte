@@ -48,9 +48,9 @@
         <i class="icon-menu9" />
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
-        <a href={$url("./:id/view", { id: product.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-clipboard3" />Kartu Stok</a
-        >
+<!--        <a href={$url("./:id/view", { id: product.id })} class="dropdown-item" on:mouseup={closeHandler}-->
+<!--          ><i class="icon-clipboard3" />lihat</a-->
+<!--        >-->
         <a href={$url("./:id/update", { id: product.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-pencil" />Edit Barang</a
         >

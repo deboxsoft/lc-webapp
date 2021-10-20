@@ -14,7 +14,7 @@
       <th width="200">Email</th>
       <th width="30" />
     </tr>
-    {#each $supplierStore as supplier}
+    {#each $supplierStore as supplier (supplier.id)}
       <SupplierRow {supplier} />
     {/each}
   </Table>

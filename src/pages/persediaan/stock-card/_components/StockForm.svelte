@@ -61,9 +61,6 @@
       case "cash": {
         return filteringAccountCash(accountStore);
       }
-      case "expense": {
-        return filteringAccountExpense(accountStore);
-      }
     }
   }
 </script>
@@ -72,7 +69,7 @@
   <div class="card">
     <div class="card-body">
       <div class="row">
-        <div class="form-group col-12 col-md-6">
+        <div class="form-group col-12" class:col-md-6={mutation === "STOCK_IN"}>
           <label for="date">Tanggal</label>
           <InputDateField id="date" name="date" class="form-control" placeholder="Tanggal" range={false} disabled />
         </div>
@@ -85,17 +82,6 @@
               placeholder="Akun Pembayaran"
               allowEmpty
               accountStore={getAccount("cash")}
-            />
-          </div>
-        {:else}
-          <div class="form-group col-12 col-md-6">
-            <label for="expenseAccount">Akun Biaya Persediaan</label>
-            <AccountSelect
-              id="expenseAccount"
-              name="expenseAccount"
-              placeholder="Akun Biaya Persediaan"
-              allowEmpty
-              accountStore={getAccount("expense")}
             />
           </div>
         {/if}
