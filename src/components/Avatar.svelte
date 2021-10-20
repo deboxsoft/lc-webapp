@@ -1,5 +1,6 @@
 <script>
   import i from "initials";
+  import Loader from "__@comps/loader/Loader.svelte";
 
   export let style = "";
   export let initials = undefined;
@@ -25,36 +26,39 @@
     abbrLength = abbr.length;
   }
   $: srcImg = src;
+  $: console.log(srcImg, !imageFail);
 </script>
 
 <div
   aria-label={label}
   class="wrapper {className}"
-  style="{style}--borderRadius:{square
-    ? 0
-    : borderRadius}; --size:{size}; --bgColor:{background};
+  style="{style}--borderRadius:{square ? 0 : borderRadius}; --size:{size}; --bgColor:{background};
   --src:{src}; --textColor:{textColor}; --abbrLength:{abbrLength}"
 >
-  {#if srcImg && !imageFail}
-    <div class={imageLoading ? "imageLoading" : ""}>
-      <img
-        alt=""
-        class={`innerImage`}
-        src={srcImg}
-        on:error={() => {
-          imageLoading = false;
-          imageFail = true;
-        }}
-        on:load={() => {
-          imageFail = false;
-          imageLoading = false;
-        }}
-      />
-    </div>
-  {:else if !initialDisable}
-    <div class="innerInitials">{abbr}</div>
+  {#if loading}
+    <Loader />
+  {:else}
+    {#if srcImg && !imageFail}
+      <div class={imageLoading ? "imageLoading" : ""}>
+        <img
+          alt=""
+          class={`innerImage`}
+          src={srcImg}
+          on:error={() => {
+            imageLoading = false;
+            imageFail = true;
+          }}
+          on:load={() => {
+            imageFail = false;
+            imageLoading = false;
+          }}
+        />
+      </div>
+    {:else if !initialDisable}
+      <div class="innerInitials">{abbr}</div>
+    {/if}
+    <slot />
   {/if}
-  <slot />
 </div>
 
 <style>

@@ -116,7 +116,7 @@
     }
   });
 
-  const closeHandler = () => {
+  export const closeHandler = () => {
     isOpen = false;
   }
 </script>

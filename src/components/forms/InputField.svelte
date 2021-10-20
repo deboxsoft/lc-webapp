@@ -17,7 +17,10 @@
   $: {
     if ($fieldsErrors && $fieldsErrors[name]) {
       invalid = true;
-      msgError = Array.isArray($fieldsErrors[name])? $fieldsErrors[name].length > 0 && $fieldsErrors[name][0] : $fieldsErrors[name] ;
+      msgError = Array.isArray($fieldsErrors[name])? $fieldsErrors[name].length > 0 && $fieldsErrors[name][0] : $fieldsErrors[name];
+      if (typeof msgError !== "string" && msgError.message) {
+        msgError = msgError.message;
+      }
     } else {
       invalid = false;
     }

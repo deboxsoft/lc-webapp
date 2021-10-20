@@ -6,9 +6,18 @@
   export let format = "rp";
   export let className = $$props.class || "";
   export let fixedNumber = format === "rp" ? 2 : 0;
+  export let prefix = undefined;
+  export let prefixClass = "";
 </script>
 
 <div {...$$restProps} class="cell-rp {className}" class:-minus={value < 0}>
+  <slot name="prefix">
+    {#if prefix}
+      <div class={prefixClass}>
+        {prefix}
+      </div>
+    {/if}
+  </slot>
   <!--{#if spaceMinus && (value < 0)}-->
   <!--  <div class="space-sign" />-->
   <!--{/if}-->
@@ -20,6 +29,7 @@
   {#if spaceMinus && value > 0}
     <div class="space-sign" />
   {/if}
+  <slot />
 </div>
 
 <style lang="scss" global>

@@ -102,8 +102,8 @@
       }
 
       .modal-header:not([class*="bg-"]) {
-        padding-bottom: 0;
-        border-bottom-width: 0;
+        padding-bottom: 0.5rem;
+        border-bottom-width: 1px;
       }
 
       .modal-footer:not([class*="bg-"]) {
