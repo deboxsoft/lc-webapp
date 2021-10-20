@@ -10,7 +10,7 @@
   const { removeGranted } = getAclContext();
   const { removeCategory, getCategoryInventory, categoryInventoryStore, inventoryStore } = stores.getInventoryContext();
   const { loading, notify } = getApplicationContext();
-  let openDialog, categoryInventory;
+  let openDialog, categoryInventory, name;
 
   if (!removeGranted) {
     $goto("/access-denied");
@@ -21,6 +21,7 @@
       categoryInventory = getCategoryInventory($params.id);
       if (categoryInventory) {
         openDialog();
+        name = categoryInventory.name;
       }
     }
   }
@@ -29,7 +30,6 @@
     $loading = true;
     try {
       // cek apakah kategori msh memiliki data inventory
-      const name = categoryInventory.name;
       if ($inventoryStore.some((_) => _.categoryId === categoryInventory.id)) {
         throw new Error(
           `tidak dapat menghapus kategori '${name}' karena masih terdapat data aktiva tetap pada kategori ini`
@@ -55,7 +55,7 @@
 
 <Modal title="Hapus Kategori Aktiva Tetap" bind:openDialog onClose={closeHandler}>
   <div class="alert alert-warning alert-styled-left">
-    Apa anda yakin akan menghapus kategori "{categoryInventory.name}"?
+    Apa anda yakin akan menghapus kategori "{name}"?
   </div>
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>

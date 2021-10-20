@@ -1,6 +1,7 @@
 <!--routify:options title="Aktiva Tetap"-->
 <script>
-  import { url, goto, isActive } from "@roxi/routify";
+  import { onMount } from "svelte";
+  import { url, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { createAclContext } from "./_acl-context";
@@ -10,10 +11,15 @@
   const { readGranted } = createAclContext();
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
-  const { findCategory, findPage, find } = stores.createInventoryContext(applicationContext);
+  const { findCategory, findPage, find, subscribe } = stores.createInventoryContext(applicationContext);
   if (!readGranted) {
     $goto("/access-denied");
   }
+
+  onMount(() => {
+    return subscribe();
+  });
+
   $loading = true;
   let loaded = false;
   const inventoryPromise = findPage({ filter: {}, pageCursor: {} }, {});

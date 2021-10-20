@@ -8,15 +8,16 @@
 
 <Table>
   <tr slot="header">
+    <th width="90" style="text-align: center">No</th>
+    <th width="90" style="text-align: center">Tanggal</th>
     <th>Nama Barang</th>
-    <th style="width: 90px">Tanggal</th>
-    <th>Kategori</th>
-    <th style="width: 80px">Jumlah</th>
-    <th style="width: 160px">Harga Satuan</th>
-    <th style="width: 160px">Harga Total</th>
-    <th style="width: 30px;" />
+    <th width="100">Kategori</th>
+    <th width="80" style="text-align: center">Jumlah</th>
+    <th width="160">Harga Satuan</th>
+    <th width="160">Harga Total</th>
+    <th width="30" />
   </tr>
-  {#each $inventoryStore as inventory}
+  {#each $inventoryStore as inventory (inventory.id)}
     <InventoryRow {inventory} />
   {/each}
 </Table>

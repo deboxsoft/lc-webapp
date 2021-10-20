@@ -74,24 +74,21 @@
 <Modal bind:openDialog {title} onClose={closeHandler}>
   <Form checkValidateFirst {schema} values={{ ...inventory }} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
+      <div class="form-group col-12 col-md-2">
+        <label for="code">Kode</label>
+        <InputField id="code" name="code" type="text" class="form-control" placeholder="Kode" />
+      </div>
       <div class="form-group col-12 col-md-6">
         <label for="name">Nama</label>
         <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
       </div>
-      <div class="form-group col-12 col-md-6">
+      <div class="form-group col-12 col-md-4">
         <label for="date">Tanggal</label>
-        <InputDate
-          id="date"
-          name="date"
-          class="form-control"
-          placeholder="Tanggal"
-          range=""
-          disabled
-        />
+        <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" range="" disabled />
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-12">
+      <div class="form-group col-12 col-md-6">
         <label for="categoryId">Kategori</label>
         <ComboxField
           id="categoryId"
@@ -104,9 +101,7 @@
           disabled={isUpdate}
         />
       </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-12">
+      <div class="form-group col-12 col-md-6">
         <label for="debitAccount">Akun Aktiva Tetap</label>
         <AccountSelect
           id="debitAccount"
@@ -117,6 +112,26 @@
           disabled={isUpdate}
           allowEmpty
         />
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-12 col-md-6">
+        <label for="brand">Merek/Type/Spec</label>
+        <InputField id="brand" name="brand" type="text" class="form-control" placeholder="Merek/Type/Spec" />
+      </div>
+      <div class="form-group col-12 col-md-6">
+        <label for="condition">Kondisi</label>
+        <InputField id="condition" name="condition" type="text" class="form-control" placeholder="Kondisi" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-12 col-md-6">
+        <label for="location">Lokasi</label>
+        <InputField id="location" name="location" type="text" class="form-control" placeholder="Lokasi" />
+      </div>
+      <div class="form-group col-12 col-md-6">
+        <label for="person">Penanggung Jawab</label>
+        <InputField id="person" name="person" type="text" class="form-control" placeholder="Penanggung Jawab" />
       </div>
     </div>
     <div class="row">
@@ -135,19 +150,12 @@
     </div>
     <div class="row">
       <div class="form-group col-12 col-md-6">
-        <label for="quantity">Jumlah</label>
-        <InputField
-          id="quantity"
-          name="quantity"
-          class="form-control"
-          type="number"
-          placeholder="Jumlah"
-          disabled={isUpdate}
-        />
+        <label for="quantity">Nominal</label>
+        <InputField id="quantity" name="quantity" class="form-control" placeholder="Nominal" disabled={isUpdate} />
       </div>
       <div class="form-group col-12 col-md-6">
-        <label for="priceItem">Harga</label>
-        <InputRp id="priceItem" name="priceItem" class="form-control" placeholder="Harga" disabled={isUpdate} />
+        <label for="priceItem">Harga Satuan</label>
+        <InputRp id="priceItem" name="priceItem" class="form-control" placeholder="Harga Satuan" disabled={isUpdate} />
       </div>
     </div>
   </Form>

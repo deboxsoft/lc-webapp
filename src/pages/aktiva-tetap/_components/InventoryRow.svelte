@@ -5,6 +5,7 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import dayjs from "dayjs";
+  import CellDate from "__@comps/CellDate.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let inventory;
@@ -14,10 +15,15 @@
 </script>
 
 <tr>
+  <td align="center">
+    <a href={$url("./:id/view", { id: inventory.id })}>
+      {inventory.id}
+    </a>
+  </td>
+  <td align="center"><CellDate date={inventory.date} /></td>
   <td>{inventory.name || ""}</td>
-  <td>{dayjs(inventory.date).format("DD-MM-YY")}</td>
   <td>{getCategoryInventory(inventory.categoryId)?.name || ""}</td>
-  <td>{inventory.quantity}</td>
+  <td align="center">{inventory.quantity}</td>
   <td>
     <CellNumber value={inventory.priceItem} />
   </td>
@@ -37,7 +43,7 @@
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
         <a href={$url("./:id/depreciation", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-        ><i class="icon-clipboard3" />Rekap Depresiasi</a
+          ><i class="icon-clipboard3" />Rekap Depresiasi</a
         >
         <a href={$url("./:id/view", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-eye" />Lihat Aktiva Tetap</a
