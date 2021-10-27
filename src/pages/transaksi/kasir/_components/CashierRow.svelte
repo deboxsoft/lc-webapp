@@ -11,13 +11,21 @@
   const { getProgram, programStore, find } = createProgramContext(applicationContext);
 
   export let cashier;
-  let dropdownContext;
+  let dropdownContext, program;
 
+  $: {
+    if (!program && cashier && $programStore) {
+      program = getProgram(cashier.programId).name;
+    }
+  }
 </script>
 
 <tr>
-  <td>{cashier.name || ""}</td>
-  <td>{dayjs(cashier.date).format("DD-MM-YY")}</td>
+  <td style="text-align: center">{ cashier.no || ""}</td>
+  <td><CellDate date={cashier.date} /></td>
+  <td>{cashier.description || ""}</td>
+  <td>{program || ""}</td>
+  <td><CellNumber value={cashier.discount} format="number" /></td>
   <td>
     <CellNumber value={cashier.amount} />
   </td>

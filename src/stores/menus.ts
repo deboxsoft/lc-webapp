@@ -223,12 +223,12 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
           label: "Info Perusahaan",
           url: "/settings/info",
           show: settingShow
-        },
-        {
-          label: "Akuntansi",
-          url: "/settings/accounting",
-          show: settingShow
         }
+        // {
+        //   label: "Akuntansi",
+        //   url: "/settings/accounting",
+        //   show: settingShow
+        // }
       ]
     },
     {

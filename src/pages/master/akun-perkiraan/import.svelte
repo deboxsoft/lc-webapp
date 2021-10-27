@@ -21,7 +21,8 @@
           id: id.toString(),
           parentId: sanitizeString(`${result.data[1]}`),
           name: sanitizeString(`${result.data[2]}`).toUpperCase(),
-          type: sanitizeString(result.data[3])
+          type: sanitizeString(result.data[3]),
+          startBalance: sanitizeNumber(result.data[4])
         });
       }
     };

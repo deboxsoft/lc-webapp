@@ -7,12 +7,13 @@
 
 <Table>
   <tr slot="header">
-    <th style="width: 50px">Tanggal</th>
-    <th>Nama</th>
-    <th>Program</th>
-    <th>Diskon</th>
-    <th>Nominal</th>
-    <th style="width: 30px;" />
+    <th width="100">No Kwitansi</th>
+    <th width="100">Tanggal</th>
+    <th>No Pendaftaran</th>
+    <th width="200">Program</th>
+    <th width="100">Diskon</th>
+    <th width="170">Nominal</th>
+<!--    <th width="30" />-->
   </tr>
   {#each $cashierStore as cashier (cashier.id)}
     <CashierRow {cashier} />

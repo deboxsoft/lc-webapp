@@ -243,6 +243,13 @@
               <ComboBox id="type" name="type" items={accountTypeItems} labelId="label" valueId="code" />
             </div>
           </div>
+          {:else}
+          <div class="row">
+            <div class="form-group col-12">
+              <label for="type">Saldo Awal</label>
+              <InputNumberField id="startBalance" name="startBalance" placeholder="Saldo Awal" />
+            </div>
+          </div>
         {/if}
       </div>
     </div>

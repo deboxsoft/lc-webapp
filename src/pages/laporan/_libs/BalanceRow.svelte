@@ -41,7 +41,7 @@
       <td style="padding-left: 1.25rem">
         {child.name}
         <div class="text-muted font-size-sm">
-          {account.id}
+          {child.id}
         </div>
       </td>
       <td class="d-table-cell d-xl-none">&nbsp;</td>

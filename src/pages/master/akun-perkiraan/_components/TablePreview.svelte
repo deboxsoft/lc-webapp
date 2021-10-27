@@ -2,6 +2,7 @@
   import { get } from "svelte/store";
   import Table from "__@comps/Table.svelte";
   import { stores } from "@deboxsoft/accounting-client";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   /**
    *
@@ -11,12 +12,7 @@
 
   const { getAccountType } = stores.getAccountContext();
   /**
-   * @type {{
-   *   id: string,
-   *   parentId: string,
-   *   name: number
-   *  type: string
-   * }[]}
+   * @type {import("@deboxsoft/accounting-api").Account[]}
    */
   export let dataList = [];
 
@@ -27,7 +23,7 @@
 
   /**
    *
-   * @type {function(): Transaction[]}
+   * @type {function(): any[]}
    */
   export const submit = () => {
     return dataList.map((_, index) => ({
@@ -35,6 +31,7 @@
       name: _.name,
       isParent: !_.parentId,
       type: _.type,
+      startBalance: _.startBalance,
       parentId: _.parentId
     }));
   };
@@ -50,13 +47,17 @@
     <div class="dbx-cell text-center id">kode</div>
     <div class="dbx-cell text-center parent">induk</div>
     <div class="dbx-cell">nama</div>
-    <div class="dbx-cell text-center account">klasifikasi</div>
+    <div class="dbx-cell startBalance">saldo awal</div>
+    <div class="dbx-cell text-center type">klasifikasi</div>
   </div>
   {#each dataList as item, index}
     <div class="dbx-tr {errors.includes(index) && `error`}">
       <div class="dbx-cell text-center id">{item.id || ""}</div>
       <div class="dbx-cell text-center parent">{item.parentId || ""}</div>
       <div class="dbx-cell">{item.name || ""}</div>
+      <div class="dbx-cell startBalance">
+        <CellNumber value={item.startBalance} />
+      </div>
       <div class="dbx-cell text-center type">{getClassificationAccount(item.type)}</div>
     </div>
   {/each}
@@ -73,6 +74,10 @@
 
   .type {
     flex: 0 0 200px;
+  }
+
+  .startBalance {
+    flex: 0 0 250px;
   }
 
   .account {

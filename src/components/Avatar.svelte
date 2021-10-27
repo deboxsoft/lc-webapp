@@ -26,7 +26,6 @@
     abbrLength = abbr.length;
   }
   $: srcImg = src;
-  $: console.log(srcImg, !imageFail);
 </script>
 
 <div

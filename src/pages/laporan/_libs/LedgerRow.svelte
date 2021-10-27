@@ -46,7 +46,7 @@
       <td style="width: 10px" />
       <td>{child.name}
         <div class="text-muted font-size-sm">
-          {account.id}
+          {child.id}
         </div>
       </td>
       <td class="text-right balance">

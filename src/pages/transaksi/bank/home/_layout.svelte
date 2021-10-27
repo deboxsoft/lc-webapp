@@ -13,7 +13,7 @@
 
   const { loading } = getApplicationContext();
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { bankStore } = stores.getBankContext();
+  const { bankStore, find } = stores.getBankContext();
   const { readGranted, createGranted } = createAclContext();
   const reportContext = createReportContext();
   if (!readGranted) {

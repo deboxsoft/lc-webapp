@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { getProgramContext } from "@deboxsoft/lc-cashier-client";
@@ -9,21 +8,25 @@
 
   export let to = "../";
 
-  let openDialog;
+  let openDialog, program;
 
-  $: program = $programStore && getProgram($params.id);
+  $: {
+    if ($programStore && openDialog) {
+      console.log($programStore);
+      program = getProgram($params.id);
+      openDialog()
+    }
 
-  onMount(() => {
-    openDialog();
-  });
+  }
+
   function closeHandler() {
     $goto(to, {});
   }
 </script>
 
 <Modal title="Program" onClose={closeHandler} bind:openDialog>
-  {#if $program}
-    <DetailProgram program={$program} />
+  {#if program}
+    <DetailProgram {program} />
   {/if}
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

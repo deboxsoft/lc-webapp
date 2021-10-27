@@ -21,9 +21,11 @@
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Kasir" });
 
+
   let submitting = false,
     filter = {};
 
+  fetchData();
   function fetchData(options = {}) {
     $loading = true;
     submitting = true;

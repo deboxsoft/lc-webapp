@@ -12,8 +12,9 @@
   import { sortUtilsFunc } from "__@root/utils";
   import { createAclContext } from "./_acl-context";
   import { createReportContext } from "./_export";
+  import Loader from "__@comps/loader/Loader.svelte";
 
-  const { readGranted, createGranted } = createAclContext();
+  const { readGranted, createGranted, removeGranted } = createAclContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
   const { accountStore, getAccountType, getAccount, load } = stores.getAccountContext();
   const { loading } = getApplicationContext();
@@ -29,11 +30,16 @@
   let openFilterDialog;
   let closeFilterDialog;
   let textFilter = undefined;
+  let ready = false;
 
-  let _buckets = []
+  let _buckets = [];
 
   $: {
-    accounts = $accountStore && $accountStore.sort(sortUtilsFunc("id"));
+    if ($accountStore) {
+      console.log("ready");
+      accounts = $accountStore.sort(sortUtilsFunc("id"));
+      ready = true;
+    }
   }
 
   function filtering() {
@@ -112,6 +118,12 @@
         Impor
       </a>
     {/if}
+    {#if removeGranted}
+      <a href={$url("./remove-all")} class="breadcrumb-elements-item">
+        <i class="icon-trash mr-1" />
+        Hapus Semua
+      </a>
+    {/if}
     <a
       href="/#"
       target="_self"
@@ -180,7 +192,11 @@
       <div class="header-elements" />
     </div>
     <div class="card-body flex-1 flex-column d-flex">
-      <TableAccount {accounts} />
+      {#if ready}
+        <TableAccount {accounts} />
+      {:else}
+        <Loader />
+      {/if}
     </div>
   </div>
   <slot />

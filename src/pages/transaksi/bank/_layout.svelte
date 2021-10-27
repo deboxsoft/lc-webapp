@@ -6,10 +6,11 @@
   import Loader from "__@comps/loader/Loader.svelte"
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
+  import { onMount } from "svelte";
 
   const { readGranted } = createAclContext();
   const applicationContext = getApplicationContext();
-  const { find } = stores.createBankContext(applicationContext);
+  const { find, subscribe } = stores.createBankContext(applicationContext);
 
   if (!readGranted) {
     $goto("/access-denied");
@@ -18,6 +19,9 @@
   setBreadcrumbContext({ path: $url("./"), title: "Manajemen Bank" });
 
   let submitting = true;
+  onMount(() => {
+    subscribe();
+  })
   find().then((result) => {
     submitting = false;
   });

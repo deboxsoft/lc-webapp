@@ -1,8 +1,14 @@
-import type { BreadcrumbItem } from "@deboxsoft/svelte-theme-limitless/navigation/Breadcrumb";
 import { getContext, setContext } from "svelte";
 import { writable, Writable } from "svelte/store";
 
-export type { BreadcrumbItem };
+export interface BreadcrumbItem {
+  path: string;
+  title: string;
+}
+export interface BreadcrumbProps {
+  class?: string;
+  itemList: BreadcrumbItem[];
+}
 type Options = {
   initial?: BreadcrumbItem[];
   store?: Writable<BreadcrumbItem[]>;
