@@ -7,7 +7,6 @@
   const { fields, fieldsErrors, validateField, submitted } = getFormContext();
   const dispatch = createEventDispatcher();
 
-  export let options = {};
   export let name;
   export let prependDisable = false;
   export let textPosition = "right";
@@ -18,12 +17,15 @@
   export let value = pristineValue;
   export let maximumValue = "10000000000000";
   export let minimumValue = "-10000000000000";
+  export let decimalPlaces = 2;
+  export let options = { decimalPlaces };
 
   const defaultOptions = {
-    decimalPlaces: format === "currency" ? 2 : 0,
+    allowDecimalPadding: format === "currency",
+    decimalPlaces,
     modifyValueOnWheel: false,
-    digitGroupSeparator: ".",
-    decimalCharacter: ",",
+    digitGroupSeparator: format === "currency" ? "." : ",",
+    decimalCharacter: format === "currency" ? "," : ".",
     maximumValue,
     minimumValue
   };
@@ -72,6 +74,10 @@
   onDestroy(() => {
     autoNumeric.wipe();
   });
+
+  export function setValue(value) {
+    autoNumeric.set(value);
+  }
 
   function createInputHandler() {
     const validate = validateField(name);
