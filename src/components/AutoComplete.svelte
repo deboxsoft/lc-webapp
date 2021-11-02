@@ -3,6 +3,7 @@
   import { createPopper } from "@popperjs/core/lib/popper-lite";
   import flip from "@popperjs/core/lib/modifiers/flip";
   import preventOverflow from "@popperjs/core/lib/modifiers/preventOverflow";
+  import Loader from "__@comps/loader/Loader.svelte";
   export let items = [];
   export let valueFieldName = "id";
   //***** <custom> ***/
@@ -71,7 +72,7 @@
     if (debug) {
       console.log("onCreate: " + text);
     }
-    return undefined;
+    return Promise.resolve().then(() => undefined);
   };
   export let selectFirstIfEmpty = false;
   export let minCharactersToSearch = 1;
@@ -451,19 +452,6 @@
     if (debug) {
       console.log("selectListItem", listItem);
     }
-    if ("undefined" === typeof listItem && create) {
-      // allow undefined items if create is enabled
-      const createdItem = onCreate(text);
-      if ("undefined" !== typeof createdItem) {
-        prepareListItems();
-        filteredListItems = listItems;
-        const index = findItemIndex(createdItem, filteredListItems);
-        if (index >= 0) {
-          highlightIndex = index;
-          listItem = filteredListItems[highlightIndex];
-        }
-      }
-    }
     if ("undefined" === typeof listItem) {
       if (debug) {
         console.log(`listItem is undefined. Can not select.`);
@@ -842,6 +830,14 @@
       return listItem === selectedItem;
     }
   }
+  async function createItemHandler() {
+    loading = true;
+    const _text = text;
+    let listItem = filteredListItems[highlightIndex];
+    await onCreate(text);
+    loading = false;
+    selectListItem(listItem)
+  }
 </script>
 
 <div
@@ -950,11 +946,9 @@
         </div>
       {/if}
     {:else if loading && loadingText}
-      <div class="autocomplete-list-item-loading">
-        <slot name="loading" {loadingText}>{loadingText}</slot>
-      </div>
+      <Loader />
     {:else if create}
-      <div class="autocomplete-list-item-create" on:click={selectItem}>
+      <div class="_create-item" on:click={createItemHandler}>
         <slot name="create" {createText}>{createText}</slot>
       </div>
     {:else if noResultsText}
@@ -1102,6 +1096,12 @@
       border: none;
       box-shadow: none;
       background: none;
+    }
+    ._create-item {
+      padding: 5px 15px;
+      cursor: pointer;
+      line-height: 1;
+      text-decoration: underline;
     }
   }
 </style>

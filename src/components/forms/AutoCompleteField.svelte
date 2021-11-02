@@ -8,12 +8,13 @@
   const dispatcher = createEventDispatcher();
 
   export let name;
-  export let pristineValue= undefined;
+  export let pristineValue = undefined;
   export let items;
   export let valueFieldName = undefined;
   export let labelFunction = undefined;
   export let keywordsFunction = undefined;
-  export let allowEmpty  = false;
+  export let allowEmpty = false;
+  export let loading = false;
   export let create = false;
   export let inputClassName = "";
   export let hiddenResultText = "data tidak ditampilkan";
@@ -30,12 +31,11 @@
 
   if ($fields && name) {
     if (pristineValue && !$fields[name]) {
-      $fields[name] = pristineValue
+      $fields[name] = pristineValue;
     } else if (!pristineValue) {
       pristineValue = $fields[name];
     }
   }
-
 
   $: {
     const _valid = $submitted ? (invalid ? "is-invalid" : "is-valid") : "";
@@ -69,6 +69,7 @@
   {hiddenResultText}
   {createText}
   {loadingText}
+  {loading}
   {noResultsText}
   {disabled}
   {allowEmpty}
@@ -79,7 +80,8 @@
   {keywordsFunction}
   inputClassName={_inputClassName}
   onChange={createChangeHandler()}
-  {items} >
+  {items}
+>
   <slot name="item" slot="item" let:item {item} let:label {label}>
     {@html label}
   </slot>
@@ -89,4 +91,3 @@
     {/if}
   {/if}
 </AutoComplete>
-
