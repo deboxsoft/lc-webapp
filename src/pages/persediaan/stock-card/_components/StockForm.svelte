@@ -69,22 +69,10 @@
   <div class="card">
     <div class="card-body">
       <div class="row">
-        <div class="form-group col-12" class:col-md-6={mutation === "STOCK_IN"}>
+        <div class="form-group col-12">
           <label for="date">Tanggal</label>
           <InputDateField id="date" name="date" class="form-control" placeholder="Tanggal" range={false} disabled />
         </div>
-        {#if mutation === "STOCK_IN"}
-          <div class="form-group col-12 col-md-6">
-            <label for="creditAccount">Akun Pembayaran</label>
-            <AccountSelect
-              id="cashAccount"
-              name="cashAccount"
-              placeholder="Akun Pembayaran"
-              allowEmpty
-              accountStore={getAccount("cash")}
-            />
-          </div>
-        {/if}
       </div>
     </div>
   </div>
