@@ -12,7 +12,7 @@
 
   const { notify, loading } = getApplicationContext();
   const { categoryProductStore } = stores.getCategoryProductContext();
-  const { getAccountLeaf } = stores.getAccountContext();
+  const { getAccountLeaf, accountStore } = stores.getAccountContext();
   const accounts = getAccountLeaf();
 
 
@@ -94,16 +94,18 @@
         />
       </div>
     </div>
-    <div class="form-group col-12 col-md-6">
-      <label for="expenseAccount">Akun Biaya Persediaan</label>
-      <AccountSelect
-        id="expenseAccount"
-        name="expenseAccount"
-        placeholder="Akun Biaya Persediaan"
-        allowEmpty
-        accountStore={getAccount("expense")}
-        accountId={categoryProduct?.expenseAccount}
-      />
+    <div class="row">
+      <div class="form-group col-12">
+        <label for="expenseAccount">Akun Biaya Persediaan</label>
+        <AccountSelect
+          id="expenseAccount"
+          name="expenseAccount"
+          placeholder="Akun Biaya Persediaan"
+          allowEmpty
+          accountStore={getAccount("expense")}
+          accountId={categoryProduct?.expenseAccount}
+        />
+      </div>
     </div>
   </Form>
   <svelte:fragment slot="footer">

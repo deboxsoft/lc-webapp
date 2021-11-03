@@ -22,7 +22,11 @@
     const _stockProducts = $stockProducts;
     const i = _stockProducts.findIndex((_) => _.index === input.index);
     _stockProducts[i] = input;
-    $stockProducts = _stockProducts;
+    if ($stockProducts !== _stockProducts[i]) {
+      $stockProducts = _stockProducts;
+    } else {
+      validate();
+    }
   }
 
   function removeProductStockHandler(index) {
@@ -38,9 +42,7 @@
       <tr slot="header">
         <th class="text-center">Barang</th>
         <th class="text-center" width="70">Jumlah</th>
-        {#if mutation === "STOCK_IN"}
-          <th class="text-center" width="270">Harga Satuan</th>
-        {/if}
+        <th class="text-center" width="270">Harga Satuan</th>
         <th width="40" />
       </tr>
       {#each $stockProducts as stockProduct, index (stockProduct.index)}

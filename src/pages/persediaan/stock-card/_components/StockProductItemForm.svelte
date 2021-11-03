@@ -6,6 +6,7 @@
   import AutoCompleteField from "__@comps/forms/AutoCompleteField.svelte";
   import { createFormContext } from "__@stores/form";
   import { debounce } from "@deboxsoft/module-core";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   const { productContext } = stores.getStockContext();
   const { productStore } = productContext;
@@ -19,6 +20,7 @@
   export let onRemoveStockProduct = () => {};
   export let onUpdateStockProduct = () => {};
 
+  let product, setPriceValue, price;
   const { fields } = createFormContext({ values: stockProduct });
 
 
@@ -31,6 +33,14 @@
 
   function changeProductHandler() {
     return () => {
+      if (product) {
+        $fields.productId = product.id;
+        if (stockProduct.mutation === "STOCK_IN") {
+          setPriceValue(product.price);
+        } else {
+          price = product.price;
+        }
+      }
       updateHandler();
     };
   }
@@ -64,9 +74,12 @@
       placeyholder="Barang"
       inputClassName="form-control"
       delay="20"
-      valueFieldName="id"
       labelFieldName="name"
       searchFunction={searchProduct}
+      valueFunction={(item) =>{
+        product = item;
+        return item?.productId;
+      }}
       maxItemsToShowInList="10"
       showClear
       on:change={changeProductHandler()}
@@ -79,14 +92,16 @@
       format="number"
       pristineValue="1"
       minimumValue="1"
-      on:click={changeQuantityHandler()}
+      on:input={changeQuantityHandler()}
     />
   </td>
-  {#if mutation === "STOCK_IN"}
-    <td>
-      <InputNumberField id="price-{id}" name="price" on:input={changePriceHandler()} />
-    </td>
-  {/if}
+  <td>
+    {#if mutation === "STOCK_IN"}
+      <InputNumberField id="price-{id}" name="price" on:input={changePriceHandler()} bind:setValue={setPriceValue} />
+    {:else}
+      <CellNumber value={price} />
+    {/if}
+  </td>
   <td style="padding: unset">
     <button
       type="button"

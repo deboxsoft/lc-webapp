@@ -4,6 +4,7 @@
   import CellDate from "__@comps/CellDate.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
+  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
 
   export let stock;
   let dropdownContext, supplier, category, stockIn, stockOut;
@@ -16,18 +17,26 @@
 </script>
 
 <tr>
-  <td align="center">
+  <td style="text-align: center">
     <a href={$url("./:id/view", { id: stock.id })}>
       {stock.id}
     </a>
   </td>
   <td style="text-align: center"><CellDate date={stock.date} /></td>
   <td>{stock.name || ""}</td>
-  <td align="center">{stock.unit || ""}</td>
-  <td align="center"><CellNumber format="number" value={stockIn} /></td>
-  <td align="center"><CellNumber format="number" value={stockOut} /></td>
-  <td align="center"><CellNumber format="number" value={stock.available} /></td>
-  <td align="center">
+  <td style="text-align: center">
+    {#if stock.mutation === "STOCK_OUT"}
+      <TransactionStatus status={stock.status} />
+    {:else}
+      -
+    {/if}
+  </td>
+  <td style="text-align: center">{stock.mutation === "STOCK_OUT" ? "keluar" : "masuk"}</td>
+  <td style="text-align: center">{stock.unit || ""}</td>
+  <td style="text-align: center"><CellNumber format="number" value={stockIn} /></td>
+  <td style="text-align: center"><CellNumber format="number" value={stockOut} /></td>
+  <td style="text-align: center"><CellNumber format="number" value={stock.available} /></td>
+  <td style="text-align: center">
     <CellNumber value={stock.price} />
   </td>
   <td style="cursor: pointer;padding: 0">
