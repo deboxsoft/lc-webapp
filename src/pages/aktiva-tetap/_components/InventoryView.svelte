@@ -21,14 +21,17 @@
   </p>
   <dt class="col-sm-3 mb-0">Tanggal Pembelian</dt>
   <p class="col-sm-9 mb-0">: <CellDate date={inventory.date} format="DD-MMMM-YYYY" /></p>
-  <dt class="col-sm-3 mb-0">Tanggal Transaksi</dt>
-  <p class="col-sm-9 mb-0">: <CellDate date={transaction.dateTransaction} format="DD-MMMM-YYYY" /></p>
-  <dt class="col-sm-3 mb-0">No Transaksi</dt>
-  <p class="col-sm-9 mb-0">: {transaction?.id || "-"}</p>
-  <dt class="col-sm-3 mb-0">Status Transaksi</dt>
-  <p class="col-sm-9 mb-0">:
-    <TransactionStatus status={transaction?.status} />
-  </p>
+  {#if transaction}
+    <dt class="col-sm-3 mb-0">Tanggal Transaksi</dt>
+    <p class="col-sm-9 mb-0">: <CellDate date={transaction.dateTransaction} format="DD-MMMM-YYYY" /></p>
+    <dt class="col-sm-3 mb-0">No Transaksi</dt>
+    <p class="col-sm-9 mb-0">: {transaction?.id || "-"}</p>
+    <dt class="col-sm-3 mb-0">Status Transaksi</dt>
+    <p class="col-sm-9 mb-0">
+      :
+      <TransactionStatus status={transaction?.status} />
+    </p>
+  {/if}
   <dt class="col-sm-3 mb-0">Kategori</dt>
   <p class="col-sm-9 mb-0">
     : {getCategoryInventory(inventory.categoryId)?.name || "-"}
@@ -53,6 +56,11 @@
   <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
     : <CellAccount class="ml-1" id={inventory.creditAccount} />
   </p>
+  <dt class="col-sm-3 mb-0">Status</dt>
+  <p class="col-sm-9 mb-0">
+    :
+    <TransactionStatus status={inventory?.status || "-"} />
+  </p>
   <dt class="col-sm-3 mb-0">Harga Barang</dt>
   <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
     : <span style="width: 150px"><CellNumber class="ml-1" value={inventory.priceItem} /></span>
@@ -66,4 +74,6 @@
     : <span style="width: 150px"><CellNumber class="ml-1" value={inventory.quantity * inventory.priceItem} /></span>
   </p>
 </dl>
-<TransactionList {transaction} />
+{#if transaction}
+  <TransactionList {transaction} />
+{/if}

@@ -6,6 +6,7 @@
   import CellNumber from "__@comps/CellNumber.svelte";
   import dayjs from "dayjs";
   import CellDate from "__@comps/CellDate.svelte";
+  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
 
   const { getCategoryInventory } = stores.getInventoryContext();
   export let inventory;
@@ -15,15 +16,16 @@
 </script>
 
 <tr>
-  <td align="center">
+  <td style="text-align: center">
     <a href={$url("./:id/view", { id: inventory.id })}>
       {inventory.id}
     </a>
   </td>
-  <td align="center"><CellDate date={inventory.date} /></td>
+  <td style="text-align: center"><CellDate date={inventory.date} /></td>
   <td>{inventory.name || ""}</td>
+  <td width="50" style="text-align: center"><TransactionStatus status={inventory.status} /></td>
   <td>{getCategoryInventory(inventory.categoryId)?.name || ""}</td>
-  <td align="center">{inventory.quantity}</td>
+  <td style="text-align: center">{inventory.quantity}</td>
   <td>
     <CellNumber value={inventory.priceItem} />
   </td>
@@ -48,9 +50,11 @@
         <a href={$url("./:id/view", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-eye" />Lihat Aktiva Tetap</a
         >
-        <a href={$url("./:id/update", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-trash-alt" />Edit Aktiva Tetap</a
-        >
+        {#if inventory.status !== "APPROVED"}
+          <a href={$url("./:id/update", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-trash-alt" />Edit Aktiva Tetap</a
+          >
+        {/if}
         <a href={$url("./:id/remove", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-pencil" />Hapus Aktiva Tetap</a
         >
