@@ -12,7 +12,6 @@
 
   $: {
     if ($programStore && openDialog) {
-      console.log($programStore);
       program = getProgram($params.id);
       openDialog()
     }

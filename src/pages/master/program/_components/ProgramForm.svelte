@@ -78,25 +78,6 @@
             />
           </div>
         </div>
-        <div class="row">
-          <div class="form-group col-12">
-            <label for="period">Periode</label>
-            <InputField
-              id="period"
-              name="period"
-              type="text"
-              class="form-control"
-              placeholder="Periode"
-              on:keypress={keyHandler}
-            />
-          </div>
-        </div>
-        <!--        <div class="row">-->
-        <!--          <div class="form-group col-12">-->
-        <!--            <label for="amount">Nominal</label>-->
-        <!--            <InputNumberField id="amount" class="form-control" name="amount" signed />-->
-        <!--          </div>-->
-        <!--        </div>-->
       </div>
     </div>
   </Form>
