@@ -20,10 +20,10 @@
     "lint": "run-p lint:svelte lint:eslint lint:tsc"
   },
   "dependencies": {
-    "@deboxsoft/accounting-api": "^1.3.0-beta.46",
-    "@deboxsoft/accounting-client": "^1.3.0-beta.65",
-    "@deboxsoft/lc-cashier-api": "^1.0.1-beta.12",
-    "@deboxsoft/lc-cashier-client": "^1.0.1-beta.16",
+    "@deboxsoft/accounting-api": "^1.3.0-beta.53",
+    "@deboxsoft/accounting-client": "^1.3.0-beta.75",
+    "@deboxsoft/lc-cashier-api": "^1.0.1-beta.13",
+    "@deboxsoft/lc-cashier-client": "^1.0.1-beta.17",
     "@deboxsoft/module-client": "^2.2.9",
     "@deboxsoft/module-core": "^2.2.12",
     "@deboxsoft/module-graphql": "^2.2.14",
