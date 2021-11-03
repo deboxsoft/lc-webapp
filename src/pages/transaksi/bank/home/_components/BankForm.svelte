@@ -1,5 +1,5 @@
 <script>
-  import { ZodError } from "@deboxsoft/zod";
+  import { z, ZodError } from "@deboxsoft/zod";
   import { goto } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { onMount } from "svelte";
@@ -10,10 +10,12 @@
   import InputField from "__@comps/forms/InputField.svelte";
   import Form from "__@comps/forms/Form.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
-  import ComboxField from "__@comps/forms/ComboxField.svelte";
   import { filteringAccountCash } from "__@root/utils";
+  import { stores } from "@deboxsoft/accounting-client";
+  import AutoCompleteField from "__@comps/forms/AutoCompleteField.svelte";
 
   const { notify, loading } = getApplicationContext();
+  const { preferenceStore, save: savePreference } = stores.getPreferenceAccountingContext();
 
   // props
   export let bank;
@@ -25,14 +27,22 @@
 
   // state
   let openDialog,
+    loadingMasterBank,
     fields,
     isValid = writable(false),
     fieldsErrors,
+    bankList = [],
     submitting = false;
 
   onMount(() => {
     openDialog();
   });
+
+  $: {
+    if ($preferenceStore?.bank) {
+      bankList = $preferenceStore.bank;
+    }
+  }
 
   function getAccount(accountType) {
     const accountStore = getAccountLeaf();
@@ -43,127 +53,15 @@
     }
   }
 
-  const bankList = [
-    "Bank Central Asia (BCA)",
-    "Bank Mandiri",
-    "Bank Rakyat Indonesia (BRI)",
-    "Bank Negara Indonesia (BNI)",
-    "BCA Syariah",
-    "BII Syariah",
-    "Bangkok Bank",
-    "Bank ANZ Indonesia",
-    "Bank Agris",
-    "Bank Agroniaga",
-    "Bank Andara",
-    "Bank Artos Indonesia",
-    "Bank BJB (Bandung)",
-    "Bank BJB Syariah",
-    "Bank BNI Syariah",
-    "Bank BNP Paribas Indonesia",
-    "Bank BPD Bali (Denpasar)",
-    "Bank BPD DIY (Yogyakarta)",
-    "Bank BTPN",
-    "Bank BRI Syariah",
-    "Bank Bengkulu (Bengkulu)",
-    "Bank Bisnis Internasional",
-    "Bank Bukopin",
-    "Bank Bumi Arta",
-    "Bank CIMB Niaga",
-    "Bank Capital Indonesia",
-    "Bank Chinatrust Indonesia",
-    "Bank DBS Indonesia",
-    "Bank DKI (Jakarta)",
-    "Bank Dipo International",
-    "Bank Ekonomi Raharja",
-    "Bank Fama International",
-    "Bank Ganesha",
-    "Bank Hana",
-    "Bank Harda International",
-    "Bank ICBC Indonesia",
-    "Bank Ina Perdana",
-    "Bank Index Selindo",
-    "Bank International Indonesia (BII)",
-    "Bank J Trust Indonesia",
-    "Bank Jambi (Jambi)",
-    "Bank Jasa Jakarta",
-    "Bank Jateng (Semarang)",
-    "Bank Jatim (Surabaya)",
-    "Bank KEB Indonesia",
-    "Bank Kalsel (Banjarmasin)",
-    "Bank Kalsel Syariah",
-    "Bank Kalteng (Palangka Raya)",
-    "Bank Kaltim (Samarinda)",
-    "Bank Kesejahteraan Ekonomi",
-    "Bank Lampung (Bandar Lampung)",
-    "Bank Liman International",
-    "Bank MNC Internasional",
-    "Bank Maluku (Ambon)",
-    "Bank Maspion",
-    "Bank Mayapada",
-    "Bank Maybank Indonesia",
-    "Bank Maybank Syariah Indonesia",
-    "Bank Mayora",
-    "Bank Mestika Dharma",
-    "Bank Metro Express",
-    "Bank Mitraniaga",
-    "Bank Mizuho Indonesia",
-    "Bank Muamalat Indonesia",
-    "Bank Multi Arta Sentosa",
-    "Bank NTB (Mataram)",
-    "Bank NTB Syariah",
-    "Bank NTT (Kupang)",
-    "Bank Nationalnobu",
-    "Bank Nusantara Parahayangan",
-    "Bank OCBC NISP",
-    "Bank Permata",
-    "Bank Permata Syariah",
-    "Bank Pundi Indonesia",
-    "Bank QNB Kesawan",
-    "Bank Rabobank International Indonesia",
-    "Bank Resona Perdania",
-    "Bank Riau Kepri (Pekanbaru)",
-    "Bank Riau Kepri Syariah",
-    "Bank Royal Indonesia",
-    "Bank SBI Indonesia",
-    "Bank Sahabat Purba Danarta",
-    "Bank Sinar Harapan Bali",
-    "Bank Sinarmas",
-    "Bank Sulteng (Palu)",
-    "Bank Sultra (Kendari)",
-    "Bank Sulut (Manado)",
-    "Bank Sumitomo Mitsui Indonesia",
-    "Bank Sumsel Babel (Palembang)",
-    "Bank Sumsel Babel Syariah",
-    "Bank Sumut (Medan)",
-    "Bank Sumut Syariah",
-    "Bank Syariah Bukopin",
-    "Bank Syariah Mandiri",
-    "Bank Tabungan Pensiunan Nasional",
-    "Bank Tabungan Pensiunan Nasional Syariah",
-    "Bank UOB Indonesia",
-    "Bank Victoria International",
-    "Bank Victoria Syariah",
-    "Bank Windu Kentjana International",
-    "Bank Woori Indonesia",
-    "Bank Yudha Bhakti",
-    "Bank of America",
-    "Bank of China",
-    "Bank of India Indonesia",
-    "CIMB Niaga Syariah",
-    "Centrama Nasional Bank",
-    "Citibank",
-    "Deutsche Bank",
-    "HSBC",
-    "HSBC Amanah",
-    "JPMorgan Chase",
-    "OCBC NISP Syariah",
-    "Panin Bank",
-    "Panin Bank Syariah",
-    "Prima Master Bank",
-    "Royal Bank of Scotland",
-    "Standard Chartered",
-    "The Bank of Tokyo Mitsubishi UFJ"
-  ];
+  async function createMasterBankHandler(text) {
+    try {
+      const bank = z.array(z.string().min(1)).parse([text, ...$preferenceStore.bank]);
+      const input = { ...$preferenceStore, bank }
+      await savePreference(input);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   async function submitHandler() {
     try {
@@ -206,7 +104,16 @@
         <div class="row">
           <div class="form-group col-6">
             <label for="bank">Pilih Bank</label>
-            <ComboxField items={bankList} name="name" />
+            <AutoCompleteField
+              inputClassName="form-control"
+              id="bank"
+              items={bankList}
+              name="name"
+              create
+              createText="tambahkan sebagai data baru"
+              placeholder="Pilih Bank"
+              onCreate={createMasterBankHandler}
+            />
           </div>
           <div class="form-group col-6">
             <label for="branch">Cabang</label>
