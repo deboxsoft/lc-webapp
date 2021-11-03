@@ -1,4 +1,5 @@
 import { createPdf } from "pdfmake/build/pdfmake";
+import vfsFonts from "./vfs_fonts";
 
 const fonts = {
   Roboto: {
@@ -31,4 +32,4 @@ export const pdfStyles = {
   }
 };
 
-export const pdfMake = (definition) => createPdf(definition, null, fonts);
+export const pdfMake = (definition) => createPdf(definition, null, fonts, vfsFonts);
