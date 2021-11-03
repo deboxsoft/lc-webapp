@@ -26,7 +26,11 @@
   let submitting = false,
     filter = {};
 
-  fetchData();
+  $: {
+    if (!$bddStore) {
+      fetchData();
+    }
+  }
 
   function fetchData(options = {}) {
     $loading = true;

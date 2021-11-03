@@ -4,23 +4,25 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
+  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
 
   export let bdd;
   let dropdownContext;
-  const total = bdd.taxRate > 0 ? bdd.amount + (bdd.taxRate * bdd.amount / 100) : bdd.amount;
+  const total = bdd.taxRate > 0 ? bdd.amount + (bdd.taxRate * bdd.amount) / 100 : bdd.amount;
 </script>
 
 <tr>
-  <td align="center">
+  <td style="text-align: center">
     <a href={$url("./:id/view", { id: bdd.id })}>
       {bdd.id}
     </a>
   </td>
-  <td align="center"><CellDate date={bdd.dateStart} /></td>
-  <td align="center"><CellDate date={bdd.dateEnd} /></td>
+  <td style="text-align: center"><TransactionStatus status={bdd.status} /></td>
+  <td style="text-align: center"><CellDate date={bdd.dateStart} /></td>
+  <td style="text-align: center"><CellDate date={bdd.dateEnd} /></td>
   <td>{bdd.description || ""}</td>
   <td>{bdd.category || ""}</td>
-  <td align="center">{bdd.taxRate || ""}</td>
+  <td style="text-align: center">{bdd.taxRate || ""}</td>
   <td>
     <CellNumber value={bdd.amount} />
   </td>
@@ -40,17 +42,19 @@
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
         <a href={$url("./:id/amortization", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-        ><i class="icon-clipboard3" />Rekap depreciation</a
+          ><i class="icon-clipboard3" />Rekap depreciation</a
         >
         <a href={$url("./:id/view", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-eye" />Lihat BDD</a
         >
-        <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-trash-alt" />Ubah BDD</a
-        >
-        <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-pencil" />Hapus BDD</a
-        >
+        {#if bdd.status !== "APPROVED"}
+          <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-trash-alt" />Ubah BDD</a
+          >
+          <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-pencil" />Hapus BDD</a
+          >
+        {/if}
       </svelte:fragment>
     </Dropdown>
   </td>

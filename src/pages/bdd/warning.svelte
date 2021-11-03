@@ -9,12 +9,13 @@
   import { getApplicationContext } from "__@modules/app";
   import { createReportContext } from "./_export";
   import Table from "__@comps/tables/DataTable.svelte";
+  import Button from "__@comps/Button.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const applicationContext = getApplicationContext();
   const reportContext = createReportContext();
   const { loading } = applicationContext;
-  const { warningContract } = stores.getBddContext();
+  const { findPage, bddStore, bddPageInfo } = stores.getBddContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
@@ -25,16 +26,39 @@
     filter = {},
     /** @type{import("@deboxsoft/accounting-api").RemainingContract[]} */
     dataList = [];
-  fetchData();
+  $: {
+    if (!$bddStore) {
+      fetchData();
+    }
+  }
 
-  function fetchData() {
+  $: {
+    if ($bddStore) {
+      dataList = $bddStore.sort((a, b) => dayjs(a.date).isAfter(dayjs(b.date)) ? 1 : -1).map(_ => ({
+        ..._
+      }))
+    }
+  }
+
+  function fetchData(options = {}) {
     $loading = true;
     submitting = true;
-    warningContract().then((_) => {
-      dataList = _;
+    findPage(
+      {
+        filter,
+        pageCursor: {
+          next: options.more && $bddPageInfo?.next
+        }
+      },
+      options
+    ).then(() => {
       $loading = false;
       submitting = false;
     });
+  }
+
+  function infiniteHandler() {
+    fetchData({ more: true });
   }
 </script>
 
@@ -63,6 +87,13 @@
           </tr>
         {/each}
       </Table>
+      {#if $bddPageInfo.hasNext}
+        <div class="" style="height: 50px">
+          <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
+          ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+          </Button>
+        </div>
+      {/if}
     </div>
   </div>
   <slot />
