@@ -65,7 +65,7 @@
       transaction.status = "REJECTED";
       notify(`transaksi id '${id}' telah direject`, "success");
     } else {
-      notify(`approve transaksi id '${id}' tidak berhasil`, "error");
+      notify(`reject transaksi id '${id}' tidak berhasil`, "error");
     }
     $loading = false;
     closeHandler();

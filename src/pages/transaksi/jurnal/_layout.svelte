@@ -31,7 +31,7 @@
   })
   const { loading } = applicationContext;
 
-  let filter = {};
+  let filter = { showJournal: true };
   let openFilterDialog;
   let closeFilterDialog;
   let textFilter = undefined;
@@ -69,9 +69,7 @@
 
   async function init() {
     $loading = true;
-    if (readGranted) {
-      filter = {};
-    } else if (readOwnGranted) {
+    if (!readOwnGranted && readOwnGranted) {
       const profile = await getProfile();
       filter.userId = profile.session.userId;
     }
