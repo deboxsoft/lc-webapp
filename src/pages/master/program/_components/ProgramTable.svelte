@@ -9,7 +9,6 @@
 <Table>
   <tr slot="header">
     <th>Nama</th>
-    <th width="150">Periode</th>
     <!--    <div class="dbx-cell amount">Nominal</div>-->
     <th width="30" />
   </tr>

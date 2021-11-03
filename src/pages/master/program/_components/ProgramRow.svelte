@@ -12,7 +12,6 @@
 
 <tr>
   <td>{program.name || ""}</td>
-  <td>{program.period || ""}</td>
   <Dropdown
     class="h-100 d-flex justify-content-center"
     bind:context={dropdownContext}
