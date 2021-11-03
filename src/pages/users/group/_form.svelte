@@ -102,8 +102,6 @@
   let fieldsErrors;
   $: values = transformValues(groupUser);
 
-  $: console.log($fieldsErrors);
-
   async function submitHandler(_onSubmit = onSubmit) {
     try {
       $loading = true;

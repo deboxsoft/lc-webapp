@@ -36,7 +36,6 @@
 
   $: {
     if ($accountStore) {
-      console.log("ready");
       accounts = $accountStore.sort(sortUtilsFunc("id"));
       ready = true;
     }
