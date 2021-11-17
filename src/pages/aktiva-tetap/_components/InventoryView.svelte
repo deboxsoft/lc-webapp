@@ -26,11 +26,6 @@
     <p class="col-sm-9 mb-0">: <CellDate date={transaction.dateTransaction} format="DD-MMMM-YYYY" /></p>
     <dt class="col-sm-3 mb-0">No Transaksi</dt>
     <p class="col-sm-9 mb-0">: {transaction?.id || "-"}</p>
-    <dt class="col-sm-3 mb-0">Status Transaksi</dt>
-    <p class="col-sm-9 mb-0">
-      :
-      <TransactionStatus status={transaction?.status} />
-    </p>
   {/if}
   <dt class="col-sm-3 mb-0">Kategori</dt>
   <p class="col-sm-9 mb-0">
@@ -51,6 +46,10 @@
   <dt class="col-sm-3 mb-0">Penanggung Jawab</dt>
   <p class="col-sm-9 mb-0">
     : {inventory.person || "-"}
+  </p>
+  <dt class="col-sm-3 mb-0">Akun Debit</dt>
+  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+    : <CellAccount class="ml-1" id={inventory.debitAccount} />
   </p>
   <dt class="col-sm-3 mb-0">Akun Kredit</dt>
   <p class="col-sm-9 mb-0 d-inline-flex align-items-center">

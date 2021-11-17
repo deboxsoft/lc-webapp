@@ -82,7 +82,7 @@
   }
 </script>
 
-<Modal bind:openDialog {title} onClose={closeHandler}>
+<Modal class="modal-lg" bind:openDialog {title} onClose={closeHandler}>
   <Form checkValidateFirst {schema} values={{ ...bdd }} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
       <div class="form-group col-12">
@@ -119,52 +119,52 @@
         </div>
       </div>
     {/if}
-    {#if !isUpdate}
-      <div class="row">
-        <div class="form-group col-6">
-          <label for="debitAccount">Akun BDD</label>
-          <AccountSelect
-            accountStore={getAccount("bdd")}
-            id="debitAccount"
-            name="debitAccount"
-            placeholder="Akun Amortisasi"
-            allowEmpty
-          />
-        </div>
-        <div class="form-group col-6">
-          <label for="creditAccount">Akun Pembayaran</label>
-          <AccountSelect
-            accountStore={getAccount("cash")}
-            id="creditAccount"
-            name="creditAccount"
-            placeholder="Akun Pembayaran"
-            allowEmpty
-          />
-        </div>
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="debitAccount">Akun BDD</label>
+        <AccountSelect
+          accountStore={getAccount("bdd")}
+          id="debitAccount"
+          name="debitAccount"
+          placeholder="Akun Amortisasi"
+          allowEmpty
+        />
       </div>
-      <div class="row">
-        <div class="form-group col-6">
-          <label for="expenseAccount">Akun Biaya Amortisasi</label>
-          <AccountSelect
-            accountStore={getAccount("expense")}
-            id="expenseAccount"
-            name="expenseAccount"
-            placeholder="Akun Biaya Amortisasi"
-            allowEmpty
-          />
-        </div>
-        <div class="form-group col-6">
-          <label for="amortizationAccount">Akun Akumulasi BDD</label>
-          <AccountSelect
-            accountStore={getAccount("accumulation")}
-            id="amortizationAccount"
-            name="amortizationAccount"
-            placeholder="Akun Akumulasi BDD"
-            allowEmpty
-          />
-        </div>
+      <div class="form-group col-6">
+        <label for="creditAccount">Akun Pembayaran</label>
+        <AccountSelect
+          accountStore={getAccount("cash")}
+          id="creditAccount"
+          name="creditAccount"
+          placeholder="Akun Pembayaran"
+          allowEmpty
+        />
       </div>
-    {/if}
+    </div>
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="expenseAccount">Akun Biaya Amortisasi</label>
+        <AccountSelect
+          accountStore={getAccount("expense")}
+          accountId={bdd?.expenseAccount}
+          id="expenseAccount"
+          name="expenseAccount"
+          placeholder="Akun Biaya Amortisasi"
+          allowEmpty
+        />
+      </div>
+      <div class="form-group col-6">
+        <label for="amortizationAccount">Akun Akumulasi BDD</label>
+        <AccountSelect
+          accountStore={getAccount("accumulation")}
+          accountId={bdd?.amortizationAccount}
+          id="amortizationAccount"
+          name="amortizationAccount"
+          placeholder="Akun Akumulasi BDD"
+          allowEmpty
+        />
+      </div>
+    </div>
     <div class="row">
       <div class="form-group col-8">
         <label for="description">Keterangan</label>
@@ -175,26 +175,24 @@
         <InputField id="category" name="category" type="text" class="form-control" placeholder="Jenis" />
       </div>
     </div>
-    {#if !isUpdate}
-      <div class="row">
-        <div class="form-group col-12 col-md-6">
-          <label for="categoryId">Pajak (%)</label>
-          <InputNumberField
-            format="number"
-            id="taxRate"
-            name="taxRate"
-            class="form-control"
-            placeholder="Pajak (%)"
-            maximumValue="100"
-            minimumValue="0"
-          />
-        </div>
-        <div class="form-group col-12 col-md-6">
-          <label for="priceItem">Jumlah</label>
-          <InputNumberField id="priceItem" name="amount" class="form-control" placeholder="Jumlah" />
-        </div>
+    <div class="row">
+      <div class="form-group col-12 col-md-6">
+        <label for="categoryId">Pajak (%)</label>
+        <InputNumberField
+          format="number"
+          id="taxRate"
+          name="taxRate"
+          class="form-control"
+          placeholder="Pajak (%)"
+          maximumValue="100"
+          minimumValue="0"
+        />
       </div>
-    {/if}
+      <div class="form-group col-12 col-md-6">
+        <label for="priceItem">Jumlah</label>
+        <InputNumberField id="priceItem" name="amount" class="form-control" placeholder="Jumlah" />
+      </div>
+    </div>
   </Form>
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

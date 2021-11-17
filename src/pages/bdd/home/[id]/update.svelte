@@ -18,14 +18,14 @@
   $: bdd = $bddStore && getBdd($params.id);
 
   async function onSubmit({ id, ...values }) {
-    // await update(bdd.id, values);
+    await update(bdd.id, values);
     notify(`Berhasil mengupdate data bdd`, "success");
   }
 </script>
 
 {#if bdd}
   <BddForm
-    bdd={{ description: bdd.description, dateStart: bdd.dateStart, dateEnd: bdd.dateEnd }}
+    {bdd}
     schema={BddUpdateInputSchema}
     isUpdate
     {onSubmit}

@@ -50,7 +50,7 @@
   }
 </script>
 
-<Modal class="modal-lg" title="Bdd" bind:openDialog onClose={closeHandler}>
+<Modal title="Bdd" bind:openDialog onClose={closeHandler}>
   <BddView {bdd} />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

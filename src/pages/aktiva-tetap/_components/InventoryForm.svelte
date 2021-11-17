@@ -69,6 +69,8 @@
   function closeHandler() {
     $goto(to);
   }
+
+  $: console.log(inventory?.debitAccount);
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>

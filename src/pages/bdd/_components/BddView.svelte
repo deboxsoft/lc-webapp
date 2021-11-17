@@ -4,6 +4,7 @@
   import TransactionList from "__@comps/transactions/TransactionList.svelte";
   import CellDate from "__@comps/CellDate.svelte";
   import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
+  import CellAccount from "__@comps/account/CellAccount.svelte";
 
   /** @type{import("@deboxsoft/accounting-api").BddDetail} */
   export let bdd;
@@ -20,12 +21,23 @@
   {#if transaction}
     <dt class="col-sm-3 mb-0">No Transaksi</dt>
     <p class="col-sm-9 mb-0">: {transaction?.id || "-"}</p>
-    <dt class="col-sm-3 mb-0">Status Transaksi</dt>
-    <p class="col-sm-9 mb-0">
-      :
-      <TransactionStatus status={transaction?.status} />
-    </p>
   {/if}
+  <dt class="col-sm-3 mb-0">Akun Amortisasi</dt>
+  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+    : <CellAccount class="ml-1" id={bdd.amortizationAccount} />
+  </p>
+  <dt class="col-sm-3 mb-0">Akun Biaya</dt>
+  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+    : <CellAccount class="ml-1" id={bdd.expenseAccount} />
+  </p>
+  <dt class="col-sm-3 mb-0">Akun Debit</dt>
+  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+    : <CellAccount class="ml-1" id={bdd.debitAccount} />
+  </p>
+  <dt class="col-sm-3 mb-0">Akun Kredit</dt>
+  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+    : <CellAccount class="ml-1" id={bdd.creditAccount} />
+  </p>
   <dt class="col-sm-3 mb-0">Keterangan</dt>
   <p class="col-sm-9 mb-0">
     : {bdd.description || "-"}

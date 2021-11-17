@@ -8,7 +8,7 @@
 
   export let bdd;
   let dropdownContext;
-  const total = bdd.taxRate > 0 ? bdd.amount + (bdd.taxRate * bdd.amount) / 100 : bdd.amount;
+  $: total = bdd.taxRate > 0 ? bdd.amount + (bdd.taxRate * bdd.amount) / 100 : bdd.amount;
 </script>
 
 <tr>
@@ -17,10 +17,10 @@
       {bdd.id}
     </a>
   </td>
-  <td style="text-align: center"><TransactionStatus status={bdd.status} /></td>
   <td style="text-align: center"><CellDate date={bdd.dateStart} /></td>
   <td style="text-align: center"><CellDate date={bdd.dateEnd} /></td>
   <td>{bdd.description || ""}</td>
+  <td style="text-align: center"><TransactionStatus status={bdd.status} /></td>
   <td>{bdd.category || ""}</td>
   <td style="text-align: center">{bdd.taxRate || ""}</td>
   <td>

@@ -36,7 +36,6 @@
   async function rejectHandler() {
     $loading = true;
     const result = await reject(inventory.id);
-    console.log(result, "result");
     if (await reject(inventory.id)) {
       notify(`reject aktiva tetap id '${inventory.id}' berhasil direject`, "success");
     } else {
@@ -51,7 +50,7 @@
   }
 </script>
 
-<Modal class="modal-lg" title="Aktiva Tetap" bind:openDialog onClose={closeHandler}>
+<Modal title="Aktiva Tetap" bind:openDialog onClose={closeHandler}>
   <InventoryView {inventory} />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

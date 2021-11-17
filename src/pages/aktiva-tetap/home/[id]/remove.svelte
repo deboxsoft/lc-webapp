@@ -8,6 +8,7 @@
   import { getAclContext } from "../../_acl-context";
   import InventoryRemove from "../../_components/InventoryRemove.svelte";
   import { writable } from "svelte/store";
+  import Loader from "__@comps/loader/Loader.svelte";
 
   const { removeGranted } = getAclContext();
   const { remove, getInventory, inventoryStore } = stores.getInventoryContext();
@@ -61,11 +62,13 @@
 </script>
 
 <Modal bind:openDialog bind:closeDialog title="Hapus Aktiva Tetap" onClose={closeHandler}>
-  {#if bdd.status === "APPROVED"}
+  {#if !inventory || submitting}
+    <Loader />
+  {:else if inventory.status === "APPROVED"}
     <InventoryRemove inventory={{...inventory}} schema={InventoryRemoveInputSchema} />
   {:else}
     <div class="alert alert-warning alert-styled-left">
-      Apa anda yakin akan menghapus data inventory '${inventory.name}'?
+      Apa anda yakin akan menghapus data inventory '{inventory.name}'?
     </div>
   {/if}
   <svelte:fragment slot="footer">
