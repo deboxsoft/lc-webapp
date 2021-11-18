@@ -31,7 +31,7 @@
   })
   const { loading } = applicationContext;
 
-  let filter = { showJournal: true };
+  let filter = {};
   let openFilterDialog;
   let closeFilterDialog;
   let textFilter = undefined;
