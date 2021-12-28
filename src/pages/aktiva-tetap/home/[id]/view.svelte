@@ -18,6 +18,7 @@
   let openDialog, inventory;
 
   inventoryDetail($params.id).then((_) => {
+    console.log(_);
     inventory = _;
     openDialog();
   });

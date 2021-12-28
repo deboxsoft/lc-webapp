@@ -35,7 +35,7 @@
     <p class="col-sm-7">
       : {inventory.name || "-"}
     </p>
-    <dt class="col-sm-5">Total Akumulasi Depresiasi</dt>
+    <dt class="col-sm-5">Nilai Buku</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
       : &nbsp<CellNumber value={totalDepreciation} />
     </p>

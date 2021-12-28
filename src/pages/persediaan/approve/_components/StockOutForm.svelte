@@ -1,12 +1,11 @@
 <script>
   import { tick } from "svelte";
-  import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
 
   import Form from "__@comps/forms/Form.svelte";
-  import { filteringAccountCash, filteringAccountExpense, filteringAccountStock } from "__@root/utils";
+  import { filteringAccountCash, filteringAccountStock } from "__@root/utils";
   import StockProductForm from "./StockProductForm.svelte";
   import InputDateField from "__@comps/forms/InputDateField.svelte";
   import { generateId } from "@deboxsoft/module-client";
@@ -17,8 +16,8 @@
   const { getAccountLeaf } = stores.getAccountContext();
 
   // props
-  export let stock;
   export let onSubmit;
+  export let stockTransaction;
   export let schema;
   /** @type {"STOCK_IN" | "STOCK_OUT"} */
   export let mutation = undefined;
@@ -65,7 +64,7 @@
   }
 </script>
 
-<Form checkValidateFirst {schema} values={stock} bind:fields bind:fieldsErrors bind:isValid>
+<Form checkValidateFirst {schema} values={stockTransaction} bind:fields bind:fieldsErrors bind:isValid>
   <div class="card">
     <div class="card-body">
       <div class="row">

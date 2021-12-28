@@ -64,12 +64,8 @@
 <Modal bind:openDialog bind:closeDialog title="Hapus Aktiva Tetap" onClose={closeHandler}>
   {#if !inventory || submitting}
     <Loader />
-  {:else if inventory.status === "APPROVED"}
-    <InventoryRemove inventory={{...inventory}} schema={InventoryRemoveInputSchema} />
   {:else}
-    <div class="alert alert-warning alert-styled-left">
-      Apa anda yakin akan menghapus data inventory '{inventory.name}'?
-    </div>
+    <InventoryRemove inventory={{...inventory}} schema={InventoryRemoveInputSchema} />
   {/if}
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-warning" on:click={closeHandler}>Tutup</button>

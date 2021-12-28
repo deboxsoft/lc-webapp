@@ -13,7 +13,6 @@
 
   export let id = generateId({ prefix: "stock-product", size: 3 });
   export let stockProduct;
-  export let updateProduct;
   export let index;
   export let mutation;
   export let fieldName = "products";
@@ -71,7 +70,7 @@
     <AutoCompleteField
       id="product-{id}"
       name="productId"
-      placeyholder="Barang"
+      placeholder="Barang"
       inputClassName="form-control"
       delay="20"
       labelFieldName="name"

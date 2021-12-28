@@ -69,27 +69,25 @@
   function closeHandler() {
     $goto(to);
   }
-
-  $: console.log(inventory?.debitAccount);
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
   <Form checkValidateFirst {schema} values={{ ...inventory }} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
-      <div class="form-group col-12 col-md-2">
-        <label for="code">Kode</label>
-        <InputField id="code" name="code" type="text" class="form-control" placeholder="Kode" />
+      <div class="form-group col-12 col-md-6">
+        <label for="date">Tanggal Perolehan</label>
+        <InputDate id="datePurchase" name="datePurchase" class="form-control" placeholder="Tanggal Perolehan" range={false} />
       </div>
       <div class="form-group col-12 col-md-6">
         <label for="name">Nama</label>
         <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
       </div>
-      <div class="form-group col-12 col-md-4">
-        <label for="date">Tanggal</label>
-        <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" range="" disabled />
-      </div>
     </div>
     <div class="row">
+      <div class="form-group col-12 col-md-6">
+        <label for="code">No Nota</label>
+        <InputField id="no" name="no" type="text" class="form-control" placeholder="No Nota" />
+      </div>
       <div class="form-group col-12 col-md-6">
         <label for="categoryId">Kategori</label>
         <ComboxField
@@ -103,23 +101,11 @@
           disabled={isUpdate}
         />
       </div>
-      <div class="form-group col-12 col-md-6">
-        <label for="debitAccount">Akun Aktiva Tetap</label>
-        <AccountSelect
-          id="debitAccount"
-          name="debitAccount"
-          accountStore={getAccount("inventory")}
-          accountId={inventory?.debitAccount}
-          placeholder="Akun Aktiva Tetap"
-          disabled={isUpdate}
-          allowEmpty
-        />
-      </div>
     </div>
     <div class="row">
       <div class="form-group col-12 col-md-6">
-        <label for="brand">Merek/Type/Spec</label>
-        <InputField id="brand" name="brand" type="text" class="form-control" placeholder="Merek/Type/Spec" />
+        <label for="supplier">Supplier</label>
+        <InputField id="supplier" name="supplier" type="text" class="form-control" placeholder="Supplier" />
       </div>
       <div class="form-group col-12 col-md-6">
         <label for="condition">Kondisi</label>
@@ -138,13 +124,13 @@
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="creditAccount">Akun Pembayaran</label>
+        <label for="creditAccount">Pembayaran</label>
         <AccountSelect
           id="creditAccount"
           name="creditAccount"
           accountStore={getAccount("cash")}
           accountId={inventory?.creditAccount}
-          placeholder="Akun Pembayaran"
+          placeholder="Pembayaran"
           disabled={isUpdate}
           allowEmpty
         />

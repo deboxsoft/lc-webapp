@@ -9,8 +9,10 @@ export const createAclContext = () => {
   const readGranted = query.read().granted;
   const updateGranted = query.update().granted;
   const removeGranted = query.delete().granted;
+  const approveGranted = query.approve().granted;
   const context = {
     auth,
+    approveGranted,
     createGranted,
     readGranted,
     updateGranted,

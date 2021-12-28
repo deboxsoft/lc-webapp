@@ -12,7 +12,9 @@
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import {
     filteringAccountAccumulationDepreciation,
-    filteringAccountExpenseDepreciation
+    filteringAccountExpenseDepreciation,
+    filteringAccountInventory,
+    filteringAccountPayable
   } from "__@root/utils";
 
   const { notify, loading } = getApplicationContext();
@@ -102,7 +104,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-12">
+      <div class="form-group col-12 col-md-6">
         <label for="expenseDepreciationAccount">Biaya Penyusutan Aktiva Tetap</label>
         <AccountSelect
           id="expenseDepreciationAccount"
@@ -114,9 +116,7 @@
           disabled={isUpdate}
         />
       </div>
-    </div>
-    <div class="row">
-      <div class="form-group col-12">
+      <div class="form-group col-12 col-md-6">
         <label for="accumulatedDepreciationAccount">Akumulasi Penyusutan Aktiva Tetap</label>
         <AccountSelect
           id="accumulatedDepreciationAccount"

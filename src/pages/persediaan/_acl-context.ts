@@ -6,6 +6,7 @@ export const createAclContext = () => {
   const auth = getAuthenticationContext();
   const query = auth.getQuery("stock");
   const createGranted = query.create().granted;
+  const approveGranted = query.approve().granted;
   const readGranted = query.read().granted;
   const updateGranted = query.update().granted;
   const removeGranted = query.delete().granted;
@@ -14,7 +15,8 @@ export const createAclContext = () => {
     createGranted,
     readGranted,
     updateGranted,
-    removeGranted
+    removeGranted,
+    approveGranted
   };
   setContext("acl-context", context);
   return context;

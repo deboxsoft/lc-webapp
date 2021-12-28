@@ -18,7 +18,7 @@
   const date = dayjs(inventory.date);
   const countDepreciation = depreciationList.length;
   const depreciationAmount =
-    useMonthLife > countDepreciation ? calculateDepreciation({ inventory, category }) : inventory.quantity;
+    useMonthLife > countDepreciation ? calculateDepreciation({ inventory, category }) : "-";
   const totalDepreciation = depreciationList.reduce(((tot, depreciation) => tot + depreciation.amount), 0);
 </script>
 <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
