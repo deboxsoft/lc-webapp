@@ -19,6 +19,7 @@
   export let minimumValue = "-10000000000000";
   export let decimalPlaces = 2;
   export let options = { decimalPlaces };
+  export let autoNumeric = undefined;
 
   const defaultOptions = {
     allowDecimalPadding: format === "currency",
@@ -36,7 +37,6 @@
   let msgError;
   let invalid = false;
   let classes = "";
-  let autoNumeric;
   let inputEl;
 
   $: {

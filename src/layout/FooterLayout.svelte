@@ -5,21 +5,8 @@
 <!--  </button>-->
 <!--</div>-->
 
-<!--<div class="navbar-collapse collapse" id="navbar-footer">-->
-<style lang="scss" global>
-  .dbx-footer {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: nowrap;
-    align-items: center;
-    font-size: .5rem;
-    padding-top: 1px;
-    vertical-align: middle;
-    width: 100%;
-  }
-</style>
 <div class="dbx-footer">
-  <div >&nbsp;</div>
+  <div>&nbsp;</div>
   <div>
     <span class="text-muted d-block">
       &copy; 2020.
@@ -30,3 +17,17 @@
     </span>
   </div>
 </div>
+
+<!--<div class="navbar-collapse collapse" id="navbar-footer">-->
+<style lang="scss" global>
+  .dbx-footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 0.5rem;
+    padding-top: 1px;
+    vertical-align: middle;
+    width: 100%;
+  }
+</style>

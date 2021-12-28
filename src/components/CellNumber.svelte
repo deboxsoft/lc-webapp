@@ -2,7 +2,7 @@
   import { convertToNumber } from "__@root/utils";
 
   export let value;
-  export let spaceMinus= false;
+  export let spaceMinus = false;
   export let format = "rp";
   export let className = $$props.class || "";
   export let fixedNumber = format === "rp" ? 2 : 0;
@@ -22,7 +22,7 @@
   <!--  <div class="space-sign" />-->
   <!--{/if}-->
   {#if format === "rp"}
-    <div class="sign">Rp. </div>
+    <div class="sign">Rp.</div>
   {/if}
   <div class="space" />
   <div class="value">{value ? convertToNumber({ value: parseFloat(value), fractionDigits: fixedNumber }) : "-"}</div>

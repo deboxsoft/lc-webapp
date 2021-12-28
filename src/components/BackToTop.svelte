@@ -18,6 +18,12 @@
   }
 </script>
 
+<svelte:window on:scroll={handleOnScroll} />
+
+<div class="btn-to-top" on:click={goTop} class:visible={!hidden}>
+  <button class="btn btn-dark btn-icon rounded-pill"><i class="icon-arrow-up8" /> </button>
+</div>
+
 <style lang="scss">
   .btn-to-top {
     position: absolute;
@@ -27,16 +33,10 @@
     opacity: 0;
     visibility: hidden;
     z-index: 999;
-    transition: all .15s ease-in-out;
+    transition: all 0.15s ease-in-out;
     &.visible {
       visibility: visible;
       opacity: 1;
     }
   }
 </style>
-
-<svelte:window on:scroll={handleOnScroll} />
-
-<div class="btn-to-top" on:click={goTop} class:visible={!hidden}>
-  <button class="btn btn-dark btn-icon rounded-pill"><i class="icon-arrow-up8" /> </button>
-</div>

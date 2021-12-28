@@ -32,7 +32,8 @@
     target="_self"
     on:click|preventDefault={() => {
       $isFullscreen = !$isFullscreen;
-    }}>
+    }}
+  >
     <i class="icon-screen-full" />
     <i class="icon-screen-normal" />
   </a>

@@ -1,5 +1,4 @@
 <script>
-
   // props
   export let itemList = [];
 
@@ -7,7 +6,6 @@
   let { class: className = "" } = $$props;
 
   // handler
-
 </script>
 
 <div class="breadcrumb-line breadcrumb-line-light header-elements-lg-inline">

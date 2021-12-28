@@ -21,7 +21,7 @@
     }
   }
 
-  const onScroll = e => {
+  const onScroll = (e) => {
     const scrollingElement = e.target.scrollingElement || e.target;
 
     const offset = horizontal

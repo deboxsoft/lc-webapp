@@ -40,6 +40,8 @@
     <!--    <a href="/#" class="dropdown-item" on:click|preventDefault={profileHandler}><i class="far fa-user" />Pengaturan Profile</a>-->
     <!--    <a href="/#" class="dropdown-item" on:click|preventDefault={passwordHandler}><i class="icon-lock5" />Ganti Password</a>-->
     <!--    <div class="dropdown-divider" />-->
-    <a href="/#" class="dropdown-item" on:click|preventDefault={logoutHandler}><i class="icon-switch2" on:mouseup={closeHandler} /> Logout</a>
+    <a href="/#" class="dropdown-item" on:click|preventDefault={logoutHandler}
+      ><i class="icon-switch2" on:mouseup={closeHandler} /> Logout</a
+    >
   </svelte:fragment>
 </Dropdown>

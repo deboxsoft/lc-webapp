@@ -7,7 +7,7 @@
 </script>
 
 <ul class="navbar-nav">
-  <li class="nav-item"></li>
+  <li class="nav-item" />
   {#if $authenticationStore.authenticated}
     <NotificationNavbarItem />
     <UserNavbarItem profileName={$authenticationStore.username} />

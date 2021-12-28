@@ -5,7 +5,7 @@
 
   let itemId = `dbx-${generateId({ size: 5 })}`;
   // props
-  export let id= `nav-item-${itemId}`;
+  export let id = `nav-item-${itemId}`;
   export let title = "Title";
   export let expanded = false;
   // export let disabled: boolean = false;
@@ -46,7 +46,12 @@
         expanded = value[id];
       });
     }
-    classes = clsx(className, "nav-item", expanded && "nav-item-open", $$slots["menu"] && hasChildren && "nav-item-submenu");
+    classes = clsx(
+      className,
+      "nav-item",
+      expanded && "nav-item-open",
+      $$slots["menu"] && hasChildren && "nav-item-submenu"
+    );
   }
 </script>
 
@@ -64,7 +69,8 @@
     on:focus
     on:blur
     on:keydown
-    {target}>
+    {target}
+  >
     <slot>{title}</slot>
   </a>
   {#if hasChildren}

@@ -12,9 +12,9 @@
 <script>
   import { clsx, generateId } from "@deboxsoft/module-client";
 
-  export let type= "checkbox";
+  export let type = "checkbox";
   export let name;
-  export let defaultValue= undefined;
+  export let defaultValue = undefined;
   export let value = defaultValue;
   export let checkList = [];
 
@@ -29,7 +29,7 @@
     <label class="form-check-label" for={id}>
       <div class="uniform-choice">
         <span class:checked={_value === value}>
-          {#if type === 'radio'}
+          {#if type === "radio"}
             <input {id} type="radio" class={classes} {name} bind:group={value} value={_value} />
           {:else}<input type="checkbox" class={classes} {name} bind:group={value} value={_value} />{/if}
         </span>

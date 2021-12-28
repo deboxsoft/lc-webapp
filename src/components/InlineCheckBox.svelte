@@ -9,33 +9,26 @@
    */
   export let title = undefined;
   /** Set an id for the input label */
-  export let id = "ccs-" + Math.random().toString(36);
+  export let id = `ccs-${Math.random().toString(36)}`;
   /** Obtain a reference to the input HTML element */
   export let ref = null;
   export let labelStyle = "";
-
 </script>
 
 <input
-  bind:this="{ref}"
+  bind:this={ref}
   type="checkbox"
   class="checkbox"
-  checked="{indeterminate ? false : checked}"
-  indeterminate="{indeterminate}"
-  id="{id}"
+  checked={indeterminate ? false : checked}
+  {indeterminate}
+  {id}
   {...$$restProps}
-  aria-label="{undefined}"
-  aria-checked="{indeterminate ? 'mixed' : checked}"
+  aria-label={undefined}
+  aria-checked={indeterminate ? "mixed" : checked}
   on:change
 />
-<label
-  for="{id}"
-  title="{title}"
-  aria-label="{$$props['aria-label']}"
-  class="label"
-  style={labelStyle}
->
-</label>
+<label for={id} {title} aria-label={$$props["aria-label"]} class="label" style={labelStyle} />
+
 <style>
   .checkbox {
     margin: -1px;
@@ -43,7 +36,7 @@
     white-space: nowrap;
     border: 0;
     visibility: inherit;
-    clip: rect(0,0,0,0);
+    clip: rect(0, 0, 0, 0);
   }
   .label {
     line-height: 1.29;

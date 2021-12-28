@@ -15,7 +15,8 @@
         href="/#"
         on:click|preventDefault={toggleMinimizeSidebar}
         class="navbar-nav-link sidebar-control sidebar-main-toggle d-none d-md-block"
-        target="_self">
+        target="_self"
+      >
         <MenuIcon />
       </a>
     </div>

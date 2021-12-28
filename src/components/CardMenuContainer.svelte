@@ -1,3 +1,7 @@
+<div class="card-menu-container">
+  <slot />
+</div>
+
 <style>
   .card-menu-container {
     display: flex;
@@ -5,7 +9,3 @@
     width: 100%;
   }
 </style>
-
-<div class="card-menu-container">
-  <slot />
-</div>

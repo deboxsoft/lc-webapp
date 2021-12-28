@@ -1,10 +1,9 @@
 <script>
-
-  export let options = {previewTemplate: "<div />"};
+  export let options = { previewTemplate: "<div />" };
   export let autoDiscover = false;
-  export let events = {}
+  export let events = {};
 
-  const {class: className} = $$props;
+  const { class: className } = $$props;
 
   /**
    *
@@ -16,14 +15,13 @@
       update(config) {
         return {
           destroy() {}
-        }
+        };
       }
-    }
+    };
   }
-
 </script>
 
 <div class={className} {...$$restProps} use:dropzone={options}>
   <slot />
-  <input hidden type="file"/>
+  <input hidden type="file" />
 </div>

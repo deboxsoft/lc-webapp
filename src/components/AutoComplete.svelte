@@ -15,10 +15,10 @@
   export let hiddenResultText = "results not shown";
   const getSelectedItem = () => {
     if (pristineValue) {
-      const i = items.findIndex(_ => _[valueFieldName] === pristineValue);
+      const i = items.findIndex((_) => _[valueFieldName] === pristineValue);
       return items[i];
     }
-  }
+  };
   //***** </custom>
   // the list of items  the user can select from
   /**
@@ -836,7 +836,7 @@
     let listItem = filteredListItems[highlightIndex];
     await onCreate(text);
     loading = false;
-    selectListItem(listItem)
+    selectListItem(listItem);
   }
 </script>
 

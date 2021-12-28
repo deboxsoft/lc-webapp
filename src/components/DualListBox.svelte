@@ -31,7 +31,7 @@
     if (filterInput === "") {
       return true;
     }
-    return new RegExp(escapeStringRegexp(filterInput), "i").test(option.label)
+    return new RegExp(escapeStringRegexp(filterInput), "i").test(option.label);
   };
   export let preserveSelectOrder = true;
   export let onChange = () => {};
@@ -54,8 +54,8 @@
 
   $: {
     if (options && values) {
-        selectedOptions = filterSelected(options);
-        availableOptions = filterAvailable(options);
+      selectedOptions = filterSelected(options);
+      availableOptions = filterAvailable(options);
     }
   }
 
@@ -247,18 +247,18 @@
       return [];
     }
 
-    const _arr = []
+    const _arr = [];
     for (let i = 0; i < element.options.length; i++) {
-      _arr.push(element.options[i])
+      _arr.push(element.options[i]);
     }
 
     return _arr
       .filter((option) => option.selected)
       .map((option) => {
-        return ({
+        return {
           index: parseInt(option.dataset.index, 10),
           value: JSON.parse(option.dataset.value)
-        });
+        };
       });
   }
 
@@ -551,7 +551,7 @@
     label={labelAvailable}
     {filterPlaceholder}
   />
-  <div class="actions-container" class:has-filter={canFilter} class:has-header-label={showHeaderLabels} >
+  <div class="actions-container" class:has-filter={canFilter} class:has-header-label={showHeaderLabels}>
     <div class="actions-left">
       <button
         class="btn btn-light btn-icon btn-sm"

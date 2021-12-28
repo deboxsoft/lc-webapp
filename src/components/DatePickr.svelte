@@ -161,7 +161,9 @@
     <input bind:this={input} readonly={readOnly} {disabled} {...$$restProps} value={value || "Tanggal"} />
     <div class="form-control-feedback text-grey-600">
       {#if allowEmpty && !cleared}
-        <a href="/#" target="_self" class="btn-light" on:click|preventDefault={clearHandler}><i class="icon-cross3" /></a>
+        <a href="/#" target="_self" class="btn-light" on:click|preventDefault={clearHandler}
+          ><i class="icon-cross3" /></a
+        >
       {:else}
         <i class="icon-calendar" />
       {/if}

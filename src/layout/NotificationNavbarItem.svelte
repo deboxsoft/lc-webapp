@@ -4,9 +4,11 @@
   import { writable } from "svelte/store";
   import ContractNotification from "../pages/bdd/_menus/ContractNotification.svelte";
 
-  let count = writable(0), countContractBDD = writable(0), closeHandler;
+  let count = writable(0),
+    countContractBDD = writable(0),
+    closeHandler;
 
-  $: $count = $countContractBDD
+  $: $count = $countContractBDD;
 </script>
 
 <Dropdown bind:closeHandler nav direction="end">
@@ -20,6 +22,7 @@
     <ContractNotification bind:count={countContractBDD} class="dropdown-item" on:mouseup={closeHandler} />
   </svelte:fragment>
 </Dropdown>
+
 <style lang="scss" global>
   .dbx-theme {
     .navbar-nav-link .badge {

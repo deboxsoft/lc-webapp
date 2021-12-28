@@ -22,6 +22,8 @@
   export let onReset = () => {};
   export let onPreview = () => {};
 
+  const { class: className = "modal-lg" } = $$props;
+
   let fileData = writable([]);
 
 
@@ -108,7 +110,7 @@
   }
 </script>
 
-<Modal bind:openDialog bind:closeDialog {title} class="modal-full" onClose={closeHandler}>
+<Modal bind:openDialog bind:closeDialog {title} class={className} onClose={closeHandler}>
   {#if $loading}
     <Loader />
   {:else}
@@ -118,7 +120,7 @@
         {alertMessage.message}
       </div>
     {/if}
-    <slot name="info" />
+    <slot name="section" />
     {#if !isPreview}
       <DropZone on:drop={handleFileSelect} accept=".csv" multiple={false} disableDefaultStyles>
         <div class="dropzone mt-2">

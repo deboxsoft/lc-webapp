@@ -4,7 +4,7 @@
   import { clsx } from "@deboxsoft/module-client";
 
   // props
-  export let isLight= false;
+  export let isLight = false;
   export let expand = undefined;
   export let alignSelf = undefined;
 

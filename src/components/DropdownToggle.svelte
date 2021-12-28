@@ -49,7 +49,7 @@
     {...$$restProps}
     bind:this={inner}
     on:click
-    on:click={toggle}
+    on:click|stopPropagation={toggle}
     href="#nav"
     aria-expanded={$context.isOpen}
     class={classes}
@@ -64,7 +64,7 @@
     {...$$restProps}
     bind:this={inner}
     on:click
-    on:click={toggle}
+    on:click|stopPropagation={toggle}
     aria-expanded={$context.isOpen}
     class={btnClasses}
   >
@@ -79,7 +79,7 @@
     style="cursor: pointer;{$$props.style || ''}"
     bind:this={inner}
     on:click
-    on:click={toggle}
+    on:click|stopPropagation={toggle}
     aria-expanded={$context.isOpen}
     class={classes}
   >
