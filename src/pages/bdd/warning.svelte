@@ -10,12 +10,13 @@
   import { createReportContext } from "./_export";
   import Table from "__@comps/tables/DataTable.svelte";
   import Button from "__@comps/Button.svelte";
+  import { writable } from "svelte/store";
 
   const { readGranted, createGranted } = createAclContext();
   const applicationContext = getApplicationContext();
   const reportContext = createReportContext();
   const { loading } = applicationContext;
-  const { findPage, bddStore, bddPageInfo } = stores.getBddContext();
+  const { warningContract } = stores.getBddContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
@@ -24,38 +25,36 @@
 
   let submitting = false,
     filter = {},
+    pageInfo,
     /** @type{import("@deboxsoft/accounting-api").RemainingContract[]} */
     dataList = [];
-  $: {
-    if (!$bddStore) {
-      fetchData();
-    }
-  }
-
-  $: {
-    if ($bddStore) {
-      dataList = $bddStore.sort((a, b) => dayjs(a.date).isAfter(dayjs(b.date)) ? 1 : -1).map(_ => ({
-        ..._
-      }))
-    }
-  }
+  fetchData();
 
   function fetchData(options = {}) {
     $loading = true;
     submitting = true;
-    findPage(
+    warningContract(
       {
         filter,
         pageCursor: {
-          next: options.more && $bddPageInfo?.next
+          next: options.more && pageInfo?.next
         }
       },
       options
-    ).then(() => {
+    ).then((response) => {
+      pageInfo = response.pageInfo;
+      const data = response.data
+        .sort((a, b) => (dayjs(a.date).isAfter(dayjs(b.date)) ? 1 : -1))
+        .map((_) => ({
+          ..._
+        }));
+      dataList = [...dataList, ...data];
       $loading = false;
       submitting = false;
     });
   }
+
+  $: console.log(dataList);
 
   function infiniteHandler() {
     fetchData({ more: true });
@@ -73,24 +72,24 @@
     <div class="card-body d-flex flex-1 flex-column">
       <Table>
         <tr slot="header">
-<!--          <th style="width: 70px">No</th>-->
+          <!--          <th style="width: 70px">No</th>-->
           <th>Deskripsi</th>
           <th style="width: 150px">Tanggal Akhir</th>
           <th style="width: 150px; text-align: center">Sisa Kontrak (bulan)</th>
         </tr>
         {#each dataList as item}
           <tr>
-<!--            <td>{item.no || ""}</td>-->
+            <!--            <td>{item.no || ""}</td>-->
             <td>{item.description || ""}</td>
             <td> {item.dateEnd ? dayjs(item.dateEnd).format("DD-MMMM-YYYY") : ""}</td>
             <td style="text-align: center">{item.remaining}</td>
           </tr>
         {/each}
       </Table>
-      {#if $bddPageInfo.hasNext}
+      {#if pageInfo?.hasNext}
         <div class="" style="height: 50px">
           <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
-          ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+            ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
           </Button>
         </div>
       {/if}

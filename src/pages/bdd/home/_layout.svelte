@@ -63,13 +63,13 @@
       },
       csv: () => {
         find().then((_) => {
-          reportContext.pdf(_);
+          reportContext.csv(_);
           close();
         });
       },
       print: () => {
         find().then((_) => {
-          reportContext.pdf(_);
+          reportContext.print(_);
           close();
         });
       }

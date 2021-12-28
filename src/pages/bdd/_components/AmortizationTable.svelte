@@ -16,7 +16,8 @@
   const totalAmortization = amount * amortizationList.length;
 </script>
 
-<div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
+<div class="border-bottom-grey
+-600 border-bottom-1 mb-1 pb-1">
   <dl class="row mb-0">
     <dt class="col-sm-4 mb-0">Biaya Amortisasi</dt>
     <p class="col-sm-8 mb-0 d-inline-flex align-items-center">
