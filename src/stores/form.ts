@@ -40,7 +40,7 @@ const createFieldsErrorStore = (isValid: Writable<boolean>) => {
     update: (cb) => {
       update((v) => {
         const _errors = cb(v);
-        if (Object.keys(v).length === 0) {
+        if (Object.keys(v).length === 0 && Object.keys(_errors).length === 0) {
           isValid.set(true);
         } else {
           isValid.set(false);

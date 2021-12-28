@@ -118,7 +118,7 @@
   onReset={resetHandler}
   onSubmit={submitHandler}
 >
-  <svelte:fragment slot="info">
+  <svelte:fragment slot="section">
     <BankInfo {account} {bank} {balanceAccount} {balanceBank} />
   </svelte:fragment>
   <TablePreview preview bind:submit bankStatementList={fileData} bind:errors />

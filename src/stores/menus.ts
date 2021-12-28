@@ -70,13 +70,18 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       show: stockShow,
       children: [
         {
-          label: "Daftar Barang",
-          url: "/persediaan/home",
+          label: "Approve Transaksi",
+          url: "/persediaan/approve",
           show: stockShow
         },
         {
-          label: "Mutasi Barang",
-          url: "/persediaan/stock-card",
+          label: "Mutasi barang",
+          url: "/persediaan/mutasi-barang",
+          show: stockShow
+        },
+        {
+          label: "Daftar Barang",
+          url: "/persediaan/home",
           show: stockShow
         },
         {
@@ -98,6 +103,11 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       icon: InventoryIcon,
       show: inventoryShow,
       children: [
+        {
+          label: "Pembelian",
+          url: "/aktiva-tetap/pembelian",
+          show: inventoryShow
+        },
         {
           label: "Daftar Aktiva Tetap",
           url: "/aktiva-tetap/home",

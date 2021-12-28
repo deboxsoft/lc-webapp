@@ -7,7 +7,7 @@
   const { notify, loading } = getApplicationContext();
 
   export let onSaved = () => {};
-  export let role;
+  export let role = undefined;
   export let isUpdate = false;
   export let readOnly = false;
 
@@ -221,6 +221,11 @@
           selected: false
         },
         {
+          label: "approve",
+          value: "approve:any",
+          selected: false
+        },
+        {
           label: "lihat",
           value: "read:any",
           selected: false
@@ -272,6 +277,11 @@
         {
           label: "buat",
           value: "create:any",
+          selected: false
+        },
+        {
+          label: "approve",
+          value: "approve:any",
           selected: false
         },
         {
@@ -409,7 +419,7 @@
           }
         });
       });
-      // redit klo ada space
+      // edit klo ada space
       role = role.replace(/ /g, "_").toUpperCase();
       const inputs = {
         ...$grants,

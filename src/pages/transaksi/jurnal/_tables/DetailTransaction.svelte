@@ -1,16 +1,14 @@
 <script>
   import { onMount } from "svelte";
   import { goto, params } from "@roxi/routify";
-  import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { stores as usersStore } from "@deboxsoft/users-client";
   import Modal from "__@comps/Modal.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
-  import CellNumber from "__@comps/CellNumber.svelte";
-  import CellAccount from "__@comps/account/CellAccount.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
   import TransactionList from "__@comps/transactions/TransactionList.svelte";
+  import CellDate from "__@comps/CellDate.svelte";
 
   const { loading, notify } = getApplicationContext();
   const { getTransactionType, approve, reject } = stores.getTransactionContext();
@@ -86,9 +84,13 @@
       <dt class="col-sm-3 mb-0">No. Bukti/Kwitansi</dt>
       <p class="col-sm-9 mb-0">: {transaction.no || "-"}</p>
       <dt class="col-sm-3 mb-0">Tanggal</dt>
-      <p class="col-sm-9 mb-0">: {dayjs(transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
+      <p class="col-sm-7 d-inline-flex align-items-center">
+        : <CellDate date={transaction.datePurchase} />
+      </p>
       <dt class="col-sm-3 mb-0">Tanggal Transaksi</dt>
-      <p class="col-sm-9 mb-0">: {dayjs(transaction.dateTransaction || transaction.date).format("DD-MMMM-YYYY") || "-"}</p>
+      <p class="col-sm-7 d-inline-flex align-items-center">
+        : <CellDate date={transaction.datePurchase} />
+      </p>
       <dt class="col-sm-3 mb-0">Deskripsi</dt>
       <p class="col-sm-9 mb-0">: {transaction.description || "-"}</p>
       <dt class="col-sm-3 mb-0">Jenis Transaksi</dt>

@@ -13,7 +13,8 @@ const codeAccount: PreferenceAccounting["codeAccount"] = {
   accumulationDepreciation: "1120100",
   cash: "101",
   revenue: "4",
-  expense: "5"
+  expense: "5",
+  payable: "20101"
 };
 
 const codeAccountList = [
@@ -180,6 +181,20 @@ export function filteringAccountAccumulationDepreciation(accountStore: Readable<
   const config = get(preferenceStore);
   const parentId = config.codeAccount.accumulationDepreciation;
   return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+}
+
+export function filteringAccountPayable(accountStore: Readable<Account[]>) {
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  const config = get(preferenceStore);
+  const code = config.codeAccount.payable;
+  console.log(config.codeAccount);
+  const regex = new RegExp(`^[^${code}].*`);
+  return derived(accountStore, (_) => {
+    return _.filter((__) => {
+      console.log(__.id, regex.test(__.id));
+      return regex.test(__.id);
+    });
+  });
 }
 
 export function accountUtils() {

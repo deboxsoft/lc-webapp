@@ -66,8 +66,6 @@
       class="form-control"
       name="amount"
       on:input={createUpdateAmountHandler()}
-      formContextDisable
-      signed
     />
   </td>
   <td style="padding: unset">
