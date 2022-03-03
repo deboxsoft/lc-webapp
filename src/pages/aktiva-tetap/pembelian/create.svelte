@@ -53,7 +53,15 @@
 </script>
 
 <Modal class="modal-lg" bind:openDialog title="Posting Data Baru" onClose={closeHandler} loading={!inventoryTransaction}>
-  <PurchaseForm {inventoryTransaction} {schema} value onSubmit={submitHandler} />
+  <PurchaseForm
+    {schema}
+    {inventoryTransaction}
+    isUpdate
+    bind:isValid
+    bind:fields
+    onSubmit={submitHandler}
+    onClose={closeHandler}
+  />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Tutup

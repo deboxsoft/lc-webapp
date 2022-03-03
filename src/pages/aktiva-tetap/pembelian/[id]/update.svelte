@@ -22,7 +22,7 @@
   const { update, inventoryTransactionStore } = stores.getInventoryTransactionContext();
   const { accountStore } = stores.getAccountContext();
 
-  let inventoryTransaction, openDialog, fields, ready = false, isValid;
+  let inventoryTransaction, openDialog, fields, ready = false, isValid, submitting = false;
   $: {
     if (!ready && $inventoryTransactionStore && openDialog) {
       ready = true;
@@ -35,6 +35,7 @@
   async function submitHandler(values) {
     try {
       $loading = true;
+      submitting = true;
       const input = schema.parse($fields);
       await update($params.id, input);
       notify(`Berhasil memperbarui data`, "success");
@@ -43,6 +44,7 @@
       notify(e.message, "error");
     } finally {
       $loading = false;
+      submitting = false;
     }
   }
 
@@ -61,4 +63,13 @@
     onSubmit={submitHandler}
     onClose={closeHandler}
   />
+  <svelte:fragment slot="footer">
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
+      Tutup
+    </button>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
+      <i class="icon-floppy-disk mr-2" />
+      Simpan
+    </button>
+  </svelte:fragment>
 </Modal>
