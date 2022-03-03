@@ -1,25 +1,23 @@
 <script>
   import CellNumber from "__@comps/CellNumber.svelte";
-  import { writable } from "svelte/store";
   import { stores } from "@deboxsoft/accounting-client";
 
   const { accountStore, getAccount } = stores.getAccountContext();
+  const { getBalance } = stores.getBalanceContext();
   export let id = undefined;
-  export let isBalanceSheet = false;
+  /**
+   * @type {undefined | Function}
+   */
   export let value = undefined;
-  let _store = writable({});
+
   let _value;
-  $: {
-    _store = getAccount(id);
-    _value = $_store.balance;
+  getBalance(id).then((_) => {
     if (typeof value === "function") {
-      value = value(_value);
+      value = value(_);
     } else {
-      value = _value;
+      value = _;
     }
-  }
+  });
 </script>
 
-{#if $_store}
-  <CellNumber {value} {...$$restProps} />
-{/if}
+<CellNumber {value} {...$$restProps} />

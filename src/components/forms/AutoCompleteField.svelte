@@ -22,14 +22,15 @@
   export let loadingText = "Memuat data...";
   export let noResultsText = "Data tidak ditemukan";
   export let disabled = false;
+  export let searchFunction = undefined;
+  export let selectedItem = undefined;
   const { class: className } = $$props;
 
   let invalid = true;
   let msgError;
   let _inputClassName;
-  let selectedItem;
 
-  if ($fields && name) {
+  if ($fields && name && !selectedItem) {
     if (pristineValue && !$fields[name]) {
       $fields[name] = pristineValue;
     } else if (!pristineValue) {
@@ -65,6 +66,7 @@
 
 <AutoComplete
   {...$$restProps}
+  {searchFunction}
   {create}
   {hiddenResultText}
   {createText}

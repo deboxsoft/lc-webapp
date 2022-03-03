@@ -22,6 +22,7 @@
   export let initialFocusElement = undefined;
   export let returnFocusElement = undefined;
   export let ariaModalLegacy = false;
+  export let scrollable = false;
   export let loading = false;
   export const openDialog = () => {
     _open = true;
@@ -34,7 +35,7 @@
 
   let _open = false;
 
-  $: classes = clsx("modal-dialog modal-dialog-centered", className);
+  $: classes = clsx("modal-dialog modal-dialog-centered", className, scrollable && "-scrollable");
 
   function closeHandler() {
     closeDialog();
@@ -85,6 +86,7 @@
       position: fixed;
       z-index: 1000;
       display: block;
+
       .card {
         margin-bottom: unset;
 
@@ -93,6 +95,10 @@
         .card-footer {
           padding: 1rem;
         }
+      }
+
+      .modal-body {
+        min-height: 250px;
       }
 
       .modal-header,
@@ -113,6 +119,21 @@
 
       .form-group {
         margin-bottom: 1rem;
+      }
+    }
+  }
+
+  .modal-dialog {
+    &.-scrollable {
+      height: calc(100% - 3.5rem);
+      .modal-content {
+        max-height: 100%;
+        overflow: hidden;
+      }
+
+      .modal-body {
+        overflow-y: auto;
+        min-height: unset;
       }
     }
   }

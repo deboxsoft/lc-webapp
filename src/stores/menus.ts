@@ -37,6 +37,7 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const stockShow = auth.getQuery("stock").read().granted;
   const userShow = auth.getQuery("user").read().granted;
   const settingShow = auth.getQuery("setting").read().granted;
+  const settingUpdateGranted = auth.getQuery("setting").update().granted;
   return [
     {
       label: "Pencatatan Transaksi",
@@ -70,7 +71,7 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       show: stockShow,
       children: [
         {
-          label: "Approve Transaksi",
+          label: "Masuk/Keluar Barang",
           url: "/persediaan/approve",
           show: stockShow
         },
@@ -148,8 +149,8 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       show: balanceSheetShow || statementIncomeShow || ledgerShow,
       children: [
         {
-          label: "Trial Balance",
-          url: "/laporan/trial-balance",
+          label: "Saldo Perkiraan",
+          url: "/laporan/saldo-perkiraan",
           show: ledgerShow
         },
         {
@@ -227,12 +228,17 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
       url: "/settings",
       type: "module",
       icon: "icon-cog3",
-      show: settingShow,
+      show: settingShow || settingUpdateGranted,
       children: [
         {
           label: "Info Perusahaan",
           url: "/settings/info",
           show: settingShow
+        },
+        {
+          label: "Proses Akhir Tahun",
+          url: "/settings/period-end",
+          show: settingUpdateGranted
         }
         // {
         //   label: "Akuntansi",

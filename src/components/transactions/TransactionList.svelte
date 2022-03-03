@@ -6,6 +6,7 @@
    * @type{import("@deboxsoft/accounting-api").Transaction}
    */
   export let transaction;
+  const creditAccounts = (transaction?.creditAccounts || []).map((_, index) => ({ index, ..._}))
 </script>
 
 <table class="table">
@@ -24,7 +25,7 @@
     <td><CellNumber value={transaction.amount} /></td>
     <td class="text-right">-</td>
   </tr>
-  {#each transaction.creditAccounts as accountAmount, index (accountAmount.index)}
+  {#each creditAccounts as accountAmount, index (accountAmount.index)}
     <tr>
       <td>{accountAmount.id || "-"}</td>
       <td><CellAccount id={accountAmount.id} /></td>

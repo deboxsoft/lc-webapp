@@ -6,30 +6,28 @@
 
   const { fields, fieldsErrors, validateField, submitted } = getFormContext();
   const dispatch = createEventDispatcher();
-
+  export let format = "currency";
+  export let emptyInputBehavior = "null";
+  const defaultOptions = {
+    emptyInputBehavior,
+    allowDecimalPadding: format === "currency" ? "floats" : false,
+    modifyValueOnWheel: false,
+    digitGroupSeparator: format === "currency" ? "." : ",",
+    decimalCharacter: format === "currency" ? "," : "."
+  };
   export let name;
   export let prependDisable = false;
   export let textPosition = "right";
   export let disabled = false;
-  export let format = "currency";
   export let resultType = "number";
   export let pristineValue = undefined;
   export let value = pristineValue;
   export let maximumValue = "10000000000000";
   export let minimumValue = "-10000000000000";
   export let decimalPlaces = 2;
-  export let options = { decimalPlaces };
+  export let options = { ...AutoNumeric.getPredefinedOptions().integerPos, ...defaultOptions };
+  export let decimalEnable = false;
   export let autoNumeric = undefined;
-
-  const defaultOptions = {
-    allowDecimalPadding: format === "currency",
-    decimalPlaces,
-    modifyValueOnWheel: false,
-    digitGroupSeparator: format === "currency" ? "." : ",",
-    decimalCharacter: format === "currency" ? "," : ".",
-    maximumValue,
-    minimumValue
-  };
 
   let { class: className } = $$props;
 
@@ -47,7 +45,9 @@
 
   $: {
     if (format === "number") {
-      options = { ...AutoNumeric.getPredefinedOptions().integerPos, ...options };
+      options = { ...options, maximumValue, minimumValue, decimalPlaces: decimalEnable ? decimalPlaces : 0 };
+    } else {
+      options = { ...options, maximumValue, minimumValue, decimalPlaces };
     }
   }
 
@@ -61,7 +61,9 @@
   }
 
   $: {
-    fields && name && autoNumeric && !Number.isNaN(value) && value !== $fields[name] && autoNumeric.set($fields[name]);
+    if (fields && name && autoNumeric && !Number.isNaN(value) && value !== $fields[name]) {
+      autoNumeric.set($fields[name], options);
+    }
   }
 
   $: classes = clsx(className, "form-control", textPosition === "right" && "text-right");
@@ -76,7 +78,7 @@
   });
 
   export function setValue(value) {
-    autoNumeric.set(value);
+    autoNumeric.set(value, options);
   }
 
   function createInputHandler() {

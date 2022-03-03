@@ -37,6 +37,7 @@
       $loading = false;
     } catch (e) {
       $submitted = false;
+      $fields = {};
       notify(e.message, "error");
       alertMessage = e.message;
       alertOpen = true;

@@ -26,7 +26,6 @@
 
   let fileData = writable([]);
 
-
   let alertMessage = "";
   /**
    * @type{ "verified" | "unverified" | "error" | "process" | "success" | "failed" }
@@ -91,7 +90,7 @@
       isPreview = true;
       onPreview($fileData);
       if (errors.length > 0) {
-        throw new Error("Data tidak lengkap, mohon diperiksa kembali.")
+        throw new Error("Data tidak lengkap, mohon diperiksa kembali.");
       }
       statusFormState = "verified";
     } catch (e) {
@@ -100,17 +99,16 @@
       alertMessage = {
         message: e.message,
         type: "error"
-      }
+      };
     }
   }
-
 
   function alertDismissHandler() {
     alertMessage = undefined;
   }
 </script>
 
-<Modal bind:openDialog bind:closeDialog {title} class={className} onClose={closeHandler}>
+<Modal bind:openDialog bind:closeDialog {title} class={className} onClose={closeHandler} scrollable theme="white">
   {#if $loading}
     <Loader />
   {:else}

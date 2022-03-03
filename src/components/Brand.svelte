@@ -7,9 +7,14 @@
   const { config } = getApplicationContext();
   const { companyStore } = stores.getCompanyContext();
 
-  let imageFail = false,
-    imageLoading = true;
-  $: srcImg = $config.brandUrl;
+  let imageFail, imageLoading, srcImg;
+  $: {
+    srcImg = $config.brandUrl;
+    if (!srcImg) {
+      imageLoading = true;
+      imageFail = false;
+    }
+  }
 </script>
 
 <div class="navbar-brand text-center text-lg-left wmin-200">

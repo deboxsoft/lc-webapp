@@ -201,14 +201,17 @@ export function accountUtils() {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const { getAccount } = stores.getAccountContext();
   const { getBalance } = stores.getBalanceContext();
-  const config = get(preferenceStore);
-  const code = config.codeAccount.cash;
-  const regex = new RegExp(`^(${code}).*`);
-  const isCash = (accountId: string) => regex.test(accountId);
+  const isCash = (accountId: string) => {
+    const config = get(preferenceStore);
+    const code = config.codeAccount.cash;
+    const regex = new RegExp(`^(${code}).*`);
+    return regex.test(accountId);
+  };
   const checkCashBalance = async (accountId: string, amount: number) => {
     if (isCash(accountId)) {
       const balance = (await getBalance(accountId)) || 0;
       if (balance < amount) {
+        console.log("error");
         const account = get(getAccount(accountId));
         throw new Error(`Saldo kas '${account.name}' tidak mencukupi.`);
       }

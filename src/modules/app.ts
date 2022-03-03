@@ -16,7 +16,7 @@ type NotifyConfig = Omit<NotyOptions, "text">;
 dayjs.locale(id);
 const defaultConfig: Partial<NotifyConfig> = {
   theme: "metroui",
-  timeout: 1000
+  timeout: 3000
 };
 
 export interface ApplicationContext extends ApisContext {

@@ -5,9 +5,10 @@
    */
   export let items = undefined;
   export let className = $$props.class || "";
+  export let fixed = false;
 </script>
 
-<table class="dbx-data-table table {className}">
+<table class="dbx-data-table table {className}" class:table-fixed={fixed}>
   <slot name="scope" />
   {#if $$slots["header"]}
     <thead>
@@ -31,5 +32,14 @@
   .dbx-data-table {
     height: 1px;
     width: 100%;
+
+    &.table-fixed {
+      table-layout: fixed;
+      border-collapse: collapse;
+
+      th {
+        word-wrap: break-word;
+      }
+    }
   }
 </style>

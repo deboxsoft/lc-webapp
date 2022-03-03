@@ -15,7 +15,12 @@
   export let hiddenResultText = "results not shown";
   const getSelectedItem = () => {
     if (pristineValue) {
-      const i = items.findIndex((_) => _[valueFieldName] === pristineValue);
+      const i = items.findIndex((_) => {
+        if (typeof _ === "string" || typeof _ === "number") {
+          return _ === pristineValue;
+        }
+        return _[valueFieldName] === pristineValue;
+      });
       return items[i];
     }
   };
@@ -46,7 +51,7 @@
   };
   export let valueFunction = function (item) {
     item = Array.isArray(item) && item.length > 0 ? item[1] : item;
-    if (item === undefined || item === null) {
+    if (item === undefined || item === null || typeof item === "string" || typeof item === "number") {
       return item;
     }
     if (!multiple || forceSingle) {
@@ -76,7 +81,7 @@
   };
   export let selectFirstIfEmpty = false;
   export let minCharactersToSearch = 1;
-  export let maxItemsToShowInList = 10;
+  export let maxItemsToShowInList = -1;
   export let multiple = false;
   export let create = false;
   // ignores the accents when matching items
@@ -1016,7 +1021,7 @@
       padding: 10px 0;
       top: 0;
       border: 1px solid #999;
-      max-height: calc(15 * (1rem + 10px) + 15px);
+      max-height: calc(7 * (1rem + 10px) + 15px);
       user-select: none;
     }
 
