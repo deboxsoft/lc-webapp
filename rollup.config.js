@@ -15,7 +15,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const comBaseResolve = require.resolve("@deboxsoft/svelte-components-base");
+// const comBaseResolve = require.resolve("@deboxsoft/svelte-components-base");
 const createPreprocess = require("../../svelte.config").createPreprocess;
 
 const { distDir } = getConfig(); // use Routify's distDir for SSOT
@@ -27,7 +27,7 @@ const mode = process.env.ROLLUP_WATCH && "development";
 const dev = mode === "development";
 const preprocess = createPreprocess({
   scss: {
-    includePaths: ["./src", path.dirname(comBaseResolve)]
+    // includePaths: ["./src", path.dirname(comBaseResolve)]
   }
 });
 
