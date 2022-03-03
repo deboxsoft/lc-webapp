@@ -18,7 +18,7 @@
     $goto("/access-denied");
   }
   setBreadcrumbContext({ path: $url("./"), title: "pembelian" });
-  const { findPage, subscribe, stockTransactionPageInfo, stockTransactionStore  } =
+  const { findPage, subscribe, stockTransactionPageInfo, stockTransactionStore } =
     stores.createStockTransactionContext(applicationContext);
 
   onMount(() => {
@@ -52,7 +52,7 @@
   }
 
   function selectHandler(item) {
-    $goto(`./${item.id}/view`)
+    $goto(`./${item.id}/view`);
   }
 </script>
 

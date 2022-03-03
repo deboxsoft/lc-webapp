@@ -28,8 +28,9 @@
   };
 
   const { loading, notify } = getApplicationContext();
+  const { getBalance } = stores.getBalanceContext();
   const { getAccount } = stores.getAccountContext();
-  const { reconcile, bank } = stores.getBankStatementContext();
+  const { reconcile, bank = writable() } = stores.getBankStatementContext();
   const { setLastBalance } = stores.getBankContext();
 
   const title = "Rekonsiliasi data bank";
@@ -41,13 +42,19 @@
   let errors = [];
   let balanceBank = 0;
   let balanceAccount = 0;
-  let account;
+  let account = writable();
   let submit, openDialog, closeDialog;
 
-  $: {
-    account = getAccount($bank.accountId);
-    $account && (balanceAccount = $account.balance);
-    $bank && (balanceBank = $bank.balance);
+  $: loadBalance($bank);
+
+  async function loadBalance(_bank) {
+    if (_bank) {
+      if (_bank.accountId) {
+        account = getAccount(_bank.accountId);
+        balanceAccount = await getBalance(_bank.accountId);
+      }
+      balanceBank = _bank.balance || 0;
+    }
   }
 
   onMount(() => {
@@ -56,13 +63,23 @@
   });
 
   async function submitHandler(_statements) {
-    errors = [];
-    if (!errors || errors.length === 0) {
-      await reconcile($bank.id, _statements);
-      setLastBalance($bank.id, balanceBank);
-      $goto("./");
-    } else {
-      throw new Error("submit failed");
+    try {
+      errors = [];
+      if (!errors || errors.length === 0) {
+        await reconcile($bank.id, _statements);
+        setLastBalance($bank.id, balanceBank);
+        $goto("./");
+      } else {
+        throw new DeboxError({
+          message: "submit failed"
+        });
+      }
+    } catch (e) {
+      if (e?.message) {
+        notify(e?.message || `data tidak berhasil disimpan`, "alert");
+      } else {
+        console.error(e);
+      }
     }
   }
 
@@ -119,7 +136,7 @@
   onSubmit={submitHandler}
 >
   <svelte:fragment slot="section">
-    <BankInfo {account} {bank} {balanceAccount} {balanceBank} />
+    <BankInfo account={$account} bank={$bank} {balanceAccount} {balanceBank} />
   </svelte:fragment>
   <TablePreview preview bind:submit bankStatementList={fileData} bind:errors />
 </FormImport>

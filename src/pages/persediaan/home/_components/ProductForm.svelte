@@ -21,19 +21,19 @@
 <Form checkValidateFirst {schema} values={product} bind:fields bind:fieldsErrors bind:isValid>
   <div class="row">
     <div class="form-group col-12">
-      <label for="name">Nama</label>
-      <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+      <label for="name">Nama *</label>
+      <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama *" />
     </div>
   </div>
   <div class="row">
     <div class="form-group col-12 col-md-6">
-      <label for="categoryId">Kategori Barang</label>
+      <label for="categoryId">Kategori Barang *</label>
       <ComboxField
         id="categoryId"
         name="categoryId"
         items={$categoryStore}
         labelId="name"
-        placeHolder="Kategori Barang"
+        placeHolder="Kategori Barang *"
       />
     </div>
     <div class="form-group col-12 col-md-6">
@@ -50,8 +50,8 @@
   </div>
   <div class="row">
     <div class="form-group col-12">
-      <label for="unit">Satuan</label>
-      <InputField id="unit" name="unit" type="text" class="form-control" placeholder="Satuan" />
+      <label for="unit">Unit *</label>
+      <InputField id="unit" name="unit" type="text" class="form-control" placeholder="Unit *" />
     </div>
   </div>
 </Form>

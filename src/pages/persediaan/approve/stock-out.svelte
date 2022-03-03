@@ -30,7 +30,7 @@
     stockTransaction = {
       userId: $authenticationStore?.profile?.session?.userId,
       datePurchase: now,
-      mutation: "STOCK-OUT"
+      mutation: "STOCK_OUT"
     };
     openDialog();
   })();

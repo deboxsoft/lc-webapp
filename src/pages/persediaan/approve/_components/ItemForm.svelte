@@ -1,3 +1,5 @@
+<svelte:options immutable={true} />
+
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import { generateId } from "@deboxsoft/module-client";
@@ -5,7 +7,7 @@
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import { createFormContext } from "__@stores/form";
   import { debounce } from "@deboxsoft/module-core";
-  import { getItemContext } from "__@root/context/ItemContext";
+  import { getItemContext } from "../../_item-context";
   import AutoCompleteField from "__@comps/forms/AutoCompleteField.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import { writable } from "svelte/store";
@@ -18,8 +20,21 @@
   export let stockProduct;
   export let index;
   export let mutation;
+
+  let productSelect;
+
+  const productId = stockProduct?.productId;
+  if (productId) {
+    productSelect = {
+      productId,
+      name: stockProduct.name
+    };
+  }
+
   let product = writable(undefined),
     quantityAutoNumeric,
+    maxQuantity,
+    minQuantity = 1,
     setPriceValue;
 
   const { fields } = createFormContext({ values: stockProduct });
@@ -35,15 +50,23 @@
     return () => {
       if ($product) {
         $fields.productId = $product.id;
+        $fields.name = $product.name;
         if (mutation === "STOCK_IN") {
-          setPriceValue($product.price);
-          quantityAutoNumeric.set($product.available, { maximumValue: undefined });
+          setPriceValue && setPriceValue($product.price);
+          maxQuantity = 10000000000000;
         } else {
-          $fields.price = $product.price;
-          quantityAutoNumeric.set($product.available, { maximumValue: $product.available });
+          if (!$product.available || $product.available === 0) {
+            $fields.quantity = 0;
+            maxQuantity = 0;
+            minQuantity = 0;
+          } else {
+            $fields.quantity = $product.available;
+            maxQuantity = $product.available;
+          }
         }
+        $fields.price = $product.price;
       } else {
-        quantityAutoNumeric.set($product.available, { maximumValue: undefined });
+        maxQuantity = 10000000000000;
       }
       updateHandler();
     };
@@ -84,7 +107,7 @@
         $product = item;
         return item?.productId;
       }}
-      maxItemsToShowInList="10"
+      selectedItem={productSelect}
       showClear
       on:change={changeProductHandler()}
     />
@@ -94,14 +117,16 @@
       id="quantity-{id}"
       name="quantity"
       format="number"
+      emptyInputBehavior="min"
       pristineValue="1"
-      minimumValue="1"
+      minimumValue={minQuantity}
+      maximumValue={maxQuantity}
       bind:autoNumeric={quantityAutoNumeric}
       on:input={changeQuantityHandler()}
     />
   </td>
   <td>
-    {#if mutation === "STOCK-IN"}
+    {#if mutation === "STOCK_IN"}
       <InputNumberField id="price-{id}" name="price" on:input={changePriceHandler()} bind:setValue={setPriceValue} />
     {:else}
       <CellNumber value={$fields.price} />

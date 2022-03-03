@@ -17,6 +17,7 @@ export const createAclContext = () => {
   const query = auth.getQuery("setting");
   const userQuery = auth.getQuery("user");
   const readGranted = query.read().granted;
+  const createGranted = query.create().granted;
   const updateGranted = query.update().granted;
   const readUserGranted = userQuery.read().granted;
   const createUserGranted = userQuery.create().granted;
@@ -25,6 +26,7 @@ export const createAclContext = () => {
   const context = {
     auth,
     readGranted,
+    createGranted,
     updateGranted,
     readUserGranted,
     createUserGranted,

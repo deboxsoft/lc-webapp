@@ -4,7 +4,7 @@
   import { goto, url } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import { createAclContext } from "../bdd/_acl-context";
+  import { createAclContext } from "./_acl-context";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import Loader from "__@comps/loader/Loader.svelte";
 

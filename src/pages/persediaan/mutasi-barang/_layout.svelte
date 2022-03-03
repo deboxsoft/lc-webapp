@@ -82,14 +82,14 @@
 <!--        <i class="icon-file-upload mr-1" />-->
 <!--        Impor-->
 <!--      </a>-->
-      <a href={$url("./stock-in")} class="breadcrumb-elements-item">
-        <i class="icon-enter mr-1" />
-        Masuk
-      </a>
-      <a href={$url("./stock-out")} class="breadcrumb-elements-item">
-        <i class="icon-exit mr-1" />
-        Keluar
-      </a>
+<!--      <a href={$url("./stock-in")} class="breadcrumb-elements-item">-->
+<!--        <i class="icon-enter mr-1" />-->
+<!--        Masuk-->
+<!--      </a>-->
+<!--      <a href={$url("./stock-out")} class="breadcrumb-elements-item">-->
+<!--        <i class="icon-exit mr-1" />-->
+<!--        Keluar-->
+<!--      </a>-->
     {/if}
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />

@@ -38,7 +38,7 @@
 <Form checkValidateFirst {schema} values={stockTransaction} bind:fields bind:fieldsErrors bind:isValid>
   <div class="card">
     <div class="card-body">
-      {#if stockTransaction.mutation === "STOCK-IN"}
+      {#if stockTransaction.mutation === "STOCK_IN"}
         <div class="row">
           <div class="form-group col-12 col-md-6">
             <label for="date">Tanggal Pembelian</label>
@@ -48,6 +48,7 @@
               class="form-control"
               placeholder="Tanggal Pembelian"
               range={false}
+              yearEditable
             />
           </div>
           <div class="form-group col-12 col-md-6">
@@ -55,41 +56,41 @@
             <InputField id="no" name="no" type="text" class="form-control" placeholder="No Nota" />
           </div>
         </div>
-      <div class="row">
-        <div class="form-group col-12 col-md-6">
-          <label for="description`">Deskripsi</label>
-          <InputField id="description`" name="description`" type="text" class="form-control" placeholder="Deskripsi" />
+        <div class="row">
+          <div class="form-group col-12 col-md-6">
+            <label for="description">Deskripsi</label>
+            <InputField id="description" name="description" type="text" class="form-control" placeholder="Deskripsi" />
+          </div>
+          <div class="form-group col-12 col-md-6">
+            <label for="stockAccount">Akun di Debit</label>
+            <AccountSelect
+              id="stockAccount"
+              name="stockAccount"
+              accountStore={getAccount("stock")}
+              accountId={stockTransaction?.stockAccount}
+              placeholder="Akun di Debit"
+              allowEmpty
+            />
+          </div>
         </div>
-        <div class="form-group col-12 col-md-6">
-          <label for="stockAccount">Akun di Debit</label>
-          <AccountSelect
-            id="stockAccount"
-            name="stockAccount"
-            accountStore={getAccount("stock")}
-            accountId={stockTransaction?.stockAccount}
-            placeholder="Akun di Debit"
-            allowEmpty
-          />
+        <div class="row">
+          <div class="form-group col-12 col-md-6">
+            <label for="cashAccount">Pembayaran</label>
+            <AccountSelect
+              id="cashAccount"
+              name="cashAccount"
+              accountStore={getAccount("cash")}
+              accountId={stockTransaction?.cashAccount}
+              placeholder="Pembayaran"
+              allowEmpty
+            />
+          </div>
+          <div class="form-group col-12 col-md-6">
+            <label for="cashAmount">Jumlah Pembayaran</label>
+            <InputRp id="cashAmount" class="form-control" name="cashAmount" signed />
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-12 col-md-6">
-          <label for="cashAccount">Pembayaran</label>
-          <AccountSelect
-            id="cashAccount"
-            name="cashAccount"
-            accountStore={getAccount("cash")}
-            accountId={stockTransaction?.cashAccount}
-            placeholder="Pembayaran"
-            allowEmpty
-          />
-        </div>
-        <div class="form-group col-12 col-md-6">
-          <label for="cashAmount">Jumlah Pembayaran</label>
-          <InputRp id="cashAmount" class="form-control" name="cashAmount" signed />
-        </div>
-      </div>
-        {:else}
+      {:else}
         <div class="row">
           <div class="form-group col-12 col-md-6">
             <label for="date">Tanggal</label>
@@ -97,7 +98,13 @@
           </div>
           <div class="form-group col-12 col-md-6">
             <label for="description`">Deskripsi</label>
-            <InputField id="description`" name="description`" type="text" class="form-control" placeholder="Deskripsi" />
+            <InputField
+              id="description`"
+              name="description`"
+              type="text"
+              class="form-control"
+              placeholder="Deskripsi"
+            />
           </div>
         </div>
         <div class="row">

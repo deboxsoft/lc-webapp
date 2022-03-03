@@ -16,19 +16,39 @@
   let dropdownContext;
 
   function getTotal(items) {
-    return items.reduce((result, item) => {
-      return result + item.priceItem * item.quantity;
+    return (items || []).reduce((result, item) => {
+      return result + item.price * item.quantity;
     }, 0);
   }
-
 </script>
 
-<tr class="cursor-pointer" on:click>
-  <td>{stockTransaction.no || ""}</td>
-  <td class="text-center"><CellDate date={stockTransaction.date} /></td>
-  <td>{stockTransaction.description || ""}</td>
-  <td><CellNumber value={getTotal(stockTransaction.items)} /></td>
-  <td><TransactionStatus status={stockTransaction.status} /> </td><td style="cursor: pointer; padding: 0">
+<tr class="cursor-pointer">
+  <td on:click>{stockTransaction.no || ""}</td>
+  <td class="text-center" on:click>
+    {#if stockTransaction.date}
+      <CellDate date={stockTransaction.date} />
+    {:else}
+      -
+    {/if}
+  </td>
+  <td class="text-center" on:click>
+    {#if stockTransaction.datePurchase}
+      <CellDate date={stockTransaction.datePurchase} />
+    {:else}
+      -
+    {/if}
+  </td>
+  <td on:click>{stockTransaction.description || ""}</td>
+  <td on:click>
+    {#if stockTransaction.mutation === "STOCK_IN"}
+      masuk
+    {:else}
+      keluar
+    {/if}
+  </td>
+  <td on:click><CellNumber value={getTotal(stockTransaction.productItems)} /></td>
+  <td on:click><TransactionStatus status={stockTransaction.status} /> </td>
+  <td style="cursor: pointer; padding: 0">
     <Dropdown
       class="h-100 d-flex justify-content-center"
       bind:context={dropdownContext}
@@ -43,18 +63,14 @@
         <a href={$url("./:id/view", { id: stockTransaction.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-eye" />View</a
         >
-        {#if updateGranted && stockTransaction.status === "UNAPPROVED"}
-          <a
-            href={$url("./:id/update", { id: stockTransaction.id })}
-            class="dropdown-item"
-            on:mouseup={closeHandler}><i class="icon-trash-alt" />Edit</a
+        {#if updateGranted && stockTransaction.status !== "APPROVED"}
+          <a href={$url("./:id/update", { id: stockTransaction.id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-trash-alt" />Edit</a
           >
         {/if}
-        {#if removeGranted && stockTransaction.status === "UNAPPROVED"}
-          <a
-            href={$url("./:id/remove", { id: stockTransaction.id })}
-            class="dropdown-item"
-            on:mouseup={closeHandler}><i class="icon-pencil" />Hapus</a
+        {#if removeGranted && stockTransaction.status !== "APPROVED"}
+          <a href={$url("./:id/remove", { id: stockTransaction.id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-pencil" />Hapus</a
           >
         {/if}
       </svelte:fragment>

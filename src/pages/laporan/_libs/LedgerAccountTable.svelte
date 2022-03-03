@@ -3,7 +3,10 @@
   import CellNumber from "__@comps/CellNumber.svelte";
   import Table from "__@comps/tables/DataTable.svelte";
 
-  export let generalLedgerStore;
+  /**
+   * @type{import("@deboxsoft/accounting-api").GeneralLedger[]}
+   */
+  export let generalLedgerList = [];
 </script>
 
 <Table>
@@ -15,13 +18,13 @@
     <th style="width: 160px">Kredit</th>
     <th style="width: 160px">Saldo</th>
   </tr>
-  {#each $generalLedgerStore as generalLedger}
+  {#each generalLedgerList as generalLedger}
     <tr>
       <td>
         {dayjs(generalLedger.date).format("DD-MM-YY") || ""}
       </td>
       <td>
-          {generalLedger.transactionId}
+        {generalLedger.transactionId}
       </td>
       <td>
         {generalLedger.description || ""}

@@ -6,12 +6,12 @@
   import InputField from "__@comps/forms/InputField.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import { writable } from "svelte/store";
   import { createAclContext } from "./_acl-context";
   import BrandUpload from "./_BrandUpload.svelte";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import Alert from "__@comps/Alert.svelte";
+  import { tick } from "svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "akuntansi" });
@@ -19,7 +19,7 @@
   if (!readGranted) {
     $goto("/access-denied");
   }
-  const { notify, loading } = getApplicationContext();
+  const { notify, loading, config } = getApplicationContext();
   const { companyStore, update } = stores.getCompanyContext();
   const schema = CompanySchema.omit({ address: true, divisions: true });
 
@@ -52,6 +52,11 @@
       messageNotify = "data berhasil tersimpan";
       notify(messageNotify, "success");
       alertType = "success";
+      // refresh logo
+      const brandUrl = $config.brandUrl;
+      $config.brandUrl = undefined;
+      await tick();
+      $config.brandUrl = brandUrl;
     } catch (e) {
       messageNotify = e.message;
       notify(messageNotify, "error");

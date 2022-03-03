@@ -24,18 +24,11 @@
   </td>
   <td style="text-align: center"><CellDate date={stock.date} /></td>
   <td>{stock.name || ""}</td>
-  <td style="text-align: center">
-    {#if stock.mutation === "STOCK_OUT"}
-      <TransactionStatus status={stock.status} />
-    {:else}
-      -
-    {/if}
-  </td>
   <td style="text-align: center">{stock.mutation === "STOCK_OUT" ? "keluar" : "masuk"}</td>
   <td style="text-align: center">{stock.unit || ""}</td>
   <td style="text-align: center"><CellNumber format="number" value={stockIn} /></td>
   <td style="text-align: center"><CellNumber format="number" value={stockOut} /></td>
-  <td style="text-align: center"><CellNumber format="number" value={stock.available} /></td>
+  <td style="text-align: center"><CellNumber format="number" value={stock.available || "0"} /></td>
   <td style="text-align: center">
     <CellNumber value={stock.price} />
   </td>

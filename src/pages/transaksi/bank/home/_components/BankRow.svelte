@@ -57,7 +57,7 @@
     <BalanceAccount
       class="flex-1 align-items-center"
       id={bank.accountId}
-      value={(_value) => parseFloat(bank.balance) - _value}
+      value={(_value) => parseFloat(bank.balance || 0) - _value}
     />
   </td>
   <td style="width: 30px;cursor: pointer;padding: 0">

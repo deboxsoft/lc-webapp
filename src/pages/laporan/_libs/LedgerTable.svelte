@@ -8,6 +8,7 @@
   export let accounts = writable(undefined);
   export let balance;
   export let key;
+  export let linkDisable = false;
 
   const { loading } = getApplicationContext();
   const foldStore = createFoldStore({ key, initial: {} });
@@ -32,7 +33,7 @@
   </thead>
   <tbody>
     {#each $accounts as account}
-      <LedgerRow {isExpand} toggle={toggleExpand} {account} />
+      <LedgerRow {isExpand} toggle={toggleExpand} {account} {linkDisable} />
     {/each}
   </tbody>
 </table>

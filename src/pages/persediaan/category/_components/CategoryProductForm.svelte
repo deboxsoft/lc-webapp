@@ -15,7 +15,6 @@
   const { getAccountLeaf, accountStore } = stores.getAccountContext();
   const accounts = getAccountLeaf();
 
-
   // props
   export let categoryProduct;
   export let isUpdate = false;
@@ -67,40 +66,33 @@
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form
-    checkValidateFirst
-    {schema}
-    values={{ ...categoryProduct }}
-    bind:fields
-    bind:fieldsErrors
-    bind:isValid
-  >
+  <Form checkValidateFirst {schema} values={{ ...categoryProduct }} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
       <div class="form-group col-12">
-        <label for="name">Nama</label>
-        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+        <label for="name">Nama *</label>
+        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama *" />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="accountId">Akun Persediaan</label>
+        <label for="accountId">Akun Persediaan *</label>
         <AccountSelect
           id="accountId"
           name="accountId"
           accountStore={getAccount("stock")}
           accountId={categoryProduct?.accountId}
-          placeholder="AkunPersediaan"
+          placeholder="AkunPersediaan *"
           allowEmpty
         />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="expenseAccount">Akun Biaya Persediaan</label>
+        <label for="expenseAccount">Akun Biaya Persediaan *</label>
         <AccountSelect
           id="expenseAccount"
           name="expenseAccount"
-          placeholder="Akun Biaya Persediaan"
+          placeholder="Akun Biaya Persediaan *"
           allowEmpty
           accountStore={getAccount("expense")}
           accountId={categoryProduct?.expenseAccount}

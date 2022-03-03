@@ -5,8 +5,8 @@
   import { writable } from "svelte/store";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
-  import TransactionItems from "__@root/pages/aktiva-tetap/pembelian/_components/TransactionItems.svelte";
   import { stores } from "@deboxsoft/accounting-client";
+  import TransactionItems from "./TransactionItems.svelte";
 
   const { loading, notify } = getApplicationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
@@ -23,7 +23,7 @@
   });
 
   function calculate() {
-    const total = stockTransaction.items.reduce((_, item) => {
+    const total = stockTransaction.productItems.reduce((_, item) => {
       return _ + item.quantity * item.price;
     }, 0);
     return {
@@ -36,52 +36,71 @@
 </script>
 
 <dl class="row">
-  <dt class="col-sm-3 mb-0">No. Nota</dt>
-  <p class="col-sm-9 mb-0">
-    : {stockTransaction.no || "-"}
-  </p>
-  <dt class="col-sm-3 mb-0">Tanggal Pembelian</dt>
-  <p class="col-sm-9 mb-0">
-    : <CellDate date={stockTransaction.datePurchase} />
-  </p>
   <dt class="col-sm-3 mb-0">Tanggal</dt>
   <p class="col-sm-9 mb-0">
     : <CellDate date={stockTransaction.date} />
   </p>
+  {#if stockTransaction.mutation === "STOCK_IN"}
+    <dt class="col-sm-3 mb-0">No. Nota/Kwitansi</dt>
+    <p class="col-sm-9 mb-0">
+      : {stockTransaction.no || "-"}
+    </p>
+    <dt class="col-sm-3 mb-0">Tanggal Pembelian</dt>
+    <p class="col-sm-9 mb-0">
+      : <CellDate date={stockTransaction.datePurchase} />
+    </p>
+    <dt class="col-sm-3 mb-0">Akun di Debet</dt>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;<CellAccount id={stockTransaction.stockAccount} />
+    </p>
+    <dt class="col-sm-3 mb-0">Akun Pembayaran</dt>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;<CellAccount id={stockTransaction.cashAccount} />
+    </p>
+    <dt class="col-sm-3 mb-0">Jumlah Pembayaran</dt>
+    <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;
+      <div style="width: 150px"><CellNumber value={stockTransaction.cashAmount} /></div>
+    </div>
+    <dt class="col-sm-3 mb-0">Akun Hutang</dt>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;<CellAccount id={$preferenceStore.codeAccount.payable} />
+    </p>
+    <dt class="col-sm-3 mb-0">Jumlah Hutang</dt>
+    <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;
+      <div style="width: 150px"><CellNumber value={calc.payableAmount} /></div>
+    </div>
+    <dt class="col-sm-3 mb-0">Total Keseluruhan</dt>
+    <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;
+      <div style="width: 150px"><CellNumber value={calc.total} /></div>
+    </div>
+    <dt class="col-sm-3 mb-0">Mutasi</dt>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      : Masuk
+    </p>
+  {:else}
+    <dt class="col-sm-3 mb-0">Akun Biaya</dt>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;<CellAccount id={stockTransaction.expenseAccount} />
+    </p>
+    <dt class="col-sm-3 mb-0">Akun di Kredit</dt>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      :&nbsp;<CellAccount id={stockTransaction.stockAccount} />
+    </p>
+    <dt class="col-sm-3 mb-0">Mutasi</dt>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      : Keluar
+    </p>
+  {/if}
   <dt class="col-sm-3 mb-0">Deskripsi</dt>
   <p class="col-sm-9 mb-0">: {stockTransaction.description || "-"}</p>
-  <dt class="col-sm-3 mb-0">Di Input Oleh</dt>
-  <p class="col-sm-9 mb-0">: {$userName || "-"}</p>
   <dt class="col-sm-3 mb-0">Status</dt>
   <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
     :&nbsp;<TransactionStatus status={stockTransaction.status} />
   </p>
-  <dt class="col-sm-3 mb-0">Akun di Debet</dt>
-  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-    :&nbsp;<CellAccount id={stockTransaction.stockAccount} />
-  </p>
-  <dt class="col-sm-3 mb-0">Akun Pembayaran</dt>
-  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-    :&nbsp;<CellAccount id={stockTransaction.cashAccount} />
-  </p>
-  <dt class="col-sm-3 mb-0">Jumlah Pembayaran</dt>
-  <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
-    :&nbsp;
-    <div style="width: 150px"><CellNumber value={stockTransaction.cashAmount} /></div>
-  </div>
-  <dt class="col-sm-3 mb-0">Akun Hutang</dt>
-  <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-    :&nbsp;<CellAccount id={$preferenceStore.codeAccount.payable} />
-  </p>
-  <dt class="col-sm-3 mb-0">Jumlah Hutang</dt>
-  <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
-    :&nbsp;
-    <div style="width: 150px"><CellNumber value={calc.payableAmount} /></div>
-  </div>
-  <dt class="col-sm-3 mb-0">Total Keseluruhan</dt>
-  <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
-    :&nbsp;
-    <div style="width: 150px"><CellNumber value={calc.total} /></div>
-  </div>
+  <dt class="col-sm-3 mb-0">Di Input Oleh</dt>
+  <p class="col-sm-9 mb-0">: {$userName || "-"}</p>
 </dl>
 <TransactionItems {stockTransaction} />

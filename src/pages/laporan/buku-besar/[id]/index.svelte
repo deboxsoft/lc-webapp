@@ -13,13 +13,17 @@
   import LedgerAccountTable from "../../_libs/LedgerAccountTable.svelte";
   import { createReportContext } from "./_export";
   import Button from "__@comps/Button.svelte";
+  import { writable } from "svelte/store";
 
   // context
   const reportContext = createReportContext();
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
-  const { findPageGeneralLedger, generalLedgerStore, generalLedgerPageInfo } =
-    stores.createGeneralLedgerContext(applicationContext);
+  const {
+    findPageGeneralLedger,
+    generalLedgerStore = writable([]),
+    generalLedgerPageInfo
+  } = stores.createGeneralLedgerContext(applicationContext);
   const { accountStore, getAccount } = stores.getAccountContext();
   const { currentDateStore } = stores.getPreferenceAccountingContext();
 
@@ -27,15 +31,13 @@
   let submitting = false;
   let endDate = new Date();
   let startDate = dayjs(endDate).startOf("month").toDate();
+  const account = getAccount($params.id);
   $: filter = {
     startDate,
     endDate
   };
-
-  $: account = getAccount($params.id);
-
   $: {
-    if ($account) {
+    if ($account?.id) {
       fetchData();
     }
   }
@@ -145,7 +147,7 @@
   </svelte:fragment>
   <div class="card d-flex flex-1">
     <div class="card-body d-flex flex-1 flex-column">
-      {#if $loading}
+      {#if $loading || !$account}
         <Loader />
       {:else}
         <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
@@ -158,11 +160,11 @@
             <p class="col-sm-9 mb-0">: {($account && $account.id) || ""}</p>
           </dl>
         </div>
-        <LedgerAccountTable {generalLedgerStore}>
+        <LedgerAccountTable generalLedgerList={$generalLedgerStore}>
           {#if $generalLedgerPageInfo.hasNext}
             <div class="" style="height: 50px">
               <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
-              ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+                ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
               </Button>
             </div>
           {/if}

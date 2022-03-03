@@ -56,7 +56,7 @@
   async function createMasterBankHandler(text) {
     try {
       const bank = z.array(z.string().min(1)).parse([text, ...$preferenceStore.bank]);
-      const input = { ...$preferenceStore, bank }
+      const input = { ...$preferenceStore, bank };
       await savePreference(input);
     } catch (e) {
       console.error(e);

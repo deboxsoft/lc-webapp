@@ -11,11 +11,13 @@
 </script>
 
 <div style="min-height: 250px">
-  <Table class="table table-hover text-nowrap">
+  <Table class="table table-hover">
     <tr slot="header">
-      <th width="120" style="text-align: center">No</th>
+      <th width="120" style="text-align: center">No. Nota/Kwitansi</th>
       <th width="90" style="text-align: center">Tanggal</th>
+      <th width="90" style="text-align: center">Tanggal Pembelian</th>
       <th>Deskripsi</th>
+      <th width="100">Mutasi</th>
       <th width="160" style="text-align: center">Total</th>
       <th width="50" style="text-align: center">Status</th>
       <th width="30" />

@@ -1,4 +1,4 @@
-<!--routify:options title="Aplikasi"-->
+<!--routify:options title="Setting"-->
 <script>
   import { url, isActive } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";

@@ -6,7 +6,6 @@
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "./_acl-context";
   import FormJournal from "./_forms/FormJournal.svelte";
-  import { accountUtils } from "__@root/utils";
 
   // context
   const applicationContext = getApplicationContext();
@@ -17,14 +16,16 @@
   const { authenticationStore } = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
 
-  const { checkCashBalance } = accountUtils();
-
   if (!createGranted) {
     $goto("/access-denied");
   }
 
   // form
-  let openDialog, createCreditAccount, transaction, startUp = true, submitting = false;
+  let openDialog,
+    createCreditAccount,
+    transaction,
+    startUp = true,
+    submitting = false;
 
   $: {
     if (startUp && $authenticationStore && !transaction && createCreditAccount) {
@@ -34,14 +35,14 @@
 
   function init() {
     startUp = false;
-    getCurrentDate().then(date => {
+    getCurrentDate().then((date) => {
       transaction = {
         date,
         type: "JOURNAL",
         creditAccounts: [createCreditAccount()],
         userId: $authenticationStore.profile.id
-      }
-    })
+      };
+    });
   }
 
   // handler
@@ -49,9 +50,6 @@
     $loading = true;
     submitting = true;
     try {
-      for (const creditAccount of values.creditAccounts) {
-        await checkCashBalance(creditAccount.id, creditAccount.amount);
-      }
       await create(values);
       notify("transaksi berhasil disimpan", "success");
       cancelHandler();
@@ -69,4 +67,11 @@
   }
 </script>
 
-<FormJournal title="Transaksi Baru" values={transaction} loading={submitting} on:submit={submitHandler} on:cancel={cancelHandler} bind:createCreditAccount />
+<FormJournal
+  title="Transaksi Baru"
+  values={transaction}
+  loading={submitting}
+  on:submit={submitHandler}
+  on:cancel={cancelHandler}
+  bind:createCreditAccount
+/>

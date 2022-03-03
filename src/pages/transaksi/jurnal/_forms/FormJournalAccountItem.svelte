@@ -5,7 +5,7 @@
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import { generateId } from "@deboxsoft/module-client";
-  import { filteringAccountCredit } from "__@root/utils";
+  // import { filteringAccountCredit } from "__@root/utils";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   export let id = generateId({ prefix: "journal-account-item" });
@@ -24,7 +24,8 @@
 
   function getAccountCredit() {
     const accountStore = getAccountLeaf();
-    return filteringAccountCredit(accountStore);
+    // return filteringAccountCredit(accountStore);
+    return accountStore;
   }
 
   function createAccountSelectedHandler() {
@@ -61,12 +62,7 @@
     />
   </td>
   <td class="fit">
-    <InputRp
-      id="{id}-amount"
-      class="form-control"
-      name="amount"
-      on:input={createUpdateAmountHandler()}
-    />
+    <InputRp id="{id}-amount" class="form-control" name="amount" on:input={createUpdateAmountHandler()} />
   </td>
   <td style="padding: unset">
     <button

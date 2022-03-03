@@ -32,7 +32,7 @@
   <td>{category?.name || ""}</td>
   <td>{supplier?.name || ""}</td>
   <td>{product.unit || ""}</td>
-  <td style="text-align: center">{product.available || ""}</td>
+  <td style="text-align: center">{product.available || "-"}</td>
   <td>
     <CellNumber value={product.price} />
   </td>

@@ -1,5 +1,5 @@
 <script>
-  import { url } from "@roxi/routify";
+  import { goto, url } from "@roxi/routify";
   import dayjs from "dayjs";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
@@ -35,6 +35,12 @@
     submitting = false;
     $loading = false;
   }
+
+  function createClickHandler(transaction) {
+    return () => {
+      $goto("./:id/view", { id: transaction.id });
+    };
+  }
 </script>
 
 <Table>
@@ -48,23 +54,21 @@
     <div class="dbx-cell -menu-list" />
   </div>
   {#each transactions as transaction (transaction.id)}
-    <div class="dbx-tr">
-      <div class="dbx-cell d-none d-md-flex no">
-        <a href={$url("./:id/view", { id: transaction.id })}>
-          {transaction.id}
-        </a>
+    <div class="dbx-tr cursor-pointer">
+      <div class="dbx-cell d-none d-md-flex no" on:click={createClickHandler(transaction)}>
+        {transaction.id}
       </div>
-      <div class="dbx-cell date">
+      <div class="dbx-cell date" on:click={createClickHandler(transaction)}>
         <CellDate date={transaction.date} />
       </div>
-      <div class="dbx-cell d-none d-xl-flex account">
+      <div class="dbx-cell d-none d-xl-flex account" on:click={createClickHandler(transaction)}>
         <CellAccount id={transaction.accountId} />
       </div>
-      <div class="dbx-cell">{transaction.description || ""}</div>
-      <div class="dbx-cell amount">
+      <div class="dbx-cell" on:click={createClickHandler(transaction)}>{transaction.description || ""}</div>
+      <div class="dbx-cell amount" on:click={createClickHandler(transaction)}>
         <CellNumber value={transaction.amount} />
       </div>
-      <div class="dbx-cell d-none d-sm-flex status">
+      <div class="dbx-cell d-none d-sm-flex status" on:click={createClickHandler(transaction)}>
         <TransactionStatus status={transaction.status} />
       </div>
       <div class="dbx-cell -menu-list" style="width: 30px">

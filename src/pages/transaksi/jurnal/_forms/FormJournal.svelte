@@ -14,7 +14,7 @@
   import { createEventDispatcher } from "svelte";
   import FormJournalAccount from "./FormJournalAccount.svelte";
   import { getAuthenticationContext } from "__@modules/users";
-  import { filteringAccountDebit } from "__@root/utils";
+  // import { filteringAccountDebit } from "__@root/utils";
   import { getApplicationContext } from "__@modules/app";
 
   const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
@@ -39,7 +39,8 @@
   }
   function getAccountDebit() {
     const accountStore = getAccountLeaf();
-    return filteringAccountDebit(accountStore);
+    // return filteringAccountDebit(accountStore);
+    return accountStore;
   }
 
   $: {
@@ -52,6 +53,7 @@
     dispatch("cancel", values);
   }
 </script>
+
 <Modal
   {title}
   class="modal-lg"

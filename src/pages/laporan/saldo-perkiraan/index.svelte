@@ -1,4 +1,4 @@
-<!--routify:options title="Trial Balance"-->
+<!--routify:options title="Saldo Perkiraan"-->
 <script>
   import { url } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
@@ -16,7 +16,7 @@
   const { loadBalance } = stores.getBalanceContext();
   const { getAccountsTree } = stores.getAccountContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  setBreadcrumbContext({ path: $url("./"), title: "Trial Balance" });
+  setBreadcrumbContext({ path: $url("./"), title: "saldo perkiraan" });
 
   let accounts = getAccountsTree();
   let balance;
@@ -105,7 +105,7 @@
   <div class="card d-flex flex-1">
     <div class="card-body d-flex flex-1 flex-column">
       {#if $accounts && $balance}
-        <LedgerTable {accounts} {balance} />
+        <LedgerTable {accounts} {balance} linkDisable />
       {:else}
         <Loader />
       {/if}

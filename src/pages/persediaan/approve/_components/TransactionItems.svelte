@@ -1,37 +1,39 @@
 <script>
-  import CellNumber from "__@comps/CellNumber.svelte";
   import { stores } from "@deboxsoft/accounting-client";
+  import ProductItemRow from "__@root/pages/persediaan/approve/_components/ProductItemRow.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
 
-  const { getCategoryStock } = stores.getStockContext();
-  const { getProduct } = stores.getProductContext();
+  const { getCategoryStock, productContext } = stores.getStockContext();
+  const { findByIds } = productContext;
 
   /**
    * @type{import("@deboxsoft/accounting-api").StockTransaction}
    */
   export let stockTransaction;
 
-  function getTotal(item) {
-    return item.quantity * item.price;
+  function getProduct(productId, products) {
+    const i = products.findIndex((_) => _.id === productId);
+    return products[i];
   }
 </script>
 
 <table class="table">
   <thead>
     <tr>
-      <th class="text-left">Nama Barang</th>
+      <th class="text-center">Nama Barang</th>
       <th class="text-center" width="70">Jumlah</th>
+      <th class="text-center" width="70">Unit</th>
       <th class="text-center" width="200">Harga Satuan</th>
       <th class="text-center" width="200">Total</th>
     </tr>
   </thead>
   <tbody>
-    {#each stockTransaction.items as item}
-      <tr>
-        <td>{getProduct(item.productId) || "-"}</td>
-        <td><CellNumber format="number" value={item.quantity} /></td>
-        <td><CellNumber value={item.price} /></td>
-        <td><CellNumber value={getTotal(item)} /></td>
-      </tr>
-    {/each}
+    {#await findByIds(stockTransaction.productItems.map((_) => _.productId))}
+      <Loader />
+    {:then products}
+      {#each stockTransaction.productItems as productItem}
+        <ProductItemRow {productItem} product={getProduct(productItem.productId, products)} />
+      {/each}
+    {/await}
   </tbody>
 </table>

@@ -37,9 +37,9 @@
   };
 
   const getClassificationAccount = (type) => {
-    const accountType = get(getAccountType({type}));
-    return accountType ? accountType.label : "-"
-  }
+    const accountType = get(getAccountType({ type }));
+    return accountType ? accountType.label : "-";
+  };
 </script>
 
 <Table>
@@ -65,23 +65,23 @@
 
 <style lang="scss">
   .id {
-    flex: 0 0 200px;
+    flex: 0 0 150px;
   }
 
   .parent {
-    flex: 0 0 200px;
+    flex: 0 0 150px;
   }
 
   .type {
-    flex: 0 0 200px;
+    flex: 0 0 175px;
   }
 
   .startBalance {
-    flex: 0 0 250px;
+    flex: 0 0 175px;
   }
 
   .account {
-    flex: 0 0 250px;
+    flex: 0 0 150px;
     overflow: unset;
     height: 37px;
   }

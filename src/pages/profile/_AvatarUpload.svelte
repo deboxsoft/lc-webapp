@@ -7,7 +7,6 @@
   import FilePondPluginImageTransform from "filepond-plugin-image-transform";
   import FilePondPluginImageCrop from "filepond-plugin-image-crop";
   import FilePondPluginImageResize from "filepond-plugin-image-resize";
-  import FilePondPluginFileMetadata from "filepond-plugin-file-metadata";
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "__@modules/users";
   import AvatarProfile, { loading } from "__@root/layout/AvatarProfile.svelte";

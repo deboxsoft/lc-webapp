@@ -1,6 +1,6 @@
 <!--routify:options title="Pembelian Barang"-->
 <script>
-  import { PurchaseStockTransactionInputSchema as schema } from "@deboxsoft/accounting-api";
+  import { PurchaseStockTransactionInputSchema } from "@deboxsoft/accounting-api";
   import { goto, params } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import ApproveForm from "./_components/ApproveForm.svelte";
@@ -17,6 +17,9 @@
   const { purchase } = stores.getStockTransactionContext();
   const { authenticationStore } = getAuthenticationContext();
   const { getCurrentDate } = stores.getPreferenceAccountingContext();
+  const schema = PurchaseStockTransactionInputSchema.omit({
+    status: true
+  })
 
   let stockTransaction,
     openDialog,
@@ -29,7 +32,7 @@
     stockTransaction = {
       userId: $authenticationStore?.profile?.session?.userId,
       datePurchase: now,
-      mutation: "STOCK-IN"
+      mutation: "STOCK_IN"
     };
     openDialog();
   })();
@@ -38,8 +41,11 @@
     try {
       $loading = true;
       submitting = true;
-      const input = schema.parse($fields);
-      await create(input);
+      const input = schema.parse({
+        ...$fields,
+        mutation: "STOCK_IN"
+      });
+      await purchase(input);
       closeHandler();
       notify(`Data berhasil tersimpan.`, "success");
     } catch (error) {

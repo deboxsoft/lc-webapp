@@ -2,14 +2,18 @@
   import Table from "__@comps/tables/DataTable.svelte";
   import { getFormContext } from "__@stores/form";
   import ItemForm from "./ItemForm.svelte";
-  import { createItemContext } from "__@root/context/ItemContext";
+  import { createItemContext } from "../../_item-context";
   import ListPlusIcon from "__@comps/icons/ListPlus.svelte";
   import CheckIcon from "__@comps/icons/Check.svelte";
   import CloseIcon from "__@comps/icons/Close.svelte";
   import { generateId } from "@deboxsoft/module-client";
   import { convertToNumber } from "__@root/utils";
+  import { stores } from "@deboxsoft/accounting-client";
 
   const { fields, isValid, fieldsErrors, validateField } = getFormContext();
+  const { findByIds: findProducts } = stores.getProductContext();
+  let productItems = [],
+    ready = false;
   const { items, total, addItem, validateItems } = createItemContext({
     validate(_) {
       validate(_);
@@ -36,7 +40,7 @@
 
   function validate(_ = $items) {
     validateField("productItems")(_);
-    if ($fields.mutation === "STOCK-IN" && ($totalStore === 0 || $totalStore < $fields.cashAmount)) {
+    if ($fields.mutation === "STOCK_IN" && ($totalStore === 0 || $totalStore < $fields.cashAmount)) {
       $fieldsErrors = { ...$fieldsErrors, noBalance: "cash melebihi dari harga total" };
     } else {
       delete $fieldsErrors.noBalance;
@@ -66,8 +70,9 @@
         Tambah Item
       </button>
     </div>
-    {#if $fields.mutation === "STOCK-IN" && ($fields.cashAmount > 0 || $totalStore > 0)}
-      {#if diff === 0}
+    {#if $fields.mutation === "STOCK_IN" && ($fields.cashAmount > 0 || $totalStore > 0)}
+      <!--negatif valid jika total lebih besar dari jumlah pembayaran sisanya masuk hutang-->
+      {#if diff <= 0 && $fields.cashAmount > 0}
         <div class="text-success" style="width: 30px;">
           <CheckIcon />
         </div>
@@ -82,7 +87,7 @@
         <span class="flex-grow-1">Total: Rp.</span>
         <span>{$totalStore ? convertToNumber({ value: parseFloat($totalStore) }) : "-"}</span>
       </div>
-      {#if $fields.mutation === "STOCK-IN"}
+      {#if $fields.mutation === "STOCK_IN"}
         <div class="d-flex">
           <span class="flex-grow-1">Pembayaran Tunai: Rp.</span>
           <span>{$fields.cashAmount ? convertToNumber({ value: parseFloat($fields.cashAmount) }) : "-"}</span>

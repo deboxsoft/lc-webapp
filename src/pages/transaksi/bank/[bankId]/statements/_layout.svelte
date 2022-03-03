@@ -21,16 +21,22 @@
 
   const { getBank } = stores.getBankContext();
   const { getAccount } = stores.getAccountContext();
-  const { findPageStatement, bank, reconcile, bankStatementStore, bankStatementPageInfo } = stores.createBankStatementContext({
-    bank: getBank($params.bankId),
-    ...applicationContext
-  });
-  let submitting = false, errors = [], ready = false, bankStatementList, itemsSelected, filter = {};
-  $: account = getAccount($bank.accountId)
+  const { findPageStatement, bank, reconcile, bankStatementStore, bankStatementPageInfo } =
+    stores.createBankStatementContext({
+      bank: getBank($params.bankId),
+      ...applicationContext
+    });
+  let submitting = false,
+    errors = [],
+    ready = false,
+    bankStatementList,
+    itemsSelected,
+    filter = {};
+  $: account = getAccount($bank.accountId);
 
   $: {
     if (!bankStatementList && $bankStatementStore) {
-      bankStatementList = $bankStatementStore
+      bankStatementList = $bankStatementStore;
     }
   }
 
@@ -38,17 +44,19 @@
   function fetchData(options = {}) {
     $loading = true;
     submitting = true;
-    findPageStatement($bank.id, {
-      filter,
-      pageCursor: {
-        next: options.more && $bankStatementPageInfo?.next
-      }
-    },
+    findPageStatement(
+      $bank.id,
+      {
+        filter,
+        pageCursor: {
+          next: options.more && $bankStatementPageInfo?.next
+        }
+      },
       options
     ).then(() => {
       $loading = false;
       submitting = false;
-    })
+    });
   }
 
   async function reconcileHandler() {
@@ -159,7 +167,7 @@
   </svelte:fragment>
   <div class="card flex-column flex-1 d-flex">
     <div class="card-body d-flex flex-column flex-1">
-      <BankInfo {bank} {account} />
+      <BankInfo bank={$bank} account={$account} />
       <BankStatementTable {bankStatementList} bind:errors />
     </div>
   </div>

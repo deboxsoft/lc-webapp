@@ -14,7 +14,6 @@
   const { getAccountLeaf } = stores.getAccountContext();
   const accounts = getAccountLeaf();
 
-
   // props
   export let supplier;
   export let isUpdate = false;
@@ -60,18 +59,11 @@
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form
-    checkValidateFirst
-    {schema}
-    values={{ ...supplier }}
-    bind:fields
-    bind:fieldsErrors
-    bind:isValid
-  >
+  <Form checkValidateFirst {schema} values={{ ...supplier }} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
       <div class="form-group col-12">
-        <label for="name">Nama</label>
-        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+        <label for="name">Nama *</label>
+        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama *" />
       </div>
     </div>
     <div class="row">

@@ -1,12 +1,13 @@
 <!--routify:options title="Edit Data"-->
 <script>
-  import { StockTransactionInputSchema } from "@deboxsoft/accounting-api";
+  import { PurchaseStockTransactionInputSchema, StockOutTransactionInputSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import ApproveForm from "../_components/ApproveForm.svelte";
   import { getAclContext } from "../../_acl-context";
   import Modal from "__@comps/Modal.svelte";
+  import { onMount } from "svelte";
 
   // context
   const { updateGranted } = getAclContext();
@@ -14,23 +15,30 @@
     $goto("/access-denied");
   }
   const { notify, loading } = getApplicationContext();
-  const { update, stockTransactionStore } = stores.getStockTransactionContext();
+  const { update, findById } = stores.getStockTransactionContext();
   const { accountStore } = stores.getAccountContext();
 
   let stockTransaction,
     openDialog,
     fields,
+    schema,
+    submitting = false,
     ready = false,
     isValid;
-  const schema =
-    stockTransaction.mutation === "STOCK-IN"
-      ? PurchaseStockTransactionInputSchema.partial()
-      : StockOutTransactionInputSchema.partial();
+
+  onMount(() => {
+    findById($params.id).then((_) => {
+      stockTransaction = _;
+    });
+  });
+
   $: {
-    if (!ready && $stockTransactionStore && openDialog) {
+    if (!ready && stockTransaction && openDialog) {
       ready = true;
-      const i = $stockTransactionStore.findIndex((_) => _.id === $params.id);
-      stockTransaction = $stockTransactionStore[i];
+      schema =
+        stockTransaction.mutation === "STOCK_IN"
+          ? PurchaseStockTransactionInputSchema.partial()
+          : StockOutTransactionInputSchema.partial();
       openDialog();
     }
   }
@@ -38,6 +46,7 @@
   async function submitHandler(values) {
     try {
       $loading = true;
+      submitting = true;
       const input = schema.parse($fields);
       await update($params.id, input);
       notify(`Berhasil memperbarui data`, "success");
@@ -45,6 +54,7 @@
     } catch (e) {
       notify(e.message, "error");
     } finally {
+      submitting = false;
       $loading = false;
     }
   }
@@ -64,4 +74,13 @@
     onSubmit={submitHandler}
     onClose={closeHandler}
   />
+  <svelte:fragment slot="footer">
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
+      Tutup
+    </button>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
+      <i class="icon-floppy-disk mr-2" />
+      Simpan
+    </button>
+  </svelte:fragment>
 </Modal>
