@@ -11,14 +11,17 @@
   export let disabled = false;
   export let format = "DD-MMMM-YYYY";
   export let options = {};
-  export let startDateKey = "startDate";
-  export let endDateKey = "endDate";
+  export let selectFromDateKey = "from";
+  export let selectToDateKey = "to";
   export let name = undefined;
   export let allowEmpty = false;
   export let className = $$props.class || "form-control";
   export let width = "100%";
   export let showClearButton = false;
   export let value = undefined;
+  export let yearEditable = false;
+  export let startDate = dayjs().subtract(20, "year");
+  export let endDate = dayjs().add(20, "year");
   if (value) {
     if ($fields && name) {
       $fields[name] = value;
@@ -27,8 +30,8 @@
   export let selected = $fields
     ? name
       ? $fields[name]
-      : $fields[startDateKey]
-      ? [$fields[startDateKey], $fields[endDateKey]]
+      : $fields[selectFromDateKey]
+      ? [$fields[selectFromDateKey], $fields[selectToDateKey]]
       : undefined
     : undefined;
   export let range = !(selected instanceof Date);
@@ -42,8 +45,8 @@
         if (name) {
           $fields[name] = [detail.from, detail.to];
         } else {
-          $fields[startDateKey] = detail.from;
-          $fields[endDateKey] = detail.to;
+          $fields[selectFromDateKey] = detail.from;
+          $fields[selectToDateKey] = detail.to;
         }
       } else if (name) {
         $fields[name] = detail.date;
@@ -80,6 +83,9 @@
     on:date-selected={applyHandler}
     end
     {disabled}
+    {yearEditable}
+    {startDate}
+    {endDate}
   >
     {#if $submitted}
       {#if invalid}
