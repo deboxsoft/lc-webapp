@@ -2,13 +2,12 @@
   import Table from "__@comps/tables/DataTable.svelte";
   import { getFormContext } from "__@stores/form";
   import PurchaseItemForm from "./PurchaseItemForm.svelte";
-  import { createItemContext } from "__@root/context/ItemContext";
+  import { createItemContext } from "../../_item-context";
   import ListPlusIcon from "__@comps/icons/ListPlus.svelte";
   import CheckIcon from "__@comps/icons/Check.svelte";
   import CloseIcon from "__@comps/icons/Close.svelte";
   import { generateId } from "@deboxsoft/module-client";
   import { convertToNumber } from "__@root/utils";
-
 
   const { fields, isValid, fieldsErrors, validateField } = getFormContext();
   const { items, total, addItem, validateItems } = createItemContext({
@@ -20,10 +19,10 @@
     },
     initialItem: $fields["items"],
     addItem: () => {
-      return  {
+      return {
         index: generateId({ prefix: "item", size: 3 }),
         quantity: 1
-      }
+      };
     }
   });
   export let diff = NaN;
@@ -44,7 +43,6 @@
       delete $fieldsErrors["total"];
     }
   }
-
 </script>
 
 <div class="card flex-grow-1">
@@ -58,10 +56,7 @@
         <th width="40" />
       </tr>
       {#each $items as item, index (item.index)}
-        <PurchaseItemForm
-          {index}
-          {item}
-        />
+        <PurchaseItemForm {index} {item} />
       {/each}
     </Table>
   </div>
@@ -73,7 +68,7 @@
       </button>
     </div>
     {#if $fields.cashAmount > 0 || $totalStore > 0}
-      {#if diff => 0}
+      {#if diff <= 0 && $fields.cashAmount > 0}
         <div class="text-success" style="width: 30px;">
           <CheckIcon />
         </div>

@@ -2,6 +2,7 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
+  import { DeboxError } from "@deboxsoft/module-core";
   import { stores } from "@deboxsoft/accounting-client";
   import PurchaseView from "../_components/PurchaseView.svelte";
   import { getAclContext } from "../../_acl-context";
@@ -10,7 +11,7 @@
 
   const { approveGranted } = getAclContext();
   const { loading, notify } = getApplicationContext();
-  const { inventoryTransactionStore, approve, reject } = stores.getInventoryTransactionContext();
+  const { approve, reject, findById } = stores.getInventoryTransactionContext();
   const { getUser } = getAuthenticationContext();
 
   let openDialog,
@@ -23,21 +24,21 @@
     approveButtonEnable = false,
     rejectButtonEnable = false;
 
+  findById($params.id).then((_) => {
+    inventoryTransaction = _;
+  });
+
   $: {
-    if (!ready && $inventoryTransactionStore && openDialog) {
+    if (!ready && inventoryTransaction && openDialog) {
       openDialog();
       ready = true;
-      const i = $inventoryTransactionStore.findIndex((_) => _.id === $params.id);
-      inventoryTransaction = $inventoryTransactionStore[i];
-      if (inventoryTransaction) {
-        userPromise = getUser(inventoryTransaction.userId);
-        approved = inventoryTransaction.status === "APPROVED";
-        rejected = inventoryTransaction.status === "REJECTED";
-        unapproved = inventoryTransaction.status === "UNAPPROVED";
-        if (approveGranted && unapproved) {
-          approveButtonEnable = approveGranted && unapproved;
-          rejectButtonEnable = approveGranted && unapproved
-        }
+      userPromise = getUser(inventoryTransaction.userId);
+      approved = inventoryTransaction.status === "APPROVED";
+      rejected = inventoryTransaction.status === "REJECTED";
+      unapproved = inventoryTransaction.status === "UNAPPROVED";
+      if (approveGranted && unapproved) {
+        approveButtonEnable = approveGranted && unapproved;
+        rejectButtonEnable = approveGranted && unapproved;
       }
     }
   }
@@ -49,11 +50,16 @@
   async function approveHandler() {
     try {
       $loading = true;
+      console.log("approve handler");
       await approve(inventoryTransaction.id);
-      notify(`data berhasil berhasil diApprove`, "success");
+      notify(`data berhasil diApprove`, "success");
       closeHandler();
     } catch (e) {
-      notify(`data tidak berhasil diApprove`, "error");
+      if (e?.code) {
+        notify(e?.message || `data tidak berhasil diApprove`, "alert");
+      } else {
+        console.error(e);
+      }
     } finally {
       $loading = false;
     }
@@ -73,7 +79,7 @@
   }
 </script>
 
-<Modal class="modal-lg" title="Detail Data" bind:openDialog onClose={closeHandler} loading={!inventoryTransactionStore}>
+<Modal class="modal-lg" title="Detail Data" bind:openDialog onClose={closeHandler} loading={!inventoryTransaction}>
   <PurchaseView {inventoryTransaction} {userPromise} />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

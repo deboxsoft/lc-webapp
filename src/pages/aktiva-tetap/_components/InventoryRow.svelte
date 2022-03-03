@@ -5,38 +5,45 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
-  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
-  import {getAclContext} from "../_acl-context";
+  import { getAclContext } from "../_acl-context";
+  import { calcDepreciation } from "@deboxsoft/accounting-api";
 
   const { getCategoryInventory } = stores.getInventoryContext();
-  const {removeGranted} = getAclContext();
+  const { removeGranted } = getAclContext();
+  export let classes = {};
   export let inventory;
-  let dropdownContext;
+  let dropdownContext, categoryInventory, inventoryDesc;
 
-  $: getCategoryInventory(inventory.categoryId);
+  $: {
+    categoryInventory = getCategoryInventory(inventory.categoryId);
+    if (categoryInventory) {
+      inventoryDesc = calcDepreciation({ ...inventory, groupDepreciationId: categoryInventory.groupDepreciationId });
+    }
+  }
 
   function selectHandler() {
-    $goto("./:id/depreciation", { id: inventory.id})
+    $goto("./:id/depreciation", { id: inventory.id });
   }
 </script>
 
 <tr class="cursor-pointer">
-  <td style="text-align: center" on:click={selectHandler}>
+  <td class={classes.id} style="text-align: center" on:click={selectHandler}>
     {inventory.id}
   </td>
-  <td style="text-align: center" on:click={selectHandler}><CellDate date={inventory.date} /></td>
-  <td style="text-align: center" on:click={selectHandler}><CellDate date={inventory.datePurchase} /></td>
-  <td on:click={selectHandler}>{inventory.name || ""}</td>
-  <td on:click={selectHandler}>{getCategoryInventory(inventory.categoryId)?.name || ""}</td>
-  <td style="text-align: center" on:click={selectHandler}>
-    <CellNumber value={inventory.totalDepreciation} />
+  <td class={classes.datePurchase} style="text-align: center" on:click={selectHandler}
+    ><CellDate date={inventory.datePurchase} /></td
+  >
+  <td class={classes.name} on:click={selectHandler}>{inventory.name || ""}</td>
+  <td class={classes.category} on:click={selectHandler}>{categoryInventory?.name || ""}</td>
+  <td class={classes.bookValue} style="text-align: center" on:click={selectHandler}>
+    <CellNumber value={inventoryDesc.depreciationAccumulation} />
   </td>
-  <td style="text-align: center" on:click={selectHandler}>{inventory.quantity}</td>
-  <td on:click={selectHandler}>
+  <td class={classes.quantity} style="text-align: center" on:click={selectHandler}>{inventory.quantity}</td>
+  <td class={classes.priceItem} on:click={selectHandler}>
     <CellNumber value={inventory.priceItem} />
   </td>
-  <td on:click={selectHandler}>
-    <CellNumber value={inventory.priceItem * inventory.quantity} />
+  <td class={classes.total} on:click={selectHandler}>
+    <CellNumber value={inventoryDesc.total} />
   </td>
   <td style="cursor: pointer;padding: 0">
     <Dropdown

@@ -19,8 +19,6 @@
   export let isValid;
   export let fields;
   export let fieldsErrors;
-  let submitting = false
-
 
   function getAccount(accountType) {
     const accountStore = getAccountLeaf();
@@ -32,19 +30,9 @@
         return filteringAccountCash(accountStore);
       }
       case "expense": {
-        return filteringAccountExpense(accountStore)
+        return filteringAccountExpense(accountStore);
       }
     }
-  }
-
-  async function submitHandler() {
-    submitting = true;
-    onSubmit && await onSubmit();
-    submitting = false;
-  }
-
-  function closeHandler() {
-    onClose && onClose();
   }
 </script>
 
@@ -53,8 +41,15 @@
     <div class="card-body">
       <div class="row">
         <div class="form-group col-12 col-md-4">
-          <label for="date">Tanggal Pembelian</label>
-          <InputDate id="datePurchase" name="datePurchase" class="form-control" placeholder="Tanggal Pembelian" range={false} />
+          <label for="date">Tanggal Pembelian *</label>
+          <InputDate
+            id="datePurchase"
+            name="datePurchase"
+            class="form-control"
+            placeholder="Tanggal Pembelian *"
+            range={false}
+            yearEditable
+          />
         </div>
         <div class="form-group col-12 col-md-4">
           <label for="code">No Nota</label>
@@ -67,36 +62,35 @@
       </div>
       <div class="row">
         <div class="form-group col-12 col-md-6">
-          <label for="description`">Deskripsi</label>
-          <InputField id="description`" name="description`" type="text" class="form-control" placeholder="Deskripsi" />
+          <label for="description">Deskripsi</label>
+          <InputField id="description" name="description" type="text" class="form-control" placeholder="Deskripsi" />
         </div>
         <div class="form-group col-12 col-md-6">
-          <label for="debitAccount">Akun di Debit</label>
+          <label for="debitAccount">Akun di Debit *</label>
           <AccountSelect
             id="inventoryAccount"
             name="inventoryAccount"
             accountId={inventoryTransaction?.inventoryAccount}
-            placeholder="Akun Debit"
+            placeholder="Akun Debit *"
             allowEmpty
           />
         </div>
       </div>
       <div class="row">
-
         <div class="form-group col-12 col-md-6">
-          <label for="creditAccount">Pembayaran</label>
+          <label for="creditAccount">Pembayaran *</label>
           <AccountSelect
             id="cashAccount"
             name="cashAccount"
             accountStore={getAccount("cash")}
             accountId={inventoryTransaction?.cashAccount}
-            placeholder="Pembayaran"
+            placeholder="Pembayaran *"
             allowEmpty
           />
         </div>
         <div class="form-group col-12 col-md-6">
-          <label for="cashAmount">Jumlah Pembayaran</label>
-          <InputRp id="cashAmount" class="form-control" name="cashAmount" signed />
+          <label for="cashAmount">Jumlah Pembayaran *</label>
+          <InputRp id="cashAmount" class="form-control" name="cashAmount" signed placeholder="Jumlah Pembayaran *" />
         </div>
       </div>
     </div>

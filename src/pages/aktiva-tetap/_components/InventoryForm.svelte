@@ -76,7 +76,14 @@
     <div class="row">
       <div class="form-group col-12 col-md-6">
         <label for="date">Tanggal Perolehan</label>
-        <InputDate id="datePurchase" name="datePurchase" class="form-control" placeholder="Tanggal Perolehan" range={false} />
+        <InputDate
+          id="datePurchase"
+          name="datePurchase"
+          class="form-control"
+          placeholder="Tanggal Perolehan"
+          range={false}
+          yearEditable
+        />
       </div>
       <div class="form-group col-12 col-md-6">
         <label for="name">Nama</label>

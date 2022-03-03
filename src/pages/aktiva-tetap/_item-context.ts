@@ -8,7 +8,7 @@ type Options<T> = {
   addItem: () => T;
 };
 
-interface ItemContext<T> {
+interface _itemContext<T> {
   items: Writable<T[]>;
   validateItems(): void;
   addItem(): void;
@@ -18,7 +18,7 @@ interface ItemContext<T> {
 }
 
 const KEY = {};
-export const createItemContext = <T extends { index: string } = any>(opts: Options<T>): ItemContext<T> => {
+export const createItemContext = <T extends { index: string } = any>(opts: Options<T>): _itemContext<T> => {
   if (hasContext(KEY)) {
     return getItemContext();
   }
@@ -32,7 +32,7 @@ export const createItemContext = <T extends { index: string } = any>(opts: Optio
     opts.validate(get(itemsStore));
   };
   validateItems();
-  const context: ItemContext<any> = {
+  const context: _itemContext<any> = {
     items: itemsStore,
     validateItems,
     addItem() {
@@ -71,4 +71,4 @@ export const createItemContext = <T extends { index: string } = any>(opts: Optio
   return context;
 };
 
-export const getItemContext = <T extends { index: string } = any>() => getContext<ItemContext<T>>(KEY);
+export const getItemContext = <T extends { index: string } = any>() => getContext<_itemContext<T>>(KEY);

@@ -76,54 +76,47 @@
 </script>
 
 <Modal bind:openDialog {title} onClose={closeHandler}>
-  <Form
-    checkValidateFirst
-    {schema}
-    values={{ ...categoryInventory }}
-    bind:fields
-    bind:fieldsErrors
-    bind:isValid
-  >
+  <Form checkValidateFirst {schema} values={{ ...categoryInventory }} bind:fields bind:fieldsErrors bind:isValid>
     <div class="row">
       <div class="form-group col-12">
-        <label for="name">Nama</label>
-        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" />
+        <label for="name">Nama *</label>
+        <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama *" />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12">
-        <label for="depreciationMethod">Kelompok Depresiasi</label>
+        <label for="depreciationMethod">Kelompok Depresiasi *</label>
         <ComboxField
           id="depreciationGroup"
           name="groupDepreciationId"
           class="form-control"
           items={groupDepreciation}
-          placeholder="Kelompok Depresiasi"
+          placeholder="Kelompok Depresiasi *"
           disabled={isUpdate}
         />
       </div>
     </div>
     <div class="row">
       <div class="form-group col-12 col-md-6">
-        <label for="expenseDepreciationAccount">Biaya Penyusutan Aktiva Tetap</label>
+        <label for="expenseDepreciationAccount">Biaya Penyusutan Aktiva Tetap *</label>
         <AccountSelect
           id="expenseDepreciationAccount"
           name="expenseDepreciationAccount"
           accountStore={getAccount("expense")}
           accountId={categoryInventory?.expenseDepreciationAccount}
-          placeholder="Biaya Penyususan Aktiva Tetap"
+          placeholder="Biaya Penyususan Aktiva Tetap *"
           allowEmpty
           disabled={isUpdate}
         />
       </div>
       <div class="form-group col-12 col-md-6">
-        <label for="accumulatedDepreciationAccount">Akumulasi Penyusutan Aktiva Tetap</label>
+        <label for="accumulatedDepreciationAccount">Akumulasi Penyusutan Aktiva Tetap *</label>
         <AccountSelect
           id="accumulatedDepreciationAccount"
           name="accumulatedDepreciationAccount"
           accountStore={getAccount("accumulation")}
           accountId={categoryInventory?.accumulatedDepreciationAccount}
-          placeholder="Akumulasi Penyusutan Aktiva Tetap"
+          placeholder="Akumulasi Penyusutan Aktiva Tetap *"
           allowEmpty
           disabled={isUpdate}
         />

@@ -7,10 +7,10 @@
   import { debounce } from "@deboxsoft/module-core";
   import InputField from "__@comps/forms/InputField.svelte";
   import ComboxField from "__@comps/forms/ComboxField.svelte";
-  import { getItemContext } from "__@root/context/ItemContext";
+  import { getItemContext } from "../../_item-context";
 
   const itemContext = getItemContext();
-  const {categoryInventoryStore} = stores.getInventoryContext();
+  const { categoryInventoryStore } = stores.getInventoryContext();
   export let id = generateId({ prefix: "item", size: 3 });
   export let item;
   export let index;
@@ -37,11 +37,11 @@
   }
 
   function updateHandler() {
-    itemContext.updateItem($fields)
+    itemContext.updateItem($fields);
   }
 
   function removeHandler() {
-    itemContext.removeItem(index)
+    itemContext.removeItem(index);
   }
 </script>
 
@@ -50,7 +50,7 @@
     <InputField
       id="name-{id}"
       name="name"
-      placeholder="Nama Aset"
+      placeholder="Nama Aset *"
       type="text"
       class="form-control"
       on:input={changeItemHandler()}
@@ -64,7 +64,7 @@
       items={$categoryInventoryStore}
       valueId="id"
       labelId="name"
-      placeholder="Kategori"
+      placeholder="Kategori *"
     />
   </td>
   <td>
@@ -78,7 +78,7 @@
     />
   </td>
   <td>
-    <InputNumberField id="price-{id}" name="priceItem" on:input={changePriceHandler()} />
+    <InputNumberField id="price-{id}" name="priceItem" on:input={changePriceHandler()} placeholder="Harga Satuan *" />
   </td>
   <td style="padding: unset">
     <button

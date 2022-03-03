@@ -20,7 +20,6 @@
       return result + item.priceItem * item.quantity;
     }, 0);
   }
-
 </script>
 
 <tr class="cursor-pointer">
@@ -43,7 +42,7 @@
         <a href={$url("./:id/view", { id: inventoryTransaction.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-eye" />View</a
         >
-        {#if updateGranted && inventoryTransaction.status === "UNAPPROVED"}
+        {#if updateGranted && inventoryTransaction.status !== "APPROVED"}
           <a
             href={$url("./:id/update", { id: inventoryTransaction.id })}
             class="dropdown-item"
@@ -51,7 +50,7 @@
             on:mouseup={closeHandler}><i class="icon-trash-alt" />Edit</a
           >
         {/if}
-        {#if removeGranted && inventoryTransaction.status === "UNAPPROVED"}
+        {#if removeGranted && inventoryTransaction.status !== "APPROVED"}
           <a
             href={$url("./:id/remove", { id: inventoryTransaction.id })}
             class="dropdown-item"
