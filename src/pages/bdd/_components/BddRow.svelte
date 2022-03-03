@@ -1,33 +1,51 @@
 <script>
-  import { url } from "@roxi/routify";
+  import { goto, url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
   import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
+  import { calcAmortization } from "@deboxsoft/accounting-api";
 
   export let bdd;
+  export let classes = {};
   let dropdownContext;
-  $: total = bdd.taxRate > 0 ? bdd.amount + (bdd.taxRate * bdd.amount) / 100 : bdd.amount;
+  const { bookValue, total, amortizationAccumulation, tax } = calcAmortization(bdd);
+
+  function clickHandler() {
+    if (bdd.status === "APPROVED") {
+      $goto("./:id/amortization", { id: bdd.id });
+    } else {
+      $goto("./:id/view", { id: bdd.id });
+    }
+  }
 </script>
 
-<tr>
-  <td style="text-align: center">
-    <a href={$url("./:id/view", { id: bdd.id })}>
-      {bdd.id}
-    </a>
+<tr class="cursor-pointer">
+  <td class={classes.id} style="text-align: center" on:click={clickHandler}>
+    {bdd.id}
   </td>
-  <td style="text-align: center"><CellDate date={bdd.dateStart} /></td>
-  <td style="text-align: center"><CellDate date={bdd.dateEnd} /></td>
-  <td>{bdd.description || ""}</td>
-  <td style="text-align: center"><TransactionStatus status={bdd.status} /></td>
-  <td>{bdd.category || ""}</td>
-  <td style="text-align: center">{bdd.taxRate || ""}</td>
-  <td>
+  <td class={classes.dateStart} style="text-align: center" on:click={clickHandler}>
+    <CellDate date={bdd.dateStart} />
+  </td>
+  <td class={classes.name} on:click={clickHandler}>{bdd.name || ""}</td>
+  <td class={classes.monthLife} style="text-align: center" on:click={clickHandler}>{bdd.monthLife || "-"}</td>
+  <td class={classes.category} on:click={clickHandler}>{bdd.category || ""}</td>
+  <td class={classes.taxRate} style="text-align: center" on:click={clickHandler}>{bdd.taxRate || ""}</td>
+  <td class={classes.accumulation} on:click={clickHandler}>
+    <CellNumber value={amortizationAccumulation} />
+  </td>
+  <td class={classes.bookValue} on:click={clickHandler}>
+    <CellNumber value={bookValue} />
+  </td>
+  <td class={classes.amount} on:click={clickHandler}>
     <CellNumber value={bdd.amount} />
   </td>
-  <td>
+  <td class={classes.total} on:click={clickHandler}>
     <CellNumber value={total} />
+  </td>
+  <td class={classes.status} style="text-align: center" on:click={clickHandler}>
+    <TransactionStatus status={bdd.status} />
   </td>
   <td style="cursor: pointer;padding: 0">
     <Dropdown

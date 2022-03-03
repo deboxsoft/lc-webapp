@@ -10,7 +10,8 @@
   import { createReportContext } from "./_export";
   import Table from "__@comps/tables/DataTable.svelte";
   import Button from "__@comps/Button.svelte";
-  import { writable } from "svelte/store";
+  import CellDate from "__@comps/CellDate.svelte";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   const { readGranted, createGranted } = createAclContext();
   const applicationContext = getApplicationContext();
@@ -48,13 +49,15 @@
         .map((_) => ({
           ..._
         }));
-      dataList = [...dataList, ...data];
+      if (options.more) {
+        dataList = [...dataList, ...data];
+      } else {
+        dataList = data;
+      }
       $loading = false;
       submitting = false;
     });
   }
-
-  $: console.log(dataList);
 
   function infiniteHandler() {
     fetchData({ more: true });
@@ -73,16 +76,20 @@
       <Table>
         <tr slot="header">
           <!--          <th style="width: 70px">No</th>-->
-          <th>Deskripsi</th>
+          <th>Nama</th>
+          <th style="width: 150px">Tanggal Awal</th>
           <th style="width: 150px">Tanggal Akhir</th>
-          <th style="width: 150px; text-align: center">Sisa Kontrak (bulan)</th>
+          <th style="width: 150px; text-align: center">Umur (Bulan)</th>
+          <th style="width: 150px; text-align: center">Sisa Kontrak (Bulan)</th>
         </tr>
         {#each dataList as item}
           <tr>
             <!--            <td>{item.no || ""}</td>-->
-            <td>{item.description || ""}</td>
-            <td> {item.dateEnd ? dayjs(item.dateEnd).format("DD-MMMM-YYYY") : ""}</td>
-            <td style="text-align: center">{item.remaining}</td>
+            <td>{item.name || ""}</td>
+            <td> <CellDate format="DD-MMMM-YYYY" date={item.dateStart} /></td>
+            <td> <CellDate format="DD-MMMM-YYYY" date={item.dateEnd} /></td>
+            <td style="text-align: center">{item.monthLife || "-"}</td>
+            <td style="text-align: center">{item.remaining || "-"}</td>
           </tr>
         {/each}
       </Table>

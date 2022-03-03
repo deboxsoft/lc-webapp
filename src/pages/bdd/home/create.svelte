@@ -19,15 +19,17 @@
       date: now,
       dateStart: now,
       dateEnd: dayjs().add(1, "year").toDate(),
-      userId: getUserId()
+      userId: getUserId(),
+      monthLife: 24
     };
   })();
 
   async function onSubmit(values) {
     await create(values);
-    notify(`Berhasil membuat data bdd ${values.description}`, "success");
+    notify(`Berhasil membuat data bdd ${values.name}`, "success");
   }
 </script>
+
 {#if bdd}
   <BddForm {bdd} schema={BddInputSchema} title="Posting Bdd" {onSubmit} />
 {/if}

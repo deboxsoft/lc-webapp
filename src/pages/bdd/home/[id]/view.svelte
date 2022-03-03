@@ -1,5 +1,4 @@
 <!--routify:options title="Detail Bdd"-->
-
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
@@ -10,7 +9,7 @@
 
   const { loading, notify } = getApplicationContext();
   const { bddDetail, approve, reject } = stores.getBddContext();
-  const { createGranted } = getAclContext()
+  const { createGranted } = getAclContext();
 
   const rejectButtonEnable = createGranted;
   const approveButtonEnable = createGranted;
@@ -18,20 +17,29 @@
   export let to = "../";
   let openDialog, bdd;
 
-  bddDetail($params.id).then(_ => {
+  bddDetail($params.id).then((_) => {
     bdd = _;
     openDialog();
-  })
+  });
 
   async function approveHandler() {
-    $loading = true;
-    if (await approve(bdd.id)) {
-      notify(`approve bdd id '${bdd.id}' berhasil diapprove`, "success");
-    } else {
-      notify(`approve bdd id '${bdd.id}' tidak berhasil diapprove`, "error");
+    try {
+      $loading = true;
+      if (await approve(bdd.id)) {
+        notify(`approve bdd id '${bdd.id}' berhasil diapprove`, "success");
+        closeHandler();
+      } else {
+        notify(`approve bdd id '${bdd.id}' tidak berhasil diapprove`, "error");
+      }
+    } catch (e) {
+      if (e?.code) {
+        notify(e?.message || `data tidak berhasil diApprove`, "alert");
+      } else {
+        console.error(e);
+      }
+    } finally {
+      $loading = false;
     }
-    $loading = false;
-    closeHandler();
   }
 
   async function rejectHandler() {
@@ -56,10 +64,10 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Close
     </button>
-    {#if rejectButtonEnable &&  bdd?.status === "UNAPPROVED"}
+    {#if rejectButtonEnable && bdd?.status === "UNAPPROVED"}
       <button type="button" class="btn btn-danger" on:click={rejectHandler}> Reject </button>
     {/if}
-    {#if approveButtonEnable &&  bdd?.status === "UNAPPROVED"}
+    {#if approveButtonEnable && bdd?.status === "UNAPPROVED"}
       <button type="button" class="btn btn-primary" on:click={approveHandler}> Approve </button>
     {/if}
   </svelte:fragment>

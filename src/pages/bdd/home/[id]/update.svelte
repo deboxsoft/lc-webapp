@@ -16,20 +16,14 @@
 
   $: to = $params.to || "../";
   $: bdd = $bddStore && getBdd($params.id);
+  $: console.log($bddStore);
 
-  async function onSubmit({ id, ...values }) {
+  async function onSubmit(values) {
     await update(bdd.id, values);
     notify(`Berhasil mengupdate data bdd`, "success");
   }
 </script>
 
 {#if bdd}
-  <BddForm
-    {bdd}
-    schema={BddUpdateInputSchema}
-    isUpdate
-    {onSubmit}
-    title="Update Bdd"
-    {to}
-  />
+  <BddForm {bdd} schema={BddUpdateInputSchema} isUpdate {onSubmit} title="Update Bdd" {to} />
 {/if}
