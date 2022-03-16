@@ -1,14 +1,18 @@
 <script>
-  import { url, isActive } from "@roxi/routify";
+  import { url, isActive, goto } from "@roxi/routify";
   import Icon from "__@root/layout/Icon.svelte";
   import Accordion from "__@root/layout/Accordion.svelte";
   import AccordionItem from "__@root/layout/AccordionItem.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import AvatarProfile from "./AvatarProfile.svelte";
   import { getUIContext } from "__@stores/ui";
+  import { tick } from "svelte";
+  import { getApplicationContext } from "__@modules/app";
 
-  const { authenticationStore } = getAuthenticationContext();
+  const { loading } = getApplicationContext();
+  const { authenticationStore, logout } = getAuthenticationContext();
   const { store } = getUIContext();
+
   let scrollbar;
   let elRef;
   $: profile = $authenticationStore.profile;
@@ -16,6 +20,13 @@
   export let menus;
 
   let collapse = false;
+  async function logoutHandler() {
+    $loading = true;
+    await logout(undefined);
+    await tick();
+    $loading = false;
+    $goto("/");
+  }
 </script>
 
 <!-- Header -->
@@ -108,6 +119,12 @@
           {/if}
         {/if}
       {/each}
+      {#if $authenticationStore.authenticated}
+        <AccordionItem href={$url("/#")} on:click={logoutHandler}>
+          <i class="icon-switch2" />
+          <span>Logout</span>
+        </AccordionItem>
+      {/if}
     </Accordion>
   </div>
 {/if}

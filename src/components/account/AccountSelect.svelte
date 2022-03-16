@@ -8,12 +8,13 @@
   export let accountId = undefined;
   export let allowEmpty = false;
   export let name = "accountId";
-  export let placeholder = "Pilih Akun"
+  export let placeholder = "Pilih Akun";
   export let disabled = false;
   export let selectedAccount = accountContext.getAccount(accountId);
+  const className = $$props.class || "";
   const dispatch = createEventDispatcher();
 
-  let initialed = false // mencegah loop
+  let initialed = false; // mencegah loop
 
   $: {
     if (!$selectedAccount && !allowEmpty && !initialed && $accountStore.length > 0) {
@@ -32,6 +33,7 @@
 
 <AutoCompleteField
   {...$$restProps}
+  {className}
   {disabled}
   {name}
   {allowEmpty}

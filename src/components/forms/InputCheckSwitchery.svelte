@@ -1,7 +1,7 @@
 <script>
   import { getFormContext } from "__@stores/form";
   import { createEventDispatcher } from "svelte";
-  import { clsx, generateId } from "@deboxsoft/module-client";
+  import { generateId } from "@deboxsoft/module-client";
 
   const { validateField, fields, fieldsErrors, submitted } = getFormContext() || {};
   const dispatcher = createEventDispatcher();
@@ -10,6 +10,7 @@
   export let label = "";
   export let disabled = false;
   export let checked = ($fields && $fields[name]) || false;
+  export let labelClass = "";
 
   let { class: className } = $$props;
   let classes;
@@ -25,21 +26,36 @@
     }
   }
 
-  $: classes = clsx(className, "form-check-input-styled");
-
   function createToggleHandler() {
     const _validate = validateField(name);
     return (e) => {
       if (!disabled) {
         checked = !checked;
-        $fields && ($fields[name] = checked)
+        $fields && ($fields[name] = checked);
         _validate();
-        dispatcher("change", checked)
+        dispatcher("change", checked);
       }
-    }
-
+    };
   }
 </script>
+
+<div class="form-check form-check-switchery {className}" class:checked class:disabled>
+  <label class="form-check-label" for={id} on:click={createToggleHandler()}>
+    <input
+      type="checkbox"
+      autocomplete="off"
+      class="form-check-input-switchery-primary"
+      {checked}
+      data-fouc
+      data-switchery={checked}
+      {disabled}
+      {...$$restProps}
+      style="display: none"
+    />
+    <span class="switchery switchery-default"> <small class="slider" /></span>
+    <slot>{label}</slot>
+  </label>
+</div>
 
 <style lang="scss" global>
   .form-check-switchery {
@@ -68,20 +84,3 @@
     }
   }
 </style>
-
-<div class="form-check form-check-switchery" class:checked class:disabled>
-  <label class="form-check-label" for={id} on:click={createToggleHandler()}>
-    <input
-      type="checkbox"
-      autocomplete="off"
-      class="form-check-input-switchery-primary"
-      {checked}
-      data-fouc
-      data-switchery={checked}
-      {disabled}
-      {...$$restProps}
-      style="display: none" />
-    <span class="switchery switchery-default"> <small class="slider" /></span>
-    <slot>{label}</slot>
-  </label>
-</div>

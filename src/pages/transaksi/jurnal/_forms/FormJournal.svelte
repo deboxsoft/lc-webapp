@@ -16,6 +16,7 @@
   import { getAuthenticationContext } from "__@modules/users";
   // import { filteringAccountDebit } from "__@root/utils";
   import { getApplicationContext } from "__@modules/app";
+  import InputCheckSwitchery from "__@comps/forms/InputCheckSwitchery.svelte";
 
   const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
   const { getAccountLeaf } = stores.getAccountContext();
@@ -31,6 +32,8 @@
   onMount(() => {
     openDialog();
   });
+
+  $: isCredit = $fields?.isCredit || false;
 
   export function createCreditAccount() {
     return {
@@ -118,8 +121,11 @@
             <!--            labelFieldName="name" />-->
             <!--        </div>-->
             <div class="form-group col-md-6">
-              <label for="accountId">Debit</label>
-              <AccountSelect id="accountId" accountStore={getAccountDebit()} allowEmpty />
+              <label for="accountId">Akun {isCredit ? "Kredit" : "Debit"}</label>
+              <div class="d-flex">
+                <AccountSelect class="mr-2" id="accountId" accountStore={getAccountDebit()} allowEmpty />
+                <InputCheckSwitchery class="mt-auto mb-auto" name="isCredit" label="kredit" />
+              </div>
             </div>
             <div class="form-group col-md-6">
               <label for="amount">Jumlah</label>
@@ -145,7 +151,7 @@
         </div>
       </div>
       {#if $fields}
-        <FormJournalAccount {createCreditAccount} />
+        <FormJournalAccount {createCreditAccount} {isCredit} />
       {/if}
     </Form>
   </div>

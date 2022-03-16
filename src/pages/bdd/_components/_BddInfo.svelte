@@ -7,7 +7,6 @@
   export let bdd;
   export let amortizationAccumulation, amortizationAmount, amortizationRemaining, tax, bookValue, rate, total;
   const className = $$props.class || "";
-  console.log(bdd);
 </script>
 
 <div class={className}>
@@ -18,7 +17,7 @@
     </p>
   </dl>
   <dl class="row mb-0">
-    <dt class="col-sm-5 mb-0">Tanggal Approve</dt>
+    <dt class="col-sm-5 mb-0">Tanggal {bdd.status === "APPROVED" ? "Approve" : ""}</dt>
     <p class="col-sm-7 mb-0">: <CellDate date={bdd.date} format="DD-MMMM-YYYY" /></p>
   </dl>
   <dl class="row mb-0">
@@ -67,22 +66,40 @@
       : &nbsp<span style="width: 150px"><CellNumber value={bookValue} /></span>
     </p>
   </dl>
+  {#if bdd.debitAccount}
+    <dl class="row mb-0">
+      <dt class="col-sm-5 mb-0">Akun di Debet</dt>
+      <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
+        :&nbsp;<CellAccount id={bdd.debitAccount} />
+      </p>
+    </dl>
+  {/if}
+  {#if bdd.creditAccount}
+    <dl class="row mb-0">
+      <dt class="col-sm-5 mb-0">Akun Pembayaran</dt>
+      <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
+        :&nbsp;<CellAccount id={bdd.creditAccount} />
+      </p>
+    </dl>
+  {/if}
+  {#if bdd.taxAccount}
+    <dl class="row mb-0">
+      <dt class="col-sm-5 mb-0">Akun Pajak</dt>
+      <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
+        :&nbsp;<CellAccount id={bdd.taxAccount} />
+      </p>
+    </dl>
+  {/if}
   <dl class="row mb-0">
-    <dt class="col-sm-5 mb-0">Akun di Debet</dt>
+    <dt class="col-sm-5 mb-0">Akun Akumulasi Amortisasi</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      :&nbsp;<CellAccount id={bdd.debitAccount} />
+      :&nbsp;<CellAccount id={bdd.amortizationAccount} />
     </p>
   </dl>
   <dl class="row mb-0">
-    <dt class="col-sm-5 mb-0">Akun Pembayaran</dt>
+    <dt class="col-sm-5 mb-0">Akun Beban Amortisasi</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      :&nbsp;<CellAccount id={bdd.creditAccount} />
-    </p>
-  </dl>
-  <dl class="row mb-0">
-    <dt class="col-sm-5 mb-0">Akun Pajak</dt>
-    <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      :&nbsp;<CellAccount id={bdd.taxAccount} />
+      :&nbsp;<CellAccount id={bdd.expenseAccount} />
     </p>
   </dl>
   <dl class="row mb-0">

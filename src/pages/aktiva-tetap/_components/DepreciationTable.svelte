@@ -6,14 +6,22 @@
   import { getGroupDepreciation, calcDepreciation } from "@deboxsoft/accounting-api";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
+  import Loader from "__@comps/loader/Loader.svelte";
 
-  const { getCategoryInventory } = stores.getInventoryContext();
+  const { getCategoryInventory, getDepreciationInventory } = stores.getInventoryContext();
   export let back = "../";
   /** @type {import("@deboxsoft/accounting-api").Inventory} */
   export let inventory;
-  const category = getCategoryInventory(inventory.categoryId);
   /** @type {import("@deboxsoft/accounting-api").Depreciation[]} */
-  const depreciationList = inventory.logs || [];
+  let depreciationList = [];
+  let loading = true;
+
+  getDepreciationInventory(inventory.id).then((_) => {
+    depreciationList = _;
+    loading = false;
+  });
+
+  const category = getCategoryInventory(inventory.categoryId);
   const groupDepreciation = getGroupDepreciation(category.groupDepreciationId);
   const { bookValue, depreciationRemaining, depreciationAccumulation, depreciationAmount, monthLife, total } =
     calcDepreciation({ ...inventory, groupDepreciationId: category.groupDepreciationId });
@@ -92,15 +100,26 @@
     </p>
   </dl>
 </div>
-<div style="min-height: 250px">
-  <Table class="table table-hover text-nowrap">
-    <tr slot="header">
-      <th>Bulan</th>
-      <th>Biaya Penyusutan</th>
-      <!--      <th style="width: 30px;" />-->
-    </tr>
-    {#each depreciationList as depreciation}
-      <DepreciationRow {depreciation} />
-    {/each}
-  </Table>
+<div class="depreciation-data">
+  {#if loading}
+    <Loader />
+  {:else}
+    <Table class="table table-hover text-nowrap">
+      <tr slot="header">
+        <th>Bulan</th>
+        <th>Biaya Penyusutan</th>
+        <!--      <th style="width: 30px;" />-->
+      </tr>
+      {#each depreciationList as depreciation}
+        <DepreciationRow {depreciation} />
+      {/each}
+    </Table>
+  {/if}
 </div>
+
+<style>
+  .depreciation-data {
+    height: 250px;
+    overflow-y: auto;
+  }
+</style>

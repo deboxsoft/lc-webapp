@@ -1,5 +1,5 @@
 <script>
-  import { getFormContext} from "__@stores/form";
+  import { getFormContext } from "__@stores/form";
   import { writable } from "svelte/store";
   import ListPlusIcon from "__@comps/icons/ListPlus.svelte";
   import CheckIcon from "__@comps/icons/Check.svelte";
@@ -13,8 +13,9 @@
   const creditAccountsValidate = validateField("creditAccounts");
   const creditAccounts = writable(($fields.creditAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
   export const total = 0;
+  export let isCredit = fields;
 
-  let debit;
+  let debit, labelMainAccount, labelOppositeAccount;
   let diff = NaN;
   let credit;
 
@@ -27,6 +28,16 @@
   $: {
     if ($fields?.amount) {
       calculate();
+    }
+  }
+
+  $: {
+    if (!isCredit) {
+      labelMainAccount = "Debit";
+      labelOppositeAccount = "Kredit";
+    } else {
+      labelMainAccount = "Kredit";
+      labelOppositeAccount = "Debit";
     }
   }
 
@@ -77,9 +88,9 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Akun Kredit</th>
+          <th>Akun {isCredit ? "Debit" : "Kredit"}</th>
           <th class="text-center" width="275">Nominal</th>
-          <th class="text-center" width="40"/>
+          <th class="text-center" width="40" />
         </tr>
       </thead>
       <tbody>
@@ -114,11 +125,11 @@
     {/if}
     <div class="d-flex flex-column" style="width: 250px">
       <div class="d-flex">
-        <span class="flex-grow-1">Total Debit: Rp.</span>
+        <span class="flex-grow-1">Total {labelMainAccount}: Rp.</span>
         <span>{debit ? convertToNumber({ value: parseFloat(debit) }) : "-"}</span>
       </div>
       <div class="d-flex">
-        <span class="flex-grow-1">Total Kredit: Rp.</span>
+        <span class="flex-grow-1">Total {labelOppositeAccount}: Rp.</span>
         <span>{credit ? convertToNumber({ value: parseFloat(credit) }) : "-"}</span>
       </div>
       <div class="d-flex" style="border-top: solid 1px gray">
