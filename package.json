@@ -33,7 +33,7 @@
     "@deboxsoft/svelte-icons": "^1.0.3",
     "@deboxsoft/users-api": "~1.3.5",
     "@deboxsoft/users-client": "~1.3.5",
-    "@deboxsoft/zod": "^3.8.2",
+    "@deboxsoft/zod": "^3.11.5",
     "@popperjs/core": "^2.9.2",
     "@roxi/routify": "2.15.1",
     "autonumeric": "^4.6.0",
@@ -112,15 +112,15 @@
     "stylelint-order": "4.1.0",
     "sucrase": "^3.0.0",
     "svelte": "^3.42.4",
-    "svelte-check": "^2.2.3",
-    "svelte-language-server": "^0.14.4",
-    "svelte-preprocess": "^4.9.8",
+    "svelte-check": "^2.4.5",
+    "svelte-language-server": "^0.14.22",
+    "svelte-preprocess": "^4.10.4",
     "tslib": "^2.0.3",
     "typescript": "~4.5.2",
-    "workbox-core": "5.1.4",
-    "workbox-expiration": "5.1.4",
-    "workbox-precaching": "5.1.4",
-    "workbox-routing": "5.1.4",
-    "workbox-strategies": "5.1.4"
+    "workbox-core": "6.5.1",
+    "workbox-expiration": "6.5.1",
+    "workbox-precaching": "6.5.1",
+    "workbox-routing": "6.5.1",
+    "workbox-strategies": "6.5.1"
   }
 }
