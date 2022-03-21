@@ -47,7 +47,7 @@
             href={$url("./:id/update", { id: inventoryTransaction.id })}
             class="dropdown-item"
             on:click|stopPropagation={() => {}}
-            on:mouseup={closeHandler}><i class="icon-trash-alt" />Edit</a
+            on:mouseup={closeHandler}><i class="icon-pencil" />Edit</a
           >
         {/if}
         {#if removeGranted && inventoryTransaction.status !== "APPROVED"}
@@ -55,7 +55,7 @@
             href={$url("./:id/remove", { id: inventoryTransaction.id })}
             class="dropdown-item"
             on:click|stopPropagation={() => {}}
-            on:mouseup={closeHandler}><i class="icon-pencil" />Hapus</a
+            on:mouseup={closeHandler}><i class="icon-trash-alt" />Hapus</a
           >
         {/if}
       </svelte:fragment>

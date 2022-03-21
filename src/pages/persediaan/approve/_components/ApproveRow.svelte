@@ -65,12 +65,12 @@
         >
         {#if updateGranted && stockTransaction.status !== "APPROVED"}
           <a href={$url("./:id/update", { id: stockTransaction.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-trash-alt" />Edit</a
+            ><i class="icon-pencil" />Edit</a
           >
         {/if}
         {#if removeGranted && stockTransaction.status !== "APPROVED"}
           <a href={$url("./:id/remove", { id: stockTransaction.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-pencil" />Hapus</a
+            ><i class="icon-trash-alt" />Hapus</a
           >
         {/if}
       </svelte:fragment>

@@ -32,17 +32,19 @@
         <i class="icon-menu9" />
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
-        <a href={$url("./:id/depreciation", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-        ><i class="icon-clipboard3" />Rekap Depresiasi</a
+        <a
+          href={$url("./:id/depreciation", { id: categoryInventory.id })}
+          class="dropdown-item"
+          on:mouseup={closeHandler}><i class="icon-clipboard3" />Rekap Depresiasi</a
         >
         <a href={$url("./:id/view", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-eye" />Detail</a
         >
         <a href={$url("./:id/update", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-trash-alt" />Edit</a
+          ><i class="icon-pencil" />Edit</a
         >
         <a href={$url("./:id/remove", { id: categoryInventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-pencil" />Hapus</a
+          ><i class="icon-trash-alt" />Hapus</a
         >
       </svelte:fragment>
     </Dropdown>

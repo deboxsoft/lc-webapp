@@ -62,7 +62,7 @@
         >
         {#if removeGranted}
           <a href={$url("./:id/remove", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-pencil" />Hapus Aktiva Tetap</a
+            ><i class="icon-trash-alt" />Hapus Aktiva Tetap</a
           >
         {/if}
       </svelte:fragment>

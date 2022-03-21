@@ -67,10 +67,10 @@
         >
         {#if bdd.status !== "APPROVED"}
           <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-trash-alt" />Ubah BDD</a
+            ><i class="icon-pencil" />Ubah BDD</a
           >
           <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-pencil" />Hapus BDD</a
+            ><i class="icon-trash-alt" />Hapus BDD</a
           >
         {/if}
       </svelte:fragment>
