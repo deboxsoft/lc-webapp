@@ -14,7 +14,7 @@
 
   const reportContext = createReportContext();
   const applicationContext = getApplicationContext();
-  const { createGranted,  } = getAclContext();
+  const { createGranted } = getAclContext();
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "data tabel" });
   const { loading } = applicationContext;
@@ -72,12 +72,6 @@
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    {#if createGranted}
-      <a href={$url("./import")} class="breadcrumb-elements-item">
-        <i class="icon-file-upload2 mr-1" />
-        Impor
-      </a>
-    {/if}
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh
