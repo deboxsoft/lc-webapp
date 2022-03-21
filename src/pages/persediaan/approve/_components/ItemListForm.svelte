@@ -45,6 +45,9 @@
     } else {
       delete $fieldsErrors.noBalance;
       delete $fieldsErrors["total"];
+      if (Object.keys($fieldsErrors).length === 0) {
+        $isValid = true;
+      }
     }
   }
 </script>

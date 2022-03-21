@@ -73,7 +73,7 @@
       name="quantity"
       format="number"
       pristineValue="1"
-      minimumValue="1"
+      minimumValue="0"
       on:input={changeQuantityHandler()}
     />
   </td>
