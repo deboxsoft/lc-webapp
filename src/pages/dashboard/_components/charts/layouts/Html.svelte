@@ -3,7 +3,7 @@
 	HTML layout component
  -->
 <script>
-  import { getContextChart } from "../ChartContainer.svelte";
+  import { getContextChart } from "__@stores/chart";
 
   /** @type {Element} [element] The layer's outermost `<div>` tag. Useful for bindings. */
   export let element = undefined;

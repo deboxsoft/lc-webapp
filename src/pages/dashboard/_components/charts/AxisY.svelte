@@ -3,7 +3,7 @@
 	Generates an HTML y-axis.
  -->
 <script>
-  import { getContextChart } from "./ChartContainer.svelte";
+  import { getContextChart } from "__@stores/chart";
   const { padding, xRange, yScale } = getContextChart();
   /** @type {Boolean} [gridlines=true] - Extend lines from the ticks into the chart space */
   export let gridlines = true;

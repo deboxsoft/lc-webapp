@@ -1,5 +1,5 @@
 <script>
-  import { getContextChart } from "./ChartContainer.svelte";
+  import { getContextChart } from "__@stores/chart";
   const { data, xGet, yGet, zGet, xScale } = getContextChart();
 </script>
 

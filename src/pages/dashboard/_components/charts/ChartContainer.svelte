@@ -1,24 +1,6 @@
-<script context="module">
-  import { getContext } from "svelte";
-  const KEY = Symbol("chart-context");
-  export function getContextChart() {
-    return getContext(KEY);
-  }
-</script>
-
 <script>
-  import { setContext, onMount } from "svelte";
-  import { writable, derived } from "svelte/store";
-
-  import makeAccessor from "./utils/makeAccessor";
-  import filterObject from "./utils/filterObject";
-  import calcExtents from "./lib/calcExtents";
-  import calcDomain from "./helpers/calcDomain";
-  import createScale from "./helpers/createScale";
-  import createGetter from "./helpers/createGetter";
-  import getRange from "./helpers/getRange";
-  import defaultScales from "./settings/defaultScales";
-  import defaultReverses from "./settings/defaultReverses";
+  import { onMount } from "svelte";
+  import { createContextChart } from "__@stores/chart";
 
   /** @type {Boolean} [ssr=false] Whether this chart should be rendered server side. */
   export let ssr = false;
@@ -78,13 +60,13 @@
   /** @type {Boolean} [rNice=false] Applies D3's [scale.nice()](https://github.com/d3/d3-scale#continuous_nice) to the r domain. */
   export let rNice = false;
   /** @type {Boolean} [xReverse=false] Reverse the default x range. By default this is `false` and the range is `[0, width]`. Ignored if you set the xRange prop. */
-  export let xReverse = defaultReverses.x;
+  export let xReverse = undefined;
   /** @type {Boolean} [yReverse=true] Reverse the default y range. By default this is `true` and the range is `[height, 0]`. Ignored if you set the yRange prop. */
-  export let yReverse = defaultReverses.y;
+  export let yReverse = undefined;
   /** @type {Boolean} [zReverse=false] Reverse the default z range. By default this is `false` and the range is `[0, width]`. Ignored if you set the zRange prop. */
-  export let zReverse = defaultReverses.z;
+  export let zReverse = undefined;
   /** @type {Boolean} [rReverse=false] Reverse the default r range. By default this is `false` and the range is `[1, 25]`.Ignored if you set the rRange prop. */
-  export let rReverse = defaultReverses.r;
+  export let rReverse = undefined;
   /** @type {[leftPixels: Number, rightPixels: Number]} [xPadding] Assign a pixel value to add to the min or max of the scale. This will increase the scales domain by the scale unit equivalent of the provided pixels. */
   export let xPadding = undefined;
   /** @type {[leftPixels: Number, rightPixels: Number]} [yPadding] Assign a pixel value to add to the min or max of the scale. This will increase the scales domain by the scale unit equivalent of the provided pixels. */
@@ -94,13 +76,13 @@
   /** @type {[leftPixels: Number, rightPixels: Number]} [rPadding] Assign a pixel value to add to the min or max of the scale. This will increase the scales domain by the scale unit equivalent of the provided pixels. */
   export let rPadding = undefined;
   /** @type {Function} [xScale=d3.scaleLinear] The D3 scale that should be used for the x-dimension. Pass in an instantiated D3 scale if you want to override the default or you want to extra options. */
-  export let xScale = defaultScales.x;
+  export let xScale = undefined;
   /** @type {Function} [yScale=d3.scaleLinear] The D3 scale that should be used for the x-dimension. Pass in an instantiated D3 scale if you want to override the default or you want to extra options. */
-  export let yScale = defaultScales.y;
+  export let yScale = undefined;
   /** @type {Function} [zScale=d3.scaleLinear] The D3 scale that should be used for the x-dimension. Pass in an instantiated D3 scale if you want to override the default or you want to extra options. */
-  export let zScale = defaultScales.z;
+  export let zScale = undefined;
   /** @type {Function} [rScale=d3.scaleSqrt] The D3 scale that should be used for the x-dimension. Pass in an instantiated D3 scale if you want to override the default or you want to extra options. */
-  export let rScale = defaultScales.r;
+  export let rScale = undefined;
   /** @type {[min: Number, max: Number]|Function|String[]|Number[]} [xRange] Override the default x range of `[0, width]` by setting an array or function with argument `({ width, height})` that returns an array. Setting this prop overrides `xReverse`. This can also be a list of numbers or strings for scales with discrete ranges like [scaleThreshhold](https://github.com/d3/d3-scale#threshold-scales) or [scaleQuantize](https://github.com/d3/d3-scale#quantize-scales). */
   export let xRange = undefined;
   /** @type {[min: Number, max: Number]|Function|String[]|Number[]} [xRange] Override the default y range of `[0, height]` by setting an array or function with argument `({ width, height})` that returns an array. Setting this prop overrides `yReverse`. This can also be a list of numbers or strings for scales with discrete ranges like [scaleThreshhold](https://github.com/d3/d3-scale#threshold-scales) or [scaleQuantize](https://github.com/d3/d3-scale#quantize-scales). */
@@ -120,274 +102,51 @@
   /** @type {Object} custom Any extra configuration values you want available on the LayerCake context. This could be useful for color lookups or additional constants. */
   export let custom = {};
 
-  /* --------------------------------------------
-   * Keep track of whethr the component has mounted
-   * This is used to emit warnings once we have measured
-   * the container object and it doesn't have proper dimensions
-   */
-  let isMounted = false;
+  export let context = createContextChart({
+    percentRange,
+    containerWidth,
+    containerHeight,
+    extents,
+    data: flatData || data,
+    padding,
+    x,
+    y,
+    z,
+    r,
+    xDomain,
+    yDomain,
+    zDomain,
+    rDomain,
+    xNice,
+    yNice,
+    zNice,
+    rNice,
+    xReverse,
+    yReverse,
+    zReverse,
+    rReverse,
+    xPadding,
+    yPadding,
+    zPadding,
+    rPadding,
+    xRange,
+    yRange,
+    zRange,
+    rRange,
+    xScale,
+    yScale,
+    zScale,
+    rScale
+  });
+  const width_d = context.width;
+  const height_d = context.height;
+  const aspectRatio_d = context.aspectRatio;
+  const _containerWidth = context.containerWidth;
+  const _containerHeight = context.containerHeight;
+
   onMount(() => {
-    isMounted = true;
+    context.setMounted(true);
   });
-
-  /* --------------------------------------------
-   * Preserve a copy of our passed in settings before we modify them
-   * Return this to the user's context so they can reference things if need be
-   * Add the active keys since those aren't on our settings object.
-   * This is mostly an escape-hatch
-   */
-  const config = {};
-  $: if (x) config.x = x;
-  $: if (y) config.y = y;
-  $: if (z) config.z = z;
-  $: if (r) config.r = r;
-  $: if (xDomain) config.xDomain = xDomain;
-  $: if (yDomain) config.yDomain = yDomain;
-  $: if (zDomain) config.zDomain = zDomain;
-  $: if (rDomain) config.rDomain = rDomain;
-  $: if (xRange) config.xRange = xRange;
-  $: if (yRange) config.yRange = yRange;
-  $: if (zRange) config.zRange = zRange;
-  $: if (rRange) config.rRange = rRange;
-
-  /* --------------------------------------------
-   * Make store versions of each parameter
-   * Prefix these with `_` to keep things organized
-   */
-  const _percentRange = writable(percentRange);
-  const _containerWidth = writable(containerWidth);
-  const _containerHeight = writable(containerHeight);
-  const _extents = writable(filterObject(extents));
-  const _data = writable(data);
-  const _flatData = writable(flatData || data);
-  const _padding = writable(padding);
-  const _x = writable(makeAccessor(x));
-  const _y = writable(makeAccessor(y));
-  const _z = writable(makeAccessor(z));
-  const _r = writable(makeAccessor(r));
-  const _xDomain = writable(xDomain);
-  const _yDomain = writable(yDomain);
-  const _zDomain = writable(zDomain);
-  const _rDomain = writable(rDomain);
-  const _xNice = writable(xNice);
-  const _yNice = writable(yNice);
-  const _zNice = writable(zNice);
-  const _rNice = writable(rNice);
-  const _xReverse = writable(xReverse);
-  const _yReverse = writable(yReverse);
-  const _zReverse = writable(zReverse);
-  const _rReverse = writable(rReverse);
-  const _xPadding = writable(xPadding);
-  const _yPadding = writable(yPadding);
-  const _zPadding = writable(zPadding);
-  const _rPadding = writable(rPadding);
-  const _xRange = writable(xRange);
-  const _yRange = writable(yRange);
-  const _zRange = writable(zRange);
-  const _rRange = writable(rRange);
-  const _xScale = writable(xScale);
-  const _yScale = writable(yScale);
-  const _zScale = writable(zScale);
-  const _rScale = writable(rScale);
-  const _config = writable(config);
-  const _custom = writable(custom);
-
-  $: $_percentRange = percentRange;
-  $: $_containerWidth = containerWidth;
-  $: $_containerHeight = containerHeight;
-  $: $_extents = filterObject(extents);
-  $: $_data = data;
-  $: $_flatData = flatData || data;
-  $: $_padding = padding;
-  $: $_x = makeAccessor(x);
-  $: $_y = makeAccessor(y);
-  $: $_z = makeAccessor(z);
-  $: $_r = makeAccessor(r);
-  $: $_xDomain = xDomain;
-  $: $_yDomain = yDomain;
-  $: $_zDomain = zDomain;
-  $: $_rDomain = rDomain;
-  $: $_xNice = xNice;
-  $: $_yNice = yNice;
-  $: $_zNice = zNice;
-  $: $_rNice = rNice;
-  $: $_xReverse = xReverse;
-  $: $_yReverse = yReverse;
-  $: $_zReverse = zReverse;
-  $: $_rReverse = rReverse;
-  $: $_xPadding = xPadding;
-  $: $_yPadding = yPadding;
-  $: $_zPadding = zPadding;
-  $: $_rPadding = rPadding;
-  $: $_xRange = xRange;
-  $: $_yRange = yRange;
-  $: $_zRange = zRange;
-  $: $_rRange = rRange;
-  $: $_xScale = xScale;
-  $: $_yScale = yScale;
-  $: $_zScale = zScale;
-  $: $_rScale = rScale;
-  $: $_custom = custom;
-  $: $_config = config;
-
-  /* --------------------------------------------
-   * Create derived values
-   * Suffix these with `_d`
-   */
-  const activeGetters_d = derived([_x, _y, _z, _r], ([$x, $y, $z, $r]) => {
-    const obj = {};
-    if ($x) {
-      obj.x = $x;
-    }
-    if ($y) {
-      obj.y = $y;
-    }
-    if ($z) {
-      obj.z = $z;
-    }
-    if ($r) {
-      obj.r = $r;
-    }
-    return obj;
-  });
-
-  const padding_d = derived([_padding, _containerWidth, _containerHeight], ([$padding]) => {
-    const defaultPadding = { top: 0, right: 0, bottom: 0, left: 0 };
-    return Object.assign(defaultPadding, $padding);
-  });
-
-  const box_d = derived(
-    [_containerWidth, _containerHeight, padding_d],
-    ([$containerWidth, $containerHeight, $padding]) => {
-      const b = {};
-      b.top = $padding.top;
-      b.right = $containerWidth - $padding.right;
-      b.bottom = $containerHeight - $padding.bottom;
-      b.left = $padding.left;
-      b.width = b.right - b.left;
-      b.height = b.bottom - b.top;
-      if (b.width <= 0 && isMounted === true) {
-        console.warn(
-          "[LayerCake] Target div has zero or negative width. Did you forget to set an explicit width in CSS on the container?"
-        );
-      }
-      if (b.height <= 0 && isMounted === true) {
-        console.warn(
-          "[LayerCake] Target div has zero or negative height. Did you forget to set an explicit height in CSS on the container?"
-        );
-      }
-      return b;
-    }
-  );
-
-  const width_d = derived([box_d], ([$box]) => {
-    return $box.width;
-  });
-
-  const height_d = derived([box_d], ([$box]) => {
-    return $box.height;
-  });
-
-  /* --------------------------------------------
-   * Calculate extents by taking the extent of the data
-   * and filling that in with anything set by the user
-   */
-  const extents_d = derived([_flatData, activeGetters_d, _extents], ([$flatData, $activeGetters, $extents]) => {
-    const getters = filterObject($activeGetters, $extents);
-    if (Object.keys(getters).length > 0) {
-      return { ...calcExtents($flatData, getters), ...$extents };
-    } else {
-      return {};
-    }
-  });
-
-  const xDomain_d = derived([extents_d, _xDomain], calcDomain("x"));
-  const yDomain_d = derived([extents_d, _yDomain], calcDomain("y"));
-  const zDomain_d = derived([extents_d, _zDomain], calcDomain("z"));
-  const rDomain_d = derived([extents_d, _rDomain], calcDomain("r"));
-
-  const xScale_d = derived(
-    [_xScale, extents_d, xDomain_d, _xPadding, _xNice, _xReverse, width_d, height_d, _xRange, _percentRange],
-    createScale("x")
-  );
-  const xGet_d = derived([_x, xScale_d], createGetter);
-
-  const yScale_d = derived(
-    [_yScale, extents_d, yDomain_d, _yPadding, _yNice, _yReverse, width_d, height_d, _yRange, _percentRange],
-    createScale("y")
-  );
-  const yGet_d = derived([_y, yScale_d], createGetter);
-
-  const zScale_d = derived(
-    [_zScale, extents_d, zDomain_d, _zPadding, _zNice, _zReverse, width_d, height_d, _zRange, _percentRange],
-    createScale("z")
-  );
-  const zGet_d = derived([_z, zScale_d], createGetter);
-
-  const rScale_d = derived(
-    [_rScale, extents_d, rDomain_d, _rPadding, _rNice, _rReverse, width_d, height_d, _rRange, _percentRange],
-    createScale("r")
-  );
-  const rGet_d = derived([_r, rScale_d], createGetter);
-
-  const xRange_d = derived([xScale_d], getRange);
-  const yRange_d = derived([yScale_d], getRange);
-  const zRange_d = derived([zScale_d], getRange);
-  const rRange_d = derived([rScale_d], getRange);
-
-  const aspectRatio_d = derived([width_d, height_d], ([$width, $height]) => {
-    return $width / $height;
-  });
-
-  $: context = {
-    activeGetters: activeGetters_d,
-    width: width_d,
-    height: height_d,
-    percentRange: _percentRange,
-    aspectRatio: aspectRatio_d,
-    containerWidth: _containerWidth,
-    containerHeight: _containerHeight,
-    x: _x,
-    y: _y,
-    z: _z,
-    r: _r,
-    custom: _custom,
-    data: _data,
-    xNice: _xNice,
-    yNice: _yNice,
-    zNice: _zNice,
-    rNice: _rNice,
-    xReverse: _xReverse,
-    yReverse: _yReverse,
-    zReverse: _zReverse,
-    rReverse: _rReverse,
-    xPadding: _xPadding,
-    yPadding: _yPadding,
-    zPadding: _zPadding,
-    rPadding: _rPadding,
-    padding: padding_d,
-    flatData: _flatData,
-    extents: extents_d,
-    xDomain: xDomain_d,
-    yDomain: yDomain_d,
-    zDomain: zDomain_d,
-    rDomain: rDomain_d,
-    xRange: xRange_d,
-    yRange: yRange_d,
-    zRange: zRange_d,
-    rRange: rRange_d,
-    config: _config,
-    xScale: xScale_d,
-    xGet: xGet_d,
-    yScale: yScale_d,
-    yGet: yGet_d,
-    zScale: zScale_d,
-    zGet: zGet_d,
-    rScale: rScale_d,
-    rGet: rGet_d
-  };
-
-  $: setContext(KEY, context);
 </script>
 
 {#if ssr === true || typeof window !== "undefined"}
