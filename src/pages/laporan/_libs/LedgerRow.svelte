@@ -4,11 +4,14 @@
   import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
 
-  export let account;
+  /**
+   * @type{AccountBalance}
+   */
+  export let accountBalance;
   export let toggle;
   export let linkDisable = false;
   export let isExpand = () => writable(false);
-  $: expanded = isExpand(account.id);
+  $: expanded = isExpand(accountBalance.id);
 
   function createDetailBalanceHandler(accountId) {
     return () => {
@@ -19,7 +22,7 @@
   }
 </script>
 
-<tr class="table-active" on:click={toggle(account.id)} style="cursor: pointer;">
+<tr class="table-active" on:click={toggle(accountBalance.id)} style="cursor: pointer;">
   <td class="d-table-cell" colspan="2">
     <div class="d-flex flex-row align-items-center">
       {#if $expanded}
@@ -28,23 +31,24 @@
         <IconArrowRight class="icon-sm pt-1 mr-1" />
       {/if}
       <div>
-        {account.name}
+        {accountBalance.name}
         <div class="text-muted font-size-sm">
-          {account.id}
+          {accountBalance.id}
         </div>
       </div>
     </div>
   </td>
   <td />
   <td class="text-right balance">
-    <CellNumber value={account.balance} />
+    <CellNumber value={accountBalance.balance} />
   </td>
 </tr>
-{#if account.children && $expanded}
-  {#each account.children as child}
+{#if accountBalance.children && $expanded}
+  {#each accountBalance.children as child}
     <tr class="child" style={!linkDisable ? "cursor: pointer" : ""} on:click={createDetailBalanceHandler(child.id)}>
       <td style="width: 10px" />
-      <td>{child.name}
+      <td
+        >{child.name}
         <div class="text-muted font-size-sm">
           {child.id}
         </div>

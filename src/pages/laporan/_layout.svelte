@@ -17,7 +17,7 @@
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "laporan" });
-  stores.createBalanceContext(applicationContext);
+  stores.createBalanceReportContext(applicationContext);
 </script>
 
 <slot />

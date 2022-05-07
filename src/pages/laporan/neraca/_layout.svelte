@@ -5,98 +5,67 @@
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import InputDate from "__@comps/forms/InputDateField.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
   import TableNeraca from "../_libs/BalanceSheetTable.svelte";
-  import { createReportContext } from "../_libs/balance-export";
-  import { parsingBalanceSheetReport } from "../_libs/helper";
+  import { balanceSheetContext } from "../_libs/balance-export";
+  import { writable } from "svelte/store";
+  import Loader from "__@comps/loader/Loader.svelte";
 
   const { readGranted } = createAclContext("balanceSheet");
   const applicationContext = getApplicationContext();
-  const { loading } = getApplicationContext();
-  const reportContext = createReportContext();
+  const { loading: topLoading } = getApplicationContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { balanceFixReport } = stores.createBalanceReportContext(applicationContext);
+  const { fixedBalanceSheetReportStore, balanceContext } = stores.getBalanceReportContext();
+  const { getFixedBalance } = balanceContext;
   const { getAccountsTree } = stores.getAccountContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const accountStore = getAccountsTree();
   setBreadcrumbContext({ path: $url("./"), title: "Laporan Neraca" });
 
-  let openFilterDialog, report;
-  $loading = true;
+  let openFilterDialog,
+    balanceSheetReport,
+    loading = writable(true);
+  $topLoading = true;
   $: {
-    if ($preferenceStore && $accountStore) {
-      fetchData().then(() => {
-        $loading = false;
-      });
+    if ($fixedBalanceSheetReportStore) {
+      balanceSheetReport = $fixedBalanceSheetReportStore;
+      $loading = false;
+      $topLoading = false;
     }
   }
   const createExportMenuHandler = (close) => {
     const title = "LAPORAN NERACA";
-    const getItemListReport = () => {
-      const { balanceSheetReport, statementIncomeBalance, assetsBalance, liabilitiesBalance } = report;
-      return [
-        balanceSheetReport.assetsCurrent.accounts,
-        { label: "TOTAL AKTIVA", balance: balanceSheetReport.assetsCurrent.balance },
-        balanceSheetReport.liabilitiesCurrent.accounts,
-        { label: "TOTAL PASIVA", balance: balanceSheetReport.liabilitiesCurrent.balance },
-        { label: "LABA/RUGI", balance: statementIncomeBalance },
-        { label: "SELISIH", balance: assetsBalance - liabilitiesBalance }
-      ];
-    };
+    const context = balanceSheetContext({
+      title,
+      loading,
+      close
+    });
     return {
-      pdf: () => {
-        $loading = true;
-        reportContext.pdf(
-          getItemListReport(),
-          (p) => {
-            if (p === 1) {
-              $loading = false;
-            }
-          },
-          { title }
-        );
-        close();
-      },
-      csv: () => {
-        $loading = true;
-        reportContext.csv(getItemListReport(), { title });
-        $loading = false;
-        close();
-      },
-      print: () => {
-        $loading = true;
-        reportContext.print(getItemListReport(), { title });
-        $loading = false;
-        close();
-      }
+      pdf: () => context.pdf({ balanceSheetReport }),
+      csv: () => context.csv({ balanceSheetReport }),
+      print: () => context.print({ balanceSheetReport })
     };
   };
 
-  function applyDateHandler({ detail }) {
-    const date = detail.date;
-    fetchData(date);
-  }
-
-  function fetchData(date) {
+  async function fetchData() {
     $loading = true;
-    return balanceFixReport(date).then((data) => {
-      report = parsingBalanceSheetReport(data);
-      $loading = false;
-    });
+    $topLoading = true;
+    await getFixedBalance({ refresh: true });
+    $loading = false;
+    $topLoading = false;
   }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">
-      <InputDate id="date" name="date" on:apply={applyDateHandler} range={false} />
-    </div>
+    <!--    <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">-->
+    <!--      <InputDate id="date" name="date" on:apply={applyDateHandler} range={false} />-->
+    <!--    </div>-->
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh
@@ -139,7 +108,11 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableNeraca bind:report />
+      {#if $loading}
+        <Loader />
+      {:else}
+        <TableNeraca key="neraca" {balanceSheetReport} />
+      {/if}
     </div>
   </div>
 </PageLayout>

@@ -10,59 +10,45 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import LedgerTable from "../_libs/LedgerTable.svelte";
   import { createReportContext } from "../_libs/ledger_export";
+  import { writable } from "svelte/store";
 
-  const reportContext = createReportContext();
-  const { loading } = getApplicationContext();
-  const { loadBalance } = stores.getBalanceContext();
-  const { getAccountsTree } = stores.getAccountContext();
+  const { loading: topLoading } = getApplicationContext();
+  const { getCurrentAccountsBalance, balanceContext } = stores.getBalanceReportContext();
+  const { getCurrentBalance } = balanceContext;
   const { setBreadcrumbContext } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "saldo perkiraan" });
+  const accountsBalance = getCurrentAccountsBalance();
 
-  let accounts = getAccountsTree();
-  let balance;
-  fetchData();
-
+  const reportContext = createReportContext({
+    title: "SALDO PERKIRAAN"
+  });
   const createExportMenuHandler = (close) => ({
-    pdf: () => {
-      $loading = true;
-      reportContext.pdf(
-        $accounts,
-        $balance,
-        (p) => {
-          if (p === 1) {
-            $loading = false;
-          }
-        },
-        {}
-      );
-      close();
-    },
-    csv: () => {
-      $loading = true;
-      reportContext.csv($accounts, $balance, {});
-      $loading = false;
-      close();
-    },
-    print: () => {
-      $loading = true;
-      reportContext.print($accounts, $balance, {});
-      $loading = false;
-      close();
-    }
+    pdf: () => reportContext.pdf({ accountsBalance: $accountsBalance }),
+    csv: () => reportContext.csv({ accountsBalance: $accountsBalance }),
+    print: () => reportContext.print({ accountsBalance: $accountsBalance })
   });
 
-  function fetchData() {
-    $loading = true;
-    loadBalance().then((_) => {
-      balance = _;
+  let loading = writable(true);
+  $topLoading = true;
+
+  $: {
+    if ($accountsBalance) {
       $loading = false;
-    });
+      $topLoading = false;
+    }
+  }
+  async function refresh() {
+    $loading = true;
+    $topLoading = true;
+    await getCurrentBalance({ refresh: true });
+    $loading = false;
+    $topLoading = false;
   }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+    <a href="#/" target="_self" on:click={refresh} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh
     </a>
@@ -104,10 +90,10 @@
   </svelte:fragment>
   <div class="card d-flex flex-1">
     <div class="card-body d-flex flex-1 flex-column">
-      {#if $accounts && $balance}
-        <LedgerTable {accounts} {balance} linkDisable />
-      {:else}
+      {#if $loading}
         <Loader />
+      {:else}
+        <LedgerTable {accountsBalance} linkDisable />
       {/if}
     </div>
   </div>

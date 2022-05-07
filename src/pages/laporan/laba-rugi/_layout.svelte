@@ -9,94 +9,68 @@
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
-  import TableLabaRugi from "../_libs/RevenueTable.svelte";
-  import { createReportContext } from "../_libs/balance-export";
-  import { parsingRevenueReport } from "../_libs/helper";
+  import TableLabaRugi from "../_libs/StatementIncomeTable.svelte";
+  import { statementBalanceContext } from "../_libs/balance-export";
   import Loader from "__@comps/loader/Loader.svelte";
+  import { writable } from "svelte/store";
 
   const { readGranted } = createAclContext("statementIncome");
   const applicationContext = getApplicationContext();
-  const { loading } = applicationContext;
-  const reportContext = createReportContext();
+  const { loading: topLoading } = applicationContext;
   if (!readGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  const { balanceFixReport } = stores.createBalanceReportContext(applicationContext);
-  const { getAccountsTree } = stores.getAccountContext();
-  const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const accountStore = getAccountsTree();
+  const { fixedBalanceSheetReportStore, balanceContext } = stores.getBalanceReportContext();
+  const { getFixedBalance } = balanceContext;
   setBreadcrumbContext({ path: $url("./"), title: "Laba-Rugi" });
 
-  let openFilterDialog, report;
-  $loading = true;
+  let openFilterDialog,
+    balanceSheetReport,
+    loading = writable(true);
+  $topLoading = true;
+
   $: {
-    if ($preferenceStore && $accountStore) {
-      fetchData().then(() => {
-        $loading = false;
-      });
+    if ($fixedBalanceSheetReportStore) {
+      balanceSheetReport = $fixedBalanceSheetReportStore;
+      $loading = false;
+      $topLoading = false;
     }
   }
+
   const createExportMenuHandler = (close) => {
     const title = "LABA-RUGI";
-    const getItemListReport = () => {
-      const { statementIncomeReport, revenueBalance, expenseBalance, statementIncomeBalance } = report;
-      return [
-        statementIncomeReport.revenue.accounts,
-        { label: "TOTAL PENDAPATAN", balance: statementIncomeReport.revenue.balance },
-        statementIncomeReport.expense.accounts,
-        { label: "TOTAL BIAYA", balance: statementIncomeReport.expense.balance },
-        { label: "LABA/RUGI", balance: statementIncomeBalance }
-      ];
-    };
+    const context = statementBalanceContext({
+      title,
+      loading,
+      close
+    });
     return {
-      pdf: () => {
-        $loading = true;
-        reportContext.pdf(
-          getItemListReport(),
-          (p) => {
-            if (p === 1) {
-              $loading = false;
-            }
-          },
-          { title }
-        );
-        close();
-      },
-      csv: () => {
-        $loading = true;
-        reportContext.csv(getItemListReport(), { title });
-        $loading = false;
-        close();
-      },
-      print: () => {
-        $loading = true;
-        reportContext.print(getItemListReport(), { title });
-        $loading = false;
-        close();
-      }
+      pdf: () => context.pdf({ balanceSheetReport }),
+      csv: () => context.csv({ balanceSheetReport }),
+      print: () => context.print({ balanceSheetReport })
     };
   };
 
-  function applyDateHandler({ detail }) {
-    const date = detail.date;
-    fetchData(date);
-  }
+  // function applyDateHandler({ detail }) {
+  //   const date = detail.date;
+  // fetchData(date);
+  // }
 
-  function fetchData(date) {
+  async function fetchData() {
     $loading = true;
-    return balanceFixReport(date).then((data) => {
-      report = parsingRevenueReport(data);
-      $loading = false;
-    });
+    $topLoading = true;
+    await getFixedBalance({ refresh: true });
+    $loading = false;
+    $topLoading = false;
   }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">
-      <InputDate id="date" name="date" on:apply={applyDateHandler} range={false} />
-    </div>
+    <!--        <div class="breadcrumb-elements-item p-0 my-auto" style="width: 115px">-->
+    <!--          <InputDate id="date" name="date" on:apply={applyDateHandler} range={false} />-->
+    <!--        </div>-->
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh
@@ -142,7 +116,7 @@
       {#if $loading}
         <Loader />
       {:else}
-        <TableLabaRugi bind:report />
+        <TableLabaRugi key="laba-rugi" {balanceSheetReport} />
       {/if}
     </div>
   </div>

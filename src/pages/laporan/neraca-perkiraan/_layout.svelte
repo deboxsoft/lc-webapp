@@ -9,81 +9,54 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
   import TableNeraca from "../_libs/BalanceSheetTable.svelte";
-  import { createReportContext } from "../_libs/balance-export";
-  import { parsingBalanceSheetReport } from "../_libs/helper";
+  import { balanceSheetContext } from "../_libs/balance-export";
   import Loader from "__@comps/loader/Loader.svelte";
+  import { writable } from "svelte/store";
 
   const { readGranted } = createAclContext("balanceSheet");
   const applicationContext = getApplicationContext();
-  const { loading } = getApplicationContext();
-  const reportContext = createReportContext();
+  const { loading: topLoading } = getApplicationContext();
   if (!readGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { balanceReport } = stores.createBalanceReportContext(applicationContext);
-  const { accountStore } = stores.getAccountContext();
-  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  const { currentBalanceSheetReportStore, balanceContext } = stores.getBalanceReportContext();
+  const { getCurrentBalance } = balanceContext;
   setBreadcrumbContext({ path: $url("./"), title: "Neraca Perkiraan" });
 
-  let openFilterDialog, report;
-  $loading = true;
+  let openFilterDialog,
+    balanceSheetReport,
+    loading = writable(true);
+  $topLoading = true;
+
   $: {
-    if ($preferenceStore && $accountStore) {
-      fetchData().then((_) => {
-        $loading = false;
-      });
+    if ($currentBalanceSheetReportStore) {
+      balanceSheetReport = $currentBalanceSheetReportStore;
+      $loading = false;
+      $topLoading = false;
     }
   }
 
   function createExportMenuHandler(close) {
     const title = "NERACA PERKIRAAN";
-    const getItemListReport = () => {
-      const { balanceSheetReport, statementIncomeBalance, assetsBalance, liabilitiesBalance } = report;
-      return [
-        balanceSheetReport.assetsCurrent.accounts,
-        { label: "TOTAL AKTIVA", balance: balanceSheetReport.assetsCurrent.balance },
-        balanceSheetReport.liabilitiesCurrent.accounts,
-        { label: "TOTAL PASIVA", balance: balanceSheetReport.liabilitiesCurrent.balance },
-        { label: "LABA/RUGI", balance: statementIncomeBalance },
-        { label: "SELISIH", balance: assetsBalance - liabilitiesBalance }
-      ];
-    };
+    const context = balanceSheetContext({
+      title,
+      loading,
+      close
+    });
     return {
-      pdf: () => {
-        $loading = true;
-        reportContext.pdf(
-          getItemListReport(),
-          (p) => {
-            if (p === 1) {
-              $loading = false;
-            }
-          },
-          { title }
-        );
-        close();
-      },
-      csv: () => {
-        $loading = true;
-        reportContext.csv(getItemListReport(), { title });
-        $loading = false;
-        close();
-      },
-      print: () => {
-        $loading = true;
-        reportContext.print(getItemListReport(), { title });
-        $loading = false;
-        close();
-      }
+      pdf: () => context.pdf({ balanceSheetReport }),
+      csv: () => context.csv({ balanceSheetReport }),
+      print: () => context.print({ balanceSheetReport })
     };
   }
 
-  function fetchData() {
+  async function fetchData() {
     $loading = true;
-    return balanceReport().then((data) => {
-      report = parsingBalanceSheetReport(data);
-      $loading = false;
-    });
+    $topLoading = true;
+    await getCurrentBalance({ refresh: true });
+    $loading = false;
+    $topLoading = false;
   }
 </script>
 
@@ -134,7 +107,7 @@
       {#if $loading}
         <Loader />
       {:else}
-        <TableNeraca key="neraca-perkiraan" bind:report />
+        <TableNeraca key="neraca-perkiraan" {balanceSheetReport} />
       {/if}
     </div>
   </div>

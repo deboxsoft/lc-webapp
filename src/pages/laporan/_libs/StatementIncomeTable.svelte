@@ -2,7 +2,7 @@
   import CellNumber from "__@comps/CellNumber.svelte";
   import RowBalance from "./BalanceRow.svelte";
   import RowTotalBalance from "./BalanceTotalRow.svelte";
-  import { createFoldStore } from "__@stores/fold";
+  import { createFoldStore } from "__@root/stores/fold";
   import { derived } from "svelte/store";
 
   export let key;
@@ -10,6 +10,7 @@
    * @type{BalanceSheetReport}
    */
   export let balanceSheetReport;
+  const statementIncome = balanceSheetReport.statementIncome;
   const accountsBalance = balanceSheetReport.accountsBalance;
   const foldStore = createFoldStore({ key, initial: {} });
   const isExpand = (key) => derived(foldStore, (_) => _[key] || false);
@@ -18,46 +19,29 @@
   };
 </script>
 
-<table class="table text-nowrap table-hover">
+<table class="table text-nowrap">
   <thead>
-    <tr>
+    <tr role="row">
       <th colspan="2">Akun Perkiraan</th>
       <th class="text-center" colspan="3">Saldo</th>
     </tr>
   </thead>
   <tbody>
-    <!--    aktiva -->
-    {#each balanceSheetReport.assets.accountsIndex as accountIndex}
+    <!-- Pendapatan -->
+    {#each statementIncome.revenue.accountsIndex as accountIndex}
       <RowBalance {isExpand} toggle={toggleExpand} account={accountsBalance[accountIndex]} />
     {/each}
-    <RowTotalBalance label="TOTAL AKTIVA" balance={balanceSheetReport.assets.balance} />
-    <!--pasiva-->
-    {#each balanceSheetReport.payable.accountsIndex as accountIndex}
+    <RowTotalBalance label="TOTAL PENDAPATAN" balance={statementIncome.revenue.balance} />
+    {#each statementIncome.expense.accountsIndex as accountIndex}
       <RowBalance {isExpand} toggle={toggleExpand} account={accountsBalance[accountIndex]} />
     {/each}
-    {#each balanceSheetReport.equities.accountsIndex as accountIndex}
-      <RowBalance {isExpand} toggle={toggleExpand} account={accountsBalance[accountIndex]} />
-    {/each}
-    <RowTotalBalance label="TOTAL PASIVA" balance={balanceSheetReport.liabilities} />
-    <!--      Laba rugi-->
-    <tr class="table-active table-border-double">
+    <RowTotalBalance label="TOTAL BIAYA" balance={statementIncome.expense.balance} />
+    <tr class="table-active table-border-double font-weight-bold">
       <td colspan="2">LABA/RUGI</td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td class="text-right balance">
-        <CellNumber value={balanceSheetReport.statementIncome.profit} />
-      </td>
-    </tr>
-
-    <tr class="table-active table-border-double font-weight-bold">
-      <td colspan="2">SELISIH</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td class="text-right balance">
-        <CellNumber
-          value={balanceSheetReport.assets.balance -
-            (balanceSheetReport.liabilities + balanceSheetReport.statementIncome.profit)}
-        />
+        <CellNumber value={statementIncome.profit} />
       </td>
     </tr>
   </tbody>

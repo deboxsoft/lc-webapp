@@ -8,81 +8,57 @@
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createAclContext } from "../_acl-context";
-  import TableLabaRugi from "../_libs/RevenueTable.svelte";
-  import { createReportContext } from "../_libs/balance-export";
-  import { parsingRevenueReport } from "../_libs/helper";
+  import TableLabaRugi from "../_libs/StatementIncomeTable.svelte";
+  import { statementBalanceContext } from "../_libs/balance-export";
+  import Loader from "__@comps/loader/Loader.svelte";
+  import { writable } from "svelte/store";
 
   const { readGranted } = createAclContext("statementIncome");
   const applicationContext = getApplicationContext();
-  const { loading } = applicationContext;
-  const reportContext = createReportContext();
+  const { loading: topLoading } = applicationContext;
   if (!readGranted) {
     $goto("/access-denied");
   }
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { balanceReport } = stores.createBalanceReportContext(applicationContext);
-  const { getAccountsTree } = stores.getAccountContext();
-  const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const accountStore = getAccountsTree();
+  const { currentBalanceSheetReportStore, balanceContext } = stores.getBalanceReportContext();
+  const { getCurrentBalance } = balanceContext;
   setBreadcrumbContext({ path: $url("./"), title: "Laba-Rugi Perkiraan" });
 
-  let openFilterDialog, report;
-  $loading = true;
+  let openFilterDialog,
+    balanceSheetReport,
+    loading = writable(true);
+
   $: {
-    if ($preferenceStore && $accountStore) {
-      fetchData().then(() => {
-        $loading = false;
-      });
+    if ($currentBalanceSheetReportStore) {
+      balanceSheetReport = $currentBalanceSheetReportStore;
+      $loading = false;
+      $topLoading = false;
     }
   }
 
   function createExportMenuHandler(close) {
     const title = "LABA-RUGI PERKIRAAN";
-    const getItemListReport = () => {
-      const { statementIncomeReport, revenueBalance, expenseBalance, statementIncomeBalance } = report;
-      return [
-        statementIncomeReport.revenue.accounts,
-        { label: "TOTAL PENDAPATAN", balance: statementIncomeReport.revenue.balance },
-        statementIncomeReport.expense.accounts,
-        { label: "TOTAL BIAYA", balance: statementIncomeReport.expense.balance },
-        { label: "LABA/RUGI", balance: statementIncomeBalance }
-      ];
-    };
+    const context = statementBalanceContext({
+      title,
+      loading,
+      close
+    });
     return {
-      pdf: () => {
-        $loading = true;
-        reportContext.pdf(
-          getItemListReport(),
-          (p) => {
-            if (p === 1) {
-              $loading = false;
-            }
-          },
-          { title }
-        );
-        close();
-      },
-      csv: () => {
-        $loading = true;
-        reportContext.csv(getItemListReport(), { title });
-        $loading = false;
-        close();
-      },
-      print: () => {
-        $loading = true;
-        reportContext.print(getItemListReport(), { title });
-        $loading = false;
-        close();
-      }
+      pdf: () => context.pdf({ balanceSheetReport }),
+      csv: () =>
+        context.csv({
+          balanceSheetReport
+        }),
+      print: () => context.print({ balanceSheetReport })
     };
   }
 
-  function fetchData() {
+  async function fetchData() {
     $loading = true;
-    return balanceReport().then((data) => {
-      report = parsingRevenueReport(data);
-      $loading = false;
-    });
+    $topLoading = true;
+    await getCurrentBalance({ refresh: true });
+    $loading = false;
+    $topLoading = false;
   }
 </script>
 
@@ -130,7 +106,11 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableLabaRugi key="laba-rugi-perkiraan" bind:report />
+      {#if $loading}
+        <Loader />
+      {:else}
+        <TableLabaRugi key="laba-rugi-perkiraan" {balanceSheetReport} />
+      {/if}
     </div>
   </div>
 </PageLayout>
