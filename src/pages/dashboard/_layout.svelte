@@ -1,9 +1,14 @@
 <!--routify:options title="Home"-->
 <script>
-  import { getBreadcrumbStore, BREADCRUMB_CONTEXT } from "__@stores/breadcrumb";
+  import { getBreadcrumbStore } from "__@stores/breadcrumb";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
-  setBreadcrumbContext([]);
-
+  setBreadcrumbContext([
+    {
+      title: "Dashboard",
+      path: "/dashboard"
+    }
+  ]);
 </script>
+
 <slot />

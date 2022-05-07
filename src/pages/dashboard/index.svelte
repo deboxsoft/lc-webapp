@@ -1,40 +1,47 @@
-<!--routify:options title="dashboard"-->
+<!--routify:options title="Dashboard"-->
 <script>
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import MenuCard from "__@root/pages/bdd/_components/MenuCard.svelte";
+  import { Chart, registerables } from "chart.js";
   import { getAuthenticationContext } from "__@modules/users";
   import { get } from "svelte/store";
+  import LineChartCard from "./_components/LineChartCard.svelte";
+  import CashFlowChart from "./_components/CashFlowChart.svelte";
+  import RatioChart from "./_components/RatioChart.svelte";
 
   const auth = getAuthenticationContext();
   const profile = get(auth.authenticationStore);
-  const accountShow = auth.getQuery("account").read().granted;
-  const programShow = auth.getQuery("program").read().granted;
-  const transactionShow = auth.getQuery("transaction").read().granted;
-  const transactionOwnShow = auth.getQuery("transaction").readOwn().granted;
-  const ledgerShow = auth.getQuery("ledger").read().granted;
-  const bankShow = auth.getQuery("bank").read().granted;
-  const cashierShow = auth.getQuery("cashier").read().granted;
-  const balanceSheetShow = auth.getQuery("balanceSheet").read().granted;
-  const statementIncomeShow = auth.getQuery("statementIncome").read().granted;
-  const inventoryShow = auth.getQuery("inventory").read().granted;
-  const bddShow = auth.getQuery("bdd").read().granted;
-  const stockShow = auth.getQuery("stock").read().granted;
-  const userShow = auth.getQuery("user").read().granted;
-  const settingShow = auth.getQuery("setting").read().granted;
-  const reportShow = ledgerShow || statementIncomeShow || balanceSheetShow;
+
+  Chart.register(...registerables);
 </script>
 
 <PageLayout>
-  <div class="d-flex flex-wrap">
-    <MenuCard show={transactionShow} label="Jurnal" path="/transaksi/jurnal" iconClass="icon-loop"  />
-    <MenuCard show={cashierShow} label="Kasir" path="/transaksi/cashier" iconClass="icon-cash2" />
-    <MenuCard show={bankShow} label="Bank" path="/transaksi/bank" iconClass="icon-cash4" />
-    <MenuCard show={stockShow} label="Persediaan" path="/persediaan/home" iconClass="icon-archive" />
-    <MenuCard show={inventoryShow} label="Aktiva Tetap" path="/aktiva-tetap/home" iconClass="icon-file-check" />
-    <MenuCard show={bddShow} label="BDD" path="/bdd/home" iconClass="icon-library2" />
-    <MenuCard show={reportShow} label="Laporan" path="/laporan" iconClass="icon-stack-text" />
-    <MenuCard show={userShow} label="Users" path="/users" iconClass="icon-users4" />
-    <MenuCard show={settingShow} label="Settings" path="/settings" iconClass="icon-cog3" />
-    <MenuCard show={profile.authenticated} label="Profile" path="/profile" iconClass="icon-profile"/>
+  <div class="row">
+    <div class="col-lg-4">
+      <LineChartCard class="bg-primary text-white" label="LABA" value="500000" />
+    </div>
+    <div class="col-lg-4">
+      <LineChartCard class="bg-teal text-white" label="PENDAPATAN" value="50000" />
+    </div>
+    <div class="col-lg-4">
+      <LineChartCard class="bg-pink text-white" label="BIAYA" value="500000" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-6">
+      <LineChartCard class="bg-indigo text-white" label="SALDO KAS & BANK" value="500000" />
+    </div>
+    <div class="col-lg-6">
+      <LineChartCard class="bg-warning text-white" label="PIUTANG PENJUALAN" value="500000" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <CashFlowChart />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <RatioChart />
+    </div>
   </div>
 </PageLayout>
