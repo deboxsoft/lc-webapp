@@ -7,7 +7,8 @@ import { terser } from "rollup-plugin-terser";
 import { copySync, removeSync } from "fs-extra";
 import { spassr } from "spassr";
 import svelte from "rollup-plugin-svelte-hot";
-import sucrase from "@rollup/plugin-sucrase";
+// import sucrase from "@rollup/plugin-sucrase";
+import typescript from "@rollup/plugin-typescript";
 import getConfig from "@roxi/routify/lib/utils/config";
 import { injectManifest } from "rollup-plugin-workbox";
 import path from "path";
@@ -32,10 +33,7 @@ const preprocess = createPreprocess({
 });
 
 const tsPlugin = () => {
-  return sucrase({
-    transforms: ["typescript"],
-    exclude: ["**/*.css"]
-  });
+  return typescript({});
 };
 
 // clear previous builds

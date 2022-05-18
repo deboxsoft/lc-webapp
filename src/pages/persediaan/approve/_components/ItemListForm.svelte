@@ -35,7 +35,6 @@
   $: {
     diff = ($fields.cashAmount || 0) - $totalStore;
     validate();
-    $isValid;
   }
 
   function validate(_ = $items) {
