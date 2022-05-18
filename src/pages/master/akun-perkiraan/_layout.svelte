@@ -8,7 +8,7 @@
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import TableAccount from "./_components/TableAccount.svelte";
-  import FormFilter from "./_components/FormFilter.svelte";
+  // import FormFilter from "./_components/FormFilter.svelte";
   import { sortUtilsFunc } from "__@root/utils";
   import { createAclContext } from "./_acl-context";
   import { createReportContext } from "./_export";
@@ -16,7 +16,7 @@
 
   const { readGranted, createGranted, removeGranted } = createAclContext();
   const { setBreadcrumbContext } = getBreadcrumbStore();
-  const { accountStore, getAccountType, getAccount, load } = stores.getAccountContext();
+  const { accountStore, getAccount, load } = stores.getAccountContext();
   const { loading } = getApplicationContext();
   const reportContext = createReportContext();
 
@@ -104,7 +104,7 @@
   });
 </script>
 
-<FormFilter bind:params={filter} bind:openDialog={openFilterDialog} onFilter={filterHandler} />
+<!--<FormFilter bind:params={filter} bind:openDialog={openFilterDialog} onFilter={filterHandler} />-->
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
@@ -123,17 +123,17 @@
         Hapus Semua
       </a>
     {/if}
-    <a
-      href="/#"
-      target="_self"
-      on:click|preventDefault={() => {
-        openFilterDialog();
-      }}
-      class="breadcrumb-elements-item"
-    >
-      <i class="icon-filter3 mr-1" />
-      Filter
-    </a>
+    <!--    <a-->
+    <!--      href="/#"-->
+    <!--      target="_self"-->
+    <!--      on:click|preventDefault={() => {-->
+    <!--        openFilterDialog();-->
+    <!--      }}-->
+    <!--      class="breadcrumb-elements-item"-->
+    <!--    >-->
+    <!--      <i class="icon-filter3 mr-1" />-->
+    <!--      Filter-->
+    <!--    </a>-->
     <a href="#/" target="_self" on:click={() => load()} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh

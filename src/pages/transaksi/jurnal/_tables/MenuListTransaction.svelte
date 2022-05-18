@@ -5,15 +5,14 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import { getAclContext } from "../_acl-context";
-  import { accountUtils } from "__@root/utils";
 
   const appContext = getApplicationContext();
   const { loading, notify } = appContext;
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
   const { getBalanceFix } = stores.createBalanceContext(appContext);
   const { getAccount } = stores.getAccountContext();
   const { auth, approveGranted, rejectGranted, removeGranted, updateGranted } = getAclContext();
   const { approve, unApprove, reject, unReject } = stores.getTransactionContext();
-  const { checkCashBalance } = accountUtils();
 
   export let transaction;
 
@@ -26,19 +25,15 @@
 
   async function approveHandler() {
     try {
-
       $loading = true;
-      const creditAccounts = transaction.creditAccounts;
-      for (const creditAccount of creditAccounts) {
-        await checkCashBalance(creditAccount.id, creditAccount.amount);
+      const oppositeAccounts = transaction.oppositeAccounts;
+      if (await approve([id])) {
+        transaction.status = "APPROVED";
+        notify(`transaksi id '${id}' telah diapprove`, "success");
+      } else {
+        throw new Error(`approve transaksi id '${id}' tidak berhasil`);
       }
-        if (await approve([id])) {
-          transaction.status = "APPROVED";
-          notify(`transaksi id '${id}' telah diapprove`, "success");
-        } else {
-          throw new Error(`approve transaksi id '${id}' tidak berhasil`);
-        }
-        $loading = false;
+      $loading = false;
     } catch (e) {
       notify(e.message, "error");
     }

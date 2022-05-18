@@ -10,8 +10,8 @@
   export let createCreditAccount;
   // context formJournal
   const { fields, fieldsErrors, isValid, validateField } = getFormContext();
-  const creditAccountsValidate = validateField("creditAccounts");
-  const creditAccounts = writable(($fields.creditAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
+  const oppositeAccountsValidate = validateField("oppositeAccounts");
+  const oppositeAccounts = writable(($fields.oppositeAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
   export const total = 0;
   export let isCredit = fields;
 
@@ -20,7 +20,7 @@
   let credit;
 
   $: {
-    if ($creditAccounts) {
+    if ($oppositeAccounts) {
       validate();
     }
   }
@@ -42,13 +42,13 @@
   }
 
   function validate() {
-    creditAccountsValidate($creditAccounts);
+    oppositeAccountsValidate($oppositeAccounts);
     calculate();
   }
 
   function calculate() {
     let _credit = 0;
-    $fields.creditAccounts.forEach((_) => {
+    $fields.oppositeAccounts.forEach((_) => {
       _credit = parseFloat(_.amount || "0") + _credit;
     });
     $fields.total = _credit;
@@ -65,21 +65,21 @@
   }
 
   function addJournalAccountHandler() {
-    $creditAccounts = [...$creditAccounts, createCreditAccount()];
+    $oppositeAccounts = [...$oppositeAccounts, createCreditAccount()];
   }
 
   function updateJournalAccountHandler(input) {
-    const _creditAccounts = $creditAccounts;
-    const i = _creditAccounts.findIndex((_) => _.index === input.index);
-    _creditAccounts[i] = input;
-    $creditAccounts = _creditAccounts;
+    const _oppositeAccounts = $oppositeAccounts;
+    const i = _oppositeAccounts.findIndex((_) => _.index === input.index);
+    _oppositeAccounts[i] = input;
+    $oppositeAccounts = _oppositeAccounts;
   }
 
   function removeJournalAccountHandler(index) {
     /** @type{Array} **/
-    let _creditAccounts = $creditAccounts;
-    _creditAccounts = _creditAccounts.splice(index, 1);
-    $creditAccounts = _creditAccounts;
+    let _oppositeAccounts = $oppositeAccounts;
+    _oppositeAccounts = _oppositeAccounts.splice(index, 1);
+    $oppositeAccounts = _oppositeAccounts;
   }
 </script>
 
@@ -94,9 +94,10 @@
         </tr>
       </thead>
       <tbody>
-        {#each $creditAccounts as journalAccountInput, index (journalAccountInput.index)}
+        {#each $oppositeAccounts as journalAccountInput, index (journalAccountInput.index)}
           <FormJournalAccountItem
             {index}
+            {isCredit}
             values={journalAccountInput}
             onRemoveJournalAccount={removeJournalAccountHandler}
             onUpdateJournalAccount={updateJournalAccountHandler}

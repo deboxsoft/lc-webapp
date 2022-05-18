@@ -22,7 +22,6 @@ export default function createScale(s) {
 
     const defaultRange = getDefaultRange(s, $width, $height, $reverse, $range, $percentScale);
     const scale = $scale === defaultScales[s] ? $scale() : $scale.copy();
-
     /* --------------------------------------------
      * On creation, `$domain` will already have any nulls filled in
      * But if we set it via the context it might not, so rerun it through partialDomain
@@ -37,12 +36,9 @@ export default function createScale(s) {
       if (typeof scale.nice === "function") {
         scale.nice();
       } else {
-        console.error(
-          `[Layer Cake] You set \`${s}Nice: true\` but the ${s}Scale does not have a \`.nice\` method. Ignoring...`
-        );
+        console.error(`You set \`${s}Nice: true\` but the ${s}Scale does not have a \`.nice\` method. Ignoring...`);
       }
     }
-
     return scale;
   };
 }

@@ -18,7 +18,7 @@
   let msgError;
 
   $: {
-    if ($fieldsErrors[name]) {
+    if ($fieldsErrors && $fieldsErrors[name]) {
       invalid = true;
       msgError = $fieldsErrors[name];
     } else {
@@ -27,12 +27,12 @@
   }
 
   function createToggleHandler() {
-    const _validate = validateField(name);
+    const _validate = validateField && validateField(name);
     return (e) => {
       if (!disabled) {
         checked = !checked;
         $fields && ($fields[name] = checked);
-        _validate();
+        _validate && _validate();
         dispatcher("change", checked);
       }
     };

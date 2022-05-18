@@ -12,34 +12,16 @@
   export let onFilter = () => {};
 
   let values = params;
-  const { accountsType } = stores.getAccountContext();
-
-  // filtering account type
-  $: accountTypeItems = $accountsType.filter((_) => {
-    return !_.disable;
-  });
 
   function submitHandler() {
     params = values || {};
     onFilter();
-    closeDialog()
+    closeDialog();
   }
-
 </script>
 
 <Modal title="filter" bind:openDialog bind:onClose bind:closeDialog>
-  <Form bind:values>
-    <label for="type">Klasifikasi Akun</label>
-    <ComboBox
-      id="type"
-      name="type"
-      items={accountTypeItems}
-      labelId="label"
-      valueId="code"
-      placeHolder="SEMUA"
-      allowEmpty
-    />
-  </Form>
+  <Form bind:values />
 
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-primary ml-1" on:click={submitHandler}>

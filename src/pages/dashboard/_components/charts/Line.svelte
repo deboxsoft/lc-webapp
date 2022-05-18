@@ -2,7 +2,7 @@
   import { getContextChart } from "__@stores/chart";
   import { writable } from "svelte/store";
   import TooltipPoint from "./TooltipPoint.svelte";
-  import { fly } from "svelte/transition";
+  import { slide } from "svelte/transition";
   import { linear } from "svelte/easing";
   import { createEventDispatcher } from "svelte";
 
@@ -36,7 +36,7 @@
   }
 </script>
 
-<path class="path-line" d={path} {stroke} in:fly={{ duration: 1000, ease: linear }} />
+<path class="path-line" d={path} {stroke} in:slide={{ duration: 1000, ease: linear }} />
 {#if !dotDisable}
   <g>
     {#each $data as dotItem}

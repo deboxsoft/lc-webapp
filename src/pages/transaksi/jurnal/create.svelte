@@ -39,7 +39,7 @@
       transaction = {
         date,
         type: "JOURNAL",
-        creditAccounts: [createCreditAccount()],
+        oppositeAccounts: [createCreditAccount()],
         userId: $authenticationStore.profile.id
       };
     });

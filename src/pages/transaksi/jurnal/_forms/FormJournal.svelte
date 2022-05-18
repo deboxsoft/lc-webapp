@@ -1,5 +1,5 @@
 <script>
-  import { onMount, tick } from "svelte";
+  import { onMount, tick, createEventDispatcher } from "svelte";
   import { TransactionInputSchema } from "@deboxsoft/accounting-api";
   import { generateId } from "@deboxsoft/module-client";
   import { stores } from "@deboxsoft/accounting-client";
@@ -11,10 +11,9 @@
   import SaveIcon from "__@comps/icons/Save.svelte";
   import Modal from "__@comps/Modal.svelte";
 
-  import { createEventDispatcher } from "svelte";
   import FormJournalAccount from "./FormJournalAccount.svelte";
   import { getAuthenticationContext } from "__@modules/users";
-  // import { filteringAccountDebit } from "__@root/utils";
+  import { filteringAccountDebit, filteringAccountCredit } from "__@root/utils";
   import { getApplicationContext } from "__@modules/app";
   import InputCheckSwitchery from "__@comps/forms/InputCheckSwitchery.svelte";
 
@@ -27,29 +26,31 @@
   export let values;
   export let title = "";
 
-  let isValid, fieldsErrors, fields, openDialog, focusRef, buttonSaveDisable;
+  let isValid, fieldsErrors, fields, openDialog, focusRef, buttonSaveDisable, accountStore;
 
   onMount(() => {
     openDialog();
   });
 
   $: isCredit = $fields?.isCredit || false;
-
-  export function createCreditAccount() {
-    return {
-      index: generateId({ prefix: "account-credit", size: 3 })
-    };
-  }
-  function getAccountDebit() {
-    const accountStore = getAccountLeaf();
-    // return filteringAccountDebit(accountStore);
-    return accountStore;
+  $: {
+    const _accounts = getAccountLeaf();
+    if (isCredit) {
+      accountStore = filteringAccountCredit(_accounts);
+    } else {
+      accountStore = filteringAccountDebit(_accounts);
+    }
   }
 
   $: {
     tick().then(() => {
       buttonSaveDisable = !$isValid || $loading;
     });
+  }
+  export function createCreditAccount() {
+    return {
+      index: generateId({ prefix: "account-credit", size: 3 })
+    };
   }
 
   function cancelHandler() {
@@ -79,12 +80,12 @@
         <div class="card-body">
           <div class="row">
             <div class="form-group col-md-6">
-              <label for="date">Tanggal</label>
+              <label for="date">Tanggal *</label>
               <InputDate
                 id="date"
                 name="date"
                 class="form-control"
-                placeholder="Tanggal"
+                placeholder="Tanggal *"
                 selected={new Date()}
                 disabled={values.status === "UNAPPROVED"}
               />
@@ -96,13 +97,13 @@
           </div>
           <div class="row">
             <div class="form-group col-12">
-              <label for="description">Diskripsi</label>
+              <label for="description">Deskripsi *</label>
               <InputField
                 id="description"
                 name="description"
                 type="text"
                 class="form-control"
-                placeholder="Diskripsi"
+                placeholder="Deskripsi *"
               />
             </div>
           </div>
@@ -121,14 +122,14 @@
             <!--            labelFieldName="name" />-->
             <!--        </div>-->
             <div class="form-group col-md-6">
-              <label for="accountId">Akun {isCredit ? "Kredit" : "Debit"}</label>
+              <label for="accountId">Akun {isCredit ? "Kredit" : "Debit"} *</label>
               <div class="d-flex">
-                <AccountSelect class="mr-2" id="accountId" accountStore={getAccountDebit()} allowEmpty />
+                <AccountSelect class="mr-2" id="accountId" {accountStore} allowEmpty />
                 <InputCheckSwitchery class="mt-auto mb-auto" name="isCredit" label="kredit" />
               </div>
             </div>
             <div class="form-group col-md-6">
-              <label for="amount">Jumlah</label>
+              <label for="amount">Jumlah *</label>
               <InputRp id="amount" class="form-control" name="amount" signed />
             </div>
           </div>

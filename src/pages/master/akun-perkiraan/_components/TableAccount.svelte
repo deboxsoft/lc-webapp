@@ -1,12 +1,13 @@
 <script>
-  import { get } from "svelte/store";
   import Table from "__@comps/Table.svelte";
   import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
+  import { constantCase } from "@deboxsoft/module-core";
   import AccountCell from "__@comps/account/CellAccount.svelte";
   import MenuListAccount from "./MenuListAccount.svelte";
+  import { getAccountType } from "__@root/utils";
 
-  const { getAccountType } = stores.getAccountContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
   export let accounts = [];
   function createUpdateHandler(id) {
     return () => {
@@ -21,7 +22,7 @@
   }
 
   function haveChildren(accountId) {
-    const i = accounts.findIndex(_ => _.parentId === accountId);
+    const i = accounts.findIndex((_) => _.parentId === accountId);
     return i > -1;
   }
 </script>
@@ -41,7 +42,7 @@
       <AccountCell id={account.parentId} />
     </div>
     <div class="dbx-cell type">
-      {get(getAccountType(account))?.label || ""}
+      {constantCase(getAccountType(account, $preferenceStore), { delimiter: " " })}
     </div>
     <div class="dbx-cell -menu-list">
       <MenuListAccount id={account.id} removeActDisable={haveChildren(account.id)} />
@@ -52,13 +53,13 @@
 <style lang="scss">
   .kode {
     flex: 0 0 80px;
-  } 
+  }
 
   .parent {
-    flex: 0 0 210px;
+    flex: 0 0 300px;
   }
 
   .type {
-    flex: 0 0 150px;
+    flex: 0 0 120px;
   }
 </style>

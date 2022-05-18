@@ -15,18 +15,30 @@
   import InputNumberField from "__@comps/forms/InputNumberField.svelte";
   import InputCheck from "__@comps/forms/InputCheckSwitchery.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
-  import ComboBox from "__@comps/forms/ComboxField.svelte";
 
   // context
   const { notify } = getApplicationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const { accountStore, getAccount, getAccountParentList, accountsType, getAccountChildren } = stores.getAccountContext();
+  const { accountStore, getAccount, getAccountParentList, getAccountChildren } = stores.getAccountContext();
   const parentAccountStore = getAccountParentList();
+  // const accountType = derived([preferenceStore], ([_preferenceStore]) => {
+  //   const accountUtils = createAccountUtils(_preferenceStore);
+  //   return [
+  //     {
+  //       code: _preferenceStore.codeAccount.assets,
+  //       label: $t("account.assets")
+  //     },
+  //     {
+  //       code: _preferenceStore.codeAccount.receivable,
+  //       label: $t("account.assets")
+  //     },
+  //     {
+  //       code: _preferenceStore.codeAccount.assets,
+  //       label: $t("account.assets")
+  //     }
+  //   ];
+  // });
 
-  // filtering account type
-  $: accountTypeItems = $accountsType.filter(_ => {
-    return !_.disable;
-  })
   export let account = {};
   export let isUpdate = false;
   export let onSubmit;
@@ -44,20 +56,12 @@
   let _tmpId = "";
   let _tmpIdAsParent = "";
   let _parentIdTmp = "";
-  let _typeTmp;
-
-  $: {
-    if (!_typeTmp && $accountsType && $accountsType.length > 0) {
-      _typeTmp = $accountsType[0].code;
-    }
-  }
 
   // hack
   let pathsError = {
     id: "kode",
     name: "nama"
   };
-
 
   onMount(() => {
     openDialog();
@@ -68,13 +72,6 @@
       genCode();
     }
   });
-
-  function setTypeFromParent() {
-    const parent = get(getAccount($accountState.parentId));
-    if (parent) {
-      $accountState.type = parent.type;
-    }
-  }
 
   // kode otomatis
   function genCode() {
@@ -92,14 +89,6 @@
   async function submitHandler(e) {
     loading = true;
     try {
-      if (!$accountState.type) {
-        if ($accountState.parentId) {
-          setTypeFromParent();
-        }
-        if (!$accountState.type) {
-          $accountState.type = $accountsType[0].code;
-        }
-      }
       $submitted = true;
 
       // to uppercase
@@ -136,7 +125,6 @@
   }
 
   function parentChangeHandler() {
-    setTypeFromParent();
     genCode();
   }
 
@@ -151,9 +139,6 @@
       _tmpIdAsParent = __account.id;
       __account.id = _tmpId;
     }
-    const __typeTmp = __account.type;
-    __account.type = _typeTmp;
-    _typeTmp = __typeTmp;
     $accountState = __account;
   }
 
@@ -182,7 +167,7 @@
       <!--          <div class="card-title">Akun Perkiraan</div>-->
       <!--        {/if}-->
       <!--      </div>-->
-      <div class="card-body">
+      <div class="card-body" style="height: 388px">
         <div class="row">
           <div class="form-group  col-12">
             <InputCheck
@@ -226,24 +211,30 @@
               class="form-control"
               placeholder="Kode"
               disabled={isUpdate}
-            >
-            </InputNumberField>
+            />
           </div>
         </div>
         <div class="row">
           <div class="form-group col-12">
             <label for="name">Nama</label>
-            <InputField id="name" name="name" type="text" class="form-control" placeholder="Nama" on:keypress={keyHandler} />
+            <InputField
+              id="name"
+              name="name"
+              type="text"
+              class="form-control"
+              placeholder="Nama"
+              on:keypress={keyHandler}
+            />
           </div>
         </div>
         {#if $accountState.isParent}
-          <div class="row">
-            <div class="form-group col-12">
-              <label for="type">Klasifikasi Akun</label>
-              <ComboBox id="type" name="type" items={accountTypeItems} labelId="label" valueId="code" />
-            </div>
-          </div>
-          {:else}
+          <!--          <div class="row">-->
+          <!--            <div class="form-group col-12">-->
+          <!--              <label for="type">Klasifikasi Akun</label>-->
+          <!--              <ComboBox id="type" name="type" items={accountTypeItems} labelId="label" valueId="code" />-->
+          <!--            </div>-->
+          <!--          </div>-->
+        {:else}
           <div class="row">
             <div class="form-group col-12">
               <label for="type">Saldo Awal</label>

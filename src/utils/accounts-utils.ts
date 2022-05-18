@@ -1,67 +1,38 @@
-import type { Account, PreferenceAccounting } from "@deboxsoft/accounting-api";
+import { Account, createAccountUtils, PreferenceAccounting } from "@deboxsoft/accounting-api";
 import { stores } from "@deboxsoft/accounting-client";
 import { getAuthenticationContext } from "__@modules/users";
 import { derived, get, Readable } from "svelte/store";
-
-const codeAccount: PreferenceAccounting["codeAccount"] = {
-  stock: "1030100",
-  bdd: "1050100",
-  expenseAmortization: "5040100",
-  accumulationAmortization: "1050200",
-  inventory: "1110100",
-  expenseDepreciation: "5050100",
-  accumulationDepreciation: "1120100",
-  cash: "101",
-  revenue: "4",
-  expense: "5",
-  payable: "20101"
-};
-
-const codeAccountList = [
-  codeAccount.stock,
-  codeAccount.bdd,
-  codeAccount.expenseAmortization,
-  codeAccount.accumulationAmortization,
-  codeAccount.inventory,
-  codeAccount.expenseDepreciation,
-  codeAccount.accumulationDepreciation
-];
-
-function excludeCodeAccount(account: Account) {
-  return !codeAccountList.includes(account.parentId);
-}
+import { t } from "../locales";
 
 export function isRevenue(accountId: string): boolean {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.revenue;
-  const regex = new RegExp(`^(${code}).*`);
-  return regex.test(accountId);
+  const accountsUtils = createAccountUtils(config);
+  return accountsUtils.isRevenue(accountId);
 }
 
 export function isExpense(accountId: string): boolean {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.expense;
-  const regex = new RegExp(`^(${code}).*`);
-  return regex.test(accountId);
+  const accountsUtils = createAccountUtils(config);
+  return accountsUtils.isExpense(accountId);
 }
 
 export function filteringAccountDebit(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.revenue;
-  const regex = new RegExp(`^[^${code}].*`);
+  const accountsUtils = createAccountUtils(config);
   let accountsIdDebit = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
-      if (regex.test(_.id)) {
-        if (!accountsIdDebit || accountsIdDebit.includes(_.id)) {
-          return excludeCodeAccount(_);
-        }
+      if (accountsUtils.isRevenue(_.id)) {
+        return false;
       }
-      return false;
+      if (!accountsIdDebit || accountsIdDebit.includes(_.id)) {
+        return accountsUtils.excludeCodeAccount(_);
+      }
+      return true;
     });
   });
 }
@@ -70,17 +41,17 @@ export function filteringAccountCredit(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.expense;
-  const regex = new RegExp(`^[^${code}].*`);
+  const accountsUtils = createAccountUtils(config);
   let accountsIdCredit = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
-      if (regex.test(_.id)) {
-        if (!accountsIdCredit || accountsIdCredit.includes(_.id)) {
-          return excludeCodeAccount(_);
-        }
+      if (accountsUtils.isExpense(_.id)) {
+        return false;
       }
-      return false;
+      if (!accountsIdCredit || accountsIdCredit.includes(_.id)) {
+        return accountsUtils.excludeCodeAccount(_);
+      }
+      return true;
     });
   });
 }
@@ -89,12 +60,11 @@ export function filteringAccountCash(accountStore: Readable<Account[]>) {
   const { authenticationStore } = getAuthenticationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.cash;
-  const regex = new RegExp(`^(${code}).*`);
+  const accountsUtils = createAccountUtils(config);
   let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
   return derived(accountStore, (_) => {
     return _.filter((_) => {
-      if (regex.test(_.id)) {
+      if (accountsUtils.isCash(_.id)) {
         if (!includeAccounts || includeAccounts.includes(_.id)) {
           return _;
         }
@@ -107,12 +77,11 @@ export function filteringAccountCash(accountStore: Readable<Account[]>) {
 export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.revenue;
-  const regex = new RegExp(`^(${code}).*`);
+  const accountsUtils = createAccountUtils(config);
   return derived(accountStore, (_) => {
     return _.filter((_) => {
-      if (regex.test(_.id)) {
-        return excludeCodeAccount(_);
+      if (accountsUtils.isRevenue(_.id)) {
+        return accountsUtils.excludeCodeAccount(_);
       }
       return false;
     });
@@ -122,12 +91,11 @@ export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
 export function filteringAccountExpense(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.expense;
-  const regex = new RegExp(`^(${code}).*`);
+  const accountsUtils = createAccountUtils(config);
   return derived(accountStore, (_) => {
     return _.filter((_) => {
-      if (regex.test(_.id)) {
-        return excludeCodeAccount(_);
+      if (accountsUtils.isExpense(_.id)) {
+        return accountsUtils.excludeCodeAccount(_);
       }
       return false;
     });
@@ -186,39 +154,25 @@ export function filteringAccountAccumulationDepreciation(accountStore: Readable<
 export function filteringAccountPayable(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const config = get(preferenceStore);
-  const code = config.codeAccount.payable;
-  console.log(config.codeAccount);
-  const regex = new RegExp(`^[^${code}].*`);
+  const accountsUtils = createAccountUtils(config);
   return derived(accountStore, (_) => {
     return _.filter((__) => {
-      console.log(__.id, regex.test(__.id));
-      return regex.test(__.id);
+      return accountsUtils.isPayable(__.id);
     });
   });
 }
 
-export function accountUtils() {
-  const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const { getAccount } = stores.getAccountContext();
-  const { getBalance } = stores.getBalanceContext();
-  const isCash = (accountId: string) => {
-    const config = get(preferenceStore);
-    const code = config.codeAccount.cash;
-    const regex = new RegExp(`^(${code}).*`);
-    return regex.test(accountId);
-  };
-  const checkCashBalance = async (accountId: string, amount: number) => {
-    if (isCash(accountId)) {
-      const balance = (await getBalance(accountId)) || 0;
-      if (balance < amount) {
-        console.log("error");
-        const account = get(getAccount(accountId));
-        throw new Error(`Saldo kas '${account.name}' tidak mencukupi.`);
-      }
-    }
-  };
-  return {
-    isCash,
-    checkCashBalance
-  };
+export function getAccountType(account: Account, preference: PreferenceAccounting) {
+  const accountsUtils = createAccountUtils(preference);
+  let type = "-";
+  if (accountsUtils.isAssets(account.id)) {
+    type = get(t)("account.assets");
+  } else if (accountsUtils.isPayable(account.id) || accountsUtils.isEquities(account.id)) {
+    type = get(t)("account.liabilities");
+  } else if (accountsUtils.isRevenue(account.id)) {
+    type = get(t)("account.revenue");
+  } else if (accountsUtils.isExpense(account.id)) {
+    type = get(t)("account.expense");
+  }
+  return type;
 }

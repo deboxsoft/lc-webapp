@@ -50,7 +50,7 @@
                 },
                 { text: "-", style: "cell-number", border: [false, false, false, false] }
               ],
-              ...transaction.creditAccounts.map((_) => {
+              ...transaction.oppositeAccounts.map((_) => {
                 const creditAccount = get(getAccount(_.id));
                 return [
                   { text: creditAccount.id, style: "cell", border: [false, false, false, false] },
@@ -167,7 +167,7 @@
           convertToNumber({ value: transaction.amount }),
           transaction.status,
           [
-            transaction.creditAccounts.map((_) => {
+            transaction.oppositeAccounts.map((_) => {
               const { name: account = "-" } = get(getAccount(_.id)) || {};
               return [account, convertToNumber({ value: _.amount })];
             })

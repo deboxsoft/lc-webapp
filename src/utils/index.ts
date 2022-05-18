@@ -7,3 +7,4 @@ export * from "./report-utils";
 export * from "./download-saver";
 export * from "./sanitize-input";
 export * from "./escape-regexp";
+export * from "./d3-formatter";

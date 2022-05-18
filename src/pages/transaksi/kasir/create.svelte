@@ -37,7 +37,7 @@
     const cashierAccount = group.metadata?.cashierAccount;
     cashier = {
       date,
-      creditAccounts: [{}],
+      oppositeAccounts: [{}],
       userId: getUserId(),
       debitAccount: cashierAccount
     };

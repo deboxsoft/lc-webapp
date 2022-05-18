@@ -14,7 +14,10 @@
   /** @type {Boolean} [pointerEvents] Set this to `false` to set `pointer-events: none;` on the entire layer. */
   export let pointerEvents = undefined;
 
-  const { padding } = getContextChart();
+  /** overwrite padding container **/
+  export let padding = undefined;
+
+  const { padding: paddingContainer } = getContextChart();
 </script>
 
 <div
@@ -22,10 +25,10 @@
   class="chart-layout-html"
   style:z-index={zIndex}
   style:pointer-events={pointerEvents === false ? "none" : null}
-  style:top={$padding.top + "px"}
-  style:right={$padding.right + "px"}
-  style:bottom={$padding.bottom + "px"}
-  style:left={$padding.left + "px"}
+  style:top={isFinite(padding?.top) ? padding.top : $paddingContainer.top + "px"}
+  style:right={isFinite(padding?.right) ? padding.right : $paddingContainer.right + "px"}
+  style:bottom={isFinite(padding?.bottom) ? padding.bottom : $paddingContainer.bottom + "px"}
+  style:left={isFinite(padding?.left) ? padding.left : $paddingContainer.left + "px"}
 >
   <slot {element} />
 </div>

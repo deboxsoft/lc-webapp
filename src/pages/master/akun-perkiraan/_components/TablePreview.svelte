@@ -1,7 +1,5 @@
 <script>
-  import { get } from "svelte/store";
   import Table from "__@comps/Table.svelte";
-  import { stores } from "@deboxsoft/accounting-client";
   import CellNumber from "__@comps/CellNumber.svelte";
 
   /**
@@ -10,7 +8,6 @@
    *
    */
 
-  const { getAccountType } = stores.getAccountContext();
   /**
    * @type {import("@deboxsoft/accounting-api").Account[]}
    */
@@ -30,15 +27,9 @@
       id: _.id,
       name: _.name,
       isParent: !_.parentId,
-      type: _.type,
       startBalance: _.startBalance,
       parentId: _.parentId
     }));
-  };
-
-  const getClassificationAccount = (type) => {
-    const accountType = get(getAccountType({ type }));
-    return accountType ? accountType.label : "-";
   };
 </script>
 
@@ -48,7 +39,6 @@
     <div class="dbx-cell text-center parent">induk</div>
     <div class="dbx-cell">nama</div>
     <div class="dbx-cell startBalance">saldo awal</div>
-    <div class="dbx-cell text-center type">klasifikasi</div>
   </div>
   {#each dataList as item, index}
     <div class="dbx-tr {errors.includes(index) && `error`}">
@@ -58,7 +48,6 @@
       <div class="dbx-cell startBalance">
         <CellNumber value={item.startBalance} />
       </div>
-      <div class="dbx-cell text-center type">{getClassificationAccount(item.type)}</div>
     </div>
   {/each}
 </Table>

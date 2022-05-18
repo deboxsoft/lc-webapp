@@ -5,27 +5,28 @@
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import { generateId } from "@deboxsoft/module-client";
-  // import { filteringAccountCredit } from "__@root/utils";
+  import { filteringAccountCredit, filteringAccountDebit } from "__@root/utils";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
 
   export let id = generateId({ prefix: "journal-account-item" });
   export let values;
-  export const creditDisable = false;
   export let index;
-  export let fieldName = "creditAccounts";
+  export let isCredit;
+  export let fieldName = "oppositeAccounts";
   export const minusCurrencyEnable = true;
   export let onRemoveJournalAccount = () => {};
   export let onUpdateJournalAccount = () => {};
 
   const { getAccountLeaf, getAccount } = stores.getAccountContext();
-  const accountStore = getAccountCredit();
-
   const { fields } = createFormContext({ values });
-
-  function getAccountCredit() {
-    const accountStore = getAccountLeaf();
-    // return filteringAccountCredit(accountStore);
-    return accountStore;
+  let accountStore = [];
+  $: {
+    const _accounts = getAccountLeaf();
+    if (isCredit) {
+      accountStore = filteringAccountDebit(_accounts);
+    } else {
+      accountStore = filteringAccountCredit(_accounts);
+    }
   }
 
   function createAccountSelectedHandler() {
@@ -56,7 +57,7 @@
       name="id"
       inputClassName="form-control"
       placeholder="Pilih Akun"
-      accountStore={getAccountCredit()}
+      {accountStore}
       allowEmpty
       on:change={createAccountSelectedHandler()}
     />

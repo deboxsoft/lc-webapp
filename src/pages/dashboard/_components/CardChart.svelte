@@ -1,5 +1,5 @@
 <script>
-  import { convertToNumber } from "__@root/utils";
+  import { formatCurrency } from "__@root/utils";
   import { linear } from "svelte/easing";
   import { blur } from "svelte/transition";
 
@@ -11,9 +11,32 @@
   export let loading = false;
   const className = $$props.class || "";
 
-  // periodBalanceReport.data.
-  function setValueCurrency(_value) {
-    return convertToNumber({ value: _value, fractionDigits: 2, thousandSeparator: ".", decimalSeparator: "," });
+  let _val, nominal;
+
+  $: {
+    if (isFinite(value)) {
+      changeValue(value);
+    }
+  }
+
+  function changeValue(to, { duration = 1500, from = 0 } = {}) {
+    const range = to - from;
+    const minTimer = 50;
+    let stepTime = Math.abs(Math.floor(duration / range));
+    stepTime = Math.max(minTimer, stepTime);
+    const startTime = new Date().getTime();
+    const endTime = startTime + duration;
+    let timer;
+    const run = () => {
+      const now = new Date().getTime();
+      const remaining = Math.max((endTime - now) / duration, 0);
+      _val = to - remaining * range;
+      if (_val === to) {
+        clearInterval(timer);
+      }
+      nominal = formatCurrency(_val);
+    };
+    timer = setInterval(run, stepTime);
   }
 </script>
 
@@ -21,7 +44,7 @@
   <div class="card-body">
     <div class="d-flex">
       <h3 class="font-weight-semibold mb-0">
-        Rp. {value ? setValueCurrency(value) : "-"}
+        {nominal ? nominal : "Rp. -"}
       </h3>
       <div class="list-icons ml-auto" />
     </div>

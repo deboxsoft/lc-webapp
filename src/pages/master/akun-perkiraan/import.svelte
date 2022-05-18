@@ -21,8 +21,7 @@
           id: id.toString(),
           parentId: sanitizeString(`${result.data[1]}`),
           name: sanitizeString(`${result.data[2]}`).toUpperCase(),
-          type: sanitizeString(result.data[3]),
-          startBalance: sanitizeNumber(result.data[4])
+          startBalance: sanitizeNumber(result.data[3])
         });
       }
     };
@@ -65,13 +64,13 @@
     errors = [];
     if (listData) {
       listData.forEach((_, index) => {
-        if (_.id === "" || _.name === "" || _.type === "" || !["10", "20", "30", "40", "50"].includes(_.type)) {
+        if (_.id === "" || _.name === "") {
           errors.push(index);
         }
       });
     }
     if (errors.length > 0 || !listData || listData.length === 0) {
-      throw new Error("Terjadi kesalahan input data, mohon diperiksa kembali.")
+      throw new Error("Terjadi kesalahan input data, mohon diperiksa kembali.");
     }
   }
 

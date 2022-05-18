@@ -40,6 +40,13 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const settingUpdateGranted = auth.getQuery("setting").update().granted;
   return [
     {
+      label: "Dashboard",
+      url: "/dashboard",
+      type: "menu",
+      show: true,
+      icon: "icon-home4"
+    },
+    {
       label: "Pencatatan Transaksi",
       url: "/transaksi",
       type: "module",

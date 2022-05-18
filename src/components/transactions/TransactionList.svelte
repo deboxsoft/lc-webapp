@@ -6,32 +6,42 @@
    * @type{import("@deboxsoft/accounting-api").Transaction}
    */
   export let transaction;
-  const creditAccounts = (transaction?.creditAccounts || []).map((_, index) => ({ index, ..._}))
+  const oppositeAccounts = (transaction?.oppositeAccounts || []).map((_, index) => ({ index, ..._ }));
 </script>
 
 <table class="table">
   <thead>
-  <tr>
-    <th style="width: 100px">Kode</th>
-    <th>Akun Perkiraan</th>
-    <th style="width: 150px">Jumlah Debit</th>
-    <th style="width: 150px">Jumlah Kredit</th>
-  </tr>
+    <tr>
+      <th style="width: 100px">Kode</th>
+      <th>Akun Perkiraan</th>
+      <th style="width: 150px">Jumlah Debit</th>
+      <th style="width: 150px">Jumlah Kredit</th>
+    </tr>
   </thead>
   <tbody>
-  <tr>
-    <td>{transaction.accountId || "-"}</td>
-    <td><CellAccount id={transaction.accountId} /></td>
-    <td><CellNumber value={transaction.amount} /></td>
-    <td class="text-right">-</td>
-  </tr>
-  {#each creditAccounts as accountAmount, index (accountAmount.index)}
     <tr>
-      <td>{accountAmount.id || "-"}</td>
-      <td><CellAccount id={accountAmount.id} /></td>
-      <td class="text-right">-</td>
-      <td><CellNumber value={accountAmount.amount} /></td>
+      <td>{transaction.accountId || "-"}</td>
+      <td><CellAccount id={transaction.accountId} /></td>
+      {#if transaction.isCredit}
+        <td class="text-right">-</td>
+        <td><CellNumber value={transaction.amount} /></td>
+      {:else}
+        <td><CellNumber value={transaction.amount} /></td>
+        <td class="text-right">-</td>
+      {/if}
     </tr>
-  {/each}
+    {#each oppositeAccounts as accountAmount, index (accountAmount.index)}
+      <tr>
+        <td>{accountAmount.id || "-"}</td>
+        <td><CellAccount id={accountAmount.id} /></td>
+        {#if transaction.isCredit}
+          <td><CellNumber value={accountAmount.amount} /></td>
+          <td class="text-right">-</td>
+        {:else}
+          <td class="text-right">-</td>
+          <td><CellNumber value={accountAmount.amount} /></td>
+        {/if}
+      </tr>
+    {/each}
   </tbody>
 </table>

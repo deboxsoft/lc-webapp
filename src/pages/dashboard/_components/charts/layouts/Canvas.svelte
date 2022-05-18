@@ -3,10 +3,10 @@
 	Canvas layout component
  -->
 <script>
-  import { getContext, onMount, setContext } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { getContextChart } from "__@stores/chart";
   import { writable } from "svelte/store";
-  import scaleCanvas from "../lib/scaleCanvas.js";
+  import scaleCanvas from "__@stores/chart/lib/scaleCanvas";
 
   /** @type {HTMLCanvasElement} [element] The `<canvas>` tag. Useful for bindings. */
   export let element = undefined;

@@ -48,7 +48,7 @@
       description: _.description,
       accountId: action === "cashier" ? accountId : _.accountId,
       amount: _.amount,
-      creditAccounts: [
+      oppositeAccounts: [
         {
           id: action === "cashier" ? _.accountId : accountId,
           amount: _.amount

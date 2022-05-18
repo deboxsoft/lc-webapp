@@ -1,0 +1,61 @@
+<script>
+  import { quadtree } from "d3-quadtree";
+  import { getContextChart } from "__@stores/chart";
+
+  const { data, xGet, yGet, width, height } = getContextChart();
+
+  let visible = false;
+  let found = {};
+  let e = {};
+
+  /**
+   * @type {string} - The dimension to search across when moving the mouse left and right
+   */
+  export let x = "x";
+  /**
+   * @type {string} - The dimension to search across when moving the mouse up and down.
+   */
+  export let y = "y";
+
+  /**
+   * @type {String | undefined} - The number of pixels to search around the mouse's location.  This is the third argument passed to [`quadtree.find`](https://github.com/d3/d3-quadtree#quadtree_find) and by default a value of `undefined` mean an unlimited range.
+   */
+  export let searchRadius = undefined;
+  /**
+   * @type {Array | undefined} - The dataset to work off of-defaults to $data if left unset.  You can pass override the default here in case you don't want to use the main data or it's in a strange format.
+   */
+  export let dataset = undefined;
+
+  $: xGetter = x === "x" ? $xGet : $yGet;
+  $: yGetter = y === "y" ? $yGet : $xGet;
+
+  $: finder = quadtree()
+    .extent([
+      [-1, -1],
+      [$width + 1, $height + 1]
+    ])
+    .x(xGetter)
+    .y(yGetter)
+    .addAll(dataset || $data);
+
+  function findItem(evt) {
+    e = evt;
+    const xLayerKey = `layer${x.toUpperCase()}`;
+    const yLayerKey = `layer${y.toUpperCase()}`;
+    found = finder.find(evt[xLayerKey], evt[yLayerKey], searchRadius) || {};
+    visible = Object.keys(found).length > 0;
+  }
+</script>
+
+<div class="bg" on:mousemove={findItem} on:mouseout={() => (visible = false)} on:blur={() => (visible = false)} />
+<slot x={xGetter(found) || 0} y={yGetter(found) || 0} {found} {visible} {e} />
+
+<style>
+  .bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+</style>

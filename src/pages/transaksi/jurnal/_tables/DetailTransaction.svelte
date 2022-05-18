@@ -8,12 +8,10 @@
   import { get } from "svelte/store";
   import TransactionList from "__@comps/transactions/TransactionList.svelte";
   import CellDate from "__@comps/CellDate.svelte";
-  import { accountUtils } from "__@root/utils";
-  import transaksi from "__@root/pages/transaksi/index.svelte";
 
-  const { checkCashBalance } = accountUtils();
   const { loading, notify } = getApplicationContext();
   const { getTransactionType, approve, reject } = stores.getTransactionContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
   const { getUser } = usersStore.getAuthenticationContext();
 
   export let backUrl;

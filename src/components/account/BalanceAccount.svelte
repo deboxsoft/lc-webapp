@@ -3,7 +3,7 @@
   import { stores } from "@deboxsoft/accounting-client";
 
   const { accountStore, getAccount } = stores.getAccountContext();
-  const { getBalance } = stores.getBalanceContext();
+  const { getFixedBalanceAccount } = stores.getBalanceContext();
   export let id = undefined;
   /**
    * @type {undefined | Function}
@@ -11,7 +11,8 @@
   export let value = undefined;
 
   let _value;
-  getBalance(id).then((_) => {
+  getFixedBalanceAccount(id, {}).then((_) => {
+    console.log(_);
     if (typeof value === "function") {
       value = value(_);
     } else {

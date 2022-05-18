@@ -19,11 +19,7 @@
   const reportContext = createReportContext();
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
-  const {
-    findPageGeneralLedger,
-    generalLedgerStore = writable([]),
-    generalLedgerPageInfo
-  } = stores.createGeneralLedgerContext(applicationContext);
+  const { trialBalance } = stores.getBalanceContext();
   const { accountStore, getAccount } = stores.getAccountContext();
   const { currentDateStore } = stores.getPreferenceAccountingContext();
 
@@ -32,10 +28,9 @@
   let endDate = new Date();
   let startDate = dayjs(endDate).startOf("month").toDate();
   const account = getAccount($params.id);
-  $: filter = {
-    startDate,
-    endDate
-  };
+  const trialBalanceStore = writable([]);
+  const trialBalancePageInfo = writable({});
+
   $: {
     if ($account?.id) {
       fetchData();
@@ -45,16 +40,34 @@
   async function fetchData(options = {}) {
     $loading = true;
     submitting = true;
-    await findPageGeneralLedger(
+    const filter = {
+      startDate,
+      endDate
+    };
+    if (options.more) {
+      filter.lastBalance = $trialBalanceStore[$trialBalanceStore.length - 1].balance;
+    }
+    const result = await trialBalance(
       $account.id,
       {
         filter,
         pageCursor: {
-          next: options.more && $generalLedgerPageInfo?.next
+          next: options.more && $trialBalancePageInfo?.next
         }
       },
       options
     );
+    if (options.more) {
+      trialBalanceStore.update((_) => {
+        if (options.backward) {
+          return [...result.data, ..._];
+        }
+        return [..._, ...result.data];
+      });
+    } else {
+      trialBalanceStore.set(result.data);
+    }
+    trialBalancePageInfo.set(result.pageInfo);
     $loading = false;
     submitting = false;
   }
@@ -79,7 +92,7 @@
     pdf: () => {
       $loading = true;
       reportContext.pdf(
-        $generalLedgerStore,
+        $trialBalanceStore,
         (p) => {
           if (p === 1) {
             $loading = false;
@@ -91,13 +104,13 @@
     },
     csv: () => {
       $loading = true;
-      reportContext.csv($generalLedgerStore, { account: $account, startDate, endDate });
+      reportContext.csv($trialBalanceStore, { account: $account, startDate, endDate });
       $loading = false;
       close();
     },
     print: () => {
       $loading = true;
-      reportContext.print($generalLedgerStore, { account: $account, startDate, endDate });
+      reportContext.print($trialBalanceStore, { account: $account, startDate, endDate });
       $loading = false;
       close();
     }
@@ -160,8 +173,8 @@
             <p class="col-sm-9 mb-0">: {($account && $account.id) || ""}</p>
           </dl>
         </div>
-        <LedgerAccountTable generalLedgerList={$generalLedgerStore}>
-          {#if $generalLedgerPageInfo.hasNext}
+        <LedgerAccountTable generalLedgerList={$trialBalanceStore}>
+          {#if $trialBalancePageInfo.hasNext}
             <div class="" style="height: 50px">
               <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
                 ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...

@@ -2,7 +2,7 @@ import type { Account } from "@deboxsoft/accounting-api";
 import { stores } from "@deboxsoft/accounting-client";
 import { get } from "svelte/store";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
-import { downloadCsv } from "__@root/utils";
+import { downloadCsv, getAccountType } from "__@root/utils";
 
 export type AccountDefInput = Account & {
   parent: string;
@@ -10,18 +10,19 @@ export type AccountDefInput = Account & {
 
 export type Metadata = Record<string, string>;
 export const createReportContext = () => {
-  const { getAccount, getAccountType, getAccountsTree, accountStore } = stores.getAccountContext();
+  const { getAccount, getAccountsTree, accountStore } = stores.getAccountContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  const preference = get(preferenceStore);
   const processingData = (account: Account) => {
     let parent = "-";
     if (account.parentId) {
       parent = get(getAccount(account.parentId)).name || parent;
     }
-    const type = get(getAccountType(account)).label || "-";
     return [
       { text: account.id, style: "cell" },
       { text: account.name, style: "cell" },
       { text: parent, style: "cell" },
-      { text: type, style: "cell" }
+      { text: getAccountType(account, preference), style: "cell" }
     ];
   };
   return {
@@ -38,14 +39,13 @@ export const createReportContext = () => {
       const now = new Date();
       downloadCsv(
         accounts.reduce((result, account) => {
-          const type = get(getAccountType(account)).code || "-";
-          const output = [account.id, "", account.name, type];
+          const output = [account.id, "", account.name, getAccountType(account, preference)];
           result.push(output);
 
           // children
           if (Array.isArray(account.children)) {
             account.children.forEach((child) => {
-              const _output = [child.id, child.parentId, child.name, type];
+              const _output = [child.id, child.parentId, child.name, getAccountType(child, preference)];
               result.push(_output);
             });
           }

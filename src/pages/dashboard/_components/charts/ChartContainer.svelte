@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import { createContextChart } from "__@stores/chart";
 
   /** @type {Boolean} [ssr=false] Whether this chart should be rendered server side. */
@@ -32,13 +32,13 @@
    */
 
   /** @type {String|Function|Number|Array} x The x accessor. The key in each row of data that corresponds to the x-field. This can be a string, an accessor function, a number or an array of any combination of those types. This property gets converted to a function when you access it through the context. */
-  export let x = undefined;
+  export let x = (d) => d;
   /** @type {String|Function|Number|Array} y The y accessor. The key in each row of data that corresponds to the y-field. This can be a string, an accessor function, a number or an array of any combination of those types. This property gets converted to a function when you access it through the context. */
-  export let y = undefined;
+  export let y = (d) => d;
   /** @type {String|Function|Number|Array} z The z accessor. The key in each row of data that corresponds to the z-field. This can be a string, an accessor function, a number or an array of any combination of those types. This property gets converted to a function when you access it through the context. */
-  export let z = undefined;
+  export let z = (d) => d;
   /** @type {String|Function|Number|Array} r The r accessor. The key in each row of data that corresponds to the r-field. This can be a string, an accessor function, a number or an array of any combination of those types. This property gets converted to a function when you access it through the context. */
-  export let r = undefined;
+  export let r = (d) => d;
 
   /** @type {Array|Object} [data=[]] If `data` is not a flat array of objects and you want to use any of the scales, set a flat version of the data via the `flatData` prop. */
   export let data = [];
@@ -104,8 +104,6 @@
 
   export let context = createContextChart({
     percentRange,
-    containerWidth,
-    containerHeight,
     extents,
     data: flatData || data,
     padding,
@@ -138,6 +136,7 @@
     zScale,
     rScale
   });
+
   const width_d = context.width;
   const height_d = context.height;
   const aspectRatio_d = context.aspectRatio;
@@ -147,6 +146,8 @@
   onMount(() => {
     context.setMounted(true);
   });
+  $: context.setContainerHeight(containerHeight);
+  $: context.setContainerWidth(containerWidth);
 </script>
 
 {#if ssr === true || typeof window !== "undefined"}

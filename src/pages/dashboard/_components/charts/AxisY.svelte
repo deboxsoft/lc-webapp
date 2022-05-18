@@ -19,6 +19,13 @@
   export let xTick = 0;
   /** @type {Number} [yTick=-1] - How far up and down to position the text marker. */
   export let yTick = 0;
+  /** @type {Number} [dxTick=0] – Any optional value passed to the `dx` attribute on the text marker and tick mark (if visible). This is ignored on the text marker if your scale is ordinal. */
+  export let dxTick = 0;
+
+  /** @type {Number} [dyTick=-4] – Any optional value passed to the `dy` attribute on the text marker and tick mark (if visible). This is ignored on the text marker if your scale is ordinal. */
+  export let dyTick = -4;
+  /** @type {String} [textAnchor='start'] The CSS `text-anchor` passed to the label. This is automatically set to "end" if the scale has a bandwidth method, like in ordinal scales. */
+  export let textAnchor = "start";
   export let labelDisable = false;
   $: isBandwidth = typeof $yScale.bandwidth === "function";
   $: tickVals = Array.isArray(ticks)
