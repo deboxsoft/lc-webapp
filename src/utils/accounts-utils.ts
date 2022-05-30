@@ -18,144 +18,204 @@ export function isExpense(accountId: string): boolean {
   return accountsUtils.isExpense(accountId);
 }
 
-export function filteringAccountDebit(accountStore: Readable<Account[]>) {
+export function filteringAccountDebit(accountStore: Readable<Account[]>, exclude = true) {
   const { authenticationStore } = getAuthenticationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const accountsUtils = createAccountUtils(config);
-  let accountsIdDebit = get(authenticationStore).metadata?.includeAccounts;
-  return derived(accountStore, (_) => {
+  return derived([accountStore, preferenceStore, authenticationStore], ([_, config, authStore]) => {
+    if (!config || !_) {
+      return [];
+    }
+    let includeAccounts = authStore.metadata?.includeAccounts;
+    const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isRevenue(_.id)) {
         return false;
       }
-      if (!accountsIdDebit || accountsIdDebit.includes(_.id)) {
-        return accountsUtils.excludeCodeAccount(_);
+      if (!includeAccounts || includeAccounts.includes(_.id)) {
+        return !accountsUtils.isExclusiveAccount(_);
       }
-      return true;
+      return !exclude;
     });
   });
 }
 
-export function filteringAccountCredit(accountStore: Readable<Account[]>) {
+export function filteringAccountCredit(accountStore: Readable<Account[]>, exclude = true) {
   const { authenticationStore } = getAuthenticationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const accountsUtils = createAccountUtils(config);
-  let accountsIdCredit = get(authenticationStore).metadata?.includeAccounts;
-  return derived(accountStore, (_) => {
+  return derived([accountStore, preferenceStore, authenticationStore], ([_, config, authStore]) => {
+    if (!config || !_) {
+      return [];
+    }
+    let includeAccounts = authStore.metadata?.includeAccounts;
+    const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isExpense(_.id)) {
         return false;
       }
-      if (!accountsIdCredit || accountsIdCredit.includes(_.id)) {
-        return accountsUtils.excludeCodeAccount(_);
+      if (!includeAccounts || includeAccounts.includes(_.id)) {
+        return !accountsUtils.isExclusiveAccount(_);
       }
-      return true;
+      return !exclude;
     });
   });
 }
 
-export function filteringAccountCash(accountStore: Readable<Account[]>) {
+export function filteringAccountCash(accountStore: Readable<Account[]>, exclude = true) {
   const { authenticationStore } = getAuthenticationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const accountsUtils = createAccountUtils(config);
-  let includeAccounts = get(authenticationStore).metadata?.includeAccounts;
-  return derived(accountStore, (_) => {
+  return derived([accountStore, preferenceStore, authenticationStore], ([_, config, authStore]) => {
+    if (!config || !_) {
+      return [];
+    }
+    let includeAccounts = authStore.metadata?.includeAccounts;
+    const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isCash(_.id)) {
         if (!includeAccounts || includeAccounts.includes(_.id)) {
-          return _;
+          return !accountsUtils.isExclusiveAccount(_);
         }
       }
-      return false;
+      return !exclude;
     });
   });
 }
 
-export function filteringAccountRevenue(accountStore: Readable<Account[]>) {
+export function filteringAccountPayment(accountStore: Readable<Account[]>, exclude = true) {
+  const { authenticationStore } = getAuthenticationContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const accountsUtils = createAccountUtils(config);
-  return derived(accountStore, (_) => {
+  return derived([accountStore, preferenceStore, authenticationStore], ([_, config, authStore]) => {
+    if (!config || !_) {
+      return [];
+    }
+    let includeAccounts = authStore.metadata?.includeAccounts;
+    const accountsUtils = createAccountUtils(config);
+    return _.filter((_) => {
+      if (accountsUtils.isCash(_.id) || accountsUtils.isPayable(_.id)) {
+        if (!includeAccounts || includeAccounts.includes(_.id)) {
+          return !accountsUtils.isExclusiveAccount(_);
+        }
+      }
+      return !exclude;
+    });
+  });
+}
+
+export function filteringAccountRevenue(accountStore: Readable<Account[]>, exclude = true) {
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isRevenue(_.id)) {
-        return accountsUtils.excludeCodeAccount(_);
+        return !accountsUtils.isExclusiveAccount(_);
       }
-      return false;
+      return !exclude;
     });
   });
 }
 
-export function filteringAccountExpense(accountStore: Readable<Account[]>) {
+export function filteringAccountExpense(accountStore: Readable<Account[]>, exclude = true) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const accountsUtils = createAccountUtils(config);
-  return derived(accountStore, (_) => {
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isExpense(_.id)) {
-        return accountsUtils.excludeCodeAccount(_);
+        return !accountsUtils.isExclusiveAccount(_);
       }
-      return false;
+      return !exclude;
     });
   });
 }
 
 export function filteringAccountStock(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const parentId = config.codeAccount.stock;
-  return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const parentId = config.exclusiveCodeAccount.stock;
+    return _.filter((_) => _.parentId === parentId);
+  });
 }
 
 export function filteringAccountBdd(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const parentId = config.codeAccount.bdd;
-  return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const parentId = config.exclusiveCodeAccount.bdd;
+    return _.filter((_) => _.parentId === parentId);
+  });
 }
 
 export function filteringAccountExpenseAmortization(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const parentId = config.codeAccount.expenseAmortization;
-  return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const parentId = config.exclusiveCodeAccount.expenseAmortization;
+    return _.filter((_) => _.parentId === parentId);
+  });
 }
 
 export function filteringAccountAccumulationAmortization(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const parentId = config.codeAccount.accumulationAmortization;
-  return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const parentId = config.exclusiveCodeAccount.accumulationAmortization;
+    return _.filter((_) => _.parentId === parentId);
+  });
 }
 
 export function filteringAccountInventory(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const parentId = config.codeAccount.inventory;
-  return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const parentId = config.exclusiveCodeAccount.inventory;
+    return _.filter((_) => _.parentId === parentId);
+  });
 }
 
 export function filteringAccountExpenseDepreciation(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const parentId = config.codeAccount.expenseDepreciation;
-  return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const parentId = config.exclusiveCodeAccount.expenseDepreciation;
+    return _.filter((_) => _.parentId === parentId);
+  });
 }
 
 export function filteringAccountAccumulationDepreciation(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const parentId = config.codeAccount.accumulationDepreciation;
-  return derived(accountStore, (_) => _.filter((_) => _.parentId === parentId));
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const parentId = config.exclusiveCodeAccount.accumulationDepreciation;
+    return _.filter((_) => _.parentId === parentId);
+  });
 }
 
 export function filteringAccountPayable(accountStore: Readable<Account[]>) {
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const config = get(preferenceStore);
-  const accountsUtils = createAccountUtils(config);
-  return derived(accountStore, (_) => {
+  return derived([accountStore, preferenceStore], ([_, config]) => {
+    if (!config || !_) {
+      return [];
+    }
+    const accountsUtils = createAccountUtils(config);
     return _.filter((__) => {
       return accountsUtils.isPayable(__.id);
     });
