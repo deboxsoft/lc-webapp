@@ -4,7 +4,7 @@
   import { clsx } from "@deboxsoft/module-client";
   import Form from "__@comps/forms/Form.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
-  import IoMdLock from "@deboxsoft/svelte-icons/io/IoMdLock.svelte";
+  import IoMdLock from "@deboxsoft/svelte-icons/io/IoLockClosedIcon.svelte";
   import { getAuthenticationContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Alert from "__@comps/Alert.svelte";

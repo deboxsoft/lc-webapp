@@ -18,14 +18,20 @@
   let { class: className } = $$props;
 
   // state
-  let canvas, progressTimerId, fadeTimerId, currentProgress, showing;
+  let canvas,
+    progressTimerId,
+    fadeTimerId,
+    currentProgress,
+    mounted = false,
+    showing;
 
   onMount(() => {
     _init();
+    mounted = true;
   });
 
   $: {
-    if (loading) {
+    if (loading && mounted) {
       show();
     } else {
       showing && hide();
