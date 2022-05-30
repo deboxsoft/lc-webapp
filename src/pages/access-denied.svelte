@@ -1,6 +1,6 @@
 <script>
   import { url } from "@roxi/routify";
-  import IconExclamation from "@deboxsoft/svelte-icons/ico/icoNotification.svelte";
+  import IconExclamation from "@deboxsoft/svelte-icons/ico/IcoNotificationIcon.svelte";
 </script>
 
 <div class="main-layout">
