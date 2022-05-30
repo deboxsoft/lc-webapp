@@ -1,5 +1,6 @@
 <script>
   import { getContextChart } from "__@stores/chart";
+  // import { max } from "d3-array";
   import QuadTree from "../charts/QuadTree.svelte";
 
   const { width, yScale, data, config, padding } = getContextChart();
@@ -28,22 +29,9 @@
         };
       });
   }
-
-  $: dataset = $data.reduce((res, _) => {
-    let i = 0;
-    for (const value of _.values) {
-      if (!res[i]) {
-        res[i] = {};
-      }
-      res[i][$config.x] = value.month;
-      res[i][_.label] = value.values;
-      i++;
-    }
-    return res;
-  }, []);
 </script>
 
-<QuadTree {dataset} y="x" let:x let:y let:visible let:found let:e>
+<QuadTree dataset={$data} y="x" let:x let:y let:visible let:found let:e>
   {@const foundSorted = sort(found, e)}
   {@const _dy = e.layerY}
   <!--{@const _dy = $yScale(max(foundSorted, (d) => d.value))}-->

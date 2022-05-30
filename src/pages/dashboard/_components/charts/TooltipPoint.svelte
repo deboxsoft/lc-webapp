@@ -3,8 +3,8 @@
   import { fade } from "svelte/transition";
   export let cx = 0;
   export let cy = 0;
-  export let stroke = "#fff";
-  export let fill = "#fff";
+  export let stroke = undefined;
+  export let fill = undefined;
   export let radius = 3;
   export let hoverRadius = 4;
   const className = $$props.class;

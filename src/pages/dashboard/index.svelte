@@ -9,6 +9,7 @@
   import CashFlowChart from "./_components/CashFlowChart.svelte";
   import RatioChart from "./_components/RatioChart.svelte";
   import { getApplicationContext } from "__@modules/app";
+  import AccountChart from "./_components/AccountChart.svelte";
 
   const auth = getAuthenticationContext();
   const profile = get(auth.authenticationStore);
@@ -55,7 +56,6 @@
         balanceKey="expense"
         class="bg-pink text-white"
         label="BIAYA"
-        value={$fixedBalanceReport?.expense}
         dataLoading={dataBalanceLoading}
         {monthlyBalanceReportLoading}
       />
@@ -65,29 +65,35 @@
         balanceKey="profit"
         class="bg-primary text-white"
         label="LABA"
-        value={$fixedBalanceReport?.profit}
         dataLoading={dataBalanceLoading}
         {monthlyBalanceReportLoading}
       />
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-4">
       <LineChartCard
-        balanceKey="cash"
-        class="bg-indigo text-white"
-        label="SALDO KAS & BANK"
-        value={$fixedBalanceReport?.cash}
+        balanceKey="assets"
+        class="bg-purple text-white"
+        label="ASET"
         dataLoading={dataBalanceLoading}
         {monthlyBalanceReportLoading}
       />
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-4">
+      <LineChartCard
+        balanceKey="cash"
+        class="bg-indigo text-white"
+        label="SALDO KAS & BANK"
+        dataLoading={dataBalanceLoading}
+        {monthlyBalanceReportLoading}
+      />
+    </div>
+    <div class="col-lg-4">
       <LineChartCard
         balanceKey="receivable"
         class="bg-warning text-white"
         label="PIUTANG PENJUALAN"
-        value={$fixedBalanceReport?.receivable}
         dataLoading={dataBalanceLoading}
         {monthlyBalanceReportLoading}
       />
@@ -96,6 +102,11 @@
   <div class="row">
     <div class="col">
       <CashFlowChart />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <AccountChart />
     </div>
   </div>
   <div class="row">

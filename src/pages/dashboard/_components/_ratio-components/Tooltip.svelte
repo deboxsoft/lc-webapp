@@ -1,4 +1,5 @@
 <script>
+  import { dateLocaleData } from "@deboxsoft/accounting-api";
   import { getContextChart } from "__@stores/chart";
   import QuadTree from "../charts/QuadTree.svelte";
 
@@ -11,12 +12,15 @@
    * @type {number} - A y-offset from hover point, in pixels.
    */
   export let offset = 10;
-  export let formatTitle = (d) => d.toUpperCase();
   export let formatValue = (d) => d;
   export let formatKey = (d) => d.toUpperCase();
+  const formatTitle = (d) => dateLocaleData.months()[d - 1].toUpperCase();
 
   function parsingData(_data) {
-    return _data;
+    return {
+      month: _data.month,
+      value: _data.value
+    };
   }
 </script>
 
@@ -38,7 +42,7 @@
       bind:clientWidth={w}
       bind:clientHeight={h}
     >
-      <div class="chart-title">{_data.name} ({formatTitle(found[$config.x])})</div>
+      <div class="chart-title">{formatTitle(_data.month)}</div>
       <div class="chart-title">Nilai Rasio: {formatValue(_data.value)}</div>
     </div>
   {/if}

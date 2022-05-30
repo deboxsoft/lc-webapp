@@ -9,6 +9,7 @@
   const { data, xGet, yGet } = getContextChart();
   /** @type {String} [stroke='#000'] */
   export let stroke = "#000";
+  export let dotStroke = stroke;
   export let dotFill = stroke;
   export let dotDisable = false;
   export let dotOptions = {
@@ -46,6 +47,8 @@
         class="d3-line-circle d3-line-circle-medium"
         {cx}
         {cy}
+        fill={dotFill}
+        stroke={dotStroke}
         on:mouseover={createTooltipMouseOverHandle(dotItem, { x: cx, y: cy })}
         on:mouseout={tooltipMouseOutHandle}
       />

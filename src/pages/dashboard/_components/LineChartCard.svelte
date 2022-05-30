@@ -14,10 +14,10 @@
 
   export let balanceKey;
   export let label;
-  export let value;
   export let monthlyBalanceReportLoading = true;
   export let balanceDataLoading = true;
   let tooltipEvt,
+    value,
     loading = false,
     widthContainerChart,
     width,
@@ -30,6 +30,9 @@
       for (const datum of $data) {
         yDomain[0] = Math.min(datum.data, yDomain[0]);
         yDomain[1] = Math.max(datum.data, yDomain[1]);
+      }
+      if ($data.length > 0) {
+        value = $data[$data.length - 1].data;
       }
     }
   }

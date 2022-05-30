@@ -1,5 +1,5 @@
 <script>
-  import { seriesRatioNames } from "@deboxsoft/accounting-api";
+  import { dateLocaleData, seriesRatioNames } from "@deboxsoft/accounting-api";
   import { stores } from "@deboxsoft/accounting-client";
   import ChartContainer from "./charts/ChartContainer.svelte";
   import Svg from "./charts/layouts/Svg.svelte";
@@ -11,43 +11,56 @@
 
   import { format } from "d3-format";
   import { scaleBand } from "d3-scale";
-  import { getApplicationContext } from "__@modules/app";
   import IconSpinner from "__@comps/loader/IconSpinner.svelte";
+  import ComboxField from "__@comps/forms/ComboxField.svelte";
+  import { createContextChart } from "__@stores/chart";
+  import { onMount } from "svelte";
 
-  const appContext = getApplicationContext();
-  const { fixedMonthlyBalanceReportStore, currentMonthlyBalanceReportStore } =
-    stores.createBalanceReportContext(appContext);
+  const { getMonthlyBalanceReport } = stores.getBalanceReportContext();
+  const dataStore = getMonthlyBalanceReport();
+  let dataLoading = true;
   const className = $$props.class || "";
+  let mounted = false;
+  let seriesRatioName = seriesRatioNames[0];
+  const months = dateLocaleData.monthsShort();
+  let isAccumulation = false;
 
-  /**
-   * store Readable
-   * @type {import("@deboxsoft/accounting-api").RatioBalanceReport}
-   */
-  export let ratioBalanceReport;
-  export let dataLoading = true;
-  /**
-   * @type {HTMLElement}
-   */
-  let containerEl, tooltipEvt;
-  let loading = false;
-
-  const formatTickY = (d) => format(".0%")(d);
-  let minValue = 0,
-    maxValue = 1;
-  const data = [];
-  const xDomain = [];
+  const context = createContextChart({
+    x: "month",
+    y: "value",
+    xScale: scaleBand().paddingInner([0.3]).round(true),
+    padding: {
+      top: 10,
+      bottom: 10,
+      left: 10
+    }
+  });
+  onMount(() => {
+    mounted = true;
+  });
 
   $: {
-    if (ratioBalanceReport) {
+    if (mounted && $dataStore && seriesRatioName) {
       processingData();
-      dataLoading = false;
     }
   }
 
+  const formatTickY = (d) => format(".0%")(d);
+  const formatTickX = (d) => {
+    return dateLocaleData.monthsShort()[d - 1].toUpperCase();
+  };
+  const formatTitleTooltip = (d) => {
+    return dateLocaleData.months()[d - 1].toUpperCase();
+  };
+
   function processingData() {
-    for (const seriesRatioName of seriesRatioNames) {
-      const key = seriesRatioName[0];
-      let value = ratioBalanceReport[key];
+    dataLoading = true;
+    const data = [];
+    let minValue = 0,
+      maxValue = 1;
+    for (const _data of $dataStore) {
+      const month = _data.month;
+      let value = _data.data.ratio[seriesRatioName[0]] || 0;
       if (isFinite(value)) {
         let _tmp = 0;
         if (value < 0) {
@@ -56,43 +69,47 @@
           maxValue = maxValue < value ? 0.5 * Math.floor(value / 0.5) + 0.5 : maxValue;
         }
       }
-      const alias = seriesRatioName[1];
-      const name = seriesRatioName[2];
       data.push({
-        key,
-        value,
-        name,
-        alias
+        month,
+        value
       });
-      xDomain.push(alias);
     }
+    context.setYDomain([minValue, maxValue]);
+    context.setXDomain([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    context.setData(data);
+    dataLoading = false;
+  }
+
+  function ratioSelectHandler({ detail }) {
+    seriesRatioName = detail;
   }
 </script>
 
 <div class="card {className}">
   <div class="card-header header-elements-sm-inline py-sm-0">
-    <h6 class="card-title py-sm-3">RATIO</h6>
+    <h6 class="card-title py-sm-3">{seriesRatioName[2]}</h6>
+    <div class="header-elements">
+      <ComboxField
+        on:change={ratioSelectHandler}
+        items={seriesRatioNames}
+        labelFunc={(_) => _[2]}
+        valueFunc={(_) => _}
+        style="width: unset"
+      />
+    </div>
   </div>
   <div class="card-body" style="height: 200px">
     {#if dataLoading}
       <IconSpinner />
     {:else}
-      <ChartContainer
-        y="value"
-        x="alias"
-        {data}
-        xScale={scaleBand().paddingInner([0.3]).round(true)}
-        {xDomain}
-        yDomain={[minValue, maxValue]}
-        padding={{ top: 10, bottom: 10, left: 60 }}
-      >
+      <ChartContainer {context}>
         <Svg>
-          <AxisX gridlines={false} baseline />
+          <AxisX gridlines={false} baseline formatTick={formatTickX} />
           <AxisY ticks={4} dxTick={10} formatTick={formatTickY} />
           <Column />
         </Svg>
         <Html>
-          <Tooltip formatValue={formatTickY} />
+          <Tooltip formatValue={formatTickY} formatTitle={formatTitleTooltip} />
         </Html>
       </ChartContainer>
     {/if}
