@@ -1,7 +1,7 @@
 <script>
   import { goto } from "@roxi/routify";
-  import IconArrowRight from "@deboxsoft/svelte-icons/ico/icoArrowRight3.svelte";
-  import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
+  import IconArrowRight from "@deboxsoft/svelte-icons/ico/IcoArrowRight3Icon.svelte";
+  import IconArrowDown from "@deboxsoft/svelte-icons/ico/IcoArrowDown3Icon.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
 
   /**

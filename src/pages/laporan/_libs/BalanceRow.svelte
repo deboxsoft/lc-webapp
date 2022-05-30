@@ -1,6 +1,6 @@
 <script>
-  import IconArrowRight from "@deboxsoft/svelte-icons/ico/icoArrowRight3.svelte";
-  import IconArrowDown from "@deboxsoft/svelte-icons/ico/icoArrowDown3.svelte";
+  import IconArrowRight from "@deboxsoft/svelte-icons/ico/IcoArrowRight3Icon.svelte";
+  import IconArrowDown from "@deboxsoft/svelte-icons/ico/IcoArrowDown3Icon.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import { writable } from "svelte/store";
 
@@ -37,7 +37,7 @@
 {#if account.children && $expanded}
   {#each account.children as child}
     <tr class="child">
-      <td style="width: 10px"></td>
+      <td style="width: 10px" />
       <td style="padding-left: 1.25rem">
         {child.name}
         <div class="text-muted font-size-sm">
