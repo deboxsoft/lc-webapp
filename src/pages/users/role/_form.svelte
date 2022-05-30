@@ -14,6 +14,18 @@
   let roles;
   let grantRole = {};
   const schemaRole = {
+    dashboard: {
+      label: "dashboard",
+      selected: false,
+      indeterminate: false,
+      actions: [
+        {
+          label: "lihat",
+          value: "read:any",
+          selected: false
+        }
+      ]
+    },
     account: {
       label: "akun perkiraan",
       selected: false,
@@ -360,7 +372,6 @@
   const resources = Object.keys(schemaRole);
   $: {
     if (Object.keys($grants).length > 0) {
-
       if (!roles) {
         roles = Object.keys($grants);
         if (role) {
@@ -455,14 +466,12 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-12">
-        Detail Hak Akses
-      </div>
+      <div class="col-12">Detail Hak Akses</div>
     </div>
     <div class="row px-2">
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[0], resources[1], resources[2]] as resourceKey}
+          {#each [resources[0], resources[1], resources[2], resources[3]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
@@ -476,7 +485,7 @@
       </div>
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[3], resources[4], resources[5], resources[6], resources[7], resources[8]] as resourceKey}
+          {#each [resources[4], resources[5], resources[6], resources[7], resources[8], resources[9]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
@@ -490,7 +499,7 @@
       </div>
       <div class="role-checkbox-tree col-md-4 col-12">
         <ol class="role-view">
-          {#each [resources[9], resources[10], resources[11], resources[12]] as resourceKey}
+          {#each [resources[10], resources[11], resources[12], resources[13]] as resourceKey}
             <RoleTreeView
               {readOnly}
               resource={resourceKey}
