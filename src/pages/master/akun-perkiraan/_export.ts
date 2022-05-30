@@ -12,8 +12,7 @@ export type Metadata = Record<string, string>;
 export const createReportContext = () => {
   const { getAccount, getAccountsTree, accountStore } = stores.getAccountContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
-  const preference = get(preferenceStore);
-  const processingData = (account: Account) => {
+  const processingData = (account: Account, preference) => {
     let parent = "-";
     if (account.parentId) {
       parent = get(getAccount(account.parentId)).name || parent;
@@ -27,14 +26,16 @@ export const createReportContext = () => {
   };
   return {
     pdf: (progressCB, metadata: Metadata = {}) => {
+      const preference = get(preferenceStore);
       const accounts = get(accountStore);
       const now = new Date();
-      const doc = createPdfDef(accounts.map(processingData));
+      const doc = createPdfDef(accounts.map((account) => processingData(account, preference)));
       return pdfMake(doc).download(metadata.filename || `account-${now.getTime()}.pdf`, null, {
         progressCallback: progressCB
       });
     },
     csv: (metadata: Metadata = {}) => {
+      const preference = get(preferenceStore);
       const accounts = get(getAccountsTree());
       const now = new Date();
       downloadCsv(
@@ -55,8 +56,9 @@ export const createReportContext = () => {
       );
     },
     print: (metadata: Metadata = {}) => {
+      const preference = get(preferenceStore);
       const accounts = get(accountStore);
-      const doc = createPdfDef(accounts.map(processingData));
+      const doc = createPdfDef(accounts.map((account) => processingData(account, preference)));
       return pdfMake(doc).print();
     }
   };

@@ -21,24 +21,6 @@
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   const { accountStore, getAccount, getAccountParentList, getAccountChildren } = stores.getAccountContext();
   const parentAccountStore = getAccountParentList();
-  // const accountType = derived([preferenceStore], ([_preferenceStore]) => {
-  //   const accountUtils = createAccountUtils(_preferenceStore);
-  //   return [
-  //     {
-  //       code: _preferenceStore.codeAccount.assets,
-  //       label: $t("account.assets")
-  //     },
-  //     {
-  //       code: _preferenceStore.codeAccount.receivable,
-  //       label: $t("account.assets")
-  //     },
-  //     {
-  //       code: _preferenceStore.codeAccount.assets,
-  //       label: $t("account.assets")
-  //     }
-  //   ];
-  // });
-
   export let account = {};
   export let isUpdate = false;
   export let onSubmit;
