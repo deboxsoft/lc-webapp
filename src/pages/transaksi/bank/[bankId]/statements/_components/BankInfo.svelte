@@ -2,7 +2,7 @@
   import CellNumber from "__@comps/CellNumber.svelte";
   import { stores } from "@deboxsoft/accounting-client";
 
-  const { getBalance } = stores.getBalanceContext();
+  const { getFixedBalanceAccount } = stores.getBalanceContext();
 
   export let hiddenBalance = false;
   /**
@@ -18,7 +18,7 @@
   export let balanceBank = undefined;
   $: {
     if (!hiddenBalance && account?.id && balanceAccount === undefined) {
-      getBalance(account.id).then((_) => {
+      getFixedBalanceAccount(account.id, {}).then((_) => {
         balanceAccount = _ || 0;
         if (bank) {
           balanceBank = bank.balance || 0;
