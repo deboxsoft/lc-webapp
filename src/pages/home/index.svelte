@@ -1,4 +1,4 @@
-<!--routify:options title="Home"-->
+<!--routify:options title="Menu"-->
 <script>
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import MenuCard from "__@root/pages/bdd/_components/MenuCard.svelte";
