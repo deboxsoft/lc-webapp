@@ -28,7 +28,7 @@
   };
 
   const { loading, notify } = getApplicationContext();
-  const { getBalance } = stores.getBalanceContext();
+  const { getFixedBalanceAccount } = stores.getBalanceContext();
   const { getAccount } = stores.getAccountContext();
   const { reconcile, bank = writable() } = stores.getBankStatementContext();
   const { setLastBalance } = stores.getBankContext();
@@ -51,7 +51,7 @@
     if (_bank) {
       if (_bank.accountId) {
         account = getAccount(_bank.accountId);
-        balanceAccount = await getBalance(_bank.accountId);
+        balanceAccount = await getFixedBalanceAccount(_bank.accountId);
       }
       balanceBank = _bank.balance || 0;
     }
@@ -63,23 +63,15 @@
   });
 
   async function submitHandler(_statements) {
-    try {
-      errors = [];
-      if (!errors || errors.length === 0) {
-        await reconcile($bank.id, _statements);
-        setLastBalance($bank.id, balanceBank);
-        $goto("./");
-      } else {
-        throw new DeboxError({
-          message: "submit failed"
-        });
-      }
-    } catch (e) {
-      if (e?.message) {
-        notify(e?.message || `data tidak berhasil disimpan`, "alert");
-      } else {
-        console.error(e);
-      }
+    errors = [];
+    if (!errors || errors.length === 0) {
+      await reconcile($bank.id, _statements);
+      setLastBalance($bank.id, balanceBank);
+      $goto("./");
+    } else {
+      throw new DeboxError({
+        message: "submit failed"
+      });
     }
   }
 
@@ -90,15 +82,12 @@
   function previewHandler(listData) {
     errors = [];
     if (listData) {
-      balanceAccount = $account.balance;
       balanceBank = $bank.balance;
       listData.forEach((_, index) => {
         if (_.date === "" || !_.balance || _.accountId === "" || (!_.in && !_.out) || (_.in && _.out)) {
           errors.push(index);
         }
         balanceBank = _.balance;
-        _.in && (balanceAccount += _.in);
-        _.out && (balanceAccount -= _.out);
       });
     }
     if (errors.length > 0 || !listData || listData.length === 0) {

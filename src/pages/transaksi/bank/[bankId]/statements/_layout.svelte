@@ -59,46 +59,46 @@
     });
   }
 
-  async function reconcileHandler() {
-    $loading = true;
-    submitting = true;
-    try {
-      // filter
-      const statements = [];
-      let index = 0;
-      errors = [];
-      for (const { status, ...statement } of bankStatementList) {
-        if ($itemsSelected.includes(index)) {
-          const amount = statement.in || statement.out;
-          if (!statement.accountId || !amount) {
-            errors.push(index);
-          }
-          statements.push(statement);
-        }
-        index++;
-      }
-      statements.sort(sortUtilsFunc("id", "desc"));
-      if (statements.length > 0 && !(errors.length > 0)) {
-        const result = await reconcile(bank.id, statements);
-        statements.forEach((_, index) => {
-          statements[index] = result[index];
-        });
-        // reset check all
-        $itemsSelected = [];
-        notify("reconcile data bank telah berhasil", "success");
-      } else if (statements.length === 0) {
-        notify("Belum ada data yang dipillih", "error");
-      } else {
-        notify("Terdapat data yang belum lengkap", "error");
-      }
-    } catch (e) {
-      console.error(e);
-      // notify(e.message, "error");
-    } finally {
-      $loading = false;
-      submitting = false;
-    }
-  }
+  // async function reconcileHandler() {
+  //   $loading = true;
+  //   submitting = true;
+  //   try {
+  //     // filter
+  //     const statements = [];
+  //     let index = 0;
+  //     errors = [];
+  //     for (const { status, ...statement } of bankStatementList) {
+  //       if ($itemsSelected.includes(index)) {
+  //         const amount = statement.in || statement.out;
+  //         if (!statement.accountId || !amount) {
+  //           errors.push(index);
+  //         }
+  //         statements.push(statement);
+  //       }
+  //       index++;
+  //     }
+  //     statements.sort(sortUtilsFunc("id", "desc"));
+  //     if (statements.length > 0 && !(errors.length > 0)) {
+  //       const result = await reconcile(bank.id, statements);
+  //       statements.forEach((_, index) => {
+  //         statements[index] = result[index];
+  //       });
+  //       // reset check all
+  //       $itemsSelected = [];
+  //       notify("reconcile data bank telah berhasil", "success");
+  //     } else if (statements.length === 0) {
+  //       notify("Belum ada data yang dipillih", "error");
+  //     } else {
+  //       notify("Terdapat data yang belum lengkap", "error");
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //     // notify(e.message, "error");
+  //   } finally {
+  //     $loading = false;
+  //     submitting = false;
+  //   }
+  // }
 
   const createExportMenuHandler = (close) => ({
     pdf: () => {
