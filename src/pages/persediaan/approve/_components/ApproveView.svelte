@@ -64,7 +64,7 @@
     </div>
     <dt class="col-sm-3 mb-0">Akun Hutang</dt>
     <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-      :&nbsp;<CellAccount id={$preferenceStore.codeAccount.payable} />
+      :&nbsp;<CellAccount id={$preferenceStore.stockPayment.payableAccount} />
     </p>
     <dt class="col-sm-3 mb-0">Jumlah Hutang</dt>
     <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
@@ -77,9 +77,7 @@
       <div style="width: 150px"><CellNumber value={calc.total} /></div>
     </div>
     <dt class="col-sm-3 mb-0">Mutasi</dt>
-    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-      : Masuk
-    </p>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">: Masuk</p>
   {:else}
     <dt class="col-sm-3 mb-0">Akun Biaya</dt>
     <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
@@ -90,9 +88,7 @@
       :&nbsp;<CellAccount id={stockTransaction.stockAccount} />
     </p>
     <dt class="col-sm-3 mb-0">Mutasi</dt>
-    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-      : Keluar
-    </p>
+    <p class="col-sm-9 mb-0 d-inline-flex align-items-center">: Keluar</p>
   {/if}
   <dt class="col-sm-3 mb-0">Deskripsi</dt>
   <p class="col-sm-9 mb-0">: {stockTransaction.description || "-"}</p>

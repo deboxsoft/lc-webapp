@@ -50,8 +50,8 @@
   </div>
   <div class="row">
     <div class="form-group col-12">
-      <label for="unit">Unit *</label>
-      <InputField id="unit" name="unit" type="text" class="form-control" placeholder="Unit *" />
+      <label for="unit">Satuan *</label>
+      <InputField id="unit" name="unit" type="text" class="form-control" placeholder="Unit *" value="UNIT" />
     </div>
   </div>
 </Form>
