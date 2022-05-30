@@ -11,9 +11,7 @@
 
   const { fields, isValid, fieldsErrors, validateField } = getFormContext();
   const { items, total, addItem, validateItems } = createItemContext({
-    validate(_) {
-      validate(_);
-    },
+    validate,
     getAmountItem(item) {
       return (item.priceItem || 0) * (item.quantity || 0);
     },
@@ -31,7 +29,6 @@
   $: {
     diff = ($fields.cashAmount || 0) - $totalStore;
     validate();
-    $isValid;
   }
 
   function validate(_ = $items) {

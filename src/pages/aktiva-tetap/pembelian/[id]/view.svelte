@@ -50,7 +50,6 @@
   async function approveHandler() {
     try {
       $loading = true;
-      console.log("approve handler");
       await approve(inventoryTransaction.id);
       notify(`data berhasil diApprove`, "success");
       closeHandler();

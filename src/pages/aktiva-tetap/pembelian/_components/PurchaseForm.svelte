@@ -11,14 +11,11 @@
   const { getAccountLeaf } = stores.getAccountContext();
 
   // props
-  export let onSubmit = undefined;
-  export let onClose = undefined;
   export let inventoryTransaction;
   export let schema;
-  export let isUpdate = false;
   export let isValid;
   export let fields;
-  export let fieldsErrors;
+  export let fieldsErrors = undefined;
 
   function getAccount(accountType) {
     const accountStore = getAccountLeaf();

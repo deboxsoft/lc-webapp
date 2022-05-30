@@ -71,7 +71,7 @@
   </div>
   <dt class="col-sm-3 mb-0">Akun Hutang</dt>
   <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-    :&nbsp;<CellAccount id={$preferenceStore.codeAccount.payable} />
+    :&nbsp;<CellAccount id={$preferenceStore.inventory.payableAccount} />
   </p>
   <dt class="col-sm-3 mb-0">Jumlah Hutang</dt>
   <div class="col-sm-9 mb-0 d-inline-flex align-items-center">

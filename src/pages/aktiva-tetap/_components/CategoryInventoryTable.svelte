@@ -14,7 +14,7 @@
       <th style="width: 200px">Biaya Penyusutan Aktiva Tetap</th>
       <th style="width: 30px;" />
     </tr>
-    {#each $categoryInventoryStore as categoryInventory}
+    {#each $categoryInventoryStore as categoryInventory (categoryInventory.id)}
       <CategoryInventoryRow {categoryInventory} />
     {/each}
   </Table>

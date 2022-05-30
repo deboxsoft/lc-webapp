@@ -22,7 +22,12 @@
   const { update, inventoryTransactionStore } = stores.getInventoryTransactionContext();
   const { accountStore } = stores.getAccountContext();
 
-  let inventoryTransaction, openDialog, fields, ready = false, isValid, submitting = false;
+  let inventoryTransaction,
+    openDialog,
+    fields,
+    ready = false,
+    isValid,
+    submitting = false;
   $: {
     if (!ready && $inventoryTransactionStore && openDialog) {
       ready = true;
@@ -54,15 +59,7 @@
 </script>
 
 <Modal class="modal-lg" bind:openDialog title="Edit Data" onClose={closeHandler} loading={!inventoryTransaction}>
-  <PurchaseForm
-    {schema}
-    {inventoryTransaction}
-    isUpdate
-    bind:isValid
-    bind:fields
-    onSubmit={submitHandler}
-    onClose={closeHandler}
-  />
+  <PurchaseForm {schema} {inventoryTransaction} bind:isValid bind:fields />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Tutup
