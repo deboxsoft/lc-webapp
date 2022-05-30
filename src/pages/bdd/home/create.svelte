@@ -6,13 +6,21 @@
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "__@modules/users";
   import dayjs from "dayjs";
+  import Modal from "__@comps/Modal.svelte";
+  import { goto, params } from "@roxi/routify";
 
   const { getUserId } = getAuthenticationContext();
-  const { notify } = getApplicationContext();
+  const { notify, loading: topLoading } = getApplicationContext();
   const { create } = stores.getBddContext();
   const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let bdd;
+  let bdd,
+    openDialog,
+    fields,
+    isValid,
+    submitting = false;
+  const schema = BddInputSchema;
+
   (async () => {
     const now = await getCurrentDate();
     bdd = {
@@ -22,14 +30,39 @@
       userId: getUserId(),
       monthLife: 24
     };
+    openDialog();
   })();
 
-  async function onSubmit(values) {
-    await create(values);
-    notify(`Berhasil membuat data bdd ${values.name}`, "success");
+  async function submitHandler() {
+    try {
+      $topLoading = true;
+      submitting = true;
+      const input = schema.parse($fields);
+      await create(input);
+      closeHandler();
+      notify(`Berhasil membuat data bdd ${input.name}`, "success");
+    } catch (error) {
+      console.error(error);
+      notify(`${error.message}`, "error");
+    } finally {
+      submitting = false;
+      $topLoading = false;
+    }
+  }
+  function closeHandler() {
+    $goto($params.to || "./");
   }
 </script>
 
-{#if bdd}
-  <BddForm {bdd} schema={BddInputSchema} title="Posting Bdd" {onSubmit} />
-{/if}
+<Modal class="modal-lg" bind:openDialog title="Posting BDD" loading={!bdd}>
+  <BddForm {bdd} {schema} title="Posting Bdd" bind:isValid bind:fields />
+  <svelte:fragment slot="footer">
+    <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
+      Tutup
+    </button>
+    <button type="button" class="btn btn-primary ml-1" disabled={!$isValid || submitting} on:click={submitHandler}>
+      <i class="icon-floppy-disk mr-2" />
+      Simpan
+    </button>
+  </svelte:fragment>
+</Modal>

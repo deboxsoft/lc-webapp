@@ -16,7 +16,6 @@
 
   $: to = $params.to || "../";
   $: bdd = $bddStore && getBdd($params.id);
-  $: console.log($bddStore);
 
   async function onSubmit(values) {
     await update(bdd.id, values);
