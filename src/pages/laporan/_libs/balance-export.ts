@@ -95,10 +95,6 @@ export const balanceSheetContext = (opts: Omit<CreateReportOptions, "generateRep
           isCsv,
           params: paramsSubtotal
         }),
-        parsingSumBalance("LABA/RUGI", balanceSheetReport.statementIncome.profit, {
-          isCsv,
-          params: paramsSubtotal
-        }),
         parsingSumBalance("SELISIH", balanceSheetReport.assets.balance - balanceSheetReport.liabilities, {
           isCsv,
           params: paramsTotal
