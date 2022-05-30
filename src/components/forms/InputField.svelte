@@ -4,12 +4,15 @@
   import { createEventDispatcher } from "svelte";
 
   const { validateField, fields = writable({}), fieldsErrors, submitted } = getFormContext() || {};
-  const dispatcher= createEventDispatcher();
+  const dispatcher = createEventDispatcher();
   export let name;
-  export let value;
+  export let value = undefined;
   export let id = name;
   export let ref;
   const { class: className } = $$props;
+  if (value && !$fields[name]) {
+    $fields[name] = value;
+  }
 
   let invalid = true;
   let msgError;
@@ -17,7 +20,9 @@
   $: {
     if ($fieldsErrors && $fieldsErrors[name]) {
       invalid = true;
-      msgError = Array.isArray($fieldsErrors[name])? $fieldsErrors[name].length > 0 && $fieldsErrors[name][0] : $fieldsErrors[name];
+      msgError = Array.isArray($fieldsErrors[name])
+        ? $fieldsErrors[name].length > 0 && $fieldsErrors[name][0]
+        : $fieldsErrors[name];
       if (typeof msgError !== "string" && msgError.message) {
         msgError = msgError.message;
       }

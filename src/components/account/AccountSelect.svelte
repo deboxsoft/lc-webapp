@@ -44,7 +44,7 @@
   on:change={changeHandler}
   labelFunction={(account) => account && account.name}
   valueFieldName="id"
-  keywordsFunction={(account) => account && account.name}
+  keywordsFunction={(account) => account && `${account.id} - ${account.name}`}
 >
   <svelte:fragment slot="item" let:item let:label>
     {item.id} - {@html label}

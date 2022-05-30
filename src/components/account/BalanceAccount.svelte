@@ -12,7 +12,6 @@
 
   let _value;
   getFixedBalanceAccount(id, {}).then((_) => {
-    console.log(_);
     if (typeof value === "function") {
       value = value(_);
     } else {

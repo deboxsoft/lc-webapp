@@ -63,9 +63,12 @@
       statusFormState = "success";
       closeHandler();
     } catch (e) {
-      console.error(e);
+      if (e?.message) {
+        notify(e?.message || `data tidak berhasil disimpan`, e.type || "error");
+      } else {
+        console.error(e);
+      }
       statusFormState = "failed";
-      notify("data tidak berhasil disimpan", "error");
     } finally {
       $loading = false;
     }

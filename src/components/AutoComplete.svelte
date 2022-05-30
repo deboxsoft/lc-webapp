@@ -904,9 +904,11 @@
     {/if}
     {#if hideArrow}
       <slot name="feedback">
-        <div class="form-control-feedback">
-          <i class="icon-search4 mr-2 text-muted" />
-        </div>
+        {#if !disabled}
+          <div class="form-control-feedback">
+            <i class="icon-search4 mr-2 text-muted" />
+          </div>
+        {/if}
       </slot>
     {/if}
   </div>
