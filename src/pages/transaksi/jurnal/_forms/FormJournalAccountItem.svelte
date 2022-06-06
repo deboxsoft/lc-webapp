@@ -14,18 +14,20 @@
   export let isCredit;
   export let fieldName = "oppositeAccounts";
   export const minusCurrencyEnable = true;
+  export let accountStore = undefined;
   export let onRemoveJournalAccount = () => {};
   export let onUpdateJournalAccount = () => {};
 
   const { getAccountLeaf, getAccount } = stores.getAccountContext();
   const { fields } = createFormContext({ values });
-  let accountStore = [];
   $: {
-    const _accounts = getAccountLeaf();
-    if (isCredit) {
-      accountStore = filteringAccountDebit(_accounts);
-    } else {
-      accountStore = filteringAccountCredit(_accounts);
+    if (!accountStore) {
+      const _accounts = getAccountLeaf();
+      if (isCredit) {
+        accountStore = filteringAccountDebit(_accounts);
+      } else {
+        accountStore = filteringAccountCredit(_accounts);
+      }
     }
   }
 

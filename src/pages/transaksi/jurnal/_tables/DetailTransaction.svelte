@@ -26,7 +26,7 @@
    */
   let state = "loading";
 
-  let openDialog, user, transactionType;
+  let openDialog, user, approveUser, transactionType;
 
   $: {
     if (transaction) {
@@ -38,6 +38,9 @@
   async function init() {
     try {
       user = await getUser(transaction.userId);
+      if (transaction.approveBy) {
+        approveUser = await getUser(transaction.approveBy);
+      }
     } catch (e) {
     } finally {
       state = "finish";
