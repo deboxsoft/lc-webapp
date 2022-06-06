@@ -1,7 +1,7 @@
 <!--routify:options title="Posting Data"-->
 <script>
   import { goto, params } from "@roxi/routify";
-  import { CashierCreateSchema as schema } from "@deboxsoft/lc-cashier-api";
+  import { CashierInputSchema as schema } from "@deboxsoft/lc-cashier-api";
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import CashierForm from "./_components/CashierForm.svelte";
   import { getApplicationContext } from "__@modules/app";
@@ -35,8 +35,8 @@
     const cashierAccount = group.metadata?.cashierAccount;
     cashier = {
       date,
-      oppositeAccounts: [{}],
-      userId: getUserId(),
+      creditAccounts: [{}],
+      userId,
       debitAccount: cashierAccount
     };
   }
@@ -63,7 +63,7 @@
   }
 </script>
 
-<Modal bind:openDialog title="Posting Pembayaran" onClose={closeHandler} class="modal-lg" loading={!cashier}>
+<Modal bind:openDialog title="Form Kasir" onClose={closeHandler} class="modal-lg" loading={!cashier}>
   <CashierForm {schema} {cashier} bind:isValid bind:fields />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>

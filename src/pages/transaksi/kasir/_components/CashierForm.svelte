@@ -1,5 +1,6 @@
 <script>
-  import { createProgramContext} from "@deboxsoft/lc-cashier-client";
+  import { createProgramContext } from "@deboxsoft/lc-cashier-client";
+  import { stores as userStores } from "@deboxsoft/users-client";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
 
@@ -10,12 +11,17 @@
   import { generateId } from "@deboxsoft/module-client";
   import CashierPaymentForm from "./CashierPaymentForm.svelte";
   import { tick } from "svelte";
+  import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import { filteringAccountCash } from "__@root/utils";
+  import { writable } from "svelte/store";
 
   const applicationContext = getApplicationContext();
+  const { authenticationStore } = userStores.getAuthenticationContext();
   const { notify, loading } = applicationContext;
-  const { getAccountLeaf } = stores.getAccountContext();
+  const { getAccountLeaf, getAccountStore } = stores.getAccountContext();
   const { programStore, findPage: findProgramContext } = createProgramContext(applicationContext);
   const accounts = getAccountLeaf();
+  const accountsDebitStore = filteringAccountCash(accounts);
 
   export function createCreditAccount() {
     return { index: generateId({ prefix: "account-input", size: 3 }) };
@@ -31,11 +37,11 @@
   export let focusRef;
 
   let buttonSaveDisable;
-
+  $: meta = $authenticationStore.metadata;
 
   $: {
     if (!$programStore) {
-      findProgramContext({pageCursor: {}, filter: {}}, {})
+      findProgramContext({ pageCursor: {}, filter: {} }, {});
     }
   }
 
@@ -44,6 +50,8 @@
       buttonSaveDisable = !$isValid || $loading;
     });
   }
+
+  $: cashierAccount = $getAccountStore(meta.cashierAccount);
 </script>
 
 <Form checkValidateFirst {schema} values={cashier} bind:fields bind:fieldsErrors bind:isValid>
@@ -52,14 +60,7 @@
       <div class="row">
         <div class="form-group col-12 col-md-6">
           <label for="date">Tanggal</label>
-          <InputDate
-            id="date"
-            name="date"
-            class="form-control"
-            placeholder="Tanggal"
-            range=""
-            disabled
-          />
+          <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" range="" />
         </div>
         <div class="form-group col-12 col-md-6">
           <label for="name">No Bukti/kwitansi</label>
@@ -85,9 +86,25 @@
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-12">
+        <div class="form-group col-12 col-md-6">
+          <label for="debitAccount">Akun Kas</label>
+          <AccountSelect
+            id="debitAccount"
+            name="debitAccount"
+            accountId={cashierAccount?.id}
+            accountStore={meta.isCashier ? writable([cashierAccount]) : accountsDebitStore}
+            disabled={meta.isCashier}
+          />
+        </div>
+        <div class="form-group col-12 col-md-6">
           <label for="description">Keterangan</label>
-          <InputField id="description" name="description" class="form-control" placeholder="Keterangan" bind:ref={focusRef} />
+          <InputField
+            id="description"
+            name="description"
+            class="form-control"
+            placeholder="Keterangan"
+            bind:ref={focusRef}
+          />
         </div>
       </div>
     </div>

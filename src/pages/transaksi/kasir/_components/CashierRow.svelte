@@ -26,37 +26,38 @@
   }
 </script>
 
-<tr>
-  <td style="text-align: center">{ cashier.no || ""}</td>
-  <td><CellDate date={cashier.date} /></td>
-  <td>{cashier.description || ""}</td>
-  <td>{program || ""}</td>
-  <td><CellNumber value={cashier.discount} format="number" /></td>
-  <td>
+<tr class="cursor-pointer">
+  <td style="text-align: center" on:click={clickHandler}>{cashier.no || ""}</td>
+  <td on:click={clickHandler}><CellDate date={cashier.date} /></td>
+  <td on:click={clickHandler}>{program || ""}</td>
+  <td on:click={clickHandler}>{cashier.student}</td>
+  <td on:click={clickHandler}>{cashier.description || ""}</td>
+  <td on:click={clickHandler}><TransactionStatus status={cashier.status} /></td>
+  <td on:click={clickHandler}>
     <CellNumber value={cashier.amount} />
   </td>
-<!--  <td style="cursor: pointer;padding: 0">-->
-<!--    <Dropdown-->
-<!--      class="h-100 d-flex justify-content-center"-->
-<!--      bind:context={dropdownContext}-->
-<!--      menuProps={{-->
-<!--        offset: [0, -15]-->
-<!--      }}-->
-<!--    >-->
-<!--      <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">-->
-<!--        <i class="icon-menu9" />-->
-<!--      </DropdownToggle>-->
-<!--      <svelte:fragment slot="menu" let:closeHandler>-->
-<!--        <a href={$url("./:id/view", { id: cashier.id })} class="dropdown-item" on:mouseup={closeHandler}-->
-<!--          ><i class="icon-eye" />Lihat Data</a-->
-<!--        >-->
-<!--        <a href={$url("./:id/update", { id: cashier.id })} class="dropdown-item" on:mouseup={closeHandler}-->
-<!--          ><i class="icon-trash-alt" />Edit</a-->
-<!--        >-->
-<!--        <a href={$url("./:id/remove", { id: cashier.id })} class="dropdown-item" on:mouseup={closeHandler}-->
-<!--          ><i class="icon-pencil" />Hapus</a-->
-<!--        >-->
-<!--      </svelte:fragment>-->
-<!--    </Dropdown>-->
-<!--  </td>-->
+  <td style="cursor: pointer;padding: 0">
+    <Dropdown
+      class="h-100 d-flex justify-content-center"
+      bind:context={dropdownContext}
+      menuProps={{
+        offset: [0, -15]
+      }}
+    >
+      <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">
+        <i class="icon-menu9" />
+      </DropdownToggle>
+      <svelte:fragment slot="menu" let:closeHandler>
+        <a href={$url("./:id/view", { id: cashier.id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-eye" />Lihat Data</a
+        >
+        <a href={$url("./:id/update", { id: cashier.id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-pencil" />Edit</a
+        >
+        <a href={$url("./:id/remove", { id: cashier.id })} class="dropdown-item" on:mouseup={closeHandler}
+          ><i class="icon-trash-alt" />Hapus</a
+        >
+      </svelte:fragment>
+    </Dropdown>
+  </td>
 </tr>

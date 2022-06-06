@@ -14,38 +14,38 @@
   const accounts = getAccountLeaf();
   const accountStore = filteringAccountRevenue(accounts);
   $: {
-    if ($oppositeAccounts) {
+    if ($creditAccounts) {
       validate();
     }
   }
 
   function validate() {
-    oppositeAccountsValidate($oppositeAccounts);
-    if (Array.isArray($oppositeAccounts)) {
+    creditAccountsValidate($creditAccounts);
+    if (Array.isArray($creditAccounts)) {
       let amount = 0;
-      $oppositeAccounts.forEach((_) => {
+      $creditAccounts.forEach((_) => {
         amount += _.amount || 0;
       });
       $fields.amount = amount;
     }
   }
 
-  function addJournalAccountHandler() {
-    $oppositeAccounts = [...$oppositeAccounts, createCreditAccount()];
+  function addItemHandler() {
+    $creditAccounts = [...$creditAccounts, createCreditAccount()];
   }
 
-  function updateJournalAccountHandler(input) {
-    const _oppositeAccounts = $oppositeAccounts;
-    const i = _oppositeAccounts.findIndex((_) => _.index === input.index);
-    _oppositeAccounts[i] = input;
-    $oppositeAccounts = _oppositeAccounts;
+  function updateItemHandler(input) {
+    const _creditAccounts = $creditAccounts;
+    const i = _creditAccounts.findIndex((_) => _.index === input.index);
+    _creditAccounts[i] = input;
+    $creditAccounts = _creditAccounts;
   }
 
-  function removeJournalAccountHandler(index) {
+  function removeItemHandler(index) {
     /** @type{Array} **/
-    let _oppositeAccounts = $oppositeAccounts;
-    _oppositeAccounts = _oppositeAccounts.splice(index, 1);
-    $oppositeAccounts = _oppositeAccounts;
+    let _creditAccounts = $creditAccounts;
+    _creditAccounts = _creditAccounts.splice(index, 1);
+    $creditAccounts = _creditAccounts;
   }
 </script>
 
@@ -54,18 +54,20 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Pembayaran</th>
+          <th>Akun Kredit</th>
           <th class="text-center" width="275">Nominal</th>
           <th class="text-center" width="40" />
         </tr>
       </thead>
       <tbody>
-        {#each $oppositeAccounts as creditAccountInput, index (creditAccountInput.index)}
+        {#each $creditAccounts as creditAccountInput, index (creditAccountInput.index)}
           <FormJournalAccountItem
             {index}
+            fieldName={creditFieldName}
             values={creditAccountInput}
-            onRemoveJournalAccount={removeJournalAccountHandler}
-            onUpdateJournalAccount={updateJournalAccountHandler}
+            onRemoveJournalAccount={removeItemHandler}
+            onUpdateJournalAccount={updateItemHandler}
+            {accountStore}
           />
         {/each}
       </tbody>
