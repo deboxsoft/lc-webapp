@@ -5,7 +5,7 @@
   import CellDate from "__@comps/CellDate.svelte";
   import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { removeGranted, updateGranted } = getAclContext();
 

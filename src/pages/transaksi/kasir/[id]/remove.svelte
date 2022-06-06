@@ -5,7 +5,7 @@
   import Modal from "__@comps/Modal.svelte";
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { notify, loading } = getApplicationContext();
   const { remove, getCashier, cashierStore } = getCashierContext();

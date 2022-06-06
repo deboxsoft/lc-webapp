@@ -1,11 +1,10 @@
 <!--routify:options title="Hapus Kategori Aktiva Tetap"-->
-
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { removeGranted } = getAclContext();
   const { removeCategory, getCategoryInventory, categoryInventoryStore, inventoryStore } = stores.getInventoryContext();

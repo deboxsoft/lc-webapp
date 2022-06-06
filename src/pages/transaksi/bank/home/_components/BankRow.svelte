@@ -5,7 +5,7 @@
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
   import BalanceAccount from "__@comps/account/BalanceAccount.svelte";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted, removeGranted } = getAclContext();
   let dropdownContext;

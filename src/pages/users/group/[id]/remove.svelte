@@ -4,7 +4,7 @@
   import Modal from "__@comps/Modal.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { removeGranted } = getAclContext();
   if (!removeGranted) {

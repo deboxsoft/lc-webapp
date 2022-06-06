@@ -3,13 +3,13 @@
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import RoleForm from "../_form.svelte";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { onMount } from "svelte";
 
   let openDialog;
 
   onMount(() => {
-    openDialog()
+    openDialog();
   });
   const { updateGranted } = getAclContext();
   if (!updateGranted) {
@@ -19,7 +19,6 @@
   function closeHandler() {
     $goto("../");
   }
-
 </script>
 
 <Modal class="modal-full" bind:openDialog title="Ubah role" onClose={closeHandler}>

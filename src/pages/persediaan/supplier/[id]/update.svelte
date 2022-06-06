@@ -1,12 +1,11 @@
 <!--routify:options title="Edit Supplier"-->
-
 <script>
   import { SupplierUpdateSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import CategoryInventoryForm from "../_components/SupplierForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted } = getAclContext();
   if (!updateGranted) {
@@ -15,7 +14,8 @@
   const { update, getSupplier, supplierStore } = stores.getSupplierContext();
   const { notify } = getApplicationContext();
 
-  let supplier, loaded = false;
+  let supplier,
+    loaded = false;
 
   $: to = $params.to || "../";
   $: {
@@ -32,12 +32,5 @@
 </script>
 
 {#if supplier}
-  <CategoryInventoryForm
-    {supplier}
-    schema={SupplierUpdateSchema}
-    isUpdate
-    {onSubmit}
-    title="Update Supplier"
-    {to}
-  />
+  <CategoryInventoryForm {supplier} schema={SupplierUpdateSchema} isUpdate {onSubmit} title="Update Supplier" {to} />
 {/if}

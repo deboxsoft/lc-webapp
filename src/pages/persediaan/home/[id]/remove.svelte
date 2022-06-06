@@ -1,16 +1,18 @@
 <!--routify:options title="Hapus Data Barang"-->
-
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { removeGranted } = getAclContext();
   const { remove, getProduct, productStore } = stores.getProductContext();
   const { loading, notify } = getApplicationContext();
-  let openDialog, product, name, ready = false;
+  let openDialog,
+    product,
+    name,
+    ready = false;
 
   if (!removeGranted) {
     $goto("/access-denied");

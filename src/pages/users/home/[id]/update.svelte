@@ -1,5 +1,4 @@
 <!--routify:options title="Edit User"-->
-
 <script>
   import { goto, params } from "@roxi/routify";
   import { getUserContext } from "__@modules/users";
@@ -7,7 +6,7 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import UserForm from "../_form.svelte";
   import Modal from "__@comps/Modal.svelte";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { onMount } from "svelte";
 
   let fields;
@@ -17,7 +16,7 @@
   let openDialog;
 
   onMount(() => {
-    openDialog()
+    openDialog();
   });
 
   const { updateGranted } = getAclContext();

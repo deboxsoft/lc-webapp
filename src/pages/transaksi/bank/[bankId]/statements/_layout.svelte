@@ -1,6 +1,5 @@
 <!--routify:options title="Bank"-->
 <script>
-  import { sortUtilsFunc } from "__@root/utils";
   import { url, params } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";

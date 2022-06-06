@@ -4,11 +4,13 @@
   import { goto, url } from "@roxi/routify";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import { createAclContext } from "./_acl-context";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import Loader from "__@comps/loader/Loader.svelte";
+  import { createAclContext } from "__@root/utils";
 
-  const { readGranted } = createAclContext();
+  const { readGranted } = createAclContext({
+    resource: "stock"
+  });
   const applicationContext = getApplicationContext();
   const stockContext = stores.createStockContext(applicationContext);
   if (!readGranted) {
@@ -23,7 +25,7 @@
 
   onMount(() => {
     return stockContext.subscribe();
-  })
+  });
 </script>
 
 {#if booting}

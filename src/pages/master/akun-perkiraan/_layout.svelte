@@ -10,11 +10,13 @@
   import TableAccount from "./_components/TableAccount.svelte";
   // import FormFilter from "./_components/FormFilter.svelte";
   import { sortUtilsFunc } from "__@root/utils";
-  import { createAclContext } from "./_acl-context";
+  import { createAclContext } from "__@root/utils";
   import { createReportContext } from "./_export";
   import Loader from "__@comps/loader/Loader.svelte";
 
-  const { readGranted, createGranted, removeGranted } = createAclContext();
+  const { readGranted, createGranted, removeGranted } = createAclContext({
+    resource: "account"
+  });
   const { setBreadcrumbContext } = getBreadcrumbStore();
   const { accountStore, getAccount, load } = stores.getAccountContext();
   const { loading } = getApplicationContext();

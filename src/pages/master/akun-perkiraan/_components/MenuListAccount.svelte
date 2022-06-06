@@ -2,7 +2,7 @@
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted, removeGranted } = getAclContext();
 

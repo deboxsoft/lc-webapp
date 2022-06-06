@@ -8,4 +8,5 @@ export type ACLContext = {
   readGranted: boolean;
   updateGranted: boolean;
   removeGranted: boolean;
+  approveGranted: boolean;
 };

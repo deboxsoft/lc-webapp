@@ -7,7 +7,7 @@
   import { getApplicationContext } from "__@modules/app";
   import { url } from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createReportContext } from "../_export";

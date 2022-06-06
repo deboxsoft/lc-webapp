@@ -1,16 +1,15 @@
 <!--routify:options title="Hapus User"-->
-
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { onMount } from "svelte";
 
   let openDialog;
   onMount(() => {
-    openDialog()
+    openDialog();
   });
   const { removeGranted } = getAclContext();
   if (!removeGranted) {
@@ -30,7 +29,7 @@
       $loading = false;
       notify(`Berhasil menghapus user ${username}`, "success");
     } catch (e) {
-      $loading = false
+      $loading = false;
     }
   }
 

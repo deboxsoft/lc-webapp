@@ -4,16 +4,14 @@
   import StockTable from "./_components/StockTable.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import { createAclContext } from "../_acl-context";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Button from "__@comps/Button.svelte";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import { createReportContext } from "../_export";
   import Loader from "__@comps/loader/Loader.svelte";
+  import { getAclContext } from "__@root/utils";
 
-  const { readGranted, createGranted } = createAclContext();
+  const { readGranted, createGranted } = getAclContext();
   const applicationContext = getApplicationContext();
   const reportContext = createReportContext();
   const { loading } = applicationContext;
@@ -78,27 +76,24 @@
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
-<!--      <a href={$url("./import")} class="breadcrumb-elements-item">-->
-<!--        <i class="icon-file-upload mr-1" />-->
-<!--        Impor-->
-<!--      </a>-->
-<!--      <a href={$url("./stock-in")} class="breadcrumb-elements-item">-->
-<!--        <i class="icon-enter mr-1" />-->
-<!--        Masuk-->
-<!--      </a>-->
-<!--      <a href={$url("./stock-out")} class="breadcrumb-elements-item">-->
-<!--        <i class="icon-exit mr-1" />-->
-<!--        Keluar-->
-<!--      </a>-->
+      <!--      <a href={$url("./import")} class="breadcrumb-elements-item">-->
+      <!--        <i class="icon-file-upload mr-1" />-->
+      <!--        Impor-->
+      <!--      </a>-->
+      <!--      <a href={$url("./stock-in")} class="breadcrumb-elements-item">-->
+      <!--        <i class="icon-enter mr-1" />-->
+      <!--        Masuk-->
+      <!--      </a>-->
+      <!--      <a href={$url("./stock-out")} class="breadcrumb-elements-item">-->
+      <!--        <i class="icon-exit mr-1" />-->
+      <!--        Keluar-->
+      <!--      </a>-->
     {/if}
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh
     </a>
-    <a
-      href={$url("./export")}
-      class="breadcrumb-elements-item"
-    >
+    <a href={$url("./export")} class="breadcrumb-elements-item">
       <i class="icon-file-download" />
       Ekspor</a
     >

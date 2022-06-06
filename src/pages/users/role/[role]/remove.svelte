@@ -5,7 +5,7 @@
   import { getAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import { get } from "svelte/store";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { onMount } from "svelte";
 
   let openDialog;

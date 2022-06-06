@@ -7,7 +7,7 @@
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "__@modules/users";
   import Modal from "__@comps/Modal.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { createGranted } = getAclContext();
   if (!createGranted) {
@@ -19,7 +19,7 @@
   const { getCurrentDate } = stores.getPreferenceAccountingContext();
   const schema = PurchaseStockTransactionInputSchema.omit({
     status: true
-  })
+  });
 
   let stockTransaction,
     openDialog,

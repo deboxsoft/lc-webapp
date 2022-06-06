@@ -1,6 +1,6 @@
 import { getAuthenticationContext } from "__@modules/users";
 
-export const createAclContext = () => {
+export const getAclContext = () => {
   const auth = getAuthenticationContext();
   return () => {
     const query = auth.getQuery("bdd");

@@ -5,7 +5,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import BankForm from "../_components/BankForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted } = getAclContext();
   if (!updateGranted) {

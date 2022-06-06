@@ -4,6 +4,11 @@
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import CashierView from "../_components/CashierView.svelte";
   import Modal from "__@comps/Modal.svelte";
+  import { getAclContext } from "__@root/utils/acl-utils";
+  import { getApplicationContext } from "__@modules/app";
+
+  const { approveGranted } = getAclContext();
+  const { loading } = getApplicationContext();
 
   const { getCashier, cashierStore } = getCashierContext();
   let closeUrl = $params.closeUrl || "../";

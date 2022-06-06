@@ -1,12 +1,11 @@
 <!--routify:options title="Edit Kategori Aktiva Tetap"-->
-
 <script>
   import { CategoryInventoryUpdateInputSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import CategoryInventoryForm from "../../_components/CategoryInventoryForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted } = getAclContext();
   if (!updateGranted) {
@@ -15,7 +14,8 @@
   const { updateCategory, getCategoryInventory, categoryInventoryStore } = stores.getInventoryContext();
   const { notify } = getApplicationContext();
 
-  let categoryInventory, loaded = false;
+  let categoryInventory,
+    loaded = false;
 
   $: to = $params.to || "../";
   $: {

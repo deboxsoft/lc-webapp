@@ -4,11 +4,13 @@
   import { url, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
   import Loader from "__@comps/loader/Loader.svelte";
+  import { createAclContext } from "__@root/utils";
 
-  const { readGranted } = createAclContext();
+  const { readGranted } = createAclContext({
+    resource: "inventory"
+  });
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
   const { findCategory, findPage, find, subscribe } = stores.createInventoryContext(applicationContext);

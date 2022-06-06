@@ -7,7 +7,7 @@
   import { getApplicationContext } from "__@modules/app";
   import { url } from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import Loader from "__@comps/loader/Loader.svelte";
 
   const { createGranted } = getAclContext();
@@ -23,7 +23,7 @@
   onMount(() => {
     fetchData();
     return subscribe();
-  })
+  });
 
   function fetchData() {
     $loading = true;

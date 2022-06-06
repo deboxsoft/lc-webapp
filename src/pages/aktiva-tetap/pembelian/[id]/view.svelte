@@ -2,10 +2,9 @@
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
-  import { DeboxError } from "@deboxsoft/module-core";
   import { stores } from "@deboxsoft/accounting-client";
   import PurchaseView from "../_components/PurchaseView.svelte";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { getApplicationContext } from "__@modules/app";
   import { getAuthenticationContext } from "__@modules/users";
 
@@ -13,7 +12,7 @@
   const { loading, notify } = getApplicationContext();
   const { approve, reject, findById } = stores.getInventoryTransactionContext();
   const { getUser } = getAuthenticationContext();
-
+  let closeUrl = $params.closeUrl || "../";
   let openDialog,
     inventoryTransaction,
     ready = false,

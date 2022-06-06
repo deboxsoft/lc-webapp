@@ -5,7 +5,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import BankForm from "./_components/BankForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { createGranted } = getAclContext();
   if (!createGranted) {
@@ -27,7 +27,6 @@
     await create(values);
     notify(`Berhasil membuat data bank ${values.name}`, "success");
   }
-
 </script>
 
 {#if bank}

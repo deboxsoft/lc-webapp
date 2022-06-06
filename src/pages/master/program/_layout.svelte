@@ -6,9 +6,11 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import ProgramTable from "./_components/ProgramTable.svelte";
-  import { createAclContext } from "./_acl-context";
+  import { createAclContext } from "__@root/utils";
 
-  const { readGranted, createGranted } = createAclContext();
+  const { readGranted, createGranted } = createAclContext({
+    resource: "program"
+  });
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
   const { programStore, getProgram, find } = createProgramContext(applicationContext);
@@ -35,7 +37,6 @@
       $loading = false;
     });
   }
-
 </script>
 
 <PageLayout breadcrumb={[]}>

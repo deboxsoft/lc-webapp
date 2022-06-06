@@ -2,7 +2,7 @@
   import { url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted, removeGranted } = getAclContext();
   export let program;
@@ -16,8 +16,8 @@
     class="h-100 d-flex justify-content-center"
     bind:context={dropdownContext}
     menuProps={{
-        offset: [0, -15]
-      }}
+      offset: [0, -15]
+    }}
   >
     <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">
       <i class="icon-menu9" />

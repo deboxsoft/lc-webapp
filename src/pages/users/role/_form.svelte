@@ -151,6 +151,11 @@
           label: "hapus",
           value: "delete:any",
           selected: false
+        },
+        {
+          label: "approve",
+          value: "approve:any",
+          selected: false
         }
       ]
     },

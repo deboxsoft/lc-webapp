@@ -5,7 +5,7 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { calcDepreciation } from "@deboxsoft/accounting-api";
 
   const { getCategoryInventory } = stores.getInventoryContext();

@@ -10,7 +10,9 @@
   import Button from "__@comps/Button.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
 
-  const { readGranted, createGranted } = createAclContext();
+  const { readGranted, createGranted, approveGranted } = createAclContext({
+    resource: "cashier"
+  });
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
   const { findPage, cashierStore, cashierPageInfo } = createCashierContext(applicationContext);

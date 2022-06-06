@@ -5,12 +5,12 @@
   import UserForm from "./_form.svelte";
   import { getUserContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { onMount } from "svelte";
 
   let openDialog;
   onMount(() => {
-    openDialog()
+    openDialog();
   });
   const { createGranted } = getAclContext();
   if (!createGranted) {

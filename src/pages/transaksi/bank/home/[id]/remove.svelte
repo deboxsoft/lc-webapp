@@ -6,7 +6,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import Loader from "__@comps/loader/Loader.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { removeGranted } = getAclContext();
   if (!removeGranted) {
@@ -17,7 +17,7 @@
   let openDialog;
   onMount(() => {
     openDialog();
-  })
+  });
 
   async function removeHandler() {
     $loading = true;

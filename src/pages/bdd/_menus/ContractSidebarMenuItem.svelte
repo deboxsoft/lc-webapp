@@ -3,12 +3,12 @@
   import Icon from "__@root/layout/Icon.svelte";
   import { getApplicationContext } from "__@modules/app";
   import { stores } from "@deboxsoft/accounting-client";
-  import { createAclContext } from "./_acl-context";
+  import { getAclContext } from "./_acl-context";
   import { writable } from "svelte/store";
 
   const applicationContext = getApplicationContext();
   const { countWarningContract } = stores.createBddContext(applicationContext);
-  const aclContext = createAclContext();
+  const aclContext = getAclContext();
   let readGranted;
   export let subItem;
 
@@ -17,7 +17,6 @@
     $count = _;
     readGranted = aclContext().readGranted;
   });
-
 </script>
 
 <a {...$$restProps} class:active={$isActive(subItem.url)} href={$url(subItem.url)}>

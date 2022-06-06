@@ -7,14 +7,14 @@
   import BankTable from "./_components/BankTable.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import { createAclContext } from "../_acl-context";
   import { createReportContext } from "./_export";
   import { getApplicationContext } from "__@modules/app";
+  import { createAclContext, getAclContext } from "__@root/utils";
 
   const { loading } = getApplicationContext();
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   const { bankStore, find } = stores.getBankContext();
-  const { readGranted, createGranted } = createAclContext();
+  const { readGranted, createGranted } = getAclContext();
   const reportContext = createReportContext();
   if (!readGranted) {
     $goto("/access-denied");

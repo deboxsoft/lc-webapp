@@ -5,7 +5,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import BddView from "../../_components/BddView.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { loading, notify } = getApplicationContext();
   const { bddDetail, approve, reject } = stores.getBddContext();

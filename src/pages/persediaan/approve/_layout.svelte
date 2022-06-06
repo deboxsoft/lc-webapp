@@ -6,7 +6,7 @@
   import { getApplicationContext } from "__@modules/app";
   import { goto, url } from "@roxi/routify";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import { onMount } from "svelte";
   import Button from "__@comps/Button.svelte";
 

@@ -5,7 +5,7 @@
   import { getCashierContext } from "@deboxsoft/lc-cashier-client";
   import { getApplicationContext } from "__@modules/app";
   import CashierForm from "../_components/CashierForm.svelte";
-  import { getAclContext } from "../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   // context
   const { notify } = getApplicationContext();

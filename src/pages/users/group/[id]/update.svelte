@@ -5,7 +5,7 @@
   import GroupForm from "../_form.svelte";
   import Modal from "__@comps/Modal.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted } = getAclContext();
   if (!updateGranted) {
@@ -56,7 +56,7 @@
 </script>
 
 <Modal class="modal-lg" bind:openDialog title="Ubah group user" onClose={closeHandler} loading={!groupUser}>
-  <GroupForm {groupUser} bind:fields bind:schema bind:isValid  />
+  <GroupForm {groupUser} bind:fields bind:schema bind:isValid />
   <svelte:fragment slot="footer">
     <button class="btn btn-link text-primary" on:click={closeHandler}>Tutup</button>
     <button class="btn bg-primary" on:click={saveHandler} disabled={submitting || !$isValid}>Simpan</button>

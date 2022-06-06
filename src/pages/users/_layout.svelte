@@ -5,16 +5,20 @@
   import { getAuthenticationContext, createUserContext, createAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
   import Loader from "__@comps/loader/Loader.svelte";
-  import PageLayout from "__@root/layout/PageLayout.svelte";
+  import { createAclContext } from "__@root/utils";
 
   /**
    *
    * @type {ApplicationContext}
    */
-  const { loading, apiUrl, fetchGraphql } = getApplicationContext();
-  const { find, findGroup } = createUserContext({ apiUrl, fetchGraphql });
+  const applicationContext = getApplicationContext();
+  const { loading, apiUrl, fetchGraphql, fetch } = applicationContext;
+  const { find, findGroup } = createUserContext(applicationContext);
   const authContext = getAuthenticationContext();
   const { load, grants } = createAccessControlContext({ authContext, apiUrl, fetchGraphql });
+  createAclContext({
+    resource: "user"
+  });
 
   let submitting = true;
   const boot = () => {

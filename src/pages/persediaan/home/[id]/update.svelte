@@ -5,7 +5,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import ProductForm from "../_components/ProductForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
   import Modal from "__@comps/Modal.svelte";
 
   const { updateGranted } = getAclContext();

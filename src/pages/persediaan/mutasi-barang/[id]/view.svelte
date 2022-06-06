@@ -7,13 +7,12 @@
   import TransactionList from "__@comps/transactions/TransactionList.svelte";
   import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { loading, notify } = getApplicationContext();
   const { approve, reject } = stores.getStockContext();
   const { stockDetail } = stores.getStockContext();
-  const {createGranted} = getAclContext()
-
+  const { createGranted } = getAclContext();
 
   const rejectButtonEnable = createGranted;
   const approveButtonEnable = createGranted;
@@ -94,10 +93,10 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Close
     </button>
-    {#if rejectButtonEnable &&  stock?.status === "UNAPPROVED"}
+    {#if rejectButtonEnable && stock?.status === "UNAPPROVED"}
       <button type="button" class="btn btn-danger" on:click={rejectHandler}> Reject </button>
     {/if}
-    {#if approveButtonEnable &&  stock?.status === "UNAPPROVED"}
+    {#if approveButtonEnable && stock?.status === "UNAPPROVED"}
       <button type="button" class="btn btn-primary" on:click={approveHandler}> Approve </button>
     {/if}
   </svelte:fragment>

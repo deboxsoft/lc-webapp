@@ -1,16 +1,18 @@
 <!--routify:options title="Hapus Supplier"-->
-
 <script>
   import { goto, params } from "@roxi/routify";
   import Modal from "__@comps/Modal.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { removeGranted } = getAclContext();
   const { remove, getSupplier, supplierStore } = stores.getSupplierContext();
   const { loading, notify } = getApplicationContext();
-  let openDialog, supplier, name, booting = true;
+  let openDialog,
+    supplier,
+    name,
+    booting = true;
 
   if (!removeGranted) {
     $goto("/access-denied");

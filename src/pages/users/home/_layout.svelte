@@ -6,10 +6,10 @@
   import MenuUserList from "./_MenuUserList.svelte";
   import { getApplicationContext } from "__@modules/app";
   import GroupName from "../group/_groupName.svelte";
-  import { createAclContext } from "../_acl-context";
   import PageLayout from "__@root/layout/PageLayout.svelte";
+  import { getAclContext } from "__@root/utils";
 
-  const { readGranted, createGranted } = createAclContext();
+  const { readGranted, createGranted } = getAclContext();
   const { loading } = getApplicationContext();
   const { userStore, groupStore, find } = getUserContext();
 

@@ -1,14 +1,14 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
-  import { createAclContext } from "./_acl-context";
+  import { getAclContext } from "./_acl-context";
   import { writable } from "svelte/store";
   import { getAuthenticationContext } from "__@modules/users";
 
   const applicationContext = getApplicationContext();
   const { countWarningContract } = stores.createBddContext(applicationContext);
-  const {getAccessControl} = getAuthenticationContext();
-  const aclContext = createAclContext();
+  const { getAccessControl } = getAuthenticationContext();
+  const aclContext = getAclContext();
   export let count = writable(0);
 
   let readGranted;
@@ -21,11 +21,11 @@
 </script>
 
 {#if readGranted}
-    <a href="/bdd/warning" {...$$restProps} on:mouseup>
-      <i class="icon-clipboard6" style="font-size: 1.25rem" />
-        Kontrak BDD
-      {#if $count > 0}
-        <span class="badge badge-warning badge-pill ml-auto">{$count}</span>
-      {/if}
-    </a>
+  <a href="/bdd/warning" {...$$restProps} on:mouseup>
+    <i class="icon-clipboard6" style="font-size: 1.25rem" />
+    Kontrak BDD
+    {#if $count > 0}
+      <span class="badge badge-warning badge-pill ml-auto">{$count}</span>
+    {/if}
+  </a>
 {/if}

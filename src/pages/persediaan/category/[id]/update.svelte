@@ -1,12 +1,11 @@
 <!--routify:options title="Edit Kategori Barang"-->
-
 <script>
   import { CategoryProductUpdateSchema } from "@deboxsoft/accounting-api";
   import { params, goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import CategoryInventoryForm from "../_components/CategoryProductForm.svelte";
   import { getApplicationContext } from "__@modules/app";
-  import { getAclContext } from "../../_acl-context";
+  import { getAclContext } from "__@root/utils";
 
   const { updateGranted } = getAclContext();
   if (!updateGranted) {
@@ -15,7 +14,8 @@
   const { update, getCategoryProduct, categoryProductStore } = stores.getCategoryProductContext();
   const { notify } = getApplicationContext();
 
-  let categoryProduct, loaded = false;
+  let categoryProduct,
+    loaded = false;
 
   $: to = $params.to || "../";
   $: {
