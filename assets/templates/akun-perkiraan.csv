@@ -1,4 +1,4 @@
 ;Template Import Akun perkiraan;;10 = AKTIVA, 20 = PASIVA, 30=PENDAPATAN, 40 = BIAYA
-kode;kode induk;nama akun;kode klasifikasi
-1010100;;KAS BESAR;10
-1010101;1010100;KAS BRANKAS;
+kode;kode induk;nama akun;saldo awal
+1010100;;KAS BESAR;
+1010101;1010100;KAS BRANKAS;100000
