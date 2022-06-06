@@ -21,7 +21,7 @@
     if ($cashierStore) {
       cashier = getCashier($params.id);
       if (cashier) {
-        if (!removeGranted(cashier.userId)) {
+        if (!removeGranted) {
           $goto("/access-denied");
         }
       }
@@ -35,7 +35,7 @@
       await remove(id);
       $loading = false;
       closeHandler();
-      notify(`Data transaksi id '${id}' berhasil dihapus`, "success");
+      notify(`Data id '${id}' berhasil dihapus`, "success");
     } catch (e) {
       if (e.message) {
         notify(e.message, "error");
@@ -52,7 +52,7 @@
 <Modal bind:openDialog title="Hapus Content" onClose={closeHandler}>
   {#if cashier}
     <div class="alert alert-warning alert-styled-left">
-      Menghapus data kasir tidak berpengaruh pada transaksi yang sudah terposting di jurnal. Apa anda yakin akan menghapus transaksi id `{cashier.id}`?
+      Apa anda yakin akan menghapus data id `{cashier.id}`?
     </div>
   {/if}
   <svelte:fragment slot="footer">

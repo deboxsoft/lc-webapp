@@ -2,12 +2,17 @@
   import { writable } from "svelte/store";
   import FormJournalAccountItem from "../../jurnal/_forms/FormJournalAccountItem.svelte";
   import { getFormContext } from "__@stores/form";
+  import { filteringAccountRevenue } from "__@root/utils";
+  import { stores } from "@deboxsoft/accounting-client";
 
   export let createCreditAccount;
   const { fields, fieldsErrors, isValid, validateField } = getFormContext();
-  const oppositeAccountsValidate = validateField("oppositeAccounts");
-  const oppositeAccounts = writable(($fields.oppositeAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
-
+  const { getAccountLeaf } = stores.getAccountContext();
+  const creditFieldName = "creditAccounts";
+  const creditAccountsValidate = validateField(creditFieldName);
+  const creditAccounts = writable(($fields[creditFieldName] || []).map((_) => ({ ..._, ...createCreditAccount() })));
+  const accounts = getAccountLeaf();
+  const accountStore = filteringAccountRevenue(accounts);
   $: {
     if ($oppositeAccounts) {
       validate();

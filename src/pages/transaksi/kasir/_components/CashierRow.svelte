@@ -1,22 +1,28 @@
 <script>
-  import { url } from "@roxi/routify";
+  import { goto, url } from "@roxi/routify";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
   import { createProgramContext } from "@deboxsoft/lc-cashier-client";
   import { getApplicationContext } from "__@modules/app";
+  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
 
   const applicationContext = getApplicationContext();
   const { getProgram, programStore, find } = createProgramContext(applicationContext);
 
   export let cashier;
+  export let classes;
   let dropdownContext, program;
 
   $: {
     if (!program && cashier && $programStore) {
       program = getProgram(cashier.programId).name;
     }
+  }
+
+  function clickHandler() {
+    $goto("./:id/view", { id: cashier.id });
   }
 </script>
 

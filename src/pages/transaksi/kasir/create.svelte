@@ -18,12 +18,10 @@
     openDialog,
     fields,
     submitting = false,
-    ready = false,
     isValid;
 
   $: {
-    if (openDialog && !ready) {
-      ready = true;
+    if (openDialog) {
       openDialog();
     }
   }

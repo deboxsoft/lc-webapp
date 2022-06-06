@@ -4,7 +4,7 @@
   import { createCashierContext, createProgramContext } from "@deboxsoft/lc-cashier-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
-  import { createAclContext } from "./_acl-context";
+  import { createAclContext } from "__@root/utils";
   import { getApplicationContext } from "__@modules/app";
   import CashierTable from "./_components/CashierTable.svelte";
   import Button from "__@comps/Button.svelte";
@@ -22,7 +22,6 @@
   }
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Kasir" });
-
 
   let submitting = false,
     filter = {};
@@ -76,7 +75,7 @@
   </svelte:fragment>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      {#if $cashierStore}
+      {#if $cashierStore && $programStore}
         <CashierTable {cashierStore}>
           {#if $cashierPageInfo.hasNext}
             <div class="" style="height: 50px">
@@ -91,5 +90,7 @@
       {/if}
     </div>
   </div>
-  <slot />
+  {#if $programStore}
+    <slot />
+  {/if}
 </PageLayout>
