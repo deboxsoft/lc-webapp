@@ -55,7 +55,6 @@
     try {
       $loading = true;
       const result = await approve([transaction.id]);
-      console.log(result);
       if (result) {
         transaction.status = "APPROVED";
         notify(`transaksi id '${transaction.id}' telah diapprove`, "success");
@@ -102,16 +101,12 @@
       <p class="col-sm-9 mb-0">: {transaction.no || "-"}</p>
       <dt class="col-sm-3 mb-0">Tanggal Transaksi</dt>
       <p class="col-sm-7 d-inline-flex align-items-center mb-0">
-        : <CellDate date={transaction.dateTransaction} />
+        : <CellDate date={transaction.date} />
       </p>
-      <dt class="col-sm-3 mb-0">Tanggal Input</dt>
-      <p class="col-sm-7 d-inline-flex align-items-center mb-0">
-        : <CellDate date={transaction.dateInput || transaction.date} />
-      </p>
-      {#if transaction.status === "APPROVED" || transaction.status === "FIXED"}
+      {#if transaction.dateApproved && (transaction.status === "APPROVED" || transaction.status === "FIXED")}
         <dt class="col-sm-3 mb-0">Tanggal Approve</dt>
         <p class="col-sm-7 d-inline-flex align-items-center mb-0">
-          : <CellDate date={transaction.date} />
+          : <CellDate date={transaction.dateApproved} />
         </p>
       {/if}
       <dt class="col-sm-3 mb-0">Deskripsi</dt>
@@ -120,6 +115,8 @@
       <p class="col-sm-9 mb-0">: {(transactionType && transactionType.name) || "-"}</p>
       <dt class="col-sm-3 mb-0">Di Input Oleh</dt>
       <p class="col-sm-9 mb-0">: {(user && user.name) || "-"}</p>
+      <dt class="col-sm-3 mb-0">Di Approve Oleh</dt>
+      <p class="col-sm-9 mb-0">: {(approveUser && approveUser.name) || "-"}</p>
       <dt class="col-sm-3 mb-0">Status</dt>
       <p class="col-sm-9 mb-0">
         :

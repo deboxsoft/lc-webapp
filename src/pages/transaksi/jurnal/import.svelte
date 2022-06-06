@@ -1,54 +1,53 @@
 <!--routify:options title="Import Statement"-->
 <script>
   import { onMount } from "svelte";
-  import { writable, get } from "svelte/store";
-  import { goto, params } from "@roxi/routify";
+  import { writable } from "svelte/store";
+  import { goto } from "@roxi/routify";
   import FormImport from "__@comps/forms/FormImport.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import TablePreview from "./_tables/TablePreview.svelte";
   import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
-  import CellNumber from "__@comps/CellNumber.svelte";
   import { getAuthenticationContext } from "__@modules/users";
-  import { filteringAccountCredit, filteringAccountDebit } from "__@root/utils";
+  import InputCheckSwitchery from "__@comps/forms/InputCheckSwitchery.svelte";
 
   const { loading, notify } = getApplicationContext();
-  const { getAccount, getAccountLeaf } = stores.getAccountContext();
+  const { getAccount, getAccountLeaf, accountStore } = stores.getAccountContext();
   const { authenticationStore, getProfile } = getAuthenticationContext();
-  const { import: importTransaction, transactionTypeStore } = stores.getTransactionContext();
+  const { import: importTransaction } = stores.getTransactionContext();
 
   // tranform step from csv
   const transformStep = (output) => {
+    let i = 0;
     return (result, self) => {
       const date = parseDate(result.data[0]);
       if (date) {
         output.push({
+          id: i,
           date,
           no: sanitizeString(`${result.data[1]}`),
           description: sanitizeString(`${result.data[2]}`),
-          amount: sanitizeNumber(result.data[3]),
-          accountId: sanitizeAccount(result.data[4])
+          oppositeAccountId: sanitizeAccount(result.data[3]),
+          amount: sanitizeNumber(result.data[4])
         });
+        i++;
       }
     };
   };
 
-  /**
-   *
-   * @type {"journal" | "payment" | "cashier"}
-   */
-  const action = $params.action;
-  const type = action === "cashier" ? "CASHIER" : "PAYMENT";
-  const title = action === "cashier" ? "Impor Transaksi Kasir" : "Impor Transaksi Pembayaran";
-  let fileLoaded = false;
-  let files = writable([]);
-  let submitting = false;
-  let errors = [];
-  let balance = 0;
-  let accountId,
-    accountsCash = writable([]);
-  let submit, openDialog, closeDialog, isPreview;
+  const title = "Impor Transaksi";
+  let fileLoaded = false,
+    files = writable([]),
+    submitting = false,
+    errors = [],
+    balance = 0,
+    accountId,
+    submit,
+    openDialog,
+    closeDialog,
+    isPreview,
+    isCredit = false;
 
   $: account = getAccount(accountId);
   // const parentAccountsCash = ["1010100", "1010200", "1010300", "1010400"];
@@ -58,28 +57,23 @@
     $loading = false;
   });
 
-  function getAccountsCash() {
-    const accountStore = getAccountLeaf();
-    if (type === "CASHIER") {
-      return filteringAccountDebit(accountStore);
-    } else if (type === "PAYMENT") {
-      return filteringAccountCredit(accountStore);
-    }
-    return accountStore;
-  }
-
-  $: accountsCash = getAccountsCash();
-
-  async function submitHandler() {
+  async function submitHandler(_data) {
     // filter
     errors = [];
-    const inputs = submit().map((_) => {
-      const profile = getProfile();
+    const profile = await getProfile();
+    const inputs = _data.map(({ id, oppositeAccountId, ..._ }) => {
       const userId = profile.session.userId;
       return {
-        type,
+        type: "JOURNAL",
         userId,
-        ..._
+        accountId,
+        ..._,
+        oppositeAccounts: [
+          {
+            id: oppositeAccountId,
+            amount: _.amount
+          }
+        ]
       };
     });
     if (!errors || errors.length === 0) {
@@ -97,19 +91,12 @@
    */
   function previewHandler(listData) {
     if (listData) {
-      balance = 0;
       errors = [];
       listData.forEach((_, index) => {
-        if (!(_.date || _.amount || _.accountId)) {
+        if (!_.date || !Number.isFinite(_.amount) || !_.oppositeAccountId) {
           errors.push(index);
         }
-        balance += parseFloat(_.amount);
       });
-      const account = get(getAccount(accountId));
-      const accountBalance = (account && account.balance) || 0;
-      if (action === "payment" && balance > accountBalance) {
-        throw new Error("Saldo kas tidak mencukupi.");
-      }
     }
   }
 
@@ -117,6 +104,10 @@
     fileLoaded = false;
     files.set([]);
     $goto("./");
+  }
+
+  function switchIsCreditHandler({ detail }) {
+    isCredit = detail;
   }
 </script>
 
@@ -136,46 +127,32 @@
 >
   <!-- form upload  -->
   <svelte:fragment slot="info">
-    {#if action === "cashier"}
-      <div class="row form-group">
-        <label class="col-form-label col-md-2" for="accountId">Akun Kas yang didebit</label>
-        <div class="col-md-10 d-inline-flex align-items-center">
-          : <AccountSelect class="ml-1" id="accountId" bind:accountId accountStore={accountsCash} />
-        </div>
-      </div>
-    {:else if action === "payment"}
-      <div class="row form-group">
-        <label class="col-form-label col-md-2" for="accountId">Akun Kas yang dikredit</label>
-        <div class="col-md-10 d-inline-flex align-items-center">
-          : <AccountSelect class="ml-1" id="accountId" bind:accountId accountStore={accountsCash} />
-        </div>
-      </div>
-    {/if}
-    <div class="row">
-      <div class="col-md-2">Saldo</div>
-      <div class="col-md-10 d-inline-flex align-items-center">
-        : <div style="width: 150px"><CellNumber class="ml-1" value={$account && $account.balance} /></div>
-      </div>
+    <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
+      <dl class="row form-group">
+        <dt class="col-sm-3 mb-0 d-flex align-items-center">Akun {isCredit ? "Kredit" : "Debit"}</dt>
+        <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+          <span class="d-flex w-75 align-items-center">
+            : <AccountSelect class="ml-1 mr-2" id="accountId" bind:accountId {accountStore} />
+            <InputCheckSwitchery
+              class="mt-auto mb-auto"
+              name="isCredit"
+              label="kredit"
+              on:change={switchIsCreditHandler}
+            />
+          </span>
+        </p>
+      </dl>
+      {#if !isPreview}
+        <dl class="row mb-0">
+          <dt class="col-sm-3 mb-0">Download Template</dt>
+          <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+            :<a href={`/templates/jurnal.csv`} class="ml-1" target="_self">jurnal.csv</a>
+          </p>
+        </dl>
+      {/if}
     </div>
-    {#if isPreview}
-      <div class="row">
-        <div class="col-form-label col-md-2">Total {action === "cashier" ? "Pemasukan" : "Pengeluaran"}</div>
-        <div class="col-md-10 d-inline-flex align-items-center">
-          : <div style="width: 150px"><CellNumber class="ml-1" value={balance} /></div>
-        </div>
-      </div>
-    {:else}
-      <div class="row">
-        <div class="col-md-2">Download Template</div>
-        <div class="col-md-10 d-inline-flex align-items-center">
-          :<a href={`/templates/${action === "cashier" ? "kasir" : "pembayaran"}.csv`} class="ml-1" target="_self"
-            >{action === "cashier" ? "kasir" : "pembayaran"}.csv</a
-          >
-        </div>
-      </div>
-    {/if}
   </svelte:fragment>
 
   <!-- preview -->
-  <TablePreview bind:submit {action} dataList={fileData} {accountId} bind:errors />
+  <TablePreview {isCredit} dataList={fileData} {accountId} bind:errors />
 </FormImport>

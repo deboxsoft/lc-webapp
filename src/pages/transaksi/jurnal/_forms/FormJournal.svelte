@@ -69,7 +69,7 @@
   <div class="d-flex flex-column flex-1">
     <Form
       checkValidateFirst
-      schema={TransactionInputSchema}
+      schema={TransactionInputSchema.omit({ dateApproved: 1, approveBy: 1 })}
       bind:fieldsErrors
       bind:fields
       bind:isValid

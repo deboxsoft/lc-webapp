@@ -11,8 +11,8 @@
   import { getApplicationContext } from "__@modules/app";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import FalCashRegister from "@deboxsoft/svelte-icons/fal/FalCashRegister.svelte";
-  import FalMoneyBill from "@deboxsoft/svelte-icons/fal/FalMoneyBill.svelte";
+  import FalCashRegister from "@deboxsoft/svelte-icons/fal/FalCashRegisterIcon.svelte";
+  import FalMoneyBill from "@deboxsoft/svelte-icons/fal/FalMoneyBillIcon.svelte";
   import { getAuthenticationContext } from "__@modules/users";
 
   const { getProfile } = getAuthenticationContext();
@@ -28,7 +28,7 @@
   const { load, findPage, transactionStore, subscribe } = stores.getTransactionContext();
   onMount(() => {
     return subscribe();
-  })
+  });
   const { loading } = applicationContext;
 
   let filter = {};
@@ -115,25 +115,10 @@
       <i class="icon-sync mr-1" />
       Refresh
     </a>
-    {#if createPaymentGranted || createCashierGranted}
-      <Dropdown class="breadcrumb-elements-item dropdown p-0">
-        <DropdownToggle class="breadcrumb-elements-item" caret nav>
-          <i class="icon-file-upload2 mr-1" />
-          Impor
-        </DropdownToggle>
-        <svelte:fragment slot="menu" let:closeHandler={dropdownClose}>
-          {#if createCashierGranted}
-            <a href={$url("./import", { action: "cashier" })} class="dropdown-item">
-              <FalCashRegister class="mr-3" /> Kasir</a
-            >
-          {:else if createPaymentGranted}
-            <a href={$url("./import", { action: "payment" })} class="dropdown-item">
-              <FalMoneyBill class="mr-3" />Pembayaran</a
-            >
-          {/if}
-        </svelte:fragment>
-      </Dropdown>
-    {/if}
+    <a href={$url("./import")} class="breadcrumb-elements-item">
+      <i class="icon-file-upload2 mr-1" />
+      Impor
+    </a>
     <a
       href="/#"
       target="_self"

@@ -24,38 +24,14 @@
    * @type {string[]}
    */
   export let errors = [];
+  export let isCredit = false;
 
   /**
    * @type {string}
    */
   export let accountId;
 
-  /**
-   * @type {"cashier" | "payment"}
-   */
-  export let action;
-
   export let accounts = writable([]);
-
-  /**
-   *
-   * @type {function(): Transaction[]}
-   */
-  export const submit = () => {
-    return dataList.map((_) => ({
-      no: _.no,
-      dateTransaction: _.date,
-      description: _.description,
-      accountId: action === "cashier" ? accountId : _.accountId,
-      amount: _.amount,
-      oppositeAccounts: [
-        {
-          id: action === "cashier" ? _.accountId : accountId,
-          amount: _.amount
-        }
-      ]
-    }));
-  };
 </script>
 
 <Table>
@@ -74,7 +50,7 @@
       <div class="dbx-cell no">{item.no || ""}</div>
       <div class="dbx-cell">{item.description || ""}</div>
       <div class="dbx-cell account">
-        <CellAccount id={item.accountId} />
+        <CellAccount id={item.oppositeAccountId} />
       </div>
       <div class="dbx-cell text-right d-sm-none d-md-none d-xl-flex amount"><CellNumber value={item.amount} /></div>
     </div>
