@@ -23,7 +23,7 @@
     width,
     yDomain = [0, 1000000];
   const months = dateLocaleData.monthsShort();
-  const data = getMonthlyBalanceReportByKey(balanceKey);
+  const data = getMonthlyBalanceReportByKey(balanceKey, true);
   const className = $$props.class || "";
   $: {
     if ($data) {
