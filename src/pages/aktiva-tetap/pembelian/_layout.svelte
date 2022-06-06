@@ -51,7 +51,7 @@
   }
 
   function selectHandler(item) {
-    $goto(`./${item.id}/view`)
+    $goto(`./${item.id}/view`);
   }
 </script>
 

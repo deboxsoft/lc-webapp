@@ -127,7 +127,13 @@
   </td>
   <td>
     {#if mutation === "STOCK_IN"}
-      <InputNumberField id="price-{id}" name="price" on:input={changePriceHandler()} bind:setValue={setPriceValue} />
+      <InputNumberField
+        id="price-{id}"
+        name="price"
+        on:input={changePriceHandler()}
+        bind:setValue={setPriceValue}
+        placeholder="Harga Satuan *"
+      />
     {:else}
       <CellNumber value={$fields.price} />
     {/if}

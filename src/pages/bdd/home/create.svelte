@@ -55,7 +55,7 @@
 </script>
 
 <Modal class="modal-lg" bind:openDialog title="Posting BDD" loading={!bdd}>
-  <BddForm {bdd} {schema} title="Posting Bdd" bind:isValid bind:fields />
+  <BddForm {bdd} {schema} bind:isValid bind:fields />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Tutup

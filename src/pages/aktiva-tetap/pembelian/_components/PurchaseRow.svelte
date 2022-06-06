@@ -46,7 +46,6 @@
           <a
             href={$url("./:id/update", { id: inventoryTransaction.id })}
             class="dropdown-item"
-            on:click|stopPropagation={() => {}}
             on:mouseup={closeHandler}><i class="icon-pencil" />Edit</a
           >
         {/if}
@@ -54,7 +53,6 @@
           <a
             href={$url("./:id/remove", { id: inventoryTransaction.id })}
             class="dropdown-item"
-            on:click|stopPropagation={() => {}}
             on:mouseup={closeHandler}><i class="icon-trash-alt" />Hapus</a
           >
         {/if}

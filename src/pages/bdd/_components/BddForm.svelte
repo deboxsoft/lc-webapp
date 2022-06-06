@@ -12,9 +12,10 @@
     filteringAccountBdd,
     filteringAccountCash,
     filteringAccountAccumulationAmortization,
-    filteringAccountExpenseAmortization
+    filteringAccountExpenseAmortization,
+    convertToNumber
   } from "__@root/utils";
-  import BddPaymentForm from "./BddPaymentForm.svelte";
+  import PaymentForm from "__@comps/transactions/PaymentForm.svelte";
 
   const { getAccountLeaf } = stores.getAccountContext();
 
@@ -25,10 +26,11 @@
   export let bdd;
   export let schema = undefined;
   export let fields = writable(undefined);
-  let fieldsErrors = undefined;
+  let fieldsErrors = undefined,
+    totalPayment;
   export let isValid = writable(false);
 
-  $: taxValue = $fields?.taxRate ? (parseFloat($fields.taxRate) * parseFloat($fields?.amount || "0")) / 100 : 0;
+  $: taxValue = $fields?.taxRate ? (parseFloat($fields.taxRate) * parseFloat(totalPayment || "0")) / 100 : 0;
 
   function getAccount(accountType) {
     const accountStore = getAccountLeaf();
@@ -82,11 +84,11 @@
       </div>
       <div class="row">
         <div class="form-group col-4">
-          <label for="debitAccount">Akun BDD *</label>
+          <label for="bddAccount">Akun BDD *</label>
           <AccountSelect
             accountStore={getAccount("bdd")}
-            id="debitAccount"
-            name="debitAccount"
+            id="bddAccount"
+            name="bddAccount"
             placeholder="Akun BDD *"
             allowEmpty
           />
@@ -152,6 +154,17 @@
     </div>
   </div>
   {#if $fields}
-    <BddPaymentForm />
+    <PaymentForm bind:totalPayment>
+      <svelte:fragment slot="footer-right">
+        <div class="d-flex">
+          <span class="flex-grow-1">Pajak: Rp.</span>
+          <span>{$fields?.taxRate ? convertToNumber({ value: taxValue }) : "-"}</span>
+        </div>
+        <div class="d-flex" style="border-top: solid 1px gray">
+          <span class="flex-grow-1 color-red"> Total: Rp.</span>
+          <span>{totalPayment ? convertToNumber({ value: totalPayment + taxValue }) : "-"}</span>
+        </div>
+      </svelte:fragment>
+    </PaymentForm>
   {/if}
 </Form>

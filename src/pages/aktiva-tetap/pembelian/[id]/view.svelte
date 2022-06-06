@@ -19,7 +19,8 @@
     approved,
     rejected,
     unapproved,
-    userPromise,
+    createBy,
+    approveBy,
     approveButtonEnable = false,
     rejectButtonEnable = false;
 
@@ -31,9 +32,18 @@
     if (!ready && inventoryTransaction && openDialog) {
       openDialog();
       ready = true;
-      userPromise = getUser(inventoryTransaction.userId);
-      approved = inventoryTransaction.status === "APPROVED";
-      rejected = inventoryTransaction.status === "REJECTED";
+      getUser(inventoryTransaction.userId).then((_) => {
+        if (_) {
+          createBy = _.name;
+        }
+      });
+      if (inventoryTransaction.approveBy) {
+        approveByPromise = getUser(inventoryTransaction.approveBy).then((_) => {
+          if (_) {
+            approveBy = _.name;
+          }
+        });
+      }
       unapproved = inventoryTransaction.status === "UNAPPROVED";
       if (approveGranted && unapproved) {
         approveButtonEnable = approveGranted && unapproved;
@@ -78,7 +88,7 @@
 </script>
 
 <Modal class="modal-lg" title="Detail Data" bind:openDialog onClose={closeHandler} loading={!inventoryTransaction}>
-  <PurchaseView {inventoryTransaction} {userPromise} />
+  <PurchaseView {inventoryTransaction} {createBy} {approveBy} />
   <svelte:fragment slot="footer">
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Close

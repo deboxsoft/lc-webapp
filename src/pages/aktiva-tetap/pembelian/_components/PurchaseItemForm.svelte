@@ -24,18 +24,6 @@
     });
   }
 
-  function changeQuantityHandler() {
-    return debounce((e) => {
-      updateHandler();
-    });
-  }
-
-  function changePriceHandler() {
-    return debounce((e) => {
-      updateHandler();
-    });
-  }
-
   function updateHandler() {
     itemContext.updateItem($fields);
   }
@@ -65,6 +53,7 @@
       valueId="id"
       labelId="name"
       placeholder="Kategori *"
+      on:change={changeItemHandler()}
     />
   </td>
   <td>
@@ -74,11 +63,11 @@
       format="number"
       pristineValue="1"
       minimumValue="0"
-      on:input={changeQuantityHandler()}
+      on:input={changeItemHandler()}
     />
   </td>
   <td>
-    <InputNumberField id="price-{id}" name="priceItem" on:input={changePriceHandler()} placeholder="Harga Satuan *" />
+    <InputNumberField id="price-{id}" name="priceItem" on:input={changeItemHandler()} placeholder="Harga Satuan *" />
   </td>
   <td style="padding: unset">
     <button

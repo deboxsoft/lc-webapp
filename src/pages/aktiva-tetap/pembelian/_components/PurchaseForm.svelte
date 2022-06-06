@@ -1,10 +1,10 @@
 <script>
   import { stores } from "@deboxsoft/accounting-client";
   import InputDate from "__@comps/forms/InputDateField.svelte";
-  import InputRp from "__@comps/forms/InputNumberField.svelte";
   import InputField from "__@comps/forms/InputField.svelte";
   import Form from "__@comps/forms/Form.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import PaymentForm from "__@comps/transactions/PaymentForm.svelte";
   import { filteringAccountCash, filteringAccountInventory, filteringAccountExpense } from "__@root/utils";
   import PurchaseItems from "./PurchaseItems.svelte";
 
@@ -16,6 +16,7 @@
   export let isValid;
   export let fields;
   export let fieldsErrors = undefined;
+  let totalPayment;
 
   function getAccount(accountType) {
     const accountStore = getAccountLeaf();
@@ -59,40 +60,25 @@
       </div>
       <div class="row">
         <div class="form-group col-12 col-md-6">
-          <label for="description">Deskripsi</label>
-          <InputField id="description" name="description" type="text" class="form-control" placeholder="Deskripsi" />
+          <label for="description">Deskripsi *</label>
+          <InputField id="description" name="description" type="text" class="form-control" placeholder="Deskripsi *" />
         </div>
         <div class="form-group col-12 col-md-6">
-          <label for="debitAccount">Akun di Debit *</label>
+          <label for="debitAccount">Akun Inventaris *</label>
           <AccountSelect
             id="inventoryAccount"
             name="inventoryAccount"
             accountId={inventoryTransaction?.inventoryAccount}
-            placeholder="Akun Debit *"
+            placeholder="Akun Inventaris *"
+            accountStore={getAccount("inventory")}
             allowEmpty
           />
-        </div>
-      </div>
-      <div class="row">
-        <div class="form-group col-12 col-md-6">
-          <label for="creditAccount">Pembayaran *</label>
-          <AccountSelect
-            id="cashAccount"
-            name="cashAccount"
-            accountStore={getAccount("cash")}
-            accountId={inventoryTransaction?.cashAccount}
-            placeholder="Pembayaran *"
-            allowEmpty
-          />
-        </div>
-        <div class="form-group col-12 col-md-6">
-          <label for="cashAmount">Jumlah Pembayaran *</label>
-          <InputRp id="cashAmount" class="form-control" name="cashAmount" signed placeholder="Jumlah Pembayaran *" />
         </div>
       </div>
     </div>
   </div>
   {#if $fields}
-    <PurchaseItems />
+    <PaymentForm bind:totalPayment />
+    <PurchaseItems {totalPayment} />
   {/if}
 </Form>

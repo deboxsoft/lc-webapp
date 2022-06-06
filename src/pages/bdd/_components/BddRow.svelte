@@ -59,9 +59,11 @@
         <i class="icon-menu9" />
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
-        <a href={$url("./:id/amortization", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-clipboard3" />Rekap depreciation</a
-        >
+        {#if bdd.status === "APPROVED"}
+          <a href={$url("./:id/amortization", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
+            ><i class="icon-clipboard3" />Rekap depreciation</a
+          >
+        {/if}
         <a href={$url("./:id/view", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
           ><i class="icon-eye" />Lihat BDD</a
         >

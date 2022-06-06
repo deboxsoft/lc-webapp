@@ -5,7 +5,14 @@
 
   /** @type {import("@deboxsoft/accounting-api").Bdd} **/
   export let bdd;
-  export let amortizationAccumulation, amortizationAmount, amortizationRemaining, tax, bookValue, rate, total;
+  export let amortizationAccumulation,
+    amortizationAmount,
+    amortizationRemaining,
+    tax,
+    bookValue,
+    rate,
+    total,
+    totalPayment;
   const className = $$props.class || "";
 </script>
 
@@ -68,9 +75,9 @@
   </dl>
   {#if bdd.debitAccount}
     <dl class="row mb-0">
-      <dt class="col-sm-5 mb-0">Akun di Debet</dt>
+      <dt class="col-sm-5 mb-0">Akun Bdd</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        :&nbsp;<CellAccount id={bdd.debitAccount} />
+        :&nbsp;<CellAccount id={bdd.bdd} />
       </p>
     </dl>
   {/if}
@@ -119,9 +126,9 @@
     </p>
   </dl>
   <dl class="row mb-0">
-    <dt class="col-sm-5 mb-0">Harga</dt>
+    <dt class="col-sm-5 mb-0">Total Harga Sebelum Pajak</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellNumber value={bdd.amount} /></span>
+      : &nbsp<span style="width: 150px"><CellNumber value={totalPayment} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
