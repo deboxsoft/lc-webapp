@@ -38,7 +38,7 @@
   let submitting = false;
   let errors = [];
   let balance = 0;
-  let submit, openDialog, closeDialog;
+  let submit, openDialog, closeDialog, isPreview;
 
   onMount(() => {
     openDialog();
@@ -87,6 +87,7 @@
   bind:errors
   bind:openDialog
   bind:closeDialog
+  bind:isPreview
   let:fileData
   {title}
   {transformStep}
@@ -94,5 +95,17 @@
   onClose={closeHandler}
   onSubmit={submitHandler}
 >
+  <svelte:fragment slot="info">
+    {#if !isPreview}
+      <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
+        <dl class="row mb-0">
+          <dt class="col-sm-3 mb-0">Download Template</dt>
+          <p class="col-sm-9 d-inline-flex align-items-center mb-0">
+            :<a href={`/templates/akun-perkiraan.csv`} class="ml-1" target="_self">akun-perkiraan.csv</a>
+          </p>
+        </dl>
+      </div>
+    {/if}
+  </svelte:fragment>
   <TablePreview bind:submit dataList={fileData} bind:errors />
 </FormImport>
