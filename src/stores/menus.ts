@@ -23,6 +23,7 @@ export type MenuList = MenuItem[];
 
 export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const profile = get(auth.authenticationStore);
+  const dashboardGranted = auth.getQuery("dashboard").read().granted;
   const accountShow = auth.getQuery("account").read().granted;
   const programShow = auth.getQuery("program").read().granted;
   const transactionShow = auth.getQuery("transaction").read().granted;
@@ -40,8 +41,8 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
   const settingUpdateGranted = auth.getQuery("setting").update().granted;
   return [
     {
-      label: "Dashboard",
-      url: "/dashboard",
+      label: dashboardGranted ? "Dashboard" : "Beranda",
+      url: dashboardGranted ? "/dashboard" : "/home",
       type: "menu",
       show: true,
       icon: "icon-home4"
