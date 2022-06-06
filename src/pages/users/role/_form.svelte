@@ -227,6 +227,18 @@
         }
       ]
     },
+    closeReport: {
+      label: "Proses Akhir Tahun",
+      selected: false,
+      indeterminate: false,
+      actions: [
+        {
+          label: "proses",
+          value: "create:any",
+          selected: false
+        }
+      ]
+    },
     inventory: {
       label: "aktiva-tetap",
       selected: false,
