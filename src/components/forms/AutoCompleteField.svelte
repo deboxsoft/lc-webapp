@@ -53,7 +53,7 @@
   }
 
   function createChangeHandler() {
-    const validate = validateField(name);
+    const validate = validateField && validateField(name);
     return ({ value }) => {
       if ($fields && name) {
         $fields[name] = value;

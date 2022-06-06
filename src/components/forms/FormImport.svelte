@@ -121,7 +121,7 @@
         {alertMessage.message}
       </div>
     {/if}
-    <slot name="section" />
+    <slot name="info" />
     {#if !isPreview}
       <DropZone on:drop={handleFileSelect} accept=".csv" multiple={false} disableDefaultStyles>
         <div class="dropzone mt-2">
