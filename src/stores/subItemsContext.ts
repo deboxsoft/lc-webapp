@@ -1,4 +1,4 @@
-import { getContext, hasContext, setContext } from "svelte";
+import { getContext, setContext } from "svelte";
 import { derived, get, Readable, writable, Writable } from "svelte/store";
 
 type Options<T> = {
@@ -19,10 +19,7 @@ interface _itemContext<T> {
 }
 
 const KEY = {};
-export const createBddPaymentContext = <T extends { index: string } = any>(opts: Options<T>): _itemContext<T> => {
-  if (hasContext(KEY)) {
-    return getItemContext();
-  }
+export const createSubItemsContext = <T extends { index: string } = any>(opts: Options<T>): _itemContext<T> => {
   let itemsStore: Writable<T[]> = writable([]);
   let modified = writable(false);
   if (!opts.initialItem) {
@@ -75,4 +72,4 @@ export const createBddPaymentContext = <T extends { index: string } = any>(opts:
   return context;
 };
 
-export const getItemContext = <T extends { index: string } = any>() => getContext<_itemContext<T>>(KEY);
+export const getSubItemsContext = <T extends { index: string } = any>() => getContext<_itemContext<T>>(KEY);
