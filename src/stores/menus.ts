@@ -242,12 +242,12 @@ export const getMenus = (auth: AuthenticationContext): MenuItem[] => {
           label: "Info Perusahaan",
           url: "/settings/info",
           show: settingShow
-        },
-        {
-          label: "Proses Akhir Tahun",
-          url: "/settings/period-end",
-          show: settingUpdateGranted
         }
+        // {
+        //   label: "Proses Akhir Tahun",
+        //   url: "/settings/period-end",
+        //   show: settingUpdateGranted
+        // }
         // {
         //   label: "Akuntansi",
         //   url: "/settings/accounting",
