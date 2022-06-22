@@ -32,7 +32,7 @@
     openDialog();
   });
 
-  $: isCredit = $fields?.isCredit || false;
+  $: isCredit = $fields?.isCredit;
   $: {
     const _accounts = getAccountLeaf();
     if (isCredit) {
@@ -152,7 +152,7 @@
         </div>
       </div>
       {#if $fields}
-        <FormJournalAccount {createCreditAccount} {isCredit} />
+        <FormJournalAccount {createCreditAccount} />
       {/if}
     </Form>
   </div>

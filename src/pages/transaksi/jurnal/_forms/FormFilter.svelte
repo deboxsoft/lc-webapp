@@ -13,11 +13,11 @@
   export let isReport = false;
   export let openDialog;
   export let closeDialog;
-  let endDate = isReport && new Date() || undefined;
+  let endDate = (isReport && new Date()) || undefined;
   let startDate = endDate && dayjs(endDate).startOf("month").toDate();
   let state = filter;
   if (endDate) {
-    filter.date = [startDate, endDate]
+    filter.date = [startDate, endDate];
   }
 
   /**
@@ -27,34 +27,38 @@
   export let onClose = undefined;
 
   const { accountStore } = stores.getAccountContext();
-  const {transactionTypeStore} = stores.getTransactionContext();
+  const { transactionTypeStore } = stores.getTransactionContext();
 
-  function transformInput({status, date, type, accountId, ...input}) {
+  function transformInput({ status, date, type, accountId, ...input }) {
     let _startDate, _endDate;
-
-    if (Array.isArray(date)) {
-      _startDate = date[0]
-      _endDate = date[1]
+    if (input.to) {
+      _startDate = input.from;
+      _endDate = input.to;
     } else if (date) {
-      _startDate = date
+      _startDate = date;
     }
     return {
       startDate: _startDate,
       endDate: _endDate,
       status: status === "" ? undefined : status,
       type: type === "" ? undefined : type,
-      accountId: accountId || undefined,
-      ...input
-    }
+      accountId: accountId || undefined
+    };
   }
-
 </script>
 
-<Modal {title} bind:onClose bind:openDialog bind:closeDialog >
-  <Form values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable >
+<Modal {title} bind:onClose bind:openDialog bind:closeDialog>
+  <Form values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable>
     <div class="form-group">
       <label for="date">Tanggal</label>
-      <InputDate id="date" mode="menu" placeholder="Tanggal" allowEmpty={!isReport} defaultDate={[filter.startDate, filter.endDate]} showClearButton />
+      <InputDate
+        id="date"
+        mode="menu"
+        placeholder="Tanggal"
+        allowEmpty={!isReport}
+        defaultDate={[filter.startDate, filter.endDate]}
+        showClearButton
+      />
     </div>
     <div class="form-group">
       <label for="accountId">Akun Debit</label>
@@ -62,7 +66,15 @@
     </div>
     <div class="form-group">
       <label for="type">Jenis Transaksi</label>
-      <ComboBox id="type" name="type" items={$transactionTypeStore} labelId="name" valueId="code" placeHolder="SEMUA" allowEmpty />
+      <ComboBox
+        id="type"
+        name="type"
+        items={$transactionTypeStore}
+        labelId="name"
+        valueId="code"
+        placeHolder="SEMUA"
+        allowEmpty
+      />
     </div>
     <div class="form-group">
       <label for="status">Status</label>

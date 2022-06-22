@@ -7,6 +7,7 @@
   import { generateId } from "@deboxsoft/module-client";
   import { filteringAccountCredit, filteringAccountDebit } from "__@root/utils";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
+  import { writable } from "svelte/store";
 
   export let id = generateId({ prefix: "journal-account-item" });
   export let values;
@@ -14,20 +15,19 @@
   export let isCredit;
   export let fieldName = "oppositeAccounts";
   export const minusCurrencyEnable = true;
-  export let accountStore = undefined;
   export let onRemoveJournalAccount = () => {};
   export let onUpdateJournalAccount = () => {};
 
   const { getAccountLeaf, getAccount } = stores.getAccountContext();
   const { fields } = createFormContext({ values });
+  let accountStore = writable([]);
+
   $: {
-    if (!accountStore) {
-      const _accounts = getAccountLeaf();
-      if (isCredit) {
-        accountStore = filteringAccountDebit(_accounts);
-      } else {
-        accountStore = filteringAccountCredit(_accounts);
-      }
+    const _accounts = getAccountLeaf();
+    if (isCredit) {
+      accountStore = filteringAccountDebit(_accounts);
+    } else {
+      accountStore = filteringAccountCredit(_accounts);
     }
   }
 

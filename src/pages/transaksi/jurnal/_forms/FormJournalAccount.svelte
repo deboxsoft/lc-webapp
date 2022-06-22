@@ -12,7 +12,6 @@
   const { fields, fieldsErrors, isValid, validateField } = getFormContext();
   const oppositeAccountsValidate = validateField("oppositeAccounts");
   const oppositeAccounts = writable(($fields.oppositeAccounts || []).map((_) => ({ ..._, ...createCreditAccount() })));
-  export let isCredit = fields;
 
   let debit, labelMainAccount, labelOppositeAccount;
   let diff = NaN;
@@ -29,6 +28,8 @@
       calculate();
     }
   }
+
+  $: isCredit = $fields?.isCredit;
 
   $: {
     if (!isCredit) {
