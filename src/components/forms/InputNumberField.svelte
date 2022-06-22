@@ -10,7 +10,7 @@
   export let emptyInputBehavior = "null";
   const defaultOptions = {
     emptyInputBehavior,
-    allowDecimalPadding: format === "currency" ? "floats" : false,
+    allowDecimalPadding: "floats",
     modifyValueOnWheel: false,
     digitGroupSeparator: format === "currency" ? "." : ",",
     decimalCharacter: format === "currency" ? "," : "."

@@ -34,11 +34,14 @@
   function createChangeHandler() {
     const _validate = validateField(name);
     return (e) => {
-      $fields[name] = e.target.value === "" ? undefined : e.target.value;
+      const _val = e.target.value === "" ? undefined : e.target.value;
       selectedIndex = e.target.selectedIndex;
+      if ($fields) {
+        $fields[name] = _val;
+      }
       _validate && _validate();
-      const index = allowEmpty ? selectedIndex - 1 : selectedIndex;
-      dispatch("change", index >= 0 ? items[index] : undefined);
+      const index = allowEmpty || placeholder ? selectedIndex - 1 : selectedIndex;
+      dispatch("change", _val);
     };
   }
 </script>

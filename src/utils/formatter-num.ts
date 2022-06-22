@@ -11,5 +11,5 @@ export const convertToNumber = ({
   fractionDigits = 2
 }: Options) => {
   const _value = (Math.round(value * 100) / 100).toFixed(fractionDigits);
-  return `${_value.replace(".", decimalSeparator).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`;
+  return `${_value.replace(thousandSeparator, decimalSeparator).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")}`;
 };

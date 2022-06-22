@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 
-export function sanitizeString(_val: string = "") {
+export function sanitizeString(_val = "") {
   return _val.trim().replace(/\s+/g, " ");
 }
 
-export function sanitizeNumber(stringValue: string = "") {
+export function sanitizeNumber(stringValue = "") {
   stringValue = stringValue.trim();
   let result = stringValue.replace(/[^0-9]/g, "");
   if (/[,\\.]\d{2}$/.test(stringValue)) {
