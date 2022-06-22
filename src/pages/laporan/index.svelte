@@ -11,7 +11,7 @@
 
 <PageLayout>
   <div class="d-flex flex-wrap">
-    <MenuCard show={ledgerShow} label="Trial Balance" path="./trial-balance" iconClass="icon-table2" />
+    <MenuCard show={ledgerShow} label="Saldo Perkiraan" path="./saldo-perkiraan" iconClass="icon-table2" />
     <MenuCard show={ledgerShow} label="Buku Besar" path="./buku-besar" iconClass="icon-file-spreadsheet" />
     <MenuCard
       show={statementIncomeShow}

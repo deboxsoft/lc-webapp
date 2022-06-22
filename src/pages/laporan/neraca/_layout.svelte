@@ -7,13 +7,13 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import { createAclContext } from "../_acl-context";
+  import { createAclContext } from "__@root/utils";
   import TableNeraca from "../_libs/BalanceSheetTable.svelte";
   import { balanceSheetContext } from "../_libs/balance-export";
   import { writable } from "svelte/store";
   import Loader from "__@comps/loader/Loader.svelte";
 
-  const { readGranted } = createAclContext("balanceSheet");
+  const { readGranted } = createAclContext({ resource: "balanceSheet" });
   const applicationContext = getApplicationContext();
   const { loading: topLoading } = getApplicationContext();
   if (!readGranted) {

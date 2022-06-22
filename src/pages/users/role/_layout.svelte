@@ -8,9 +8,15 @@
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getAclContext } from "__@root/utils";
+  import { onDestroy } from "svelte";
 
   const { readGranted, createGranted } = getAclContext();
-  const { load, grants } = getAccessControlContext();
+  const { load, grants, subscribe } = getAccessControlContext();
+  const unsubscribe = subscribe();
+
+  onDestroy(() => {
+    unsubscribe();
+  });
   if (!readGranted) {
     $goto("/access-denied");
   }

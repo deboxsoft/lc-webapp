@@ -1,20 +1,19 @@
 <!--routify:options title="Setting"-->
 <script>
-  import { url, isActive } from "@roxi/routify";
+  import { url } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
-  import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getAuthenticationContext, createUserContext, createAccessControlContext } from "__@modules/users";
   import { getApplicationContext } from "__@modules/app";
-  import Loader from "__@comps/loader/Loader.svelte";
 
   /**
    *
    * @type {ApplicationContext}
    */
-  const { loading, apiUrl, fetchGraphql } = getApplicationContext();
-  const { find, findGroup } = createUserContext({ apiUrl, fetchGraphql });
+  const applicationContext = getApplicationContext();
+  const { loading } = applicationContext;
+  const { find, findGroup } = createUserContext(applicationContext);
   const authContext = getAuthenticationContext();
-  const { load, grants } = createAccessControlContext({ authContext, apiUrl, fetchGraphql });
+  const { load, grants } = createAccessControlContext(applicationContext);
 
   const boot = () => {
     $loading = true;
@@ -36,4 +35,5 @@
     show = !show;
   }
 </script>
+
 <slot />

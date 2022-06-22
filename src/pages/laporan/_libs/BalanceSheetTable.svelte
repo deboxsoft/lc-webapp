@@ -22,14 +22,14 @@
   }
 </script>
 
-{#if accountsBalance?.length > 0}
-  <table class="table text-nowrap table-hover">
-    <thead>
-      <tr>
-        <th colspan="2">Akun Perkiraan</th>
-        <th class="text-center" colspan="3">Saldo</th>
-      </tr>
-    </thead>
+<table class="table text-nowrap table-hover">
+  <thead>
+    <tr>
+      <th colspan="2">Akun Perkiraan</th>
+      <th class="text-center" colspan="3">Saldo</th>
+    </tr>
+  </thead>
+  {#if accountsBalance?.length > 0}
     <tbody>
       <!--    aktiva -->
       {#each balanceSheetReport.assets.accountsIndex as accountIndex}
@@ -54,8 +54,8 @@
         </td>
       </tr>
     </tbody>
-  </table>
-{/if}
+  {/if}
+</table>
 
 <style lang="scss">
   .balance {

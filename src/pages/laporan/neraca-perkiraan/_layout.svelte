@@ -7,13 +7,14 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import { createAclContext } from "../_acl-context";
+  import { createAclContext } from "__@root/utils";
   import TableNeraca from "../_libs/BalanceSheetTable.svelte";
   import { balanceSheetContext } from "../_libs/balance-export";
   import Loader from "__@comps/loader/Loader.svelte";
   import { writable } from "svelte/store";
 
-  const { readGranted } = createAclContext("balanceSheet");
+  const { readGranted, query } = createAclContext({ resource: "balanceSheet" });
+  const closeReportGranted = query.create("closeReport").granted;
   const applicationContext = getApplicationContext();
   const { loading: topLoading } = getApplicationContext();
   if (!readGranted) {
@@ -58,10 +59,18 @@
     $loading = false;
     $topLoading = false;
   }
+
+  async function periodEndHandler() {}
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
+    {#if closeReportGranted}
+      <a href="./neraca-perkiraan/proses-akhir-tahun" class="breadcrumb-elements-item">
+        <i class="icon-database-check mr-1" />
+        Proses Akhir Tahun
+      </a>
+    {/if}
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh

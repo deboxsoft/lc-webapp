@@ -1,13 +1,15 @@
 import type { Stock } from "@deboxsoft/accounting-api";
+import type { StockContext } from "@deboxsoft/accounting-client/types/stores";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
 import { downloadCsv, numericCell, textCell } from "__@root/utils";
 
 export type Metadata = Record<string, string>;
-export const createReportContext = () => {
+export const createReportContext = ({ productContext }: StockContext) => {
+  const { getProduct } = productContext;
   const processingData = (stock: Stock, isCsv?: boolean) => {
     const total = stock.quantity * stock.price;
     return [
-      textCell(stock.name, { isCsv }),
+      textCell(getProduct(stock.productId).name, { isCsv }),
       numericCell(stock.quantity, { isCsv }),
       numericCell(stock.price, { isCsv, type: "rp" }),
       numericCell(total, { isCsv, type: "rp" })

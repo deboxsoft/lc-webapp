@@ -9,9 +9,12 @@ export const createReportContext = () => {
       dateCell(bdd.date, { isCsv }),
       dateCell(bdd.dateStart, { isCsv }),
       dateCell(bdd.dateEnd, { isCsv }),
-      textCell(bdd.description, { isCsv }),
+      textCell(bdd.name, { isCsv }),
       numericCell(bdd.taxRate, { isCsv }),
-      numericCell(bdd.amount, { isCsv, type: "rp" })
+      numericCell(
+        bdd.paymentAccounts.reduce((tot, _) => tot + _.amount, 0),
+        { isCsv, type: "rp" }
+      )
     ];
   };
   return {

@@ -1,10 +1,9 @@
 <!--routify:options title="Laporan"-->
-
 <script>
   import { goto } from "@roxi/routify";
-  import { createAclContext } from "../_acl-context";
+  import { createAclContext } from "__@root/utils";
 
-  const { readGranted } = createAclContext("ledger");
+  const { readGranted } = createAclContext({ resource: "ledger" });
   if (!readGranted) {
     $goto("/access-denied");
   }

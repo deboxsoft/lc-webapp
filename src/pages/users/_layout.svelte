@@ -15,7 +15,7 @@
   const { loading, apiUrl, fetchGraphql, fetch } = applicationContext;
   const { find, findGroup } = createUserContext(applicationContext);
   const authContext = getAuthenticationContext();
-  const { load, grants } = createAccessControlContext({ authContext, apiUrl, fetchGraphql });
+  const { load, grants } = createAccessControlContext({ authContext, ...applicationContext });
   createAclContext({
     resource: "user"
   });

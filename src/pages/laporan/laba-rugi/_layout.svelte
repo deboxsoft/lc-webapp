@@ -7,13 +7,13 @@
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import { createAclContext } from "../_acl-context";
+  import { createAclContext } from "__@root/utils";
   import TableLabaRugi from "../_libs/StatementIncomeTable.svelte";
   import { statementBalanceContext } from "../_libs/balance-export";
   import Loader from "__@comps/loader/Loader.svelte";
   import { writable } from "svelte/store";
 
-  const { readGranted } = createAclContext("statementIncome");
+  const { readGranted } = createAclContext({ resource: "statementIncome" });
   const applicationContext = getApplicationContext();
   const { loading: topLoading } = applicationContext;
   if (!readGranted) {
