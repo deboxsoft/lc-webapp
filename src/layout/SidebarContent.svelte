@@ -40,7 +40,7 @@
       <div class="card-body">
         <div class="media">
           <div class="mr-3">
-            <AvatarProfile size={$store.minimizeSidebar ? "50px" : "75px"} />
+            <AvatarProfile size={$store.minimizeSidebar ? "40px" : "75px"} />
           </div>
           <div class="media-body">
             <div class="media-title font-weight-semibold">{profile.displayName}</div>
