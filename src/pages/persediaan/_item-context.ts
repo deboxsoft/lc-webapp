@@ -33,7 +33,7 @@ export const createItemContext = (opts: Options<ProductItem>): _itemContext<Prod
     return getItemContext();
   }
   const productContext = stores.getProductContext();
-  let itemsStore: Writable<ProductItem[]> = writable([]);
+  const itemsStore: Writable<ProductItem[]> = writable([]);
   if (!opts.initialItem) {
     itemsStore.set([opts.addItem()]);
   } else {

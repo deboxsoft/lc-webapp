@@ -15,9 +15,10 @@
 
   const { readGranted, createGranted } = getAclContext();
   const applicationContext = getApplicationContext();
-  const reportContext = createReportContext();
   const { loading } = applicationContext;
-  const { findPage, productStore, productPageInfo, find } = stores.getProductContext();
+  const stockContext = stores.getStockContext();
+  const { findPage, productStore, productPageInfo, find } = stockContext.productContext;
+  const reportContext = createReportContext(stockContext);
   if (!readGranted) {
     $goto("/access-denied");
   }
@@ -77,10 +78,10 @@
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
-      <!--      <a href={$url("./create")} class="breadcrumb-elements-item">-->
-      <!--        <i class="icon-file-upload mr-1" />-->
-      <!--        Impor-->
-      <!--      </a>-->
+      <a href={$url("./import")} class="breadcrumb-elements-item">
+        <i class="icon-file-upload mr-1" />
+        Impor
+      </a>
       <a href={$url("./create")} class="breadcrumb-elements-item">
         <i class="icon-plus2 mr-1" />
         Tambah

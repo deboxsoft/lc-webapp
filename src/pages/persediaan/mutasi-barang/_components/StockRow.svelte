@@ -16,44 +16,39 @@
   }
 </script>
 
-<tr>
-  <td style="text-align: center">
-    <a href={$url("./:id/view", { id: stock.id })}>
-      {stock.id}
-    </a>
-  </td>
-  <td style="text-align: center"><CellDate date={stock.date} /></td>
-  <td>{stock.name || ""}</td>
-  <td style="text-align: center">{stock.mutation === "STOCK_OUT" ? "keluar" : "masuk"}</td>
-  <td style="text-align: center">{stock.unit || ""}</td>
-  <td style="text-align: center"><CellNumber format="number" value={stockIn} /></td>
-  <td style="text-align: center"><CellNumber format="number" value={stockOut} /></td>
-  <td style="text-align: center"><CellNumber format="number" value={stock.available || "0"} /></td>
-  <td style="text-align: center">
+<tr class="cursor-pointer">
+  <td style="text-align: center" on:click><CellDate date={stock.date} /></td>
+  <td on:click>{stock.name || ""}</td>
+  <td style="text-align: center" on:click>{stock.mutation === "STOCK_OUT" ? "keluar" : "masuk"}</td>
+  <td style="text-align: center" on:click>{stock.unit || ""}</td>
+  <td style="text-align: center" on:click><CellNumber format="number" value={stockIn} /></td>
+  <td style="text-align: center" on:click><CellNumber format="number" value={stockOut} /></td>
+  <td style="text-align: center" on:click><CellNumber format="number" value={stock.available || "0"} /></td>
+  <td style="text-align: center" on:click>
     <CellNumber value={stock.price} />
   </td>
-  <td style="cursor: pointer;padding: 0">
-    <Dropdown
-      class="h-100 d-flex justify-content-center"
-      bind:context={dropdownContext}
-      menuProps={{
-        offset: [0, -15]
-      }}
-    >
-      <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">
-        <i class="icon-menu9" />
-      </DropdownToggle>
-      <svelte:fragment slot="menu" let:closeHandler>
-        <a href={$url("./:id/view", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-clipboard3" />detail</a
-        >
-        <!--          <a href={$url("./:id/update", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}-->
-        <!--          ><i class="icon-pencil" />Edit Barang</a-->
-        <!--          >-->
-        <!--          <a href={$url("./:id/remove", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}-->
-        <!--            ><i class="icon-trash" />Hapus Persediaan</a-->
-        <!--          >-->
-      </svelte:fragment>
-    </Dropdown>
-  </td>
+  <!--  <td style="cursor: pointer;padding: 0">-->
+  <!--    <Dropdown-->
+  <!--      class="h-100 d-flex justify-content-center"-->
+  <!--      bind:context={dropdownContext}-->
+  <!--      menuProps={{-->
+  <!--        offset: [0, -15]-->
+  <!--      }}-->
+  <!--    >-->
+  <!--      <DropdownToggle class="list-icons-item d-flex align-items-center" tag="div">-->
+  <!--        <i class="icon-menu9" />-->
+  <!--      </DropdownToggle>-->
+  <!--      <svelte:fragment slot="menu" let:closeHandler>-->
+  <!--        <a href={$url("./:id/view", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}-->
+  <!--          ><i class="icon-clipboard3" />detail</a-->
+  <!--        >-->
+  <!--        &lt;!&ndash;          <a href={$url("./:id/update", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}&ndash;&gt;-->
+  <!--        &lt;!&ndash;          ><i class="icon-pencil" />Edit Barang</a&ndash;&gt;-->
+  <!--        &lt;!&ndash;          >&ndash;&gt;-->
+  <!--        &lt;!&ndash;          <a href={$url("./:id/remove", { id: stock.id })} class="dropdown-item" on:mouseup={closeHandler}&ndash;&gt;-->
+  <!--        &lt;!&ndash;            ><i class="icon-trash" />Hapus Persediaan</a&ndash;&gt;-->
+  <!--        &lt;!&ndash;          >&ndash;&gt;-->
+  <!--      </svelte:fragment>-->
+  <!--    </Dropdown>-->
+  <!--  </td>-->
 </tr>

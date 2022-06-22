@@ -11,7 +11,8 @@
 
   const { loading, notify } = getApplicationContext();
   const { approve, reject } = stores.getStockContext();
-  const { stockDetail } = stores.getStockContext();
+  const { stockDetail, productContext } = stores.getStockContext();
+  const { findById } = productContext;
   const { createGranted } = getAclContext();
 
   const rejectButtonEnable = createGranted;
@@ -24,32 +25,16 @@
   let transaction;
   const closeUrl = $params.closeUrl || "../";
   let openDialog;
-  stockDetail($params.id).then((_) => {
+  let product,
+    productName = "...loading";
+  stockDetail($params.id).then(async (_) => {
     stock = _;
     openDialog();
+    if (stock) {
+      product = await findById(stock.productId);
+      productName = product?.name || "-";
+    }
   });
-
-  async function approveHandler() {
-    $loading = true;
-    if (await approve(stock.id)) {
-      notify(`approve stok id '${stock.id}' berhasil diapprove`, "success");
-    } else {
-      notify(`approve stok id '${stock.id}' tidak berhasil diapprove`, "error");
-    }
-    $loading = false;
-    closeHandler();
-  }
-
-  async function rejectHandler() {
-    $loading = true;
-    if (await reject(stock.id)) {
-      notify(`reject stok id '${stock.id}' berhasil direject`, "success");
-    } else {
-      notify(`reject stok id '${stock.id}' tidak berhasil`, "error");
-    }
-    $loading = false;
-    closeHandler();
-  }
 
   function closeHandler() {
     $goto(closeUrl, {});
@@ -59,22 +44,11 @@
 <Modal class="modal-lg" title="Detail Stock" bind:openDialog onClose={closeHandler}>
   <dl class="row">
     <dt class="col-sm-3 mb-0">Nama Barang</dt>
-    <p class="col-sm-9 mb-0">: {stock?.name || "-"}</p>
+    <p class="col-sm-9 mb-0">: {product?.name || "-"}</p>
     <dt class="col-sm-3 mb-0">Tanggal</dt>
     <p class="col-sm-9 mb-0">: <CellDate date={stock.date} format="DD-MMMM-YYYY" /></p>
     <dt class="col-sm-3 mb-0">Mutasi</dt>
     <p class="col-sm-9 mb-0">: {stock?.mutation === "STOCK_IN" ? "masuk" : "keluar"}</p>
-    {#if transaction}
-      <dt class="col-sm-3 mb-0">Tanggal Transaksi</dt>
-      <p class="col-sm-9 mb-0">: <CellDate date={transaction?.dateTransaction} format="DD-MMMM-YYYY" /></p>
-      <dt class="col-sm-3 mb-0">No Transaksi</dt>
-      <p class="col-sm-9 mb-0">: {transaction?.id || "-"}</p>
-    {/if}
-    <dt class="col-sm-3 mb-0">Status</dt>
-    <p class="col-sm-9 mb-0">
-      :
-      <TransactionStatus status={stock?.status || "-"} />
-    </p>
     <dt class="col-sm-3 mb-0">Jumlah</dt>
     <p class="col-sm-9 mb-0">: {stock.quantity} {stock.unit || ""}</p>
     <dt class="col-sm-3 mb-0">Harga Satuan</dt>
@@ -93,11 +67,5 @@
     <button type="button" class="btn btn-outline bg-primary text-primary border-primary" on:click={closeHandler}>
       Close
     </button>
-    {#if rejectButtonEnable && stock?.status === "UNAPPROVED"}
-      <button type="button" class="btn btn-danger" on:click={rejectHandler}> Reject </button>
-    {/if}
-    {#if approveButtonEnable && stock?.status === "UNAPPROVED"}
-      <button type="button" class="btn btn-primary" on:click={approveHandler}> Approve </button>
-    {/if}
   </svelte:fragment>
 </Modal>

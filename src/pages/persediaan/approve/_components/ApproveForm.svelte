@@ -87,36 +87,36 @@
             <InputDate id="date" name="date" class="form-control" placeholder="Tanggal" range={false} disabled />
           </div>
           <div class="form-group col-12 col-md-6">
-            <label for="description`">Deskripsi</label>
+            <label for="description`">Deskripsi *</label>
             <InputField
-              id="description`"
-              name="description`"
+              id="description"
+              name="description"
               type="text"
               class="form-control"
-              placeholder="Deskripsi"
+              placeholder="Deskripsi *"
             />
           </div>
         </div>
         <div class="row">
           <div class="form-group col-12 col-md-6">
-            <label for="expenseAccount">Akun Biaya</label>
+            <label for="expenseAccount">Akun Biaya *</label>
             <AccountSelect
               id="expenseAccount"
               name="expenseAccount"
               accountStore={getAccount("expense")}
               accountId={stockTransaction?.expenseAccount}
-              placeholder="Akun Biaya"
+              placeholder="Akun Biaya *"
               allowEmpty
             />
           </div>
           <div class="form-group col-12 col-md-6">
-            <label for="stockAccount">Akun di Kredit</label>
+            <label for="stockAccount">Akun di Kredit *</label>
             <AccountSelect
               id="stockAccount"
               name="stockAccount"
               accountStore={getAccount("stock")}
               accountId={stockTransaction?.stockAccount}
-              placeholder="Akun di Kredit"
+              placeholder="Akun di Kredit *"
               allowEmpty
             />
           </div>

@@ -13,9 +13,10 @@
 
   const { readGranted, createGranted } = getAclContext();
   const applicationContext = getApplicationContext();
-  const reportContext = createReportContext();
   const { loading } = applicationContext;
-  const { findPage, stockStore, stockPageInfo, find, productContext } = stores.getStockContext();
+  const stockContext = stores.getStockContext();
+  const { findPage, stockStore, stockPageInfo, find, productContext } = stockContext;
+  const reportContext = createReportContext(stockContext);
   if (!readGranted) {
     $goto("/access-denied");
   }
@@ -71,24 +72,14 @@
       }
     };
   }
+
+  function onSelectHandler({ detail: stock }) {
+    $goto(`./${stock.id}/view`);
+  }
 </script>
 
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
-    {#if createGranted}
-      <!--      <a href={$url("./import")} class="breadcrumb-elements-item">-->
-      <!--        <i class="icon-file-upload mr-1" />-->
-      <!--        Impor-->
-      <!--      </a>-->
-      <!--      <a href={$url("./stock-in")} class="breadcrumb-elements-item">-->
-      <!--        <i class="icon-enter mr-1" />-->
-      <!--        Masuk-->
-      <!--      </a>-->
-      <!--      <a href={$url("./stock-out")} class="breadcrumb-elements-item">-->
-      <!--        <i class="icon-exit mr-1" />-->
-      <!--        Keluar-->
-      <!--      </a>-->
-    {/if}
     <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
       <i class="icon-sync mr-1" />
       Refresh
@@ -101,7 +92,7 @@
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
       {#if $stockStore}
-        <StockTable {stockStore}>
+        <StockTable {stockStore} on:select={onSelectHandler}>
           {#if $stockPageInfo.hasNext}
             <div class="" style="height: 50px">
               <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}

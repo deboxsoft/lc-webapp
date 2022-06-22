@@ -78,7 +78,6 @@
           <CheckIcon />
         </div>
       {:else}
-        {diff} : {$totalStore}
         <div class="text-danger" style="width: 30px;">
           <CloseIcon />
         </div>

@@ -34,37 +34,39 @@
   let product = writable(undefined),
     quantityAutoNumeric,
     maxQuantity,
-    minQuantity = 1,
+    minQuantity = 0,
     setPriceValue;
 
   const { fields } = createFormContext({ values: stockProduct });
 
   function searchProduct() {
     if (!$productStore) {
-      productContext.load().then(() => $productStore);
+      productContext.load().then(() => $productStore || []);
     }
-    return Promise.resolve().then(() => $productStore);
+    return Promise.resolve().then(() => $productStore || []);
   }
 
   function changeProductHandler() {
     return () => {
       if ($product) {
-        $fields.productId = $product.id;
-        $fields.name = $product.name;
+        const _fields = {};
+        _fields.productId = $product.id;
+        _fields.name = $product.name;
         if (mutation === "STOCK_IN") {
           setPriceValue && setPriceValue($product.price);
           maxQuantity = 10000000000000;
         } else {
           if (!$product.available || $product.available === 0) {
-            $fields.quantity = 0;
+            _fields.quantity = 0;
             maxQuantity = 0;
             minQuantity = 0;
           } else {
-            $fields.quantity = $product.available;
+            _fields.quantity = $product.available;
             maxQuantity = $product.available;
           }
         }
-        $fields.price = $product.price;
+        _fields.price = $product.price;
+        fields.update((_ = {}) => ({ ..._, ..._fields }));
       } else {
         maxQuantity = 10000000000000;
       }
@@ -98,7 +100,7 @@
     <AutoCompleteField
       id="product-{id}"
       name="productId"
-      placeholder="Nama Barang"
+      placeholder="Nama Barang *"
       inputClassName="form-control"
       delay="20"
       labelFieldName="name"

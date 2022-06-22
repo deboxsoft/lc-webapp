@@ -1,14 +1,20 @@
 <script>
   import Table from "__@comps/tables/DataTable.svelte";
   import StockRow from "./StockRow.svelte";
+  import { createEventDispatcher } from "svelte";
 
+  const dispatch = createEventDispatcher();
   export let stockStore;
+  function createSelectHandler(stock) {
+    return () => {
+      dispatch("select", stock);
+    };
+  }
 </script>
 
 <Table>
   <svelte:fragment slot="header">
     <tr>
-      <th width="100" rowspan="2" style="text-align: center">No</th>
       <th width="100" rowspan="2" style="text-align: center">Tanggal</th>
       <th rowspan="2" style="text-align: center">Nama Barang</th>
       <th rowspan="2" style="text-align: center" width="50">Mutasi</th>
@@ -24,7 +30,7 @@
     </tr>
   </svelte:fragment>
   {#each $stockStore as stock (stock.id)}
-    <StockRow {stock} />
+    <StockRow {stock} on:click={createSelectHandler(stock)} />
   {/each}
 </Table>
 <slot />

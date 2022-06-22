@@ -82,11 +82,13 @@
     <div style="width: 150px"><CellNumber value={calc.total} /></div>
   </div>
 </dl>
-<dl class="row mb-0">
-  <dt class="col-sm-3 mb-0">Pembayaran</dt>
-  <p class="col-sm-9 mb-0">:</p>
-</dl>
-<AccountAmountTable dataList={stockTransaction.paymentAccounts} />
+{#if stockTransaction.paymentAccounts}
+  <dl class="row mb-0">
+    <dt class="col-sm-3 mb-0">Pembayaran</dt>
+    <p class="col-sm-9 mb-0">:</p>
+  </dl>
+  <AccountAmountTable dataList={stockTransaction.paymentAccounts} />
+{/if}
 <dl class="row mb-0 mt-2">
   <dt class="col-sm-3 mb-0">Daftar Barang</dt>
   <p class="col-sm-9 mb-0">:</p>
