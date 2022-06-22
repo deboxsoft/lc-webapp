@@ -80,6 +80,10 @@
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
+      <a href={$url("./import")} class="breadcrumb-elements-item">
+        <i class="icon-file-upload2 mr-1" />
+        Impor
+      </a>
       <a href={$url("./create")} class="breadcrumb-elements-item">
         <i class="icon-plus2 mr-1" />
         Posting
