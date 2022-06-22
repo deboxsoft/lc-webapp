@@ -13,20 +13,21 @@
   const { loading, notify } = getApplicationContext();
   const { import: importInventories, getCategoryInventory, categoryInventoryStore } = stores.getInventoryContext();
 
+  /**
+   *
+   * @param output {import("@deboxsoft/accounting-api").InventoryInput[]}
+   * @return {(function(*, *): void)|*}
+   */
   const transformStep = (output) => {
     return (result, self) => {
-      const datePurchase = parseDate(result.data[0]);
+      const datePurchase = parseDate(result.data[6]);
       if (datePurchase) {
+        const quantity = 1;
         output.push({
           datePurchase,
           name: sanitizeString(result.data[1]).toUpperCase(),
-          quantity: sanitizeNumber(result.data[2]),
-          priceItem: sanitizeNumber(result.data[3]),
-          code: result.data[4] !== "" ? sanitizeString(result.data[4]) : undefined,
-          brand: result.data[5] !== "" ? sanitizeString(result.data[5]) : undefined,
-          condition: result.data[6] !== "" ? sanitizeString(result.data[6]) : undefined,
-          location: result.data[7] !== "" ? sanitizeString(result.data[7]) : undefined,
-          person: result.data[8] !== "" ? sanitizeString(result.data[8]) : undefined
+          quantity: sanitizeNumber(result.data[3]),
+          priceItem: sanitizeNumber(result.data[4]) / quantity
         });
       }
     };
@@ -37,7 +38,7 @@
   let files = writable([]);
   let submitting = false;
   let errors = [];
-  let submit, openDialog, closeDialog;
+  let submit, openDialog, closeDialog, categoryId;
 
   onMount(() => {
     openDialog();
@@ -48,7 +49,7 @@
     errors = [];
     const inputs = submit();
     if (!errors || errors.length === 0) {
-      await importInventories(inputs);
+      await importInventories(inputs.map((_) => ({ ..._, categoryId })));
       $goto("./");
     } else {
       throw errors;
@@ -63,7 +64,7 @@
     errors = [];
     if (listData) {
       listData.forEach((_, index) => {
-        if (_.name === "" || _.type === "" || _.datePurchase === "" || _.priceItem === "" || _.quantity === "") {
+        if (_.name === "" || _.datePurchase === "" || _.priceItem === "" || _.quantity === "") {
           errors.push(index);
         }
       });
@@ -77,6 +78,10 @@
     fileLoaded = false;
     files.set([]);
     $goto("./");
+  }
+
+  function categoryHandler({ detail }) {
+    categoryId = detail;
   }
 </script>
 
@@ -93,7 +98,7 @@
   onClose={closeHandler}
   onSubmit={submitHandler}
 >
-  <div class="border-bottom-grey-200 border-bottom-1 mb-1 pb-1" slot="section">
+  <div class="border-bottom-grey-200 border-bottom-1 mb-1 pb-1" slot="info">
     <div class="row">
       <div class="col-12 col-md-3">
         <label for="categoryId">Kategori</label>
@@ -107,6 +112,7 @@
           valueId="id"
           labelId="name"
           placeholder="Kategori"
+          on:change={categoryHandler}
         />
       </div>
     </div>

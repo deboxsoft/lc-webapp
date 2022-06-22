@@ -3,6 +3,7 @@
   import Table from "__@comps/tables/DataTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import CellNumber from "__@comps/CellNumber.svelte";
+  import CellDate from "__@comps/CellDate.svelte";
 
   /**
    *
@@ -27,21 +28,20 @@
    */
   export const submit = () => {
     return dataList;
-  }
-
+  };
 </script>
 
 <Table class="table text-nowrap">
   <tr slot="header">
     <th width="90">Tgl Perolehan</th>
-    <th >Nama Aset</th>
+    <th>Nama Aset</th>
     <th>Jumlah</th>
     <th>Harga Satuan</th>
     <th>Harga Perolehan</th>
   </tr>
   {#each dataList as item, index}
-    <tr class="{errors.includes(index) && `error`}">
-      <td>{item.datePurchase || ""}</td>
+    <tr class={errors.includes(index) && `error`}>
+      <td><CellDate date={item.datePurchase} /></td>
       <td>{item.name || ""}</td>
       <td>{item.quantity || ""}</td>
       <td>
