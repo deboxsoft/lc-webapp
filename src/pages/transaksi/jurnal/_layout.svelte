@@ -9,10 +9,6 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { createAclContext } from "./_acl-context";
   import { getApplicationContext } from "__@modules/app";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import FalCashRegister from "@deboxsoft/svelte-icons/fal/FalCashRegisterIcon.svelte";
-  import FalMoneyBill from "@deboxsoft/svelte-icons/fal/FalMoneyBillIcon.svelte";
   import { getAuthenticationContext } from "__@modules/users";
 
   const { getProfile } = getAuthenticationContext();
@@ -31,6 +27,9 @@
   });
   const { loading } = applicationContext;
 
+  /**
+   * @type {import("@deboxsoft/accounting-api").TransactionFilter}
+   */
   let filter = {};
   let openFilterDialog;
   let closeFilterDialog;
@@ -135,16 +134,7 @@
       Ekspor
     </a>
   </svelte:fragment>
-  <div class="header-elements" slot="header-elements">
-    <!--    <div class="form-group-feedback form-group-feedback-right">-->
-    <!--      <div class="list-icons">-->
-    <!--        <input class="form-control input" placeholder="search" on:input={filterHandler} />-->
-    <!--        <div class="form-control-feedback text-grey-600">-->
-    <!--          <i class="icon-search4" />-->
-    <!--        </div>-->
-    <!--      </div>-->
-    <!--    </div>-->
-  </div>
+  <div class="header-elements" slot="header-elements" />
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
       <TableTransaction bind:filter {transactions} />
