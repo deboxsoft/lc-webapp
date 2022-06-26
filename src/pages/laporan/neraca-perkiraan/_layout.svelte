@@ -60,7 +60,13 @@
     $topLoading = false;
   }
 
-  async function periodEndHandler() {}
+  function selectHandler({ detail: account }) {
+    $goto("../saldo-perkiraan/:accountId", {
+      accountId: account.id,
+      fromLabel: "Neraca Perkiraan",
+      fromPath: "/laporan/neraca-perkiraan"
+    });
+  }
 </script>
 
 <PageLayout breadcrumb={[]}>
@@ -116,7 +122,7 @@
       {#if $loading}
         <Loader />
       {:else}
-        <TableNeraca key="neraca-perkiraan" {balanceSheetReport} />
+        <TableNeraca key="neraca-perkiraan" {balanceSheetReport} on:select={selectHandler} />
       {/if}
     </div>
   </div>

@@ -1,4 +1,4 @@
-import type { AccountBalance, BalanceSheetReport } from "@deboxsoft/accounting-api";
+import type { AccountBalance, BalanceClassification, BalanceSheetReport } from "@deboxsoft/accounting-api";
 import dayjs from "dayjs";
 import type { Writable } from "svelte/store";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
@@ -6,6 +6,7 @@ import { downloadCsv, numericCell as balanceCell, textCell as nameCell, emptyCel
 
 type GenerateReportOptions = {
   isCsv: boolean;
+  parentOnly: boolean;
   paramsSubtotal: Record<string, any>;
   paramsTotal: Record<string, any>;
 };
@@ -26,6 +27,7 @@ export interface ReportOptions {
   balanceSheetReport: BalanceSheetReport;
   date?: Date;
   filename?: string;
+  parentOnly?: boolean;
 }
 
 const options = {
@@ -41,31 +43,35 @@ export type Metadata = Record<string, any>;
 export const statementBalanceContext = (opts: Omit<CreateReportOptions, "generateReport">) => {
   return createReportContext({
     ...opts,
-    generateReport: (balanceSheetReport: BalanceSheetReport, { isCsv, paramsSubtotal, paramsTotal }) => {
+    generateReport: (balanceSheetReport: BalanceSheetReport, { isCsv, paramsSubtotal, paramsTotal, parentOnly }) => {
       const statementIncome = balanceSheetReport.statementIncome;
       const accountsBalance = balanceSheetReport.accountsBalance;
-      return [
-        ...parsingAccountsBalance(
-          statementIncome.revenue.accountsIndex.map((_index) => accountsBalance[_index]),
-          { isCsv }
-        ),
-        parsingSumBalance("TOTAL PENDAPATAN", statementIncome.revenue.balance, {
-          isCsv,
-          params: paramsSubtotal
-        }),
-        ...parsingAccountsBalance(
-          statementIncome.expense.accountsIndex.map((_index) => accountsBalance[_index]),
-          { isCsv }
-        ),
-        parsingSumBalance("TOTAL BIAYA", statementIncome.expense.balance, {
-          isCsv,
-          params: paramsSubtotal
-        }),
+      const result = [];
+      const _pushData = (balanceClassification: BalanceClassification, totalLabel: string) => {
+        result.push(
+          ...parsingAccountsBalance(
+            balanceClassification.accountsIndex.map((_index) => accountsBalance[_index]),
+            { isCsv, parentOnly }
+          )
+        );
+        if (!parentOnly) {
+          result.push(
+            parsingSumBalance(totalLabel, balanceClassification.balance, {
+              isCsv,
+              params: paramsSubtotal
+            })
+          );
+        }
+      };
+      _pushData(statementIncome.revenue, "TOTAL PENDAPATAN");
+      _pushData(statementIncome.expense, "TOTAL BIAYA");
+      result.push(
         parsingSumBalance("LABA/RUGI", statementIncome.profit, {
           isCsv,
           params: paramsTotal
         })
-      ];
+      );
+      return result;
     }
   });
 };
@@ -104,7 +110,7 @@ export const balanceSheetContext = (opts: Omit<CreateReportOptions, "generateRep
   });
 };
 export const createReportContext = (opts: CreateReportOptions) => {
-  const processingData = (balanceSheetReport: BalanceSheetReport, isCsv = false) => {
+  const processingData = (balanceSheetReport: BalanceSheetReport, isCsv = false, parentOnly = false) => {
     const paramsSubtotal = {
       fillColor: options.backgroundColorSubtotal
     };
@@ -114,16 +120,16 @@ export const createReportContext = (opts: CreateReportOptions) => {
     return opts.generateReport(balanceSheetReport, {
       isCsv,
       paramsSubtotal,
-      paramsTotal
+      paramsTotal,
+      parentOnly
     });
   };
   return {
     pdf: ({ balanceSheetReport, date = new Date(), filename }: ReportOptions) => {
       opts.loading.set(true);
-      const now = new Date();
       const reportDesc = processingData(balanceSheetReport);
       const doc = createPdfDef(reportDesc, { title: opts.title, date });
-      pdfMake(doc).download(filename || `${opts.title}-${now.getTime()}.pdf`, null, {
+      pdfMake(doc).download(filename || `${opts.title}-${date.getTime()}.pdf`, null, {
         progressCallback: (p) => {
           if (p === 1) {
             opts.loading.set(false);
@@ -132,10 +138,9 @@ export const createReportContext = (opts: CreateReportOptions) => {
       });
       opts.close && opts.close();
     },
-    csv: ({ balanceSheetReport, date = new Date() }: ReportOptions) => {
+    csv: ({ balanceSheetReport, date = new Date(), parentOnly }: ReportOptions) => {
       opts.loading.set(true);
-      const now = new Date();
-      downloadCsv(processingData(balanceSheetReport, true), `${opts.title}-${now.getTime()}.csv`);
+      downloadCsv(processingData(balanceSheetReport, true, parentOnly), `${opts.title}-${date.getTime()}.csv`);
       opts.loading.set(false);
       opts.close && opts.close();
     },
@@ -151,7 +156,7 @@ export const createReportContext = (opts: CreateReportOptions) => {
 
 function parsingAccountsBalance(
   accountBalances: AccountBalance[],
-  { isCsv = false }: Pick<GenerateReportOptions, "isCsv">
+  { isCsv = false, parentOnly = false }: Partial<Pick<GenerateReportOptions, "isCsv" | "parentOnly">>
 ) {
   const _parseAccount = (accountBalance: AccountBalance) => {
     const paramsParent = {
@@ -164,7 +169,7 @@ function parsingAccountsBalance(
       emptyCell({ isCsv, params: paramsParent })
     ];
     const defChild = [];
-    if (accountBalance.children) {
+    if (!parentOnly && accountBalance.children) {
       const paramsChildren = {};
       for (const child of accountBalance.children) {
         defChild.push([

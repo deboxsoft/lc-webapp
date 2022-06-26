@@ -1,38 +1,35 @@
-<!--routify:options title="Trial Balance"-->
+<!--routify:options title="Detail Saldo Akun Perkiraan"-->
 <script>
   import { params } from "@roxi/routify";
-  import dayjs from "dayjs";
-  import { tick } from "svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import PageLayout from "__@root/layout/PageLayout.svelte";
   import { getApplicationContext } from "__@modules/app";
   import Dropdown from "__@comps/Dropdown.svelte";
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import DatePickr from "__@comps/forms/InputDateField.svelte";
   import Loader from "__@comps/loader/Loader.svelte";
   import LedgerAccountTable from "../../_libs/LedgerAccountTable.svelte";
   import { createReportContext } from "../../_libs/balance-per-accounte-export";
   import Button from "__@comps/Button.svelte";
-  import { writable } from "svelte/store";
 
   // context
   const reportContext = createReportContext();
   const applicationContext = getApplicationContext();
   const { loading } = applicationContext;
-  const { trialBalance } = stores.getBalanceContext();
+  const { getCurrentBalanceAccount, currentBalanceStore } = stores.getBalanceContext();
+  const {
+    findPageGeneralLedger,
+    generalLedgerPageInfo: pageInfo,
+    generalLedgerStore: dataStore
+  } = stores.createGeneralLedgerContext(applicationContext);
   const { accountStore, getAccount } = stores.getAccountContext();
   const { currentDateStore } = stores.getPreferenceAccountingContext();
 
   // state
   let submitting = false;
-  let endDate = new Date();
-  let startDate = dayjs(endDate).startOf("month").toDate();
   const account = getAccount($params.id);
-  const trialBalanceStore = writable([]);
-  const trialBalancePageInfo = writable({});
 
   $: {
-    if ($account?.id) {
+    if ($account?.id && $currentBalanceStore) {
       fetchData();
     }
   }
@@ -40,48 +37,16 @@
   async function fetchData(options = {}) {
     $loading = true;
     submitting = true;
-    const filter = {
-      startDate,
-      endDate
-    };
-    if (options.more) {
-      filter.lastBalance = $trialBalanceStore[$trialBalanceStore.length - 1].balance;
-    }
-    const result = await trialBalance(
-      $account.id,
-      {
-        filter,
-        pageCursor: {
-          next: options.more && $trialBalancePageInfo?.next
-        }
-      },
-      options
-    );
-    if (options.more) {
-      trialBalanceStore.update((_) => {
-        if (options.backward) {
-          return [...result.data, ..._];
-        }
-        return [..._, ...result.data];
-      });
-    } else {
-      trialBalanceStore.set(result.data);
-    }
-    trialBalancePageInfo.set(result.pageInfo);
+    console.log($currentBalanceStore);
+    const currentBalance = (await getCurrentBalanceAccount($account.id)) || 0;
+    const result = await findPageGeneralLedger($account.id, currentBalance, {
+      filter: {},
+      pageCursor: {
+        next: options.more && $pageInfo?.next
+      }
+    });
     $loading = false;
     submitting = false;
-  }
-
-  function dateChangeHandler({ detail }) {
-    const now = $currentDateStore;
-    startDate = dayjs(detail.from).startOf("day").toDate();
-    const _tmp = dayjs(detail.to || now)
-      .endOf("day")
-      .toDate();
-    endDate = dayjs(_tmp).isBefore(now) ? _tmp : now;
-    tick().then(() => {
-      fetchData();
-    });
   }
 
   function infiniteHandler() {
@@ -92,25 +57,25 @@
     pdf: () => {
       $loading = true;
       reportContext.pdf(
-        $trialBalanceStore,
+        $dataStore,
         (p) => {
           if (p === 1) {
             $loading = false;
           }
         },
-        { account: $account, startDate, endDate }
+        { account: $account }
       );
       close();
     },
     csv: () => {
       $loading = true;
-      reportContext.csv($trialBalanceStore, { account: $account, startDate, endDate });
+      reportContext.csv($dataStore, { account: $account });
       $loading = false;
       close();
     },
     print: () => {
       $loading = true;
-      reportContext.print($trialBalanceStore, { account: $account, startDate, endDate });
+      reportContext.print($dataStore, { account: $account });
       $loading = false;
       close();
     }
@@ -121,14 +86,11 @@
   showBackButton
   backPath={$params?.fromPath || "../"}
   breadcrumb={[
-    { path: $params?.fromPath || "../", title: $params.fromLabel || "Buku Besar" },
-    { title: "rekap per akun" }
+    { path: $params?.fromPath || "../", title: $params.fromLabel || "Saldo Perkiraan" },
+    { title: "Detail Saldo Akun Perkiraan" }
   ]}
 >
   <svelte:fragment slot="breadcrumb-items-right">
-    <div class="breadcrumb-elements-item p-0 my-auto" style="width: 180px">
-      <DatePickr id="date" name="date" on:apply={dateChangeHandler} />
-    </div>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download2 mr-1" />
@@ -180,8 +142,8 @@
             <p class="col-sm-9 mb-0">: {($account && $account.id) || ""}</p>
           </dl>
         </div>
-        <LedgerAccountTable generalLedgerList={$trialBalanceStore}>
-          {#if $trialBalancePageInfo.hasNext}
+        <LedgerAccountTable generalLedgerList={$dataStore}>
+          {#if $pageInfo.hasNext}
             <div class="" style="height: 50px">
               <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
                 ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...

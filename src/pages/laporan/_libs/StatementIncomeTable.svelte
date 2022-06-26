@@ -1,6 +1,6 @@
 <script>
   import CellNumber from "__@comps/CellNumber.svelte";
-  import RowBalance from "./BalanceRow.svelte";
+  import BalanceRow from "./BalanceRow.svelte";
   import RowTotalBalance from "./BalanceTotalRow.svelte";
   import { createFoldStore } from "__@root/stores/fold";
   import { derived } from "svelte/store";
@@ -29,11 +29,11 @@
   <tbody>
     <!-- Pendapatan -->
     {#each statementIncome.revenue.accountsIndex as accountIndex}
-      <RowBalance {isExpand} toggle={toggleExpand} account={accountsBalance[accountIndex]} />
+      <BalanceRow {isExpand} toggle={toggleExpand} account={accountsBalance[accountIndex]} on:select />
     {/each}
     <RowTotalBalance label="TOTAL PENDAPATAN" balance={statementIncome.revenue.balance} />
     {#each statementIncome.expense.accountsIndex as accountIndex}
-      <RowBalance {isExpand} toggle={toggleExpand} account={accountsBalance[accountIndex]} />
+      <BalanceRow {isExpand} toggle={toggleExpand} account={accountsBalance[accountIndex]} on:select />
     {/each}
     <RowTotalBalance label="TOTAL BIAYA" balance={statementIncome.expense.balance} />
     <tr class="table-active table-border-double font-weight-bold">

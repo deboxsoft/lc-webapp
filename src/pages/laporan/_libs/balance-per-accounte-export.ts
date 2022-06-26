@@ -1,5 +1,4 @@
-import type { GeneralLedger } from "@deboxsoft/accounting-api";
-import dayjs from "dayjs";
+import { GeneralLedger, dayjs } from "@deboxsoft/accounting-api";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
 import { downloadCsv, emptyCell, numericCell, textCell } from "__@root/utils";
 const options = {

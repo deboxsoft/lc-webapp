@@ -93,7 +93,7 @@
       {#if $loading}
         <Loader />
       {:else}
-        <LedgerTable {accountsBalance} linkDisable />
+        <LedgerTable {accountsBalance} />
       {/if}
     </div>
   </div>

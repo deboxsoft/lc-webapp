@@ -47,6 +47,11 @@
     return {
       pdf: () => context.pdf({ balanceSheetReport }),
       csv: () => context.csv({ balanceSheetReport }),
+      csvParent: () =>
+        context.csv({
+          balanceSheetReport,
+          parentOnly: true
+        }),
       print: () => context.print({ balanceSheetReport })
     };
   };
@@ -62,6 +67,14 @@
     await getFixedBalance({ refresh: true });
     $loading = false;
     $topLoading = false;
+  }
+
+  function selectHandler({ detail: account }) {
+    $goto("../buku-besar/:accountId", {
+      accountId: account.id,
+      fromLabel: "Laba-Rugi",
+      fromPath: "/laporan/laba-rugi"
+    });
   }
 </script>
 
@@ -101,6 +114,15 @@
         <a
           href="/#"
           target="_self"
+          on:click|preventDefault={createExportMenuHandler(dropdownClose).csvParent}
+          class="dropdown-item"
+        >
+          <i class="icon-file-excel" />
+          Download CSV Induk</a
+        >
+        <a
+          href="/#"
+          target="_self"
           on:click|preventDefault={createExportMenuHandler(dropdownClose).print}
           class="dropdown-item"
         >
@@ -115,7 +137,7 @@
       {#if $loading}
         <Loader />
       {:else}
-        <TableLabaRugi key="laba-rugi" {balanceSheetReport} />
+        <TableLabaRugi key="laba-rugi" {balanceSheetReport} on:select={selectHandler} />
       {/if}
     </div>
   </div>

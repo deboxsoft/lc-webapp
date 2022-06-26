@@ -33,15 +33,30 @@
     <tbody>
       <!--    aktiva -->
       {#each balanceSheetReport.assets.accountsIndex as accountIndex}
-        <BalanceRow {isExpand} toggle={toggleExpand} account={balanceSheetReport.accountsBalance[accountIndex]} />
+        <BalanceRow
+          {isExpand}
+          toggle={toggleExpand}
+          account={balanceSheetReport.accountsBalance[accountIndex]}
+          on:select
+        />
       {/each}
       <RowTotalBalance label="TOTAL AKTIVA" balance={balanceSheetReport.assets.balance} />
       <!--pasiva-->
       {#each balanceSheetReport.payable.accountsIndex as accountIndex}
-        <BalanceRow {isExpand} toggle={toggleExpand} account={balanceSheetReport.accountsBalance[accountIndex]} />
+        <BalanceRow
+          {isExpand}
+          toggle={toggleExpand}
+          account={balanceSheetReport.accountsBalance[accountIndex]}
+          on:select
+        />
       {/each}
       {#each balanceSheetReport.equities.accountsIndex as accountIndex}
-        <BalanceRow {isExpand} toggle={toggleExpand} account={balanceSheetReport.accountsBalance[accountIndex]} />
+        <BalanceRow
+          {isExpand}
+          toggle={toggleExpand}
+          account={balanceSheetReport.accountsBalance[accountIndex]}
+          on:select
+        />
       {/each}
       <RowTotalBalance label="TOTAL PASIVA" balance={balanceSheetReport.liabilities} />
 

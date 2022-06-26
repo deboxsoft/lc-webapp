@@ -27,6 +27,7 @@ export interface ReportOptions {
   accountsBalance: BalanceSheetReport["accountsBalance"];
   date?: Date;
   filename?: string;
+  parentOnly?: boolean;
 }
 
 const options = {
@@ -45,9 +46,8 @@ export const createReportContext = (opts: CreateReportOptions) => {
   return {
     pdf: ({ accountsBalance, date = new Date(), filename }: ReportOptions) => {
       opts.loading.set(true);
-      const now = new Date();
       const doc = createPdfDef(parsingAccountsBalance(accountsBalance), { title: opts.title });
-      pdfMake(doc).download(filename || `${opts.title}-${now.getTime()}.pdf`, null, {
+      pdfMake(doc).download(filename || `${opts.title}-${date.getTime()}.pdf`, null, {
         progressCallback: (p) => {
           if (p === 1) {
             opts.loading.set(false);
@@ -59,14 +59,13 @@ export const createReportContext = (opts: CreateReportOptions) => {
     },
     csv: ({ accountsBalance, date = new Date(), filename }: ReportOptions) => {
       opts.loading.set(true);
-      const now = new Date();
       downloadCsv(
         parsingAccountsBalance(accountsBalance, { isCsv: true }),
-        filename || `${opts.title}-${now.getTime()}.csv`
+        filename || `${opts.title}-${date.getTime()}.csv`
       );
       opts.close && opts.close();
     },
-    print: ({ accountsBalance, date = new Date(), filename }: ReportOptions) => {
+    print: ({ accountsBalance }: ReportOptions) => {
       opts.loading.set(true);
       const doc = createPdfDef(parsingAccountsBalance(accountsBalance), { title: opts.title });
       pdfMake(doc).print();

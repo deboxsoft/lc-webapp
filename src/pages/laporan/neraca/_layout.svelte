@@ -59,6 +59,14 @@
     $loading = false;
     $topLoading = false;
   }
+
+  function selectHandler({ detail: account }) {
+    $goto("../buku-besar/:accountId", {
+      accountId: account.id,
+      fromLabel: "Neraca",
+      fromPath: "/laporan/neraca"
+    });
+  }
 </script>
 
 <PageLayout breadcrumb={[]}>
@@ -111,7 +119,7 @@
       {#if $loading}
         <Loader />
       {:else}
-        <TableNeraca key="neraca" {balanceSheetReport} />
+        <TableNeraca key="neraca" {balanceSheetReport} on:select={selectHandler} />
       {/if}
     </div>
   </div>
