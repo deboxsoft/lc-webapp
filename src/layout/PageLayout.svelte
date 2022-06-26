@@ -6,8 +6,9 @@
   import { getApplicationContext } from "__@modules/app";
 
   export let breadcrumb = undefined;
+  export let backPath = "../";
   export let backHandler = () => {
-    $goto("../");
+    $goto(backPath);
   };
   export let showBackButton = false;
   export let breadcrumbDisable = false;
