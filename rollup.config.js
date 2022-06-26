@@ -17,6 +17,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // const comBaseResolve = require.resolve("@deboxsoft/svelte-components-base");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const createPreprocess = require("../../svelte.config").createPreprocess;
 
 const { distDir } = getConfig(); // use Routify's distDir for SSOT

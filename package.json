@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "Web Application Learning Center.",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "run-p routify nollup",
     "dev:ssr": "run-p routify rollup",
@@ -21,8 +22,8 @@
     "lint": "run-p lint:svelte lint:eslint lint:tsc"
   },
   "dependencies": {
-    "@deboxsoft/accounting-api": "^1.5.3",
-    "@deboxsoft/accounting-client": "^1.5.5",
+    "@deboxsoft/accounting-api": "^1.5.8",
+    "@deboxsoft/accounting-client": "^1.5.11",
     "@deboxsoft/lc-cashier-api": "^1.0.1",
     "@deboxsoft/lc-cashier-client": "^1.0.1",
     "@deboxsoft/module-client": "~2.3.2",
@@ -76,6 +77,9 @@
     "@nurdiansyah/eslint-config-devel": "^8.0.3",
     "@nurdiansyah/rollup": "^1.8.11",
     "@nurdiansyah/stylelint-rscss": "^1.0.2",
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-replace": "^4.0.0",
     "@types/d3-scale": "^4.0.2",
     "@types/file-saver": "^2.0.2",
     "@types/nanoid": "^2.1.0",
