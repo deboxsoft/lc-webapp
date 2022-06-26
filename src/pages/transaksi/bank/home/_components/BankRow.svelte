@@ -15,8 +15,8 @@
   let toggle;
 </script>
 
-<tr class={className}>
-  <td>
+<tr class="cursor-pointer {className}">
+  <td on:click>
     <div>
       <div class="text-default font-weight-semibold">
         {bank.name || ""}
@@ -26,7 +26,7 @@
       </div>
     </div>
   </td>
-  <td>
+  <td on:click>
     <div>
       <div class="text-default font-weight-semibold">
         {bank.nameAccountBank || ""}
@@ -36,7 +36,7 @@
       </div>
     </div>
   </td>
-  <td>
+  <td on:click>
     <div>
       <div class="text-default font-weight-semibold">
         <CellAccount id={bank.accountId} />
@@ -46,18 +46,18 @@
       </div>
     </div>
   </td>
-  <td>
+  <td on:click>
     <CellNumber class="flex-1 align-items-center" value={bank.balance} />
   </td>
 
-  <td>
+  <td on:click>
     <BalanceAccount class="flex-1 align-items-center" id={bank.accountId} />
   </td>
-  <td>
+  <td on:click>
     <BalanceAccount
       class="flex-1 align-items-center"
       id={bank.accountId}
-      value={(_value) => parseFloat(bank.balance || 0) - _value}
+      value={(_value) => parseFloat(bank.balance || 0) - _value || 0}
     />
   </td>
   <td style="width: 30px;cursor: pointer;padding: 0">

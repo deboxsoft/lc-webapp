@@ -12,7 +12,6 @@
   export let preview = false;
   export let loading;
   export let errors = [];
-  // export let itemsSelected = writable([]);
   let isSelectAll = preview;
 
   $: accountChildren = getAccountLeaf();
@@ -31,7 +30,7 @@
       <th width="200">Akun Perkiraan</th>
     </tr>
     {#each bankStatementList as bankStatement, index}
-      <tr class="{errors.includes(index) && `error`}" class:preview>
+      <tr class:bg-danger-300={errors.includes(index)} class:preview>
         <td class="text-center date">
           <CellDate date={bankStatement.date} />
         </td>

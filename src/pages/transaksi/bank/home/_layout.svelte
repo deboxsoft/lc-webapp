@@ -41,6 +41,10 @@
       $loading = false;
     });
   }
+
+  function selectHandler({ detail: bank }) {
+    $goto("../:bankId/statements", { bankId: bank.id });
+  }
 </script>
 
 <PageLayout breadcrumb={[]}>
@@ -94,7 +98,7 @@
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
       {#if $bankStore}
-        <BankTable {bankStore} />
+        <BankTable {bankStore} on:select={selectHandler} />
       {/if}
     </div>
   </div>

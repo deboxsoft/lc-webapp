@@ -11,6 +11,8 @@
 
   import BankStatementTable from "./_components/BankStatementTable.svelte";
   import BankInfo from "./_components/BankInfo.svelte";
+  import { sortUtilsFunc } from "__@root/utils";
+  import { derived, writable } from "svelte/store";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Rekonsiliasi Detail" });
@@ -25,19 +27,21 @@
       bank: getBank($params.bankId),
       ...applicationContext
     });
+  /**
+   * @type {Readable<BankStatement[]>}
+   */
+  const bankStatementList = derived(bankStatementStore, (_store) => {
+    if (_store) {
+      return _store.sort(sortUtilsFunc("date", "desc"));
+    }
+    return _store;
+  });
   let submitting = false,
     errors = [],
     ready = false,
-    bankStatementList,
     itemsSelected,
     filter = {};
   $: account = getAccount($bank.accountId);
-
-  $: {
-    if (!bankStatementList && $bankStatementStore) {
-      bankStatementList = $bankStatementStore;
-    }
-  }
 
   fetchData();
   function fetchData(options = {}) {
@@ -58,58 +62,17 @@
     });
   }
 
-  // async function reconcileHandler() {
-  //   $loading = true;
-  //   submitting = true;
-  //   try {
-  //     // filter
-  //     const statements = [];
-  //     let index = 0;
-  //     errors = [];
-  //     for (const { status, ...statement } of bankStatementList) {
-  //       if ($itemsSelected.includes(index)) {
-  //         const amount = statement.in || statement.out;
-  //         if (!statement.accountId || !amount) {
-  //           errors.push(index);
-  //         }
-  //         statements.push(statement);
-  //       }
-  //       index++;
-  //     }
-  //     statements.sort(sortUtilsFunc("id", "desc"));
-  //     if (statements.length > 0 && !(errors.length > 0)) {
-  //       const result = await reconcile(bank.id, statements);
-  //       statements.forEach((_, index) => {
-  //         statements[index] = result[index];
-  //       });
-  //       // reset check all
-  //       $itemsSelected = [];
-  //       notify("reconcile data bank telah berhasil", "success");
-  //     } else if (statements.length === 0) {
-  //       notify("Belum ada data yang dipillih", "error");
-  //     } else {
-  //       notify("Terdapat data yang belum lengkap", "error");
-  //     }
-  //   } catch (e) {
-  //     console.error(e);
-  //     // notify(e.message, "error");
-  //   } finally {
-  //     $loading = false;
-  //     submitting = false;
-  //   }
-  // }
-
   const createExportMenuHandler = (close) => ({
     pdf: () => {
-      reportContext.pdf(bankStatementList);
+      reportContext.pdf($bankStatementList);
       close();
     },
     csv: () => {
-      reportContext.csv(bankStatementList);
+      reportContext.csv($bankStatementList);
       close();
     },
     print: () => {
-      reportContext.print(bankStatementList);
+      reportContext.print($bankStatementList);
       close();
     }
   });
@@ -167,7 +130,7 @@
   <div class="card flex-column flex-1 d-flex">
     <div class="card-body d-flex flex-column flex-1">
       <BankInfo bank={$bank} account={$account} />
-      <BankStatementTable {bankStatementList} bind:errors />
+      <BankStatementTable bankStatementList={$bankStatementList} bind:errors />
     </div>
   </div>
 </PageLayout>
