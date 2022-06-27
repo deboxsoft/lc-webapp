@@ -68,9 +68,11 @@
           ><i class="icon-eye" />Lihat BDD</a
         >
         {#if bdd.status !== "APPROVED"}
-          <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-pencil" />Ubah BDD</a
-          >
+          {#if bdd.bddAccount}
+            <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
+              ><i class="icon-pencil" />Ubah BDD</a
+            >
+          {/if}
           <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
             ><i class="icon-trash-alt" />Hapus BDD</a
           >

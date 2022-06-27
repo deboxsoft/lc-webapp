@@ -1,4 +1,4 @@
-<!--routify:options title="Import Statement"-->
+<!--routify:options title="Import BDD"-->
 <script>
   import { onMount } from "svelte";
   import { writable } from "svelte/store";
@@ -8,49 +8,67 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import TablePreview from "../_components/TablePreview.svelte";
-  import { sanitizeNumber, sanitizeAccount, sanitizeString, parseDate } from "__@root/utils";
+  import {
+    sanitizeNumber,
+    sanitizeString,
+    parseDate,
+    filteringAccountExpenseAmortization,
+    filteringAccountAccumulationAmortization
+  } from "__@root/utils";
   import { getAuthenticationContext } from "__@modules/users";
-  import InputCheckSwitchery from "__@comps/forms/InputCheckSwitchery.svelte";
 
   const { loading, notify } = getApplicationContext();
   const { getAccount, getAccountLeaf, accountStore } = stores.getAccountContext();
   const { authenticationStore, getProfile } = getAuthenticationContext();
-  const { import: importTransaction } = stores.getTransactionContext();
+  const { import: importBdd } = stores.getBddContext();
 
   // tranform step from csv
   const transformStep = (output) => {
     let i = 0;
     return (result, self) => {
-      const date = parseDate(result.data[0]);
+      const date = parseDate(result.data[4]);
       if (date) {
         output.push({
           id: i,
-          date,
-          no: sanitizeString(`${result.data[1]}`),
-          description: sanitizeString(`${result.data[2]}`),
-          oppositeAccountId: sanitizeAccount(result.data[3]),
-          amount: sanitizeNumber(result.data[4])
+          dateStart: date,
+          name: sanitizeString(result.data[0]),
+          category: sanitizeString(result.data[1]),
+          monthLife: sanitizeNumber(result.data[3]),
+          amount: sanitizeNumber(result.data[2])
         });
         i++;
       }
     };
   };
 
-  const title = "Impor Transaksi";
+  const title = "Impor BDD";
   let fileLoaded = false,
     files = writable([]),
     submitting = false,
     errors = [],
     balance = 0,
-    accountId,
+    expenseAccount,
+    amortizationAccount,
     submit,
     openDialog,
     closeDialog,
-    isPreview,
-    isCredit = false;
+    isPreview;
 
-  $: account = getAccount(accountId);
-  // const parentAccountsCash = ["1010100", "1010200", "1010300", "1010400"];
+  function getAccounts(accountType) {
+    const accountStore = getAccountLeaf();
+    switch (accountType) {
+      case "expense": {
+        return filteringAccountExpenseAmortization(accountStore);
+      }
+      case "accumulation": {
+        return filteringAccountAccumulationAmortization(accountStore);
+      }
+      default: {
+        return accountStore;
+      }
+    }
+  }
+
   $loading = true;
   onMount(() => {
     openDialog();
@@ -61,23 +79,17 @@
     // filter
     errors = [];
     const profile = await getProfile();
-    const inputs = _data.map(({ id, oppositeAccountId, ..._ }) => {
+    const inputs = _data.map(({ id, ..._ }) => {
       const userId = profile.session.userId;
       return {
-        type: "JOURNAL",
         userId,
-        accountId,
-        ..._,
-        oppositeAccounts: [
-          {
-            id: oppositeAccountId,
-            amount: _.amount
-          }
-        ]
+        amortizationAccount,
+        expenseAccount,
+        ..._
       };
     });
     if (!errors || errors.length === 0) {
-      await importTransaction(inputs);
+      await importBdd(inputs);
       $goto("./");
       $loading = false;
     } else {
@@ -105,10 +117,6 @@
     files.set([]);
     $goto("./");
   }
-
-  function switchIsCreditHandler({ detail }) {
-    isCredit = detail;
-  }
 </script>
 
 <FormImport
@@ -126,33 +134,45 @@
   onSubmit={submitHandler}
 >
   <!-- form upload  -->
-  <svelte:fragment slot="info">
-    <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
-      <dl class="row form-group">
-        <dt class="col-sm-3 mb-0 d-flex align-items-center">Akun {isCredit ? "Kredit" : "Debit"}</dt>
+  <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1" slot="info">
+    <dl class="row form-group">
+      <dt class="col-sm-3 mb-0 d-flex align-items-center">Akun Biaya Amortisasi</dt>
+      <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+        <span class="d-flex w-75 align-items-center">
+          : <AccountSelect
+            class="ml-1 mr-2"
+            id="expenseAccount"
+            name="expenseAccount"
+            bind:accountId={expenseAccount}
+            accountStore={getAccounts("expense")}
+          />
+        </span>
+      </p>
+    </dl>
+    <dl class="row form-group">
+      <dt class="col-sm-3 mb-0 d-flex align-items-center">Akun Akumulasi BDD</dt>
+      <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
+        <span class="d-flex w-75 align-items-center">
+          : <AccountSelect
+            class="ml-1 mr-2"
+            id="amortizationAccount"
+            name="amortizationAccount"
+            bind:accountId={amortizationAccount}
+            accountStore={getAccounts("accumulation")}
+          />
+        </span>
+      </p>
+    </dl>
+    {#if !isPreview}
+      <dl class="row mb-0">
+        <dt class="col-sm-3 mb-0">Download Template</dt>
         <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-          <span class="d-flex w-75 align-items-center">
-            : <AccountSelect class="ml-1 mr-2" id="accountId" bind:accountId {accountStore} />
-            <InputCheckSwitchery
-              class="mt-auto mb-auto"
-              name="isCredit"
-              label="kredit"
-              on:change={switchIsCreditHandler}
-            />
-          </span>
+          :<a href={`/templates/bdd.csv`} class="ml-1" target="_self">bdd.csv</a>
         </p>
       </dl>
-      {#if !isPreview}
-        <dl class="row mb-0">
-          <dt class="col-sm-3 mb-0">Download Template</dt>
-          <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-            :<a href={`/templates/jurnal.csv`} class="ml-1" target="_self">jurnal.csv</a>
-          </p>
-        </dl>
-      {/if}
-    </div>
-  </svelte:fragment>
+    {/if}
+  </div>
 
   <!-- preview -->
-  <TablePreview {isCredit} dataList={fileData} {accountId} bind:errors />
+  <TablePreview dataList={fileData} bind:errors />
 </FormImport>

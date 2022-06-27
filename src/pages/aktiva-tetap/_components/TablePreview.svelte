@@ -1,17 +1,9 @@
 <script>
-  import { get } from "svelte/store";
   import Table from "__@comps/tables/DataTable.svelte";
   import { stores } from "@deboxsoft/accounting-client";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
 
-  /**
-   *
-   * @typedef{import("@deboxsoft/accounting-api").Inventory} Inventory
-   *
-   */
-
-  const { getCategoryInventory } = stores.getInventoryContext();
   /**
    * @type {import("@deboxsoft/accounting-api").Inventory[]}
    */

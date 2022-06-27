@@ -1,18 +1,9 @@
 <script>
-  import { get } from "svelte/store";
   import Table from "__@comps/tables/DataTable.svelte";
-  import { stores } from "@deboxsoft/accounting-client";
   import CellNumber from "__@comps/CellNumber.svelte";
 
   /**
-   *
-   * @typedef{import("@deboxsoft/accounting-api").Inventory} Inventory
-   *
-   */
-
-  const { getCategoryInventory } = stores.getInventoryContext();
-  /**
-   * @type {import("@deboxsoft/accounting-api").Inventory[]}
+   * @type {import("@deboxsoft/accounting-api").Product[]}
    */
   export let dataList = [];
 
@@ -27,28 +18,27 @@
    */
   export const submit = () => {
     return dataList;
-  }
-
+  };
 </script>
 
 <Table class="table text-nowrap">
   <tr slot="header">
-    <th width="90">Tgl Perolehan</th>
-    <th >Nama Aset</th>
-    <th>Jumlah</th>
-    <th>Harga Satuan</th>
-    <th>Harga Perolehan</th>
+    <th width="50">No</th>
+    <th>Nama</th>
+    <th>Satuan</th>
+    <th>Harga Barang</th>
+    <th>Stock</th>
   </tr>
   {#each dataList as item, index}
-    <tr class="{errors.includes(index) && `error`}">
-      <td>{item.datePurchase || ""}</td>
+    <tr class={errors.includes(index) && `error`}>
+      <td>{item.no || ""}</td>
       <td>{item.name || ""}</td>
-      <td>{item.quantity || ""}</td>
+      <td>{item.unit || ""}</td>
       <td>
-        <CellNumber value={item.priceItem} />
+        <CellNumber value={item.price} />
       </td>
       <td>
-        <CellNumber value={item.priceItem * item.quantity} />
+        <CellNumber value={item.available} format="number" />
       </td>
     </tr>
   {/each}

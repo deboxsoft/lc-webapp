@@ -22,8 +22,10 @@
   {total}
   {totalPayment}
 />
-<dl class="row mb-0">
-  <dt class="col-sm-5 mb-0">Pembayaran</dt>
-  <p class="col-sm-7 mb-0">:</p>
-</dl>
-<AccountAmountTable dataList={bdd.paymentAccounts} bind:totalPayment />
+{#if bdd.paymentAccounts}
+  <dl class="row mb-0">
+    <dt class="col-sm-5 mb-0">Pembayaran</dt>
+    <p class="col-sm-7 mb-0">:</p>
+  </dl>
+  <AccountAmountTable dataList={bdd.paymentAccounts} bind:totalPayment />
+{/if}
