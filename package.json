@@ -22,8 +22,8 @@
     "lint": "run-p lint:svelte lint:eslint lint:tsc"
   },
   "dependencies": {
-    "@deboxsoft/accounting-api": "^1.5.8",
-    "@deboxsoft/accounting-client": "^1.5.11",
+    "@deboxsoft/accounting-api": "^1.5.12",
+    "@deboxsoft/accounting-client": "^1.5.13",
     "@deboxsoft/lc-cashier-api": "^1.0.1",
     "@deboxsoft/lc-cashier-client": "^1.0.1",
     "@deboxsoft/module-client": "~2.3.2",
