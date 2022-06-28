@@ -9,18 +9,12 @@
   const { authenticationStore } = getAuthenticationContext();
   const { notify } = getApplicationContext();
   const { create } = stores.getInventoryContext();
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let inventory;
-
-  (async () => {
-    const now = await getCurrentDate();
-    inventory = {
-      date: now,
-      quantity: 1,
-      userId: $authenticationStore?.profile?.session?.userId
-    };
-  })();
+  const inventory = {
+    date: new Date(),
+    quantity: 1,
+    userId: $authenticationStore?.profile?.session?.userId
+  };
 
   async function onSubmit(values) {
     await create(values);

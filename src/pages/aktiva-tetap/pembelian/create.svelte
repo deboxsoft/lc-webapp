@@ -11,10 +11,8 @@
   const { authenticationStore } = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
   const { create } = stores.getInventoryTransactionContext();
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let inventoryTransaction,
-    openDialog,
+  let openDialog,
     fields,
     submitting = false,
     isValid;
@@ -22,14 +20,15 @@
     date: true,
     status: true
   });
-  (async () => {
-    const now = await getCurrentDate();
-    inventoryTransaction = {
-      userId: $authenticationStore?.profile?.session?.userId,
-      datePurchase: now
-    };
-    openDialog();
-  })();
+  const inventoryTransaction = {
+    userId: $authenticationStore?.profile?.session?.userId,
+    datePurchase: now
+  };
+  $: {
+    if (openDialo) {
+      openDialog();
+    }
+  }
 
   async function submitHandler() {
     try {

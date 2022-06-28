@@ -12,16 +12,11 @@
     $goto("/access-denied");
   }
   const { notify } = getApplicationContext();
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
   const { create } = stores.getBankContext();
 
-  let bank;
-  (async () => {
-    const date = await getCurrentDate();
-    bank = {
-      date
-    };
-  })();
+  const bank = {
+    date: new Date()
+  };
 
   async function onSubmit(values) {
     await create(values);

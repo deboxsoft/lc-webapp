@@ -17,23 +17,23 @@
   const { loading, notify } = getApplicationContext();
   const { stockOut, stockStore, getStock } = stores.getStockTransactionContext();
   const { authenticationStore } = getAuthenticationContext();
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let stockTransaction,
-    openDialog,
+  let openDialog,
     fields,
     isValid,
     submitting = false;
 
-  (async () => {
-    const now = await getCurrentDate();
-    stockTransaction = {
-      userId: $authenticationStore?.profile?.session?.userId,
-      datePurchase: now,
-      mutation: "STOCK_OUT"
-    };
-    openDialog();
-  })();
+  const stockTransaction = {
+    userId: $authenticationStore?.profile?.session?.userId,
+    datePurchase: now,
+    mutation: "STOCK_OUT"
+  };
+
+  $: {
+    if (openDialog) {
+      openDialog();
+    }
+  }
 
   async function submitHandler() {
     try {

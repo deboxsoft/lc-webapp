@@ -12,26 +12,26 @@
   const { getUserId } = getAuthenticationContext();
   const { notify, loading: topLoading } = getApplicationContext();
   const { create } = stores.getBddContext();
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
-  let bdd,
-    openDialog,
+  let openDialog,
     fields,
     isValid,
     submitting = false;
   const schema = BddInputSchema;
 
-  (async () => {
-    const now = await getCurrentDate();
-    bdd = {
-      date: now,
-      dateStart: now,
-      dateEnd: dayjs().add(1, "year").toDate(),
-      userId: getUserId(),
-      monthLife: 24
-    };
-    openDialog();
-  })();
+  const now = new Date();
+  const bdd = {
+    date: now,
+    dateStart: now,
+    dateEnd: dayjs().add(1, "year").toDate(),
+    userId: getUserId(),
+    monthLife: 24
+  };
+  $: {
+    if (openDialog) {
+      openDialog();
+    }
+  }
 
   async function submitHandler() {
     try {

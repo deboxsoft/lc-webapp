@@ -12,7 +12,6 @@
   const { notify, loading } = getApplicationContext();
   const { getUserId, getGroup } = getAuthenticationContext();
   const { create } = getCashierContext();
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
   let cashier,
     openDialog,
@@ -28,7 +27,7 @@
 
   initial();
   async function initial() {
-    const date = await getCurrentDate();
+    const date = new Date();
     const userId = getUserId();
     const group = await getGroup(userId);
 

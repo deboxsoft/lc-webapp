@@ -12,7 +12,6 @@
   const { getUserId } = getAuthenticationContext();
   const { productContext } = stores.getStockContext();
   const { create } = productContext;
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
 
   let product = {},
     openDialog,
@@ -20,7 +19,6 @@
     submitting = false,
     ready = false,
     isValid;
-
 
   $: {
     if (openDialog && !ready) {

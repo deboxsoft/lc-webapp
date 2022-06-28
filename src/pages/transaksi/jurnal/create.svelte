@@ -12,7 +12,6 @@
   const { create, getTransaction } = stores.getTransactionContext();
   const { createGranted } = getAclContext();
   const { accountStore, getAccount } = stores.getAccountContext();
-  const { getCurrentDate } = stores.getPreferenceAccountingContext();
   const { authenticationStore } = getAuthenticationContext();
   const { notify, loading } = getApplicationContext();
 
@@ -35,14 +34,12 @@
 
   function init() {
     startUp = false;
-    getCurrentDate().then((date) => {
-      transaction = {
-        date,
-        type: "JOURNAL",
-        oppositeAccounts: [createCreditAccount()],
-        userId: $authenticationStore.profile.id
-      };
-    });
+    transaction = {
+      date: new Date(),
+      type: "JOURNAL",
+      oppositeAccounts: [createCreditAccount()],
+      userId: $authenticationStore.profile.id
+    };
   }
 
   // handler
