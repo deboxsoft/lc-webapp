@@ -78,7 +78,9 @@
   });
 
   export function setValue(value) {
-    autoNumeric.set(value, options);
+    if (Number.isFinite(value)) {
+      autoNumeric.set(value, options);
+    }
   }
 
   function createInputHandler() {

@@ -25,7 +25,7 @@
     isValid,
     submitting = false;
 
-  stockTransaction = {
+  const stockTransaction = {
     userId: $authenticationStore?.profile?.session?.userId,
     datePurchase: new Date(),
     mutation: "STOCK_IN"

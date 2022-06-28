@@ -25,7 +25,7 @@
 
   const stockTransaction = {
     userId: $authenticationStore?.profile?.session?.userId,
-    datePurchase: now,
+    datePurchase: new Date(),
     mutation: "STOCK_OUT"
   };
 
