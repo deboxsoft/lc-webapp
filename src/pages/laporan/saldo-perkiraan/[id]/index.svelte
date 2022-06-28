@@ -37,7 +37,6 @@
   async function fetchData(options = {}) {
     $loading = true;
     submitting = true;
-    console.log($currentBalanceStore);
     const currentBalance = (await getCurrentBalanceAccount($account.id)) || 0;
     const result = await findPageGeneralLedger($account.id, currentBalance, {
       filter: {},
