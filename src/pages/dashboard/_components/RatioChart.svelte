@@ -93,7 +93,7 @@
         on:change={ratioSelectHandler}
         items={seriesRatioNames}
         labelFunc={(_) => _[2]}
-        valueFunc={(_) => _}
+        valueFunc={(_) => _[0]}
         style="width: unset"
       />
     </div>
