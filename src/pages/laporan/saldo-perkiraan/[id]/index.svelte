@@ -22,7 +22,6 @@
     generalLedgerStore: dataStore
   } = stores.createGeneralLedgerContext(applicationContext);
   const { accountStore, getAccount } = stores.getAccountContext();
-  const { currentDateStore } = stores.getPreferenceAccountingContext();
 
   // state
   let submitting = false;

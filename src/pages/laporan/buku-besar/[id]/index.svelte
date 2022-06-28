@@ -21,7 +21,6 @@
   const { loading } = applicationContext;
   const { trialBalance } = stores.getBalanceContext();
   const { accountStore, getAccount } = stores.getAccountContext();
-  const { currentDateStore } = stores.getPreferenceAccountingContext();
 
   // state
   let submitting = false;
@@ -73,7 +72,7 @@
   }
 
   function dateChangeHandler({ detail }) {
-    const now = $currentDateStore;
+    const now = new Date();
     startDate = dayjs(detail.from).startOf("day").toDate();
     const _tmp = dayjs(detail.to || now)
       .endOf("day")

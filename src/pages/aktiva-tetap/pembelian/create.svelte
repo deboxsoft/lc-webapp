@@ -22,10 +22,10 @@
   });
   const inventoryTransaction = {
     userId: $authenticationStore?.profile?.session?.userId,
-    datePurchase: now
+    datePurchase: new Date()
   };
   $: {
-    if (openDialo) {
+    if (openDialog) {
       openDialog();
     }
   }
