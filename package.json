@@ -8,7 +8,7 @@
     "dev": "run-p routify nollup",
     "dev:ssr": "run-p routify rollup",
     "build": "cross-env NODE_ENV=production npm run build:app",
-    "build:deploy": "pnpm build && cp -R ./dist ../../deploy/webapp",
+    "build:deploy": "pnpm build && rm -Rf ../../deploy/webapp/dist/build && cp -R ./dist/build ../../deploy/webapp/dist",
     "build:app": "routify -b && rollup -c",
     "build:static": "spank",
     "format": "prettier --write --plugin-search-dir ./ src/**/*.*",
