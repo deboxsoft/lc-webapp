@@ -69,8 +69,10 @@ export const createBaseApplicationContext = () => {
     subscriptionClientOptions: {
       reconnect: true
     },
-    graphqlUrl: process.env.DBX_ENV_GRAPHQL_URL,
-    graphqlWsUrl: process.env.DBX_ENV_GRAPHQL_WS
+    // @ts-ignore
+    graphqlUrl: DBX_ENV_GRAPHQL_URL || process.env.DBX_ENV_GRAPHQL_URL,
+    // @ts-ignore
+    graphqlWsUrl: DBX_ENV_GRAPHQL_WS || process.env.DBX_ENV_GRAPHQL_WS
   });
   // jwt
   const jwtStore = createJwtStore();
