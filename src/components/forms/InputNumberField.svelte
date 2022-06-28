@@ -61,7 +61,7 @@
   }
 
   $: {
-    if (fields && name && autoNumeric && !Number.isNaN(value) && value !== $fields[name]) {
+    if (fields && name && autoNumeric && Number.isFinite(value) && value !== $fields[name]) {
       autoNumeric.set($fields[name], options);
     }
   }
@@ -70,7 +70,7 @@
 
   onMount(() => {
     autoNumeric = new AutoNumeric(inputEl, { ...defaultOptions, ...options });
-    !Number.isNaN(value) && autoNumeric.set(value);
+    Number.isFinite(value) && autoNumeric.set(value);
   });
 
   onDestroy(() => {
