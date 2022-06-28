@@ -47,11 +47,11 @@ export const statementBalanceContext = (opts: Omit<CreateReportOptions, "generat
       const statementIncome = balanceSheetReport.statementIncome;
       const accountsBalance = balanceSheetReport.accountsBalance;
       const result = [];
-      const _pushData = (balanceClassification: BalanceClassification, totalLabel: string) => {
+      const _pushData = (balanceClassification: BalanceClassification, totalLabel: string, gap = 0) => {
         result.push(
           ...parsingAccountsBalance(
             balanceClassification.accountsIndex.map((_index) => accountsBalance[_index]),
-            { isCsv, parentOnly }
+            { isCsv, parentOnly, gap }
           )
         );
         if (!parentOnly) {
@@ -64,13 +64,15 @@ export const statementBalanceContext = (opts: Omit<CreateReportOptions, "generat
         }
       };
       _pushData(statementIncome.revenue, "TOTAL PENDAPATAN");
-      _pushData(statementIncome.expense, "TOTAL BIAYA");
-      result.push(
-        parsingSumBalance("LABA/RUGI", statementIncome.profit, {
-          isCsv,
-          params: paramsTotal
-        })
-      );
+      _pushData(statementIncome.expense, "TOTAL BIAYA", 1);
+      if (!parentOnly) {
+        result.push(
+          parsingSumBalance("LABA/RUGI", statementIncome.profit, {
+            isCsv,
+            params: paramsTotal
+          })
+        );
+      }
       return result;
     }
   });
@@ -156,18 +158,29 @@ export const createReportContext = (opts: CreateReportOptions) => {
 
 function parsingAccountsBalance(
   accountBalances: AccountBalance[],
-  { isCsv = false, parentOnly = false }: Partial<Pick<GenerateReportOptions, "isCsv" | "parentOnly">>
+  {
+    isCsv = false,
+    parentOnly = false,
+    gap = 0
+  }: Partial<Pick<GenerateReportOptions, "isCsv" | "parentOnly">> & { gap?: number }
 ) {
   const _parseAccount = (accountBalance: AccountBalance) => {
     const paramsParent = {
       fillColor: options.backgroundColorParent
     };
-    const defParent = [
-      nameCell(accountBalance.name, { isCsv, params: { ...paramsParent, margin: [options.paddingParent, 0, 0, 0] } }),
-      emptyCell({ isCsv, params: paramsParent }),
-      balanceCell(accountBalance.balance, { isCsv, params: paramsParent, type: "rp" }),
-      emptyCell({ isCsv, params: paramsParent })
+    const defParent: any = [
+      nameCell(accountBalance.name, { isCsv, params: { ...paramsParent, margin: [options.paddingParent, 0, 0, 0] } })
     ];
+    if (parentOnly) {
+      for (let i = 0; i < gap; i++) {
+        defParent.push(emptyCell({ isCsv, params: paramsParent }));
+      }
+      defParent.push(balanceCell(accountBalance.balance, { isCsv, params: paramsParent, type: "rp" }));
+    } else {
+      defParent.push(emptyCell({ isCsv, params: paramsParent }));
+      defParent.push(balanceCell(accountBalance.balance, { isCsv, params: paramsParent, type: "rp" }));
+      defParent.push(emptyCell({ isCsv, params: paramsParent }));
+    }
     const defChild = [];
     if (!parentOnly && accountBalance.children) {
       const paramsChildren = {};
