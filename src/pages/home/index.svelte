@@ -26,15 +26,15 @@
 
 <PageLayout>
   <div class="d-flex flex-wrap">
-    <MenuCard show={transactionShow} label="Jurnal" path="/transaksi/jurnal" iconClass="icon-loop" />
-    <MenuCard show={cashierShow} label="Kasir" path="/transaksi/cashier" iconClass="icon-cash2" />
-    <MenuCard show={bankShow} label="Bank" path="/transaksi/bank" iconClass="icon-cash4" />
-    <MenuCard show={stockShow} label="Persediaan" path="/persediaan/home" iconClass="icon-archive" />
-    <MenuCard show={inventoryShow} label="Aktiva Tetap" path="/aktiva-tetap/home" iconClass="icon-file-check" />
-    <MenuCard show={bddShow} label="BDD" path="/bdd/home" iconClass="icon-library2" />
-    <MenuCard show={reportShow} label="Laporan" path="/laporan" iconClass="icon-stack-text" />
-    <MenuCard show={userShow} label="Users" path="/users" iconClass="icon-users4" />
-    <MenuCard show={settingShow} label="Settings" path="/settings" iconClass="icon-cog3" />
-    <MenuCard show={profile.authenticated} label="Profile" path="/profile" iconClass="icon-profile" />
+    <MenuCard show="{transactionShow}" label="Jurnal" path="/transaksi/jurnal" iconClass="icon-loop" />
+    <MenuCard show="{cashierShow}" label="Kasir" path="/transaksi/kasir" iconClass="icon-cash2" />
+    <MenuCard show="{bankShow}" label="Bank" path="/transaksi/bank" iconClass="icon-cash4" />
+    <MenuCard show="{stockShow}" label="Persediaan" path="/persediaan/home" iconClass="icon-archive" />
+    <MenuCard show="{inventoryShow}" label="Aktiva Tetap" path="/aktiva-tetap/home" iconClass="icon-file-check" />
+    <MenuCard show="{bddShow}" label="BDD" path="/bdd/home" iconClass="icon-library2" />
+    <MenuCard show="{reportShow}" label="Laporan" path="/laporan" iconClass="icon-stack-text" />
+    <MenuCard show="{userShow}" label="Users" path="/users" iconClass="icon-users4" />
+    <MenuCard show="{settingShow}" label="Settings" path="/settings" iconClass="icon-cog3" />
+    <MenuCard show="{profile.authenticated}" label="Profile" path="/profile" iconClass="icon-profile" />
   </div>
 </PageLayout>
