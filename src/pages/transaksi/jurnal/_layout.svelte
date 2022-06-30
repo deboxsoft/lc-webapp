@@ -30,12 +30,13 @@
   /**
    * @type {import("@deboxsoft/accounting-api").TransactionFilter}
    */
-  let filter = {};
+  let defaultFilter = {};
   let openFilterDialog;
   let closeFilterDialog;
   let textFilter = undefined;
   let fetchMor;
   let submitFilter;
+  let userId;
   let transactions = [];
 
   init();
@@ -70,14 +71,14 @@
     $loading = true;
     if (!readOwnGranted && readOwnGranted) {
       const profile = await getProfile();
-      filter.userId = profile.session.userId;
+      userId = profile.session.userId;
     }
-    await load({ filter, pageCursor: {} });
+    await load({ filter: defaultFilter, pageCursor: {} });
     $loading = false;
   }
 
   async function filterHandler() {
-    const _filter = Object.assign(filter, submitFilter && submitFilter());
+    const _filter = Object.assign({ userId }, submitFilter && submitFilter());
     textFilter = undefined;
     $loading = true;
     await findPage({
@@ -96,48 +97,53 @@
   }
 </script>
 
-<FormFilter {filter} bind:closeDialog={closeFilterDialog} bind:openDialog={openFilterDialog} bind:submit={submitFilter}>
-  <button slot="footer" type="button" class="btn btn-primary ml-1" on:click={filterHandler}>
-    <i class="icon-filter4 mr-2" />
+<FormFilter
+  filter="{defaultFilter}"
+  bind:closeDialog="{closeFilterDialog}"
+  bind:openDialog="{openFilterDialog}"
+  bind:submit="{submitFilter}"
+>
+  <button slot="footer" type="button" class="btn btn-primary ml-1" on:click="{filterHandler}">
+    <i class="icon-filter4 mr-2"></i>
     Filter
   </button>
 </FormFilter>
-<PageLayout breadcrumb={[]}>
+<PageLayout breadcrumb="{[]}">
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
-      <a href={$url("./create")} class="breadcrumb-elements-item">
-        <i class="icon-plus2 mr-1" />
+      <a href="{$url('./create')}" class="breadcrumb-elements-item">
+        <i class="icon-plus2 mr-1"></i>
         Posting
       </a>
     {/if}
-    <a href="#/" target="_self" on:click={syncHandler} class="breadcrumb-elements-item">
-      <i class="icon-sync mr-1" />
+    <a href="#/" target="_self" on:click="{syncHandler}" class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1"></i>
       Refresh
     </a>
-    <a href={$url("./import")} class="breadcrumb-elements-item">
-      <i class="icon-file-upload2 mr-1" />
+    <a href="{$url('./import')}" class="breadcrumb-elements-item">
+      <i class="icon-file-upload2 mr-1"></i>
       Impor
     </a>
     <a
       href="/#"
       target="_self"
-      on:click|preventDefault={() => {
+      on:click|preventDefault="{() => {
         openFilterDialog();
-      }}
+      }}"
       class="breadcrumb-elements-item"
     >
-      <i class="icon-filter3 mr-1" />
+      <i class="icon-filter3 mr-1"></i>
       Filter
     </a>
-    <a href={$url("./export")} class="breadcrumb-elements-item">
-      <i class="icon-file-download2 mr-1" />
+    <a href="{$url('./export')}" class="breadcrumb-elements-item">
+      <i class="icon-file-download2 mr-1"></i>
       Ekspor
     </a>
   </svelte:fragment>
-  <div class="header-elements" slot="header-elements" />
+  <div class="header-elements" slot="header-elements"></div>
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1">
-      <TableTransaction bind:filter {transactions} />
+      <TableTransaction filter="{defaultFilter}" transactions="{transactions}" />
     </div>
   </div>
   <slot />
