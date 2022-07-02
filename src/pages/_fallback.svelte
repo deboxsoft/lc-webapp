@@ -13,7 +13,10 @@
       <!-- Buttons -->
       <div class="row">
         <div class="col-sm-6">
-          <a href="/" class="btn btn-primary btn-block"><i class="icon-home4 mr-2" /> Dashboard</a>
+          <a href="/" class="btn btn-primary btn-block">
+            <i class="icon-home4 mr-2" />
+            Dashboard
+          </a>
         </div>
       </div>
       <!-- /buttons -->

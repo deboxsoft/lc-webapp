@@ -22,19 +22,19 @@
 </script>
 
 <div {...$$restProps} class={classes}>
+  <span class="pl-3 font-weight-semibold">MENU UTAMA</span>
   <a href="/#" class="sidebar-mobile-main-toggle" target="_self" on:click|preventDefault={toggleShowMobileHandler}>
     <i class="icon-arrow-left8" />
   </a>
-  <span class="font-weight-semibold">Main sidebar</span>
-  <a
-    href="/#"
-    class="sidebar-mobile-expand"
-    target="_self"
-    on:click|preventDefault={() => {
-      $isFullscreen = !$isFullscreen;
-    }}
-  >
-    <i class="icon-screen-full" />
-    <i class="icon-screen-normal" />
-  </a>
+  <!--  <a-->
+  <!--    href="/#"-->
+  <!--    class="sidebar-mobile-expand"-->
+  <!--    target="_self"-->
+  <!--    on:click|preventDefault="{() => {-->
+  <!--      $isFullscreen = !$isFullscreen;-->
+  <!--    }}"-->
+  <!--  >-->
+  <!--    <i class="icon-screen-full"></i>-->
+  <!--    <i class="icon-screen-normal"></i>-->
+  <!--  </a>-->
 </div>

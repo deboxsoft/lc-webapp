@@ -17,7 +17,7 @@
   }
 </script>
 
-<div class="navbar-brand text-center text-lg-left wmin-200">
+<div class="navbar-brand text-center text-lg-left wmin-md-200">
   <a href={$url("/")} class="d-flex">
     {#if srcImg && !imageFail}
       <img

@@ -21,12 +21,12 @@
 <svelte:window on:scroll={handleOnScroll} />
 
 <div class="btn-to-top" on:click={goTop} class:visible={!hidden}>
-  <button class="btn btn-dark btn-icon rounded-pill"><i class="icon-arrow-up8" /> </button>
+  <button class="btn btn-dark btn-icon rounded-pill"><i class="icon-arrow-up8" /></button>
 </div>
 
 <style lang="scss">
   .btn-to-top {
-    position: absolute;
+    position: fixed;
     bottom: 1.25rem;
     right: 1.25rem;
     align-self: flex-end;

@@ -98,6 +98,6 @@
   }
 </script>
 
-<form on:submit|preventDefault={submitHandler} {...$$restProps}>
+<form on:submit|preventDefault="{submitHandler}" {...$$restProps}>
   <slot />
 </form>

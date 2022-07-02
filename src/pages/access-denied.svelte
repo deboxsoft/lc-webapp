@@ -22,8 +22,10 @@
             on:click|preventDefault={() => {
               window.history.go(-2);
             }}
-            target="_self">back</a
+            target="_self"
           >
+            back
+          </a>
         </div>
       </div>
     </div>

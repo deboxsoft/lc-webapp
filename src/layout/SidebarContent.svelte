@@ -31,7 +31,7 @@
 
 <!-- Header -->
 <div class="card-header header-elements-inline">
-  <h6 class="card-title">MAIN MENU</h6>
+  <h6 class="card-title d-none d-md-block">MAIN MENU</h6>
 </div>
 
 {#if !collapse}
@@ -45,7 +45,8 @@
           <div class="media-body">
             <div class="media-title font-weight-semibold">{profile.displayName}</div>
             <div class="font-size-xs opacity-50">
-              <i class="icon-pin font-size-sm" /> &nbsp;{(profile.session && profile.session.role) || "-"}
+              <i class="icon-pin font-size-sm" />
+              &nbsp;{(profile.session && profile.session.role) || "-"}
             </div>
           </div>
 
@@ -108,8 +109,8 @@
                           {:else if subItem.icon}
                             <Icon component={subItem.icon} />
                           {/if}
-                          <span>{subItem.label}</span></a
-                        >
+                          <span>{subItem.label}</span>
+                        </a>
                       </li>
                     {/if}
                   {/if}

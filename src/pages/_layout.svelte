@@ -17,6 +17,7 @@
   import Loader from "__@comps/loader/Loader.svelte";
   import { createApplicationContext } from "__@modules/app";
   import Brand from "__@comps/Brand.svelte";
+  import BackToTop from "__@comps/BackToTop.svelte";
 
   // context and store
   const { authenticationContext, accountingContext, loading, companyContext, configPromise } =
@@ -108,23 +109,20 @@
       <!-- Navbar -->
       <Navbar class="-background-blue" expand="md" isDark>
         <Brand />
-        <div class="d-md-none">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
-            <i class="icon-tree5" />
-          </button>
+        <div class=" d-flex flex-1 d-md-none">
           <button
             class="navbar-toggler sidebar-mobile-main-toggle"
             type="button"
             on:click|preventDefault={toggleShowMobileSidebar}
           >
-            <i class="icon-paragraph-justify3" />
+            <i class="icon-transmission" />
           </button>
         </div>
-        <div class="collapse navbar-collapse" id="navbar-mobile">
+        <div class="collapse navbar-collapse order-2 order-md-1">
           <NavbarLeft showToggleMenu />
           <span class="ml-md-auto mr-md-3">&nbsp;</span>
-          <NavbarRight />
         </div>
+        <NavbarRight class="flex-row order-1 order-md-2 flex-1 flex-md-0 justify-content-end align-items-center" />
       </Navbar>
       <!-- close Navbar -->
       <!--  page content-->
@@ -143,6 +141,7 @@
       <div class="footer navbar navbar-expand-lg navbar-light">
         <Footer />
       </div>
+      <BackToTop />
     </div>
   {:else}
     <Login bind:menus onLoginSuccess={loginHandler} />

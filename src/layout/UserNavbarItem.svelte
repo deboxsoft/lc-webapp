@@ -33,15 +33,16 @@
   <DropdownToggle class="d-flex align-items-center navbar-nav-link" tag="div">
     <AvatarProfile size="34px" class="mr-2" />
     <!--    <img src={avatarSrc} class="rounded-circle mr-2" height="34" alt="" />-->
-    <span>{profileName}</span>
+    <span class="d-none d-sm-block">{profileName}</span>
   </DropdownToggle>
   <!-- menu -->
   <svelte:fragment slot="menu">
     <!--    <a href="/#" class="dropdown-item" on:click|preventDefault={profileHandler}><i class="far fa-user" />Pengaturan Profile</a>-->
     <!--    <a href="/#" class="dropdown-item" on:click|preventDefault={passwordHandler}><i class="icon-lock5" />Ganti Password</a>-->
     <!--    <div class="dropdown-divider" />-->
-    <a href="/#" class="dropdown-item" on:click|preventDefault={logoutHandler} on:mouseup={closeHandler}
-      ><i class="icon-switch2" /> Logout</a
-    >
+    <a href="/#" class="dropdown-item" on:click|preventDefault={logoutHandler} on:mouseup={closeHandler}>
+      <i class="icon-switch2" />
+      Logout
+    </a>
   </svelte:fragment>
 </Dropdown>

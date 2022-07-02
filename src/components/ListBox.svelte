@@ -66,9 +66,14 @@
             {/each}
           </optgroup>
         {:else}
-          <option value={option.value} title={option.title} data-value={JSON.stringify(option.value)} data-index={index}
-            >{option.label}</option
+          <option
+            value={option.value}
+            title={option.title}
+            data-value={JSON.stringify(option.value)}
+            data-index={index}
           >
+            {option.label}
+          </option>
         {/if}
       {/each}
     </select>

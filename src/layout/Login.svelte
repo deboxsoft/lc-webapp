@@ -97,8 +97,8 @@
               </div>
 
               <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block"
-                  >Masuk <i class="icon-circle-right2 ml-2" />
+                <button type="submit" class="btn btn-primary btn-block">
+                  Masuk <i class="icon-circle-right2 ml-2" />
                 </button>
               </div>
 
