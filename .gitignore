@@ -218,3 +218,4 @@ docker-compose.yml
 
 # routify
 .routify
+./.env
