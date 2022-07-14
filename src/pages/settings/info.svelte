@@ -52,11 +52,6 @@
       messageNotify = "data berhasil tersimpan";
       notify(messageNotify, "success");
       alertType = "success";
-      // refresh logo
-      const brandUrl = $config.brandUrl;
-      $config.brandUrl = undefined;
-      await tick();
-      $config.brandUrl = brandUrl;
     } catch (e) {
       messageNotify = e.message;
       notify(messageNotify, "error");

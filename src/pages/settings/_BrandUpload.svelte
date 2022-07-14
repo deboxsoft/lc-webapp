@@ -109,7 +109,11 @@
   function oninitfile() {}
 
   function onprocessfile(error, file) {
+    // refresh logo
+    const brandUrl = $config.brandUrl;
+    $config.brandUrl = undefined;
     tick().then(() => {
+      $config.brandUrl = brandUrl;
       $loading = false;
     });
   }
