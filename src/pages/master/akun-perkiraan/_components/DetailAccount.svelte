@@ -2,7 +2,7 @@
   import { get } from "svelte/store";
   import { url } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
-  import { getAcc } from "@deboxsoft/accounting-api";
+  import { getAccountType } from "__@root/utils";
   import { constantCase } from "@deboxsoft/module-core";
 
   const { getAccount } = stores.getAccountContext();
