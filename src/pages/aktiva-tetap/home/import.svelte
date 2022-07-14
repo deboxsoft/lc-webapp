@@ -39,7 +39,8 @@
   let submitting = false;
   let isPreview;
   let errors = [];
-  let submit, openDialog, closeDialog, categoryId;
+  let submit, openDialog, closeDialog, statusFormState;
+  export let categoryId;
 
   onMount(() => {
     openDialog();
@@ -47,6 +48,9 @@
   });
 
   async function submitHandler() {
+    if (!categoryId) {
+      throw new Error("kategori harus diisi.");
+    }
     errors = [];
     const inputs = submit();
     if (!errors || errors.length === 0) {
@@ -63,6 +67,9 @@
    */
   function previewHandler(listData) {
     errors = [];
+    if (!categoryId) {
+      throw new Error("Kategori belum dipilih.");
+    }
     if (listData) {
       listData.forEach((_, index) => {
         if (_.name === "" || _.datePurchase === "" || _.priceItem === "" || _.quantity === "") {
@@ -82,11 +89,17 @@
   }
 
   function categoryHandler({ detail }) {
-    categoryId = detail;
+    categoryId = detail?.id;
+    if (categoryId) {
+      statusFormState = "verified";
+    } else {
+      statusFormState = "unverified";
+    }
   }
 </script>
 
 <FormImport
+  bind:statusFormState
   bind:fileLoaded
   bind:files
   bind:errors
@@ -122,7 +135,8 @@
       <dl class="row mb-0">
         <dt class="col-sm-3 mb-0">Download Template</dt>
         <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-          :<a href={`/templates/inventaris.csv`} class="ml-1" target="_self">inventaris.csv</a>
+          :
+          <a href={`/templates/inventaris.csv`} class="ml-1" target="_self">inventaris.csv</a>
         </p>
       </dl>
     {/if}

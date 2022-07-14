@@ -5,7 +5,7 @@
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
   import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
-  import { calcAmortization } from "@deboxsoft/accounting-api";
+  import { calcAmortization, dayjs } from "@deboxsoft/accounting-api";
 
   export let bdd;
   export let classes = {};
@@ -18,6 +18,13 @@
     } else {
       $goto("./:id/view", { id: bdd.id });
     }
+  }
+
+  /**
+   * @param _bdd {import("@deboxsoft/accounting-api").Bdd}
+   */
+  function isExpired(_bdd) {
+    return dayjs().isAfter(_bdd.dateEnd);
   }
 </script>
 
@@ -60,22 +67,31 @@
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
         {#if bdd.status === "APPROVED"}
-          <a href={$url("./:id/amortization", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-clipboard3" />Rekap depreciation</a
-          >
+          <a href={$url("./:id/amortization", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}>
+            <i class="icon-clipboard3" />
+            Rekap depreciation
+          </a>
         {/if}
-        <a href={$url("./:id/view", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-eye" />Lihat BDD</a
-        >
+        <a href={$url("./:id/view", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}>
+          <i class="icon-eye" />
+          Lihat BDD
+        </a>
         {#if bdd.status !== "APPROVED"}
           {#if bdd.bddAccount}
-            <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-              ><i class="icon-pencil" />Ubah BDD</a
-            >
+            <a href={$url("./:id/update", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}>
+              <i class="icon-pencil" />
+              Ubah BDD
+            </a>
           {/if}
-          <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-trash-alt" />Hapus BDD</a
-          >
+          <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}>
+            <i class="icon-trash-alt" />
+            Hapus BDD
+          </a>
+        {:else if isExpired(bdd)}
+          <a href={$url("./:id/remove", { id: bdd.id })} class="dropdown-item" on:mouseup={closeHandler}>
+            <i class="icon-trash-alt" />
+            Hapus BDD
+          </a>
         {/if}
       </svelte:fragment>
     </Dropdown>

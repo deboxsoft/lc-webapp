@@ -38,7 +38,7 @@
         }
       });
       if (inventoryTransaction.approveBy) {
-        approveByPromise = getUser(inventoryTransaction.approveBy).then((_) => {
+        getUser(inventoryTransaction.approveBy).then((_) => {
           if (_) {
             approveBy = _.name;
           }
@@ -94,10 +94,10 @@
       Close
     </button>
     {#if rejectButtonEnable}
-      <button type="button" class="btn btn-danger" on:click={rejectHandler}> Reject </button>
+      <button type="button" class="btn btn-danger" on:click={rejectHandler}>Reject</button>
     {/if}
     {#if approveButtonEnable}
-      <button type="button" class="btn btn-primary" on:click={approveHandler}> Approve </button>
+      <button type="button" class="btn btn-primary" on:click={approveHandler}>Approve</button>
     {/if}
   </svelte:fragment>
 </Modal>

@@ -16,8 +16,13 @@
 
   $: {
     categoryInventory = getCategoryInventory(inventory.categoryId);
-    if (categoryInventory) {
-      inventoryDesc = calcDepreciation({ ...inventory, groupDepreciationId: categoryInventory.groupDepreciationId });
+    if (categoryInventory?.groupDepreciationId) {
+      inventoryDesc = calcDepreciation({
+        depreciationCount: inventory.depreciationCount || 0,
+        quantity: inventory.quantity,
+        priceItem: inventory.priceItem,
+        groupDepreciationId: categoryInventory.groupDepreciationId
+      });
     }
   }
 
@@ -30,20 +35,20 @@
   <td class={classes.id} style="text-align: center" on:click={selectHandler}>
     {inventory.id}
   </td>
-  <td class={classes.datePurchase} style="text-align: center" on:click={selectHandler}
-    ><CellDate date={inventory.datePurchase} /></td
-  >
+  <td class={classes.datePurchase} style="text-align: center" on:click={selectHandler}>
+    <CellDate date={inventory.datePurchase} />
+  </td>
   <td class={classes.name} on:click={selectHandler}>{inventory.name || ""}</td>
   <td class={classes.category} on:click={selectHandler}>{categoryInventory?.name || ""}</td>
   <td class={classes.bookValue} style="text-align: center" on:click={selectHandler}>
-    <CellNumber value={inventoryDesc.depreciationAccumulation} />
+    <CellNumber value={inventoryDesc?.depreciationAccumulation} />
   </td>
   <td class={classes.quantity} style="text-align: center" on:click={selectHandler}>{inventory.quantity}</td>
   <td class={classes.priceItem} on:click={selectHandler}>
     <CellNumber value={inventory.priceItem} />
   </td>
   <td class={classes.total} on:click={selectHandler}>
-    <CellNumber value={inventoryDesc.total} />
+    <CellNumber value={inventoryDesc?.total || inventory.quantity * inventory.priceItem} />
   </td>
   <td style="cursor: pointer;padding: 0">
     <Dropdown
@@ -57,13 +62,15 @@
         <i class="icon-menu9" />
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
-        <a href={$url("./:id/depreciation", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-clipboard3" />Rekap Depresiasi</a
-        >
+        <a href={$url("./:id/depreciation", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}>
+          <i class="icon-clipboard3" />
+          Rekap Depresiasi
+        </a>
         {#if removeGranted}
-          <a href={$url("./:id/remove", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-trash-alt" />Hapus Aktiva Tetap</a
-          >
+          <a href={$url("./:id/remove", { id: inventory.id })} class="dropdown-item" on:mouseup={closeHandler}>
+            <i class="icon-trash-alt" />
+            Hapus Aktiva Tetap
+          </a>
         {/if}
       </svelte:fragment>
     </Dropdown>

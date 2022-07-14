@@ -19,11 +19,10 @@
   export let createBy = "...load";
   export let approveBy = "...load";
   export let userPromise;
-  export let approveByPromise;
   const _createBy = writable(),
     _approveBy = writable();
   $: $_createBy = createBy;
-  $: $_createBy = approveBy;
+  $: $_approveBy = approveBy;
   const total = inventoryTransaction.paymentAccounts.reduce((tot, item) => tot + item.amount, 0);
 </script>
 

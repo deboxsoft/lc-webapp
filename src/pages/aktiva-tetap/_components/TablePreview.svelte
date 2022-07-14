@@ -1,6 +1,5 @@
 <script>
   import Table from "__@comps/tables/DataTable.svelte";
-  import { stores } from "@deboxsoft/accounting-client";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
 

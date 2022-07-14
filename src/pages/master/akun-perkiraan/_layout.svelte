@@ -46,7 +46,7 @@
   function filtering() {
     const _reduce = (result, account) => {
       // filter
-      const keys = Object.keys(filter);
+      const keys = Object.keys(filter || {});
       let _ok = true;
       if (keys.length > 0) {
         keys.forEach((key) => {
@@ -153,8 +153,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-pdf" />
-          Download PDF</a
-        >
+          Download PDF
+        </a>
         <a
           href="/#"
           target="_self"
@@ -162,8 +162,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-excel" />
-          Download CSV</a
-        >
+          Download CSV
+        </a>
         <a
           href="/#"
           target="_self"
@@ -171,8 +171,8 @@
           class="dropdown-item"
         >
           <i class="icon-printer2" />
-          Print</a
-        >
+          Print
+        </a>
       </svelte:fragment>
     </Dropdown>
   </svelte:fragment>

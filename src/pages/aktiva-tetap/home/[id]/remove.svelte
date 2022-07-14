@@ -42,7 +42,7 @@
       submitting = true;
       const name = inventory.name;
       const input = (inventory.logs && InventoryRemoveInputSchema.parse(values)) || undefined;
-      await remove($params.id, input);
+      await remove($params.id);
       closeDialog();
       $goto("../");
       notify(`berhasil menghapus barang '${name}'`, "success");

@@ -125,7 +125,7 @@
   onSubmit={submitHandler}
 >
   <svelte:fragment slot="info">
-    <BankInfo account={$account} bank={$bank} {balanceAccount} {balanceBank} />
+    <BankInfo account={$account} bank={$bank} {balanceAccount} {balanceBank} isForm={!isPreview} />
   </svelte:fragment>
   <TablePreview preview bind:submit bankStatementList={fileData} bind:errors />
 </FormImport>

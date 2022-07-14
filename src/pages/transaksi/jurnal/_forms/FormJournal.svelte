@@ -32,10 +32,9 @@
     openDialog();
   });
 
-  $: isCredit = $fields?.isCredit;
   $: {
     const _accounts = getAccountLeaf();
-    if (isCredit) {
+    if ($fields?.isCredit) {
       accountStore = filteringAccountCredit(_accounts);
     } else {
       accountStore = filteringAccountDebit(_accounts);
@@ -122,7 +121,7 @@
             <!--            labelFieldName="name" />-->
             <!--        </div>-->
             <div class="form-group col-md-6">
-              <label for="accountId">Akun {isCredit ? "Kredit" : "Debit"} *</label>
+              <label for="accountId">Akun {$fields?.isCredit ? "Kredit" : "Debit"} *</label>
               <div class="d-flex">
                 <AccountSelect class="mr-2" id="accountId" {accountStore} allowEmpty />
                 <InputCheckSwitchery class="mt-auto mb-auto" name="isCredit" label="kredit" />

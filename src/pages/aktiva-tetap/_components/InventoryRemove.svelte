@@ -40,30 +40,30 @@
       : &nbsp<CellNumber value={totalDepreciation} />
     </p>
   </dl>
-  <div class="row">
-    <div class="form-group col-12">
-      <label for="debitAccount">Akun Debit</label>
-      <AccountSelect
-        id="debitAccount"
-        name="debitAccount"
-        accountStore={getAccount("debit")}
-        accountId={values?.debitAccount}
-        placeholder="Akun Debit"
-        allowEmpty
-      />
-    </div>
-  </div>
-  <div class="row">
-    <div class="form-group col-12">
-      <label for="creditAccount">Akun Kredit</label>
-      <AccountSelect
-        id="creditAccount"
-        name="creditAccount"
-        accountStore={getAccount("credit")}
-        accountId={values?.creditAccount}
-        placeholder="Akun Kredit"
-        allowEmpty
-      />
-    </div>
-  </div>
+  <!--  <div class="row">-->
+  <!--    <div class="form-group col-12">-->
+  <!--      <label for="debitAccount">Akun Debit</label>-->
+  <!--      <AccountSelect-->
+  <!--        id="debitAccount"-->
+  <!--        name="debitAccount"-->
+  <!--        accountStore={getAccount("debit")}-->
+  <!--        accountId={values?.debitAccount}-->
+  <!--        placeholder="Akun Debit"-->
+  <!--        allowEmpty-->
+  <!--      />-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <!--  <div class="row">-->
+  <!--    <div class="form-group col-12">-->
+  <!--      <label for="creditAccount">Akun Kredit</label>-->
+  <!--      <AccountSelect-->
+  <!--        id="creditAccount"-->
+  <!--        name="creditAccount"-->
+  <!--        accountStore={getAccount("credit")}-->
+  <!--        accountId={values?.creditAccount}-->
+  <!--        placeholder="Akun Kredit"-->
+  <!--        allowEmpty-->
+  <!--      />-->
+  <!--    </div>-->
+  <!--  </div>-->
 </Form>

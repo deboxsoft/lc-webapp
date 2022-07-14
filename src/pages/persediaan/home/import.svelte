@@ -44,6 +44,7 @@
     balance = 0,
     categoryId,
     submit,
+    statusFormState,
     openDialog,
     closeDialog,
     isPreview;
@@ -55,6 +56,9 @@
   });
 
   async function submitHandler(_data) {
+    if (!categoryId) {
+      throw new Error("kategori harus diisi.");
+    }
     // filter
     errors = [];
     const inputs = _data.map(({ id, no, ..._ }) => {
@@ -94,11 +98,17 @@
   }
 
   function categoryHandler({ detail }) {
-    categoryId = detail;
+    categoryId = detail?.id;
+    if (categoryId) {
+      statusFormState = "verified";
+    } else {
+      statusFormState = "unverified";
+    }
   }
 </script>
 
 <FormImport
+  bind:statusFormState
   bind:fileLoaded
   bind:files
   bind:isPreview
@@ -135,7 +145,8 @@
       <dl class="row mb-0">
         <dt class="col-sm-3 mb-0">Download Template</dt>
         <p class="col-sm-9 mb-0 d-inline-flex align-items-center">
-          :<a href={`/templates/barang-persediaan.csv`} class="ml-1" target="_self">barang-persediaan.csv</a>
+          :
+          <a href={`/templates/barang-persediaan.csv`} class="ml-1" target="_self">barang-persediaan.csv</a>
         </p>
       </dl>
     {/if}

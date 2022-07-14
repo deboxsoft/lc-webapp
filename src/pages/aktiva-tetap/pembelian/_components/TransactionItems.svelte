@@ -28,7 +28,7 @@
     {#each inventoryTransaction.items as item}
       <tr>
         <td>{item.name || "-"}</td>
-        <td>{getCategoryInventory(item.categoryId).name || "-"}</td>
+        <td>{getCategoryInventory(item.categoryId)?.name || "-"}</td>
         <td><CellNumber format="number" value={item.quantity} /></td>
         <td><CellNumber value={item.priceItem} /></td>
         <td><CellNumber value={getTotal(item)} /></td>
