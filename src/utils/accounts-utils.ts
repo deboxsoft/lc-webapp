@@ -25,7 +25,7 @@ export function filteringAccountDebit(accountStore: Readable<Account[]>, exclude
     if (!config || !_) {
       return [];
     }
-    let includeAccounts = authStore.metadata?.includeAccounts;
+    const includeAccounts = authStore.metadata?.includeAccounts;
     const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isRevenue(_.id)) {
@@ -46,7 +46,7 @@ export function filteringAccountCredit(accountStore: Readable<Account[]>, exclud
     if (!config || !_) {
       return [];
     }
-    let includeAccounts = authStore.metadata?.includeAccounts;
+    const includeAccounts = authStore.metadata?.includeAccounts;
     const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isExpense(_.id)) {
@@ -67,7 +67,7 @@ export function filteringAccountCash(accountStore: Readable<Account[]>, exclude 
     if (!config || !_) {
       return [];
     }
-    let includeAccounts = authStore.metadata?.includeAccounts;
+    const includeAccounts = authStore.metadata?.includeAccounts;
     const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isCash(_.id)) {
@@ -87,7 +87,7 @@ export function filteringAccountPayment(accountStore: Readable<Account[]>, exclu
     if (!config || !_) {
       return [];
     }
-    let includeAccounts = authStore.metadata?.includeAccounts;
+    const includeAccounts = authStore.metadata?.includeAccounts;
     const accountsUtils = createAccountUtils(config);
     return _.filter((_) => {
       if (accountsUtils.isCash(_.id) || accountsUtils.isPayable(_.id)) {
@@ -138,7 +138,7 @@ export function filteringAccountStock(accountStore: Readable<Account[]>) {
     if (!config || !_) {
       return [];
     }
-    const parentId = config.exclusiveCodeAccount.stock;
+    const parentId = config.codeAccount.stock;
     return _.filter((_) => _.parentId === parentId);
   });
 }
@@ -149,7 +149,7 @@ export function filteringAccountBdd(accountStore: Readable<Account[]>) {
     if (!config || !_) {
       return [];
     }
-    const parentId = config.exclusiveCodeAccount.bdd;
+    const parentId = config.codeAccount.bdd;
     return _.filter((_) => _.parentId === parentId);
   });
 }
@@ -160,7 +160,7 @@ export function filteringAccountExpenseAmortization(accountStore: Readable<Accou
     if (!config || !_) {
       return [];
     }
-    const parentId = config.exclusiveCodeAccount.expenseAmortization;
+    const parentId = config.codeAccount.expenseAmortization;
     return _.filter((_) => _.parentId === parentId);
   });
 }
@@ -171,7 +171,7 @@ export function filteringAccountAccumulationAmortization(accountStore: Readable<
     if (!config || !_) {
       return [];
     }
-    const parentId = config.exclusiveCodeAccount.accumulationAmortization;
+    const parentId = config.codeAccount.accumulationAmortization;
     return _.filter((_) => _.parentId === parentId);
   });
 }
@@ -182,7 +182,7 @@ export function filteringAccountInventory(accountStore: Readable<Account[]>) {
     if (!config || !_) {
       return [];
     }
-    const parentId = config.exclusiveCodeAccount.inventory;
+    const parentId = config.codeAccount.inventory;
     return _.filter((_) => _.parentId === parentId);
   });
 }
@@ -193,7 +193,7 @@ export function filteringAccountExpenseDepreciation(accountStore: Readable<Accou
     if (!config || !_) {
       return [];
     }
-    const parentId = config.exclusiveCodeAccount.expenseDepreciation;
+    const parentId = config.codeAccount.expenseDepreciation;
     return _.filter((_) => _.parentId === parentId);
   });
 }
@@ -204,7 +204,7 @@ export function filteringAccountAccumulationDepreciation(accountStore: Readable<
     if (!config || !_) {
       return [];
     }
-    const parentId = config.exclusiveCodeAccount.accumulationDepreciation;
+    const parentId = config.codeAccount.accumulationDepreciation;
     return _.filter((_) => _.parentId === parentId);
   });
 }
