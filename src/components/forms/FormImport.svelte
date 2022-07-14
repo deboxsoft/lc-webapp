@@ -26,11 +26,11 @@
 
   let fileData = writable([]);
 
-  let alertMessage = "";
+  export let alertMessage = "";
   /**
    * @type{ "verified" | "unverified" | "error" | "process" | "success" | "failed" }
    */
-  let statusFormState = "unverified";
+  export let statusFormState = "unverified";
 
   $: fileLoaded = $files.length > 0;
 
@@ -125,7 +125,11 @@
     {#if !isPreview}
       <DropZone on:drop={handleFileSelect} accept=".csv" multiple={false} disableDefaultStyles>
         <div class="dropzone mt-2">
-          <div class="dz-default dz-message"><span>Drop files CSV <span>or CLICK</span></span></div>
+          <div class="dz-default dz-message">
+            <span>
+              Drop files CSV <span>or CLICK</span>
+            </span>
+          </div>
           {#each $files as file}
             <div class="dz-preview dz-file-preview">
               <div class="dz-details">
@@ -147,23 +151,29 @@
     {/if}
   {/if}
   <div slot="footer">
-    <button type="button" on:click={closeHandler} class="btn btn-outline-primary mr-2"
-      ><i class="icon-cancel-circle2 mr-2" />Tutup</button
-    >
+    <button type="button" on:click={closeHandler} class="btn btn-outline-primary mr-2">
+      <i class="icon-cancel-circle2 mr-2" />
+      Tutup
+    </button>
     {#if !isPreview}
-      <button type="button" on:click={previewHandler} class="btn bg-primary mr-2" disabled={!fileLoaded}
-        ><i class="icon-file-eye2 mr-2" />preview</button
-      >
+      <button type="button" on:click={previewHandler} class="btn bg-primary mr-2" disabled={!fileLoaded}>
+        <i class="icon-file-eye2 mr-2" />
+        preview
+      </button>
     {:else}
-      <button type="button" on:click={resetHandler} class="btn btn-outline-primary mr-2"
-        ><i class="icon-reset mr-2" />Reset</button
-      >
+      <button type="button" on:click={resetHandler} class="btn btn-outline-primary mr-2">
+        <i class="icon-reset mr-2" />
+        Reset
+      </button>
       <button
         type="button"
         on:click={submitHandler}
         class="btn btn-primary mr-2"
-        disabled={statusFormState !== "verified"}><i class="icon-floppy-disk mr-2" />Simpan</button
+        disabled={statusFormState !== "verified"}
       >
+        <i class="icon-floppy-disk mr-2" />
+        Simpan
+      </button>
     {/if}
   </div>
 </Modal>

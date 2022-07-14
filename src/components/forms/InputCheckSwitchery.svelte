@@ -52,7 +52,7 @@
       {...$$restProps}
       style="display: none"
     />
-    <span class="switchery switchery-default"> <small class="slider" /></span>
+    <span class="switchery switchery-default"><small class="slider" /></span>
     <slot>{label}</slot>
   </label>
 </div>
