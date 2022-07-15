@@ -40,7 +40,6 @@
       <tr slot="header" class="amortization-header">
         <th>Bulan</th>
         <th>Biaya Amortisasi</th>
-        <th style="width: 30px;" />
       </tr>
       {#each amortizationList as amortization}
         <AmortizationRow {amortization} />

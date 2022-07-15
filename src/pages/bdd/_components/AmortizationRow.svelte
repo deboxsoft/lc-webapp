@@ -7,8 +7,5 @@
 
 <tr>
   <td>{amortization.month}</td>
-  <td><CellNumber value={amortization.amount} />
-  </td>
-  <td style="cursor: pointer; padding: 0">
-  </td>
+  <td><CellNumber value={amortization.amount} /></td>
 </tr>

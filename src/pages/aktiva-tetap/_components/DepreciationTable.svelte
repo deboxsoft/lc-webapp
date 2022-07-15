@@ -69,51 +69,51 @@
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Disusutkan Setiap Tanggal</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp
-        <span style="width: 150px"><CellNumber format="number" value={inventory.depreciationDayOfMonth} /></span>
+        <span>: &nbsp</span>
+        <span class="flex-1 pr-1"><CellNumber format="number" value={inventory.depreciationDayOfMonth} /></span>
       </p>
     </dl>
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Nilai Penyusutan</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp
-        <span style="width: 150px"><CellNumber value={depreciationAmount} /></span>
+        <span>: &nbsp</span>
+        <span class="flex-1 pr-1"><CellNumber value={depreciationAmount} /></span>
       </p>
     </dl>
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Akumulasi Penyusutan</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp
-        <span style="width: 150px"><CellNumber value={depreciationAccumulation} /></span>
+        <span>: &nbsp</span>
+        <span class="flex-1 pr-1"><CellNumber value={depreciationAccumulation} /></span>
       </p>
     </dl>
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Nilai Buku</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp
-        <span style="width: 150px"><CellNumber value={bookValue} /></span>
+        <span>: &nbsp</span>
+        <span class="flex-1 pr-1"><CellNumber value={bookValue} /></span>
       </p>
     </dl>
   {/if}
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Jumlah Barang</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp
-      <span style="width: 150px"><CellNumber format="number" value={inventory.quantity} /></span>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1"><CellNumber format="number" value={inventory.quantity} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Harga Satuan</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp
-      <span style="width: 150px"><CellNumber value={inventory.priceItem} /></span>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1"><CellNumber value={inventory.priceItem} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Total Harga</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp
-      <span style="width: 150px"><CellNumber value={total} /></span>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1"><CellNumber value={total} /></span>
     </p>
   </dl>
 </div>
@@ -126,7 +126,6 @@
         <tr slot="header">
           <th>Bulan</th>
           <th>Biaya Penyusutan</th>
-          <!--      <th style="width: 30px;" />-->
         </tr>
         {#each depreciationList as depreciation}
           <DepreciationRow {depreciation} />

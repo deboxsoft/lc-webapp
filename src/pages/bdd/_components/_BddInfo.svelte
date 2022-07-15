@@ -20,7 +20,8 @@
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Nama</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      :&nbsp<span style="width: 150px">{bdd.name}</span>
+      :&nbsp
+      <span>{bdd.name}</span>
     </p>
   </dl>
   <dl class="row mb-0">
@@ -70,49 +71,56 @@
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Diamortisasi Setiap Tanggal</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellNumber format="number" value={bdd.amortizationDayOfMonth} /></span>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1"><CellNumber format="number" value={bdd.amortizationDayOfMonth} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Nilai Amortisasi</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellNumber value={amortizationAmount} /></span>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1"><CellNumber value={amortizationAmount} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Tarif</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"
-        ><CellNumber format="number" value={rate}>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1">
+        <CellNumber format="number" value={rate}>
           {bdd.taxRate ? `%` : ""}
-        </CellNumber></span
-      >
+        </CellNumber>
+      </span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Akum. Amortization</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellNumber value={amortizationAccumulation} /></span>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1"><CellNumber value={amortizationAccumulation} /></span>
     </p>
   </dl>
   <dl class="row mb-0">
     <dt class="col-sm-5 mb-0">Nilai Buku</dt>
     <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-      : &nbsp<span style="width: 150px"><CellNumber value={bookValue} /></span>
+      <span>: &nbsp</span>
+      <span class="flex-1 pr-1"><CellNumber value={bookValue} /></span>
     </p>
   </dl>
   {#if bdd.amount}
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Nilai BDD</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp<span style="width: 150px"><CellNumber value={bdd.amount} /></span>
+        <span>: &nbsp</span>
+        <span class="flex-1 pr-1"><CellNumber value={bdd.amount} /></span>
       </p>
     </dl>
   {:else}
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Pajak (%)</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp<span style="width: 150px">
+        <span>: &nbsp</span>
+        <span class="flex-1 pr-1">
           <CellNumber format="number" value={bdd.taxRate}>
             {bdd.taxRate ? `%` : ""}
           </CellNumber>
@@ -122,19 +130,22 @@
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Nilai Pajak</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp<span style="width: 150px"><CellNumber value={tax} /></span>
+        : &nbsp
+        <span><CellNumber value={tax} /></span>
       </p>
     </dl>
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Total Harga Sebelum Pajak</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp<span style="width: 150px"><CellNumber value={totalPayment} /></span>
+        : &nbsp
+        <span><CellNumber value={totalPayment} /></span>
       </p>
     </dl>
     <dl class="row mb-0">
       <dt class="col-sm-5 mb-0">Total Harga</dt>
       <p class="col-sm-7 mb-0 d-inline-flex align-items-center">
-        : &nbsp<span style="width: 150px"><CellNumber value={total} /></span>
+        : &nbsp
+        <span><CellNumber value={total} /></span>
       </p>
     </dl>
   {/if}
