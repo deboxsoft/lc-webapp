@@ -46,7 +46,6 @@
         balanceKey="revenue"
         class="bg-teal text-white"
         label="PENDAPATAN"
-        value={$fixedBalanceReport?.revenue}
         dataLoading={dataBalanceLoading}
         {monthlyBalanceReportLoading}
       />

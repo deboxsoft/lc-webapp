@@ -44,7 +44,8 @@
       endDate
     };
     if (options.more) {
-      filter.lastBalance = $trialBalanceStore[$trialBalanceStore.length - 1].balance;
+      const lastItem = $trialBalanceStore[$trialBalanceStore.length - 1];
+      filter.lastBalance = lastItem.balance - lastItem.amount;
     }
     const result = await trialBalance(
       $account.id,
@@ -118,9 +119,9 @@
 
 <PageLayout
   showBackButton
-  backPath={$params?.fromPath || "../"}
+  backPath={$params?.fromPath || "./"}
   breadcrumb={[
-    { path: $params?.fromPath || "../", title: $params.fromLabel || "Buku Besar" },
+    { path: $params?.fromPath || "./", title: $params.fromLabel || "Buku Besar" },
     { title: "rekap per akun" }
   ]}
 >

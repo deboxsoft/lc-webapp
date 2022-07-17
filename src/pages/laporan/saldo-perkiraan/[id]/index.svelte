@@ -36,13 +36,24 @@
   async function fetchData(options = {}) {
     $loading = true;
     submitting = true;
-    const currentBalance = (await getCurrentBalanceAccount($account.id)) || 0;
-    const result = await findPageGeneralLedger($account.id, currentBalance, {
-      filter: {},
-      pageCursor: {
-        next: options.more && $pageInfo?.next
-      }
-    });
+    let currentBalance = 0;
+    if (options.more) {
+      const lastItem = $dataStore[$dataStore.length - 1];
+      currentBalance = lastItem.balance - lastItem.amount;
+    } else {
+      currentBalance = (await getCurrentBalanceAccount($account.id)) || 0;
+    }
+    const result = await findPageGeneralLedger(
+      $account.id,
+      currentBalance,
+      {
+        filter: {},
+        pageCursor: {
+          next: options.more && $pageInfo?.next
+        }
+      },
+      options
+    );
     $loading = false;
     submitting = false;
   }

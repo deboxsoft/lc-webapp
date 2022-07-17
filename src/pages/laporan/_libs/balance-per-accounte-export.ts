@@ -16,7 +16,7 @@ export const createReportContext = () => {
         textCell(generalLedger.transactionId, { isCsv }),
         textCell(generalLedger.description, { isCsv }),
         amount > 0 ? numericCell(amount, { isCsv }) : emptyCell({ isCsv }),
-        amount > 0 ? emptyCell({ isCsv }) : numericCell(amount, { isCsv }),
+        amount > 0 ? emptyCell({ isCsv }) : numericCell(-1 * amount, { isCsv }),
         numericCell(generalLedger.balance, { isCsv })
       ];
     };
