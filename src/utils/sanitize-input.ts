@@ -6,9 +6,9 @@ export function sanitizeString(_val = "") {
 
 export function sanitizeNumber(stringValue = "") {
   stringValue = stringValue.trim();
-  let result = stringValue.replace(/[^0-9]/g, "");
-  if (/[,\\.]\d{2}$/.test(stringValue)) {
-    result = result.replace(/(\d{2})$/, ".$1");
+  let result = stringValue.replace(/[^0-9,.]/g, "");
+  if (/[,\\.]\d{1,2}$/.test(stringValue)) {
+    result = result.replace(",", ".");
   }
   return parseFloat(result);
 }
