@@ -1,8 +1,9 @@
 <script>
   import CellNumber from "__@comps/CellNumber.svelte";
   import { stores } from "@deboxsoft/accounting-client";
+  import { getBalanceDataAccount } from "__@root/utils";
 
-  const { getFixedBalanceAccount } = stores.getBalanceContext();
+  const { currentBalanceStore } = stores.getBalanceContext();
 
   export let hiddenBalance = false;
   export let isForm = false;
@@ -15,24 +16,8 @@
    * @type {Partial<import("@deboxsoft/accounting-api").Bank>}
    */
   export let bank = {};
-  export let balanceAccount = undefined;
-  export let balanceBank = undefined;
-  $: {
-    if (!hiddenBalance && account?.id && balanceAccount === undefined) {
-      getFixedBalanceAccount(account.id, {}).then((_) => {
-        balanceAccount = _ || 0;
-        if (bank) {
-          balanceBank = bank.balance || 0;
-        }
-      });
-    }
-  }
-
-  $: {
-    if (!hiddenBalance && bank && balanceBank === undefined) {
-      balanceBank = bank.balance;
-    }
-  }
+  export let balanceAccount = getBalanceDataAccount(bank.accountId, currentBalanceStore);
+  $: balanceBank = bank.balance;
 </script>
 
 <div class="border-bottom-grey-600 border-bottom-1 mb-1 pb-1">
@@ -59,7 +44,7 @@
     <dl class="row mb-0">
       <dt class="col-sm-3 mb-0">Saldo Akun Perkiraan</dt>
       <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
-        : <div style="width: 150px"><CellNumber class="ml-1" value={balanceAccount} /></div>
+        : <div style="width: 150px"><CellNumber class="ml-1" value={$balanceAccount} /></div>
       </div>
     </dl>
     <dl class="row mb-0">

@@ -51,6 +51,7 @@
       </tr>
     {/each}
   </Table>
+  <slot />
 {/if}
 
 <style lang="scss">

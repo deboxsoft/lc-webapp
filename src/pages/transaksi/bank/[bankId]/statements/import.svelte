@@ -28,7 +28,7 @@
   };
 
   const { loading, notify } = getApplicationContext();
-  const { getFixedBalanceAccount } = stores.getBalanceContext();
+  const { getCurrentBalanceAccount } = stores.getBalanceContext();
   const { getAccount } = stores.getAccountContext();
   const { reconcile, bank = writable() } = stores.getBankStatementContext();
   const { setLastBalance } = stores.getBankContext();
@@ -44,18 +44,6 @@
   let balanceAccount = 0;
   let account = writable();
   let submit, openDialog, closeDialog;
-
-  $: loadBalance($bank);
-
-  async function loadBalance(_bank) {
-    if (_bank) {
-      if (_bank.accountId) {
-        account = getAccount(_bank.accountId);
-        balanceAccount = await getFixedBalanceAccount(_bank.accountId);
-      }
-      balanceBank = _bank.balance || 0;
-    }
-  }
 
   onMount(() => {
     openDialog();
@@ -125,7 +113,7 @@
   onSubmit={submitHandler}
 >
   <svelte:fragment slot="info">
-    <BankInfo account={$account} bank={$bank} {balanceAccount} {balanceBank} isForm={!isPreview} />
+    <BankInfo account={$account} bank={$bank} isForm={!isPreview} />
   </svelte:fragment>
   <TablePreview preview bind:submit bankStatementList={fileData} bind:errors />
 </FormImport>

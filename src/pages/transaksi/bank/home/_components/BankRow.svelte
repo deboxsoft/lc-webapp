@@ -4,14 +4,16 @@
   import DropdownToggle from "__@comps/DropdownToggle.svelte";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
-  import BalanceAccount from "__@comps/account/BalanceAccount.svelte";
-  import { getAclContext } from "__@root/utils";
+  import { getAclContext, getBalanceDataAccount } from "__@root/utils";
+  import { stores } from "@deboxsoft/accounting-client";
 
   const { updateGranted, removeGranted } = getAclContext();
+  const { currentBalanceStore } = stores.getBalanceContext();
   let dropdownContext;
 
   export let className = $$props.class || "";
-  export let bank;
+  export let bank = {};
+  const accountBalance = getBalanceDataAccount(bank?.accountId, currentBalanceStore);
   let toggle;
 </script>
 
@@ -51,14 +53,10 @@
   </td>
 
   <td on:click>
-    <BalanceAccount class="flex-1 align-items-center" id={bank.accountId} />
+    <CellNumber class="flex-1 align-items-center" value={$accountBalance} />
   </td>
   <td on:click>
-    <BalanceAccount
-      class="flex-1 align-items-center"
-      id={bank.accountId}
-      value={(_value) => parseFloat(bank.balance || 0) - _value || 0}
-    />
+    <CellNumber class="flex-1 align-items-center" value={parseFloat(bank.balance || 0) - $accountBalance} />
   </td>
   <td style="width: 30px;cursor: pointer;padding: 0">
     <Dropdown
@@ -72,18 +70,21 @@
         <i class="icon-menu9" />
       </DropdownToggle>
       <svelte:fragment slot="menu" let:closeHandler>
-        <a href={$url("../:bankId/statements", { bankId: bank.id })} class="dropdown-item" on:mouseup={closeHandler}
-          ><i class="icon-file-excel" />Rekonsiliasi</a
-        >
+        <a href={$url("../:bankId/statements", { bankId: bank.id })} class="dropdown-item" on:mouseup={closeHandler}>
+          <i class="icon-file-excel" />
+          Rekonsiliasi
+        </a>
         {#if updateGranted}
-          <a href={$url("../home/:id/update", { id: bank.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-pencil" />Ubah Bank</a
-          >
+          <a href={$url("../home/:id/update", { id: bank.id })} class="dropdown-item" on:mouseup={closeHandler}>
+            <i class="icon-pencil" />
+            Ubah Bank
+          </a>
         {/if}
         {#if removeGranted}
-          <a href={$url("../home/:id/remove", { id: bank.id })} class="dropdown-item" on:mouseup={closeHandler}
-            ><i class="icon-trash-alt" />Hapus Bank</a
-          >
+          <a href={$url("../home/:id/remove", { id: bank.id })} class="dropdown-item" on:mouseup={closeHandler}>
+            <i class="icon-trash-alt" />
+            Hapus Bank
+          </a>
         {/if}
       </svelte:fragment>
     </Dropdown>

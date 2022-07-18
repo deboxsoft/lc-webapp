@@ -13,6 +13,7 @@
   import BankInfo from "./_components/BankInfo.svelte";
   import { sortUtilsFunc } from "__@root/utils";
   import { derived, writable } from "svelte/store";
+  import Button from "__@comps/Button.svelte";
 
   const { setBreadcrumbContext, breadcrumbStore } = getBreadcrumbStore();
   setBreadcrumbContext({ path: $url("./"), title: "Rekonsiliasi Detail" });
@@ -102,8 +103,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-pdf" />
-          Download PDF</a
-        >
+          Download PDF
+        </a>
         <a
           href="/#"
           target="_self"
@@ -112,8 +113,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-excel" />
-          Download CSV</a
-        >
+          Download CSV
+        </a>
         <a
           href="/#"
           target="_self"
@@ -122,15 +123,24 @@
           class="dropdown-item"
         >
           <i class="icon-printer2" />
-          Print</a
-        >
+          Print
+        </a>
       </svelte:fragment>
     </Dropdown>
   </svelte:fragment>
   <div class="card flex-column flex-1 d-flex">
     <div class="card-body d-flex flex-column flex-1">
       <BankInfo bank={$bank} account={$account} />
-      <BankStatementTable bankStatementList={$bankStatementList} bind:errors />
+      <BankStatementTable bankStatementList={$bankStatementList} bind:errors>
+        {#if $bankStatementPageInfo.hasNext}
+          <div class="" style="height: 50px">
+            <Button class="btn btn-light w-100 text-uppercase" on:click={() => fetchData({ more: true })} {submitting}>
+              <i class="icon-chevron-down mr-2" />
+              Muat Lebih Banyak...
+            </Button>
+          </div>
+        {/if}
+      </BankStatementTable>
     </div>
   </div>
 </PageLayout>
