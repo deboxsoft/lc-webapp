@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@deboxsoft/accounting-api": "^1.5.24",
-    "@deboxsoft/accounting-client": "^1.5.18",
+    "@deboxsoft/accounting-client": "^1.5.19",
     "@deboxsoft/lc-cashier-api": "^1.0.1",
     "@deboxsoft/lc-cashier-client": "^1.0.1",
     "@deboxsoft/module-client": "~2.3.2",
