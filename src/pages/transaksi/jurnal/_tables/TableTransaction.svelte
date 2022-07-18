@@ -1,6 +1,5 @@
 <script>
-  import { goto, url } from "@roxi/routify";
-  import dayjs from "dayjs";
+  import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { getApplicationContext } from "__@modules/app";
   import CellNumber from "__@comps/CellNumber.svelte";
@@ -30,7 +29,7 @@
           next: $transactionPageInfo.next
         }
       },
-      { more: true }
+      options
     );
     submitting = false;
     $loading = false;
@@ -78,8 +77,9 @@
   {/each}
   {#if $transactionPageInfo.hasNext}
     <div class="dbx-tr" style="height: 50px">
-      <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
-        ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+      <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}>
+        <i class="icon-chevron-down mr-2" />
+        Muat Lebih Banyak...
       </Button>
     </div>
   {/if}
