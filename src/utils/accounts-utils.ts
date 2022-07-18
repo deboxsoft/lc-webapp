@@ -1,4 +1,4 @@
-import { Account, createAccountUtils, PreferenceAccounting } from "@deboxsoft/accounting-api";
+import { Account, BalanceData, createAccountUtils, PreferenceAccounting } from "@deboxsoft/accounting-api";
 import { stores } from "@deboxsoft/accounting-client";
 import { getAuthenticationContext } from "__@modules/users";
 import { derived, get, Readable } from "svelte/store";
@@ -235,4 +235,12 @@ export function getAccountType(account: Account, preference: PreferenceAccountin
     type = get(t)("account.expense");
   }
   return type;
+}
+
+export function getBalanceDataAccount(accountId: string | undefined, store: Readable<BalanceData | undefined>) {
+  return derived(store, (_) => {
+    if (_ && accountId) {
+      return _[accountId];
+    }
+  });
 }
