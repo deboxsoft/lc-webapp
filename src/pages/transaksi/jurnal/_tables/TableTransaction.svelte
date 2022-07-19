@@ -29,7 +29,7 @@
           next: $transactionPageInfo.next
         }
       },
-      options
+      { more: true }
     );
     submitting = false;
     $loading = false;
