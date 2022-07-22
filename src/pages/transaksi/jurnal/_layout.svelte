@@ -98,52 +98,52 @@
 </script>
 
 <FormFilter
-  filter="{defaultFilter}"
-  bind:closeDialog="{closeFilterDialog}"
-  bind:openDialog="{openFilterDialog}"
-  bind:submit="{submitFilter}"
+  filter={defaultFilter}
+  bind:closeDialog={closeFilterDialog}
+  bind:openDialog={openFilterDialog}
+  bind:submit={submitFilter}
 >
-  <button slot="footer" type="button" class="btn btn-primary ml-1" on:click="{filterHandler}">
-    <i class="icon-filter4 mr-2"></i>
+  <button slot="footer" type="button" class="btn btn-primary ml-1" on:click={filterHandler}>
+    <i class="icon-filter4 mr-2" />
     Filter
   </button>
 </FormFilter>
-<PageLayout breadcrumb="{[]}">
+<PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
     {#if createGranted}
-      <a href="{$url('./create')}" class="breadcrumb-elements-item">
-        <i class="icon-plus2 mr-1"></i>
+      <a href={$url("./create")} class="breadcrumb-elements-item">
+        <i class="icon-plus2 mr-1" />
         Posting
       </a>
     {/if}
-    <a href="#/" target="_self" on:click="{syncHandler}" class="breadcrumb-elements-item">
-      <i class="icon-sync mr-1"></i>
+    <a href="#/" target="_self" on:click={syncHandler} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
       Refresh
     </a>
-    <a href="{$url('./import')}" class="breadcrumb-elements-item">
-      <i class="icon-file-upload2 mr-1"></i>
+    <a href={$url("./import")} class="breadcrumb-elements-item">
+      <i class="icon-file-upload2 mr-1" />
       Impor
     </a>
     <a
       href="/#"
       target="_self"
-      on:click|preventDefault="{() => {
+      on:click|preventDefault={() => {
         openFilterDialog();
-      }}"
+      }}
       class="breadcrumb-elements-item"
     >
-      <i class="icon-filter3 mr-1"></i>
+      <i class="icon-filter3 mr-1" />
       Filter
     </a>
-    <a href="{$url('./export')}" class="breadcrumb-elements-item">
-      <i class="icon-file-download2 mr-1"></i>
+    <a href={$url("./export")} class="breadcrumb-elements-item">
+      <i class="icon-file-download2 mr-1" />
       Ekspor
     </a>
   </svelte:fragment>
-  <div class="header-elements" slot="header-elements"></div>
+  <div class="header-elements" slot="header-elements" />
   <div class="card d-flex flex-1 flex-column">
-    <div class="card-body d-flex flex-1">
-      <TableTransaction filter="{defaultFilter}" transactions="{transactions}" />
+    <div class="card-body d-flex flex-1 flex-column">
+      <TableTransaction filter={defaultFilter} {transactions} />
     </div>
   </div>
   <slot />

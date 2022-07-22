@@ -7,8 +7,8 @@
   const transactionShow = authContext.getQuery().read("transaction").granted;
   const ledgerShow = authContext.getQuery().read("ledger").granted;
   const bankShow = authContext.getQuery().read("bank").granted;
-  const statementIncomeShow = auth.getQuery().read("statementIncome").granted;
-  const balanceSheetShow = auth.getQuery().read("balanceSheet").granted;
+  const statementIncomeShow = authContext.getQuery().read("statementIncome").granted;
+  const balanceSheetShow = authContext.getQuery().read("balanceSheet").granted;
   if (transactionShow) {
     $redirect("./jurnal");
   } else if (bankShow) {
@@ -22,7 +22,6 @@
   } else if (balanceSheetShow) {
     $redirect("./neraca");
   } else {
-    $redirect("/access-denied")
+    $redirect("/access-denied");
   }
 </script>
-

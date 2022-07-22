@@ -5,7 +5,7 @@
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellAccount from "__@comps/account/CellAccount.svelte";
   import MenuListTransaction from "./MenuListTransaction.svelte";
-  import Table from "__@comps/Table.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
   import Button from "__@comps/Button.svelte";
   import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
   import CellDate from "__@comps/CellDate.svelte";
@@ -40,75 +40,69 @@
       $goto("./:id/view", { id: transaction.id });
     };
   }
+
+  const classes = {
+    no: "d-none d-md-table-cell",
+    date: "text-center",
+    debit: "d-none d-xl-table-cell debit",
+    description: "description",
+    amount: "",
+    status: "d-none d-sm-table-cell text-center"
+  };
 </script>
 
-<Table>
-  <div class="dbx-thead" slot="header">
-    <div class="dbx-cell d-none d-md-flex no">No Transaksi</div>
-    <div class="dbx-cell date">Tanggal</div>
-    <div class="dbx-cell d-none d-xl-flex account">Debit</div>
-    <div class="dbx-cell ">Deskripsi</div>
-    <div class="dbx-cell amount">Jumlah</div>
-    <div class="dbx-cell d-none d-sm-flex status">Status</div>
-    <div class="dbx-cell -menu-list" />
+<div style="overflow-x: auto">
+  <Table class="table table-hover">
+    <tr slot="header">
+      <th class={classes.no} width="80">No Transaksi</th>
+      <th class={classes.date} width="100">Tanggal</th>
+      <th class={classes.debit} width="200">Debit</th>
+      <th class={classes.description}>Deskripsi</th>
+      <th class={classes.amount} width="160">Jumlah</th>
+      <th class={classes.status} width="50">Status</th>
+      <th width="30" />
+    </tr>
+    {#each transactions as transaction (transaction.id)}
+      <tr class="cursor-pointer">
+        <td class={classes.no} on:click={createClickHandler(transaction)}>
+          {transaction.id}
+        </td>
+        <td class={classes.date} on:click={createClickHandler(transaction)}>
+          <CellDate date={transaction.date} />
+        </td>
+        <td class={classes.debit} on:click={createClickHandler(transaction)}>
+          <CellAccount id={transaction.accountId} />
+        </td>
+        <td class={classes.description} style="text-overflow: ellipsis" on:click={createClickHandler(transaction)}>
+          <div>
+            {transaction.description || ""}
+          </div>
+        </td>
+        <td class={classes.amount} on:click={createClickHandler(transaction)}>
+          <CellNumber value={transaction.amount} />
+        </td>
+        <td class={classes.status} on:click={createClickHandler(transaction)}>
+          <TransactionStatus status={transaction.status} />
+        </td>
+        <td style="cursor: pointer;padding: 0">
+          <MenuListTransaction bind:transaction />
+        </td>
+      </tr>
+    {/each}
+  </Table>
+</div>
+{#if $transactionPageInfo.hasNext}
+  <div class="" style="height: 50px">
+    <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}>
+      <i class="icon-chevron-down mr-2" />
+      Muat Lebih Banyak...
+    </Button>
   </div>
-  {#each transactions as transaction (transaction.id)}
-    <div class="dbx-tr cursor-pointer">
-      <div class="dbx-cell d-none d-md-flex no" on:click={createClickHandler(transaction)}>
-        {transaction.id}
-      </div>
-      <div class="dbx-cell date" on:click={createClickHandler(transaction)}>
-        <CellDate date={transaction.date} />
-      </div>
-      <div class="dbx-cell d-none d-xl-flex account" on:click={createClickHandler(transaction)}>
-        <CellAccount id={transaction.accountId} />
-      </div>
-      <div class="dbx-cell" on:click={createClickHandler(transaction)}>{transaction.description || ""}</div>
-      <div class="dbx-cell amount" on:click={createClickHandler(transaction)}>
-        <CellNumber value={transaction.amount} />
-      </div>
-      <div class="dbx-cell d-none d-sm-flex status" on:click={createClickHandler(transaction)}>
-        <TransactionStatus status={transaction.status} />
-      </div>
-      <div class="dbx-cell -menu-list" style="width: 30px">
-        <MenuListTransaction bind:transaction />
-      </div>
-    </div>
-  {/each}
-  {#if $transactionPageInfo.hasNext}
-    <div class="dbx-tr" style="height: 50px">
-      <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}>
-        <i class="icon-chevron-down mr-2" />
-        Muat Lebih Banyak...
-      </Button>
-    </div>
-  {/if}
-</Table>
+{/if}
 
 <style lang="scss">
-  .dbx-tr {
-    .no {
-      font-size: 0.9em;
-    }
-  }
-  .no {
-    text-align: center;
-    flex: 0 0 125px;
-  }
-  .date {
-    text-align: center;
-    flex: 0 0 100px;
-  }
-
-  .account {
-    flex: 0 0 200px;
-  }
-
-  .amount {
-    flex: 0 0 200px;
-  }
-
-  .status {
-    flex: 0 0 90px;
+  .description,
+  .debit {
+    white-space: normal;
   }
 </style>

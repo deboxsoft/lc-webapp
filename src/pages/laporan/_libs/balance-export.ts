@@ -1,5 +1,5 @@
 import type { AccountBalance, BalanceClassification, BalanceSheetReport } from "@deboxsoft/accounting-api";
-import dayjs from "dayjs";
+import { dayjs } from "@deboxsoft/accounting-api";
 import type { Writable } from "svelte/store";
 import { pdfMake, pdfStyles } from "__@root/styles/pdf";
 import { downloadCsv, numericCell as balanceCell, textCell as nameCell, emptyCell } from "__@root/utils";

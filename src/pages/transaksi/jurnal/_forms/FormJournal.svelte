@@ -1,6 +1,6 @@
 <script>
   import { onMount, tick, createEventDispatcher } from "svelte";
-  import { TransactionInputSchema } from "@deboxsoft/accounting-api";
+  import { TransactionInputSchema, getLimitDate } from "@deboxsoft/accounting-api";
   import { generateId } from "@deboxsoft/module-client";
   import { stores } from "@deboxsoft/accounting-client";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
@@ -19,6 +19,7 @@
 
   const { getTransactionType, transactionTypeStore } = stores.getTransactionContext();
   const { getAccountLeaf } = stores.getAccountContext();
+  const { preferenceStore } = stores.getPreferenceAccountingContext();
   const { authenticationStore } = getAuthenticationContext();
   const { loading } = getApplicationContext();
   const dispatch = createEventDispatcher();
@@ -26,7 +27,7 @@
   export let values;
   export let title = "";
 
-  let isValid, fieldsErrors, fields, openDialog, focusRef, buttonSaveDisable, accountStore;
+  let isValid, fieldsErrors, fields, openDialog, focusRef, buttonSaveDisable, accountStore, startDate, endDate;
 
   onMount(() => {
     openDialog();
@@ -45,6 +46,14 @@
     tick().then(() => {
       buttonSaveDisable = !$isValid || $loading;
     });
+  }
+
+  $: {
+    if ($preferenceStore) {
+      const limitDate = getLimitDate($preferenceStore.period, $preferenceStore.startPeriodOnMonth);
+      startDate = limitDate.start;
+      endDate = limitDate.end;
+    }
   }
   export function createCreditAccount() {
     return {
@@ -87,6 +96,8 @@
                 placeholder="Tanggal *"
                 selected={new Date()}
                 disabled={values.status === "UNAPPROVED"}
+                {startDate}
+                {endDate}
               />
             </div>
             <div class="form-group col-md-6">
