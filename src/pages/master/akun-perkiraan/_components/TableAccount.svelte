@@ -1,11 +1,12 @@
 <script>
-  import Table from "__@comps/Table.svelte";
+  import Table from "__@comps/tables/DataTable.svelte";
   import { goto } from "@roxi/routify";
   import { stores } from "@deboxsoft/accounting-client";
   import { constantCase } from "@deboxsoft/module-core";
   import AccountCell from "__@comps/account/CellAccount.svelte";
   import MenuListAccount from "./MenuListAccount.svelte";
   import { getAccountType } from "__@root/utils";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   const { preferenceStore } = stores.getPreferenceAccountingContext();
   export let accounts = [];
@@ -25,29 +26,47 @@
     const i = accounts.findIndex((_) => _.parentId === accountId);
     return i > -1;
   }
+
+  function createClickHandler(account) {
+    return () => {
+      $goto("./:id/view", { id: account.id });
+    };
+  }
+
+  const classes = {
+    id: "",
+    name: "",
+    parent: "d-none d-sm-table-cell",
+    type: "d-none d-md-table-cell",
+    startBalance: "d-none d-md-table-cell"
+  };
 </script>
 
-<Table items={accounts} let:item={account}>
-  <div class="dbx-thead" slot="header">
-    <div class="dbx-cell kode">Kode</div>
-    <div class="dbx-cell">Nama</div>
-    <div class="dbx-cell parent">Induk</div>
-    <div class="dbx-cell type">Klasifikasi</div>
-    <div class="dbx-cell -menu-list" />
-  </div>
-  <div class="dbx-tr">
-    <div class="dbx-cell kode">{account.id || ""}</div>
-    <div class="dbx-cell">{account.name || ""}</div>
-    <div class="dbx-cell parent">
+<Table class="table-hover" items={accounts} let:item={account}>
+  <tr slot="header">
+    <th class={classes.id} width="80">Kode</th>
+    <th class={classes.name}>Nama</th>
+    <th class={classes.parent} width="200">Induk</th>
+    <th class={classes.type} width="100">Klasifikasi</th>
+    <th class={classes.startBalance} width="160">Saldo Awal</th>
+    <th width="30" />
+  </tr>
+  <tr class="cursor-pointer">
+    <td class={classes.id} on:click={createClickHandler(account)}>{account.id || ""}</td>
+    <td class={classes.name} on:click={createClickHandler(account)}>{account.name || ""}</td>
+    <td class={classes.parent} on:click={createClickHandler(account)}>
       <AccountCell id={account.parentId} />
-    </div>
-    <div class="dbx-cell type">
+    </td>
+    <td class={classes.type} on:click={createClickHandler(account)}>
       {constantCase(getAccountType(account, $preferenceStore), { delimiter: " " })}
-    </div>
-    <div class="dbx-cell -menu-list">
+    </td>
+    <td class={classes.startBalance} on:click={createClickHandler(account)}>
+      <CellNumber value={account.startBalance} />
+    </td>
+    <td style="padding: 0">
       <MenuListAccount id={account.id} removeActDisable={haveChildren(account.id)} />
-    </div>
-  </div>
+    </td>
+  </tr>
 </Table>
 
 <style lang="scss">

@@ -4,6 +4,7 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getAccountType } from "__@root/utils";
   import { constantCase } from "@deboxsoft/module-core";
+  import CellNumber from "__@comps/CellNumber.svelte";
 
   const { getAccount } = stores.getAccountContext();
   const { preferenceStore } = stores.getPreferenceAccountingContext();
@@ -41,4 +42,10 @@
   <p class="col-sm-9">
     : {constantCase(accountType, { delimiter: " " })}
   </p>
+  {#if !account.isParent}
+    <dt class="col-sm-3">Saldo Awal</dt>
+    <div class="col-sm-9 mb-0 d-inline-flex align-items-center">
+      : <div style="width: 150px"><CellNumber class="ml-1" value={account.startBalance} /></div>
+    </div>
+  {/if}
 </dl>
