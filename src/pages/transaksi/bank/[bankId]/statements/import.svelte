@@ -1,7 +1,7 @@
 <!--routify:options title="Import Rekonsiliasi"-->
 <script>
   import { onMount } from "svelte";
-  import { writable } from "svelte/store";
+  import { derived, writable } from "svelte/store";
   import { goto } from "@roxi/routify";
   import FormImport from "__@comps/forms/FormImport.svelte";
   import { stores } from "@deboxsoft/accounting-client";
@@ -12,7 +12,15 @@
 
   // tranform step from csv
   const transformStep = (output) => {
+    let index = 0;
+    errors = [];
     return (result, self) => {
+      if (index === 0) {
+        const accountId = result.data[6];
+        if (!accountId || accountId !== $account.id) {
+          throw new Error(`Kode Akun Bank '${$account.id}' Tidak sama atau belum diisi di file csv`);
+        }
+      }
       const date = parseDate(result.data[0]);
       if (date) {
         output.push({
@@ -24,6 +32,7 @@
           accountId: sanitizeAccount(result.data[5])
         });
       }
+      index++;
     };
   };
 
@@ -42,13 +51,14 @@
   let errors = [];
   let balanceBank = 0;
   let balanceAccount = 0;
-  let account = writable();
   let submit, openDialog, closeDialog;
 
   onMount(() => {
     openDialog();
     $loading = false;
   });
+
+  $: account = getAccount($bank.accountId);
 
   async function submitHandler(_statements) {
     errors = [];

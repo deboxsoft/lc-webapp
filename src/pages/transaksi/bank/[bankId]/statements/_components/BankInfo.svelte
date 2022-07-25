@@ -37,7 +37,11 @@
     <p class="col-sm-9 mb-0">: {bank.nameAccountBank}</p>
   </dl>
   <dl class="row mb-0">
-    <dt class="col-sm-3 mb-0">Akun Perkiraan</dt>
+    <dt class="col-sm-3 mb-0">Kode Akun Perkiraan Bank</dt>
+    <p class="col-sm-9 mb-0">: {bank.accountId}</p>
+  </dl>
+  <dl class="row mb-0">
+    <dt class="col-sm-3 mb-0">Nama Akun Perkiraan Bank</dt>
     <p class="col-sm-9 mb-0">: {account.name}</p>
   </dl>
   {#if !hiddenBalance}
