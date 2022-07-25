@@ -22,7 +22,7 @@
     let i = 0;
     return (result, self) => {
       const no = sanitizeNumber(result.data[0]);
-      if (Number.isFinite(no)) {
+      if (isFinite(no)) {
         output.push({
           id: i,
           no,
