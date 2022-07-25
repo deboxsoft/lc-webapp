@@ -32,7 +32,7 @@
    */
   export let statusFormState = "unverified";
 
-  $: fileLoaded = $files.length > 0;
+  let previewEnable = false;
 
   function processRawCSV(data) {
     const output = [];
@@ -43,15 +43,23 @@
   }
 
   function handleFileSelect(e) {
+    previewEnable = false;
     $files = e.detail.acceptedFiles;
-    $files.forEach((file) => {
+    const forEachFunc = (file) => {
       const reader = new FileReader();
       reader.onload = () => {
-        const binaryStr = reader.result;
-        processRawCSV(binaryStr);
+        try {
+          const binaryStr = reader.result;
+          processRawCSV(binaryStr);
+        } catch (e) {
+          notify(e.message, "warning");
+          previewEnable = false;
+        }
       };
       reader.readAsText(file, "UTF-8");
-    });
+    };
+    $files.forEach(forEachFunc);
+    previewEnable = true;
   }
 
   async function submitHandler() {
@@ -76,7 +84,7 @@
 
   function resetHandler() {
     isPreview = false;
-    fileLoaded = false;
+    previewEnable = false;
     files.set([]);
     errors = [];
     statusFormState = "unverified";
@@ -156,7 +164,7 @@
       Tutup
     </button>
     {#if !isPreview}
-      <button type="button" on:click={previewHandler} class="btn bg-primary mr-2" disabled={!fileLoaded}>
+      <button type="button" on:click={previewHandler} class="btn bg-primary mr-2" disabled={!previewEnable}>
         <i class="icon-file-eye2 mr-2" />
         preview
       </button>

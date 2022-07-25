@@ -42,14 +42,16 @@
   function applyHandler({ detail }) {
     if ($fields) {
       if (range) {
+        const _from = detail.from.add(7, "hour").toDate();
+        const _to = detail.to.endOf("d").add(7, "hour").toDate();
         if (name) {
-          $fields[name] = [detail.from, detail.to];
+          $fields[name] = [_from, _to];
         } else {
-          $fields[selectFromDateKey] = detail.from;
-          $fields[selectToDateKey] = detail.to;
+          $fields[selectFromDateKey] = _from;
+          $fields[selectToDateKey] = _to;
         }
       } else if (name) {
-        $fields[name] = detail.date;
+        $fields[name] = detail.date.add(7, "hour").toDate();
       }
     }
     dispatcher("apply", detail);

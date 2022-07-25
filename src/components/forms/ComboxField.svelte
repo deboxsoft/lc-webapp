@@ -38,7 +38,6 @@
       selectedIndex = e.target.selectedIndex;
       _validate && _validate();
       const index = allowEmpty || placeholder ? selectedIndex - 1 : selectedIndex;
-      console.log(index, items[index], selectedIndex);
       dispatch("change", index >= 0 ? items[index] : undefined);
     };
   }

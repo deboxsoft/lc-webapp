@@ -61,7 +61,7 @@
   }
 
   $: {
-    if (fields && name && autoNumeric && Number.isFinite(value) && value !== $fields[name]) {
+    if (fields && name && autoNumeric && isFinite(value) && value !== $fields[name]) {
       autoNumeric.set($fields[name], options);
     }
   }
@@ -70,7 +70,7 @@
 
   onMount(() => {
     autoNumeric = new AutoNumeric(inputEl, { ...defaultOptions, ...options });
-    Number.isFinite(value) && autoNumeric.set(value);
+    isFinite(value) && autoNumeric.set(value);
   });
 
   onDestroy(() => {
@@ -78,7 +78,7 @@
   });
 
   export function setValue(value) {
-    if (Number.isFinite(value)) {
+    if (isFinite(value)) {
       autoNumeric.set(value, options);
     }
   }
