@@ -8,6 +8,7 @@
   import { get } from "svelte/store";
   import TransactionList from "__@comps/transactions/TransactionList.svelte";
   import CellDate from "__@comps/CellDate.svelte";
+  import dayjs from "dayjs";
 
   const { loading, notify } = getApplicationContext();
   const { getTransactionType, approve, reject } = stores.getTransactionContext();
@@ -125,8 +126,10 @@
           class:badge-primary={transaction.status === "UNAPPROVED"}
           class:badge-danger={transaction.status === "REJECTED"}
           class:badge-light={transaction.status === "FIXED"}
-          class:badge-success={transaction.status === "APPROVED"}>{transaction.status}</span
+          class:badge-success={transaction.status === "APPROVED"}
         >
+          {transaction.status}
+        </span>
       </p>
     </dl>
     <TransactionList {transaction} />
@@ -136,10 +139,10 @@
       Close
     </button>
     {#if rejectButtonEnable}
-      <button type="button" class="btn btn-danger" on:click={rejectHandler}> Reject </button>
+      <button type="button" class="btn btn-danger" on:click={rejectHandler}>Reject</button>
     {/if}
     {#if approveButtonEnable}
-      <button type="button" class="btn btn-primary" on:click={approveHandler}> Approve </button>
+      <button type="button" class="btn btn-primary" on:click={approveHandler}>Approve</button>
     {/if}
   </svelte:fragment>
 </Modal>

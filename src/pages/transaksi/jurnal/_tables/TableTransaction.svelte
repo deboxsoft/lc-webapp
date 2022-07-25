@@ -14,26 +14,9 @@
   const { transactionPageInfo, findPage } = stores.getTransactionContext();
 
   export let transactions = [];
-  export let filter;
-
+  export let infiniteHandler;
   // state
-  let submitting = false;
-
-  export async function infiniteHandler() {
-    submitting = true;
-    $loading = true;
-    await findPage(
-      {
-        filter,
-        pageCursor: {
-          next: $transactionPageInfo.next
-        }
-      },
-      { more: true }
-    );
-    submitting = false;
-    $loading = false;
-  }
+  export let submitting = false;
 
   function createClickHandler(transaction) {
     return () => {
@@ -52,7 +35,7 @@
 </script>
 
 <div style="overflow-x: auto">
-  <Table class="table table-hover">
+  <Table class="table-hover">
     <tr slot="header">
       <th class={classes.no} width="80">No Transaksi</th>
       <th class={classes.date} width="100">Tanggal</th>

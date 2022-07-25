@@ -21,7 +21,7 @@
   stores.createBalanceContext(applicationContext);
   const accountContext = stores.getAccountContext();
   setBreadcrumbContext({ path: $url("./"), title: "jurnal" });
-  const { load, findPage, transactionStore, subscribe } = stores.getTransactionContext();
+  const { load, findPage, transactionStore, transactionPageInfo, subscribe } = stores.getTransactionContext();
   onMount(() => {
     return subscribe();
   });
@@ -30,12 +30,13 @@
   /**
    * @type {import("@deboxsoft/accounting-api").TransactionFilter}
    */
-  let defaultFilter = {};
+  let filter = {};
+
   let openFilterDialog;
   let closeFilterDialog;
   let textFilter = undefined;
-  let fetchMor;
   let submitFilter;
+  let submitting;
   let userId;
   let transactions = [];
 
@@ -73,20 +74,29 @@
       const profile = await getProfile();
       userId = profile.session.userId;
     }
-    await load({ filter: defaultFilter, pageCursor: {} });
+    await load({ filter: filter, pageCursor: {} });
     $loading = false;
   }
 
-  async function filterHandler() {
+  async function filterHandler(opts) {
     const _filter = Object.assign({ userId }, submitFilter && submitFilter());
     textFilter = undefined;
     $loading = true;
-    await findPage({
-      pageCursor: {},
-      filter: _filter
-    });
+    submitting = true;
+    await findPage(
+      {
+        pageCursor: opts?.more
+          ? {
+              next: $transactionPageInfo.next
+            }
+          : {},
+        filter: _filter
+      },
+      { more: opts?.more }
+    );
     tick().then(() => {
       filtering();
+      submitting = false;
       $loading = false;
       closeFilterDialog();
     });
@@ -95,14 +105,13 @@
   function syncHandler() {
     filterHandler();
   }
+
+  export function infiniteHandler() {
+    filterHandler({ more: true });
+  }
 </script>
 
-<FormFilter
-  filter={defaultFilter}
-  bind:closeDialog={closeFilterDialog}
-  bind:openDialog={openFilterDialog}
-  bind:submit={submitFilter}
->
+<FormFilter {filter} bind:closeDialog={closeFilterDialog} bind:openDialog={openFilterDialog} bind:submit={submitFilter}>
   <button slot="footer" type="button" class="btn btn-primary ml-1" on:click={filterHandler}>
     <i class="icon-filter4 mr-2" />
     Filter
@@ -143,7 +152,7 @@
   <div class="header-elements" slot="header-elements" />
   <div class="card d-flex flex-1 flex-column">
     <div class="card-body d-flex flex-1 flex-column">
-      <TableTransaction filter={defaultFilter} {transactions} />
+      <TableTransaction {filter} {transactions} {submitting} {infiniteHandler} />
     </div>
   </div>
   <slot />

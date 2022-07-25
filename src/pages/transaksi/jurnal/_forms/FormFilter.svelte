@@ -43,29 +43,29 @@
   }
 </script>
 
-<Modal title="{title}" bind:onClose bind:openDialog bind:closeDialog>
-  <Form values="{filter}" transform="{transformInput}" bind:submitHandler="{submit}" feedbackValidateDisable>
+<Modal {title} bind:onClose bind:openDialog bind:closeDialog>
+  <Form values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable>
     <div class="form-group">
       <label for="date">Tanggal</label>
       <InputDate
         id="date"
         mode="menu"
         placeholder="Tanggal"
-        allowEmpty="{!isReport}"
-        defaultDate="{[startDate, endDate]}"
+        allowEmpty={!isReport}
+        defaultDate={[startDate, endDate]}
         showClearButton
       />
     </div>
     <div class="form-group">
       <label for="accountId">Akun Debit</label>
-      <AccountSelect id="accountId" placeholder="SEMUA" allowEmpty name="accountId" accountStore="{accountStore}" />
+      <AccountSelect id="accountId" placeholder="SEMUA" allowEmpty name="accountId" {accountStore} />
     </div>
     <div class="form-group">
       <label for="type">Jenis Transaksi</label>
       <ComboBox
         id="type"
         name="type"
-        items="{$transactionTypeStore}"
+        items={$transactionTypeStore}
         labelId="name"
         valueId="code"
         placeHolder="SEMUA"
@@ -74,13 +74,7 @@
     </div>
     <div class="form-group">
       <label for="status">Status</label>
-      <ComboBox
-        id="status"
-        name="status"
-        items="{['UNAPPROVED', 'FIXED', 'APPROVED']}"
-        placeHolder="SEMUA"
-        allowEmpty
-      />
+      <ComboBox id="status" name="status" items={["UNAPPROVED", "FIXED", "APPROVED"]} placeHolder="SEMUA" allowEmpty />
     </div>
   </Form>
   <slot name="footer" slot="footer" />
