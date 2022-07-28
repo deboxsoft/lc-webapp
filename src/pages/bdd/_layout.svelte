@@ -5,14 +5,12 @@
   import { stores } from "@deboxsoft/accounting-client";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import { createAclContext } from "__@root/utils";
-  import { getApplicationContext } from "__@modules/app";
 
   const { readGranted, createGranted } = createAclContext({
     resource: "bdd"
   });
   const applicationContext = getApplicationContext();
-  const { loading } = applicationContext;
-  const { findPage, bddStore, bddPageInfo, find, subscribe } = stores.createBddContext(applicationContext);
+  const { subscribe } = stores.createBddContext(applicationContext);
   if (!readGranted) {
     $goto("/access-denied");
   }

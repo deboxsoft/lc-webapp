@@ -129,10 +129,6 @@
       <i class="icon-sync mr-1" />
       Refresh
     </a>
-    <a href={$url("./import")} class="breadcrumb-elements-item">
-      <i class="icon-file-upload2 mr-1" />
-      Impor
-    </a>
     <a
       href="/#"
       target="_self"
@@ -143,6 +139,10 @@
     >
       <i class="icon-filter3 mr-1" />
       Filter
+    </a>
+    <a href={$url("./import")} class="breadcrumb-elements-item">
+      <i class="icon-file-upload2 mr-1" />
+      Impor
     </a>
     <a href={$url("./export")} class="breadcrumb-elements-item">
       <i class="icon-file-download2 mr-1" />

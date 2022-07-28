@@ -14,7 +14,6 @@
 
   const itemContext = getItemContext();
   const { categoryStockStore, productContext } = stores.getStockContext();
-  const { productStore } = productContext;
 
   export let id = generateId({ prefix: "item", size: 3 });
   export let stockProduct;
@@ -39,11 +38,8 @@
 
   const { fields } = createFormContext({ values: stockProduct });
 
-  function searchProduct() {
-    if (!$productStore) {
-      productContext.load().then(() => $productStore || []);
-    }
-    return Promise.resolve().then(() => $productStore || []);
+  async function searchProduct(keyword) {
+    return await productContext.find({ name: keyword });
   }
 
   function changeProductHandler() {
@@ -102,7 +98,7 @@
       name="productId"
       placeholder="Nama Barang *"
       inputClassName="form-control"
-      delay="20"
+      delay="200"
       labelFieldName="name"
       searchFunction={searchProduct}
       valueFunction={(item) => {

@@ -12,6 +12,8 @@
   import { createReportContext } from "../_export";
   import Loader from "__@comps/loader/Loader.svelte";
   import { getAclContext } from "__@root/utils";
+  import ProductFilterForm from "__@root/pages/persediaan/home/_components/ProductFilterForm.svelte";
+  import { onMount } from "svelte";
 
   const { readGranted, createGranted } = getAclContext();
   const applicationContext = getApplicationContext();
@@ -26,16 +28,21 @@
   setBreadcrumbContext({ path: $url("./"), title: "barang" });
 
   let submitting = false,
-    filter = {};
-
-  fetchData();
+    openFilterDialog,
+    clearFilter,
+    submitFilter,
+    closeFilterDialog,
+    filter;
+  onMount(() => {
+    fetchData();
+  });
 
   function fetchData(options = {}) {
     $loading = true;
     submitting = true;
     findPage(
       {
-        filter,
+        filter: $filter || {},
         pageCursor: {
           next: options.more && $productPageInfo?.next
         }
@@ -73,10 +80,48 @@
       }
     };
   }
+
+  function submitFilterHandler() {
+    fetchData();
+    closeFilterDialog();
+  }
 </script>
 
+<ProductFilterForm
+  bind:filter
+  bind:closeDialog={closeFilterDialog}
+  bind:openDialog={openFilterDialog}
+  bind:clearFilter
+  bind:submitFilter
+>
+  <svelte:fragment slot="footer">
+    <button type="button" class="btn btn-light ml-1" on:click={clearFilter}>
+      <i class="icon-filter4 mr-2" />
+      Clear
+    </button>
+    <button type="button" class="btn btn-primary ml-1" on:click={submitFilterHandler}>
+      <i class="icon-filter4 mr-2" />
+      Filter
+    </button>
+  </svelte:fragment>
+</ProductFilterForm>
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">
+    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
+      <i class="icon-sync mr-1" />
+      Refresh
+    </a>
+    <a
+      href="/#"
+      target="_self"
+      on:click|preventDefault={() => {
+        openFilterDialog();
+      }}
+      class="breadcrumb-elements-item"
+    >
+      <i class="icon-filter3 mr-1" />
+      Filter
+    </a>
     {#if createGranted}
       <a href={$url("./import")} class="breadcrumb-elements-item">
         <i class="icon-file-upload mr-1" />
@@ -87,10 +132,6 @@
         Tambah
       </a>
     {/if}
-    <a href="#/" target="_self" on:click={fetchData} class="breadcrumb-elements-item">
-      <i class="icon-sync mr-1" />
-      Refresh
-    </a>
     <Dropdown class="breadcrumb-elements-item dropdown p-0">
       <DropdownToggle class="breadcrumb-elements-item" caret nav>
         <i class="icon-file-download mr-1" />
@@ -104,8 +145,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-pdf" />
-          Download PDF</a
-        >
+          Download PDF
+        </a>
         <a
           href="/#"
           target="_self"
@@ -113,8 +154,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-excel" />
-          Download CSV</a
-        >
+          Download CSV
+        </a>
         <a
           href="/#"
           target="_self"
@@ -122,8 +163,8 @@
           class="dropdown-item"
         >
           <i class="icon-printer2" />
-          Print</a
-        >
+          Print
+        </a>
       </svelte:fragment>
     </Dropdown>
   </svelte:fragment>
@@ -133,8 +174,9 @@
         <ProductTable {productStore}>
           {#if $productPageInfo.hasNext}
             <div class="" style="height: 50px">
-              <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}
-                ><i class="icon-chevron-down mr-2" />Muat Lebih Banyak...
+              <Button class="btn btn-light w-100 text-uppercase" on:click={infiniteHandler} {submitting}>
+                <i class="icon-chevron-down mr-2" />
+                Muat Lebih Banyak...
               </Button>
             </div>
           {/if}

@@ -1,10 +1,6 @@
 <script>
-  import { url } from "@roxi/routify";
   import CellNumber from "__@comps/CellNumber.svelte";
   import CellDate from "__@comps/CellDate.svelte";
-  import Dropdown from "__@comps/Dropdown.svelte";
-  import DropdownToggle from "__@comps/DropdownToggle.svelte";
-  import TransactionStatus from "__@comps/transactions/TransactionStatus.svelte";
 
   export let stock;
   let dropdownContext, supplier, category, stockIn, stockOut;

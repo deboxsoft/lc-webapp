@@ -7,16 +7,17 @@
   import { writable } from "svelte/store";
 
   const applicationContext = getApplicationContext();
-  const { countWarningContract } = stores.createBddContext(applicationContext);
+  const { countWarningContractStore } = stores.createBddContext(applicationContext);
   const aclContext = getAclContext();
   let readGranted;
   export let subItem;
 
   let count = writable(0);
-  countWarningContract().then((_) => {
-    $count = _;
-    readGranted = aclContext().readGranted;
-  });
+  $: {
+    if (isFinite($countWarningContractStore)) {
+      readGranted = aclContext().readGranted;
+    }
+  }
 </script>
 
 <a {...$$restProps} class:active={$isActive(subItem.url)} href={$url(subItem.url)}>
@@ -26,7 +27,7 @@
     <Icon component={subItem.icon} />
   {/if}
   <span>{subItem.label}</span>
-  {#if $count > 0}
-    <span class="badge badge-warning badge-pill ml-auto">{$count}</span>
+  {#if readGranted && $countWarningContractStore > 0}
+    <span class="badge badge-warning badge-pill ml-auto">{$countWarningContractStore}</span>
   {/if}
 </a>

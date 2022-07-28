@@ -18,16 +18,25 @@
   export let valueFunc = (_) => (typeof _ === "object" ? _[valueId] : _);
   export let labelEmpty = "-";
   export let valueEmpty = "";
-  export let value = $fields[name];
+  export let value = valueEmpty;
   export let placeholder = undefined;
   export let className = $$props.class || "";
 
-  let selectedIndex;
+  let selectedIndex,
+    _value = value;
   const dispatch = createEventDispatcher();
 
   $: {
     if (items.length > 0 && !$fields[name] && !allowEmpty && !placeholder) {
       $fields[name] = items[0][valueId] || items[0];
+    }
+  }
+
+  $: {
+    if (fields && name) {
+      if ($fields && $fields[name] !== _value) {
+        _value = $fields[name] || valueEmpty;
+      }
     }
   }
 
@@ -47,7 +56,7 @@
   {...$$restProps}
   class="form-control form-control-uniform {className}"
   class:empty={!!placeholder && ((!selectedIndex && !$fields[name]) || selectedIndex === 0)}
-  bind:value
+  value={_value}
   on:change={createChangeHandler()}
 >
   {#if allowEmpty}
