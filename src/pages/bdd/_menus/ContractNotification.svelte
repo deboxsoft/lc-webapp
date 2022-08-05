@@ -19,6 +19,7 @@
       const acl = getAccessControl();
       readGranted = aclContext().readGranted;
     }
+    $count = $countWarningContractStore || 0;
   }
 </script>
 

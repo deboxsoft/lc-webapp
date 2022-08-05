@@ -42,8 +42,8 @@
   function applyHandler({ detail }) {
     if ($fields) {
       if (range) {
-        const _from = detail.from.add(7, "hour").toDate();
-        const _to = detail.to.endOf("d").add(7, "hour").toDate();
+        const _from = detail.from.toDate();
+        const _to = detail.to.endOf("d").toDate();
         if (name) {
           $fields[name] = [_from, _to];
         } else {
@@ -51,7 +51,7 @@
           $fields[selectToDateKey] = _to;
         }
       } else if (name) {
-        $fields[name] = detail.date.add(7, "hour").toDate();
+        $fields[name] = detail.date.toDate();
       }
     }
     dispatcher("apply", detail);

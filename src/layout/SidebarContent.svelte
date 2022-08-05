@@ -30,10 +30,11 @@
 </script>
 
 <!-- Header -->
-<div class="card-header header-elements-inline">
-  <h6 class="card-title d-none d-md-block">MAIN MENU</h6>
-</div>
-
+{#if !$store.minimizeSidebar}
+  <div class="card-header header-elements-inline">
+    <h6 class="card-title d-none d-md-block">MAIN MENU</h6>
+  </div>
+{/if}
 {#if !collapse}
   {#if $authenticationStore.authenticated}
     <div class="sidebar-user">
