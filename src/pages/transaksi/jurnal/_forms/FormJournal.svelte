@@ -13,7 +13,7 @@
 
   import FormJournalAccount from "./FormJournalAccount.svelte";
   import { getAuthenticationContext } from "__@modules/users";
-  import { filteringAccountDebit, filteringAccountCredit } from "__@root/utils";
+  // import { filteringAccountDebit, filteringAccountCredit } from "__@root/utils";
   import { getApplicationContext } from "__@modules/app";
   import InputCheckSwitchery from "__@comps/forms/InputCheckSwitchery.svelte";
 
@@ -34,12 +34,12 @@
   });
 
   $: {
-    const _accounts = getAccountLeaf();
-    if ($fields?.isCredit) {
-      accountStore = filteringAccountCredit(_accounts);
-    } else {
-      accountStore = filteringAccountDebit(_accounts);
-    }
+    accountStore = getAccountLeaf();
+    // if ($fields?.isCredit) {
+    //   accountStore = filteringAccountCredit(_accounts);
+    // } else {
+    //   accountStore = filteringAccountDebit(_accounts);
+    // }
   }
 
   $: {

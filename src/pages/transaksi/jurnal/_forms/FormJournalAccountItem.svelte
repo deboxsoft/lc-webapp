@@ -5,7 +5,7 @@
   import TrashIcon from "__@comps/icons/Trash.svelte";
   import InputRp from "__@comps/forms/InputNumberField.svelte";
   import { generateId } from "@deboxsoft/module-client";
-  import { filteringAccountCredit, filteringAccountDebit } from "__@root/utils";
+  // import { filteringAccountCredit, filteringAccountDebit } from "__@root/utils";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import { writable } from "svelte/store";
 
@@ -23,12 +23,12 @@
   let accountStore = writable([]);
 
   $: {
-    const _accounts = getAccountLeaf();
-    if (isCredit) {
-      accountStore = filteringAccountDebit(_accounts);
-    } else {
-      accountStore = filteringAccountCredit(_accounts);
-    }
+    accountStore = getAccountLeaf();
+    // if (isCredit) {
+    //   accountStore = filteringAccountDebit(_accounts);
+    // } else {
+    //   accountStore = filteringAccountCredit(_accounts);
+    // }
   }
 
   function createAccountSelectedHandler() {
