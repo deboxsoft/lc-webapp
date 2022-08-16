@@ -27,7 +27,7 @@
     <th class={classes.quantity} width="50" style="text-align: center">Jumlah</th>
     <th class={classes.priceItem} width="160" style="text-align: center">Harga Satuan</th>
     <th class={classes.total} width="160" style="text-align: center">Harga Total</th>
-    <th class={classes.status} width="50" style="text-align: center">Status</th>
+    <th width="30" />
   </tr>
   {#each $inventoryStore as inventory (inventory.id)}
     <InventoryRow {inventory} />

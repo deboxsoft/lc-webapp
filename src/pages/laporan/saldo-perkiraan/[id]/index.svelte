@@ -95,7 +95,7 @@
   showBackButton
   backPath={$params?.fromPath || "../"}
   breadcrumb={[
-    { path: $params?.fromPath || "../", title: $params.fromLabel || "Saldo Perkiraan" },
+    { path: $params?.fromPath || "../saldo-perkiraan", title: $params.fromLabel || "Saldo Perkiraan" },
     { title: "Detail Saldo Akun Perkiraan" }
   ]}
 >

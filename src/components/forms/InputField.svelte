@@ -9,7 +9,7 @@
   export let value = undefined;
   export let id = name;
   export let ref;
-  const { class: className } = $$props;
+  const { class: className = "form-control" } = $$props;
   if (value && !$fields[name]) {
     $fields[name] = value;
   }

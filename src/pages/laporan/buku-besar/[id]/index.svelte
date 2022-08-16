@@ -119,7 +119,7 @@
 
 <PageLayout
   showBackButton
-  backPath={$params?.fromPath || "./"}
+  backPath={$params?.fromPath || "../"}
   breadcrumb={[
     { path: $params?.fromPath || "./", title: $params.fromLabel || "Buku Besar" },
     { title: "rekap per akun" }

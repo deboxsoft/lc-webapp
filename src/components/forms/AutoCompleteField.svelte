@@ -24,6 +24,7 @@
   export let disabled = false;
   export let searchFunction = undefined;
   export let selectedItem = undefined;
+  export let clearValue = undefined;
   const { class: className } = $$props;
 
   let invalid = true;
@@ -66,6 +67,7 @@
 
 <AutoComplete
   {...$$restProps}
+  bind:clear={clearValue}
   {searchFunction}
   {create}
   {hiddenResultText}

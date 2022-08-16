@@ -764,7 +764,7 @@
       close();
     }
   }
-  function clear() {
+  export function clear() {
     if (debug) {
       console.log("clear");
     }

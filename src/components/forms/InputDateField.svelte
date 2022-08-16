@@ -22,6 +22,7 @@
   export let yearEditable = false;
   export let startDate = dayjs().subtract(20, "year");
   export let endDate = dayjs().add(20, "year");
+  export let clearDate = undefined;
   if (value) {
     if ($fields && name) {
       $fields[name] = value;
@@ -78,6 +79,7 @@
     applyLabel="Pilih"
     closeLabel="Tutup"
     bind:selected
+    bind:clearHandler={clearDate}
     styling={new CalendarStyle({ buttonWidth: "100%", datepickerWidth: width })}
     wrapperInputClass="form-group-feedback form-group-feedback-right"
     {showClearButton}

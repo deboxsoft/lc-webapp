@@ -11,6 +11,7 @@
   export let placeholder = "Pilih Akun";
   export let disabled = false;
   export let selectedAccount = accountContext.getAccount(accountId);
+  export let clearAccountValue = undefined;
   const className = $$props.class || "";
   const dispatch = createEventDispatcher();
 
@@ -45,6 +46,7 @@
   labelFunction={(account) => account && account.name}
   valueFieldName="id"
   keywordsFunction={(account) => account && `${account.id} - ${account.name}`}
+  bind:clearValue={clearAccountValue}
 >
   <svelte:fragment slot="item" let:item let:label>
     {item.id} - {@html label}
