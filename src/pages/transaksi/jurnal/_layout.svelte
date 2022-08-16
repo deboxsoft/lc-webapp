@@ -1,6 +1,7 @@
 <!--routify:options title="Transaksi Jurnal"-->
 <script>
   import { tick, onMount } from "svelte";
+  import { writable } from "svelte/store";
   import { url, goto } from "@roxi/routify";
   import { getBreadcrumbStore } from "__@stores/breadcrumb";
   import PageLayout from "__@root/layout/PageLayout.svelte";
@@ -27,13 +28,11 @@
   });
   const { loading } = applicationContext;
 
-  /**
-   * @type {import("@deboxsoft/accounting-api").TransactionFilter}
-   */
-  let filter = {};
+  let filter = writable({});
 
   let openFilterDialog;
   let closeFilterDialog;
+  let clearFilter;
   let textFilter = undefined;
   let submitFilter;
   let submitting;
@@ -74,12 +73,12 @@
       const profile = await getProfile();
       userId = profile.session.userId;
     }
-    await load({ filter: filter, pageCursor: {} });
+    await load({ filter: $filter, pageCursor: {} });
     $loading = false;
   }
 
   async function filterHandler(opts) {
-    const _filter = Object.assign({ userId }, submitFilter && submitFilter());
+    const _filter = Object.assign({ userId }, submitFilter());
     textFilter = undefined;
     $loading = true;
     submitting = true;
@@ -111,11 +110,23 @@
   }
 </script>
 
-<FormFilter {filter} bind:closeDialog={closeFilterDialog} bind:openDialog={openFilterDialog} bind:submit={submitFilter}>
-  <button slot="footer" type="button" class="btn btn-primary ml-1" on:click={filterHandler}>
-    <i class="icon-filter4 mr-2" />
-    Filter
-  </button>
+<FormFilter
+  {filter}
+  bind:closeDialog={closeFilterDialog}
+  bind:openDialog={openFilterDialog}
+  bind:clearFilter
+  bind:submitFilter
+>
+  <svelte:fragment slot="footer">
+    <button type="button" class="btn btn-light ml-1" on:click={clearFilter}>
+      <i class="icon-filter4 mr-2" />
+      Clear
+    </button>
+    <button type="button" class="btn btn-primary ml-1" on:click={filterHandler}>
+      <i class="icon-filter4 mr-2" />
+      Filter
+    </button>
+  </svelte:fragment>
 </FormFilter>
 <PageLayout breadcrumb={[]}>
   <svelte:fragment slot="breadcrumb-items-right">

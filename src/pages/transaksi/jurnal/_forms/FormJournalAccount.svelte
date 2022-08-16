@@ -78,7 +78,7 @@
   function removeJournalAccountHandler(index) {
     /** @type{Array} **/
     let _oppositeAccounts = $oppositeAccounts;
-    _oppositeAccounts = _oppositeAccounts.splice(index, 1);
+    _oppositeAccounts.splice(index, 1);
     $oppositeAccounts = _oppositeAccounts;
   }
 </script>
@@ -134,7 +134,7 @@
         <span>{credit ? convertToNumber({ value: parseFloat(credit) }) : "-"}</span>
       </div>
       <div class="d-flex" style="border-top: solid 1px gray">
-        <span class="flex-grow-1"> Selisih: Rp.</span>
+        <span class="flex-grow-1">Selisih: Rp.</span>
         <span>{diff ? convertToNumber({ value: diff }) : "-"}</span>
       </div>
     </div>

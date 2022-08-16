@@ -6,15 +6,16 @@
   import InputDate from "__@comps/forms/InputDateField.svelte";
   import AccountSelect from "__@comps/account/AccountSelect.svelte";
   import dayjs from "dayjs";
+  import InputField from "__@comps/forms/InputField.svelte";
 
-  export let filter = {};
+  export let filter = writable({});
   export let title = "Filter";
-  export let submit;
   export let isReport = false;
   export let openDialog;
   export let closeDialog;
   let endDate = (isReport && new Date()) || undefined;
   let startDate = endDate && dayjs(endDate).startOf("month").toDate();
+  let fields, clearDate, clearAccount;
 
   /**
    *
@@ -25,7 +26,14 @@
   const { accountStore } = stores.getAccountContext();
   const { transactionTypeStore } = stores.getTransactionContext();
 
-  function transformInput({ status, date, type, accountId, ...input }) {
+  export function clearFilter() {
+    $filter = $fields = {};
+    clearDate();
+    clearAccount();
+  }
+
+  export function submitFilter() {
+    const { id, status, date, type, accountId, ...input } = $fields;
     let _startDate, _endDate;
     if (input.to) {
       _startDate = input.from;
@@ -34,6 +42,7 @@
       _startDate = date;
     }
     return {
+      id: id === "" ? undefined : id,
       startDate: _startDate,
       endDate: _endDate,
       status: status === "" ? undefined : status,
@@ -44,7 +53,11 @@
 </script>
 
 <Modal {title} bind:onClose bind:openDialog bind:closeDialog>
-  <Form values={filter} transform={transformInput} bind:submitHandler={submit} feedbackValidateDisable>
+  <Form values={$filter} feedbackValidateDisable bind:fields>
+    <div class="form-group">
+      <label for="id">Transaksi Id</label>
+      <InputField id="id" name="id" placeholder="Transaksi Id" />
+    </div>
     <div class="form-group">
       <label for="date">Tanggal</label>
       <InputDate
@@ -54,11 +67,19 @@
         allowEmpty={!isReport}
         defaultDate={[startDate, endDate]}
         showClearButton
+        bind:clearDate
       />
     </div>
     <div class="form-group">
       <label for="accountId">Akun Debit</label>
-      <AccountSelect id="accountId" placeholder="SEMUA" allowEmpty name="accountId" {accountStore} />
+      <AccountSelect
+        id="accountId"
+        placeholder="SEMUA"
+        allowEmpty
+        name="accountId"
+        {accountStore}
+        bind:clearAccountValue={clearAccount}
+      />
     </div>
     <div class="form-group">
       <label for="type">Jenis Transaksi</label>
@@ -74,7 +95,13 @@
     </div>
     <div class="form-group">
       <label for="status">Status</label>
-      <ComboBox id="status" name="status" items={["UNAPPROVED", "FIXED", "APPROVED"]} placeHolder="SEMUA" allowEmpty />
+      <ComboBox
+        id="status"
+        name="status"
+        items={["UNAPPROVED", "FIXED", "APPROVED", "REJECTED", "BLACKLIST"]}
+        placeHolder="SEMUA"
+        allowEmpty
+      />
     </div>
   </Form>
   <slot name="footer" slot="footer" />
