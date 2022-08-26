@@ -33,7 +33,7 @@
   }
 
   export function submitFilter() {
-    const { id, status, date, type, accountId, ...input } = $fields;
+    const { id, status, date, type, accountId, ...input } = $fields || {};
     let _startDate, _endDate;
     if (input.to) {
       _startDate = input.from;

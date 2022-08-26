@@ -26,7 +26,7 @@
     $filter = $fields = {};
   }
   export function submitFilter() {
-    const { name, ...inputs } = $fields;
+    const { name, ...inputs } = $fields || {};
     $filter = {
       name: name === "" ?? name,
       ...inputs
