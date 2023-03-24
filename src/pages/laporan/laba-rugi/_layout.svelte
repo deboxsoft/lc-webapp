@@ -32,9 +32,13 @@
   $: {
     if ($fixedBalanceSheetReportStore) {
       balanceSheetReport = $fixedBalanceSheetReportStore;
-      $loading = false;
+      // $loading = false;
       $topLoading = false;
     }
+  }
+
+  $: {
+    if (balanceSheetReport) $loading = false;
   }
 
   const createExportMenuHandler = (close) => {
@@ -100,8 +104,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-pdf" />
-          Download PDF</a
-        >
+          Download PDF
+        </a>
         <a
           href="/#"
           target="_self"
@@ -109,8 +113,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-excel" />
-          Download CSV</a
-        >
+          Download CSV
+        </a>
         <a
           href="/#"
           target="_self"
@@ -118,8 +122,8 @@
           class="dropdown-item"
         >
           <i class="icon-file-excel" />
-          Download CSV Induk</a
-        >
+          Download CSV Induk
+        </a>
         <a
           href="/#"
           target="_self"
@@ -127,8 +131,8 @@
           class="dropdown-item"
         >
           <i class="icon-printer2" />
-          Print</a
-        >
+          Print
+        </a>
       </svelte:fragment>
     </Dropdown>
   </svelte:fragment>
