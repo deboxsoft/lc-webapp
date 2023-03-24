@@ -10,8 +10,8 @@
    * @type{BalanceSheetReport}
    */
   export let balanceSheetReport;
-  const statementIncome = balanceSheetReport.statementIncome;
-  const accountsBalance = balanceSheetReport.accountsBalance;
+  $: statementIncome = balanceSheetReport.statementIncome;
+  $: accountsBalance = balanceSheetReport.accountsBalance;
   const foldStore = createFoldStore({ key, initial: {} });
   const isExpand = (key) => derived(foldStore, (_) => _[key] || false);
   const toggleExpand = (key) => () => {
